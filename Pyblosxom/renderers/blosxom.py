@@ -53,18 +53,28 @@ class BlosxomRenderer(RendererBase):
 
         pattern = re.compile(r'.+?\.' + taste + '$')
 
-        datadir = config["datadir"]
+        template_files = {}
 
-        dirname = data["root_datadir"]
-        if os.path.isfile(dirname):
-            dirname = os.path.dirname(dirname)
+        # first we try the flavourdir if they have one specified.
+        if config.has_key("flavourdir"):
+            template_files = tools.Walk(self._request, config["flavourdir"], 1, pattern)
 
-        template_files = None
-        while len(dirname) >= len(datadir):
-            template_files = tools.Walk(self._request, dirname, 1, pattern)
-            if template_files: break
-            dirname = os.path.split(dirname)[0]
+        # next we try the directory being requested and work our way
+        # back to the datadir.
+        if not template_files:
+            datadir = config["datadir"]
 
+            dirname = data["root_datadir"]
+            if os.path.isfile(dirname):
+                dirname = os.path.dirname(dirname)
+
+            template_files = None
+            while len(dirname) >= len(datadir):
+                template_files = tools.Walk(self._request, dirname, 1, pattern)
+                if template_files: break
+                dirname = os.path.split(dirname)[0]
+
+        # hmm...  guess we'll try the datadir.
         if not template_files:
             template_files = tools.Walk(self._request, config['datadir'], 1, pattern)
 
