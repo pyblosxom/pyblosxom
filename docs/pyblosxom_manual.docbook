@@ -116,6 +116,8 @@ have an item here describing the changes and who did them.
 </preface>
 
 
+
+
 <!--
   CHAPTER INSTALLATION
 -->
@@ -292,9 +294,9 @@ to change the permissions of your plugin directory accordingly.
 <sect2>
 <title>Configure PyBlosxom by Editing config.py</title>
 <para>
-The config.py file is a text file written in Python.  You can use any text editor to edit it.
-It has a series of comments in it that will help guide you through setting the various properties
-you need to set.
+The config.py file is a text file written in Python.  You can use any text 
+editor to edit it.  It has a series of comments in it that will help guide 
+you through setting the various properties you need to set.
 </para>
 <para>
 Plugins will require you to add new variables to your config.py file in order
@@ -360,6 +362,97 @@ FIXME - need instructions for setting up with mod_python, Twisted, and WSGI.
 </para>
 </sect1>
 
+<sect1>
+<title>Trouble-shooting</title>
+<para>
+We're going to try to break this down a bit into categories.  Bear
+with us and keep trying things.  If you have problems and have gone
+through this section to no avail, then come talk to us on the pyblosxom-users
+list.  Details of the mailing list are located at 
+http://pyblosxom.sourceforge.net/ .
+</para>
+
+<sect2>
+<title>Running ./pyblosxom.cgi doesn't work.</title>
+<para>
+First, you should check to see if you have Python installed on your
+system.  If not, then that's probably the problem.  Go install Python.
+</para>
+<para>
+If Python is installed on your system, make sure the first line in
+pyblosxom.cgi points to your Python interpreter.  If not, fix that
+and try running ./pyblosxom.cgi again.
+</para>
+<para>
+If Python is installed on your system and the first line of pyblosxom.cgi
+is correct, then check to see if it's a permissions issue.  pyblosxom.cgi
+is a script--so it needs execute permissions in order to function.  If
+those aren't set, then fix that and try running ./pyblosxom.cgi again.
+</para>
+</sect2>
+
+<sect2>
+<title>I see a HTTP 404 error when I try to bring up my blog</title>
+<para>
+When you try to look at your blog and you get a HTTP 404 error, then
+you're using the wrong URL.  Are you futzing with .htaccess?  Does
+your server allow you to run CGI scripts?  Do other CGI scripts work?
+Does the URL you're trying to use to access PyBlosxom look like other
+URLs that work on your system?
+</para>
+</sect2>
+
+<sect2>
+<title>I see a HTTP 500 error when I try to bring up my blog</title>
+<para>
+When you try to look at your blog and you get a HTTP 500 error, check your
+server logs.  For Apache, look for the error.log file in a place like
+/var/logs/apache or /var/logs/httpd .
+</para>
+<para>
+Note: We're assuming that doing ./pyblosxom.cgi at the command prompt 
+works fine.
+</para>
+<para>
+Does your web-server have execute access to your pyblosxom.cgi script?
+</para>
+<para>
+Is it kicking up a Python stack trace?  If so, uncomment the line in
+pyblosxom.cgi (remove the # at the beginning of the line) that looks
+like this:
+</para>
+<programlisting role="python">
+#import cgitb; cgitb.enable()
+</programlisting>
+<para>
+Then try looking at your blog again.  That should spit up a huge
+pretty traceback that should help iron out the issue for you.  At a
+bare minimum, it's useful to people who can help you out.
+</para>
+<para>
+Do you have plugins loaded?  If you do, try unloading all your plugins
+and see if the problem persists.  Sometimes there are issues with plugins
+that only show up in certain situations.
+</para>
+</sect2>
+
+<sect2>
+<title>I have other issues</title>
+<para>
+Try changing the renderer for your blog to the debug renderer.  You can
+do this by setting the "renderer" property in your config.py file to
+"debug".  That will show a lot more detail about what things get set
+to and may help you figure out your issues.
+</para>
+</sect2>
+
+<sect2>
+<title>My blog looks UGLY!</title>
+<para>
+Read the chapter on flavours and templates to help you out.
+</para>
+</sect2>
+</sect1>
 </chapter>
 
 
@@ -1974,8 +2067,16 @@ py["blog_encoding"] = "iso-8859-1"
   this is the full path to where your PyBlosxom entries are kept.
   </para>
   <programlisting role="python">
+# example for unix/linux/osx
 py["datadir"] = "/home/will/blog/datadir/"
+
+# examples for windows
+py["datadir"] = "/blogdata/datadir/"
+py["datadir"] = "e:/blogdata/datadir/"
   </programlisting>
+  <para>
+  If you're using Windows, don't use \ in the datadir path.
+  </para>
 </entry>
 </row>
 <row>
@@ -1987,8 +2088,16 @@ py["datadir"] = "/home/will/blog/datadir/"
   this is the full path to the directory for logs.
   </para>
   <programlisting role="python">
+# example for unix/linux/osx
 py["logdir"] = "/home/will/blog/logs/"
+
+# examples for windows
+py["logdir"] = "/blogdata/logs/"
+py["logdir"] = "e:/blogdata/logs/"
   </programlisting>
+  <para>
+  If you're using Windows, don't use \ in the logdir path.
+  </para>
 </entry>
 </row>
 <row>
