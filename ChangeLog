@@ -1,3 +1,8 @@
+2003-03-26 Will Guaraldi <willg at bluesock dot org>
+	* Re-wrote the callback chain mechanisms so it's a passive
+	  registration chain like blosxom and it's more magical and
+	  versatile.
+
 2003-03-24 Will Guaraldi <willg at bluesock dot org>
 	* Adjusted initialize_plugins to load plugins in the plugins
 	  directory in alphanumeric order if the "load_plugins" key
