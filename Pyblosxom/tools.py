@@ -379,6 +379,30 @@ def run_callback(chain, input,
     return output
 
 
+def generate_entry(properties, data, mtime):
+    """
+    Takes a properties dict and a data string and generates a generic
+    entry using the data you provided.
+
+    @param properties: the dict of properties for the entry
+    @type  properties: dict
+
+    @param data: the data content for the entry
+    @type  data: string
+
+    @param mtime: the mtime tuple (as given by time.localtime()).  
+        if you pass in None, then we'll use localtime.
+    @type  mtime: tuple of ints
+    """
+    entry = EntryBase()
+
+    entry.update(properties)
+    entry.setData(data)
+    if mtime:
+        entry.setTime(mtime)
+    else:
+        entry.setTime(time.localtime())
+    return entry
 
 # These next few lines are to save a sort of run-time global registry
 # of important things so that they're global to all the components
