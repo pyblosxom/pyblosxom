@@ -168,10 +168,10 @@ class PyblCalendar:
         # immediately, problem page:
         # http://roughingit.wari.org/plugin_info?flav=plugininfo
         try:
-			index = keys.index(thismonth)
+            index = keys.index(thismonth)
         except ValueError:
             index = 0
-	
+
         if index == 0:
             prev = None
         else:
