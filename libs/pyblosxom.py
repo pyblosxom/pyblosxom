@@ -178,7 +178,7 @@ class PyBlosxom:
                     {'title': 'The page you are looking for is not available',
                      'body': 'Somehow I cannot find the page you want. ' + 
                      'Go Back to <a href="%s">%s</a>?' 
-                     % (data["base_url"], config["blog_title"])})
+                     % (config["base_url"], config["blog_title"])})
                 tools.logRequest(config.get('logfile',''), '404')
             renderer.render()
 
