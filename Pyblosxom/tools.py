@@ -205,7 +205,7 @@ def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
         ext = request.getData()['extensions']
         pattern = re.compile(r'.*\.(' + '|'.join(ext.keys()) + r')$')
 
-    ignore = request.getConfiguration().get("ignore", None)
+    ignore = request.getConfiguration().get("ignore_directories", None)
     if type(ignore) == type(""): ignore = [ignore]
     if ignore:
         for i in range(0, len(ignore)):
