@@ -195,16 +195,50 @@ def writeComment(config, data, comment):
        config.has_key('comment_smtp_from') and \
        config.has_key('comment_smtp_to'):
         import smtplib
+        author = escape_SMTP_commands(clean_author(comment['author']))
+        description = escape_SMTP_commands(comment['description'])
         try:
             server = smtplib.SMTP(config['comment_smtp_server'])
             curl = config['base_url']+'/'+entry['file_path']
             message = "Subject: write back by %s\r\n\r\n%s\r\n%s\r\n%s" \
-                      %  (comment['author'], comment['description'], cfn, curl)
-            server.sendmail(config['comment_smtp_from'], config['comment_smtp_to'], message)
+                      %  (author, description, cfn, curl)
+            server.sendmail(from_addr=config['comment_smtp_from'], to_addrs=config['comment_smtp_to'], msg=message)
             server.quit()
         except:
             log("Error sending mail: %s" % message)
             pass
+
+def clean_author(s):
+    """
+    Guard against blasterattacko style attacks that embedd SMTP commands in
+    author field.
+
+    If author field is more than one line, reduce to one line
+
+    @param the string to be checked
+    @type string
+
+    @returns the sanitized string
+    """
+    return s.splitlines()[0]
+
+def escape_SMTP_commands(s):
+    """
+    Guard against blasterattacko style attacks that embed SMTP commands by
+    using an HTML span to make the command syntactically invalid to SMTP but
+    renderable by HTML
+
+    @param the string to be checked
+    @type string
+
+    @returns the sanitized string
+    """
+    def repl_fn(mo):
+        return '<span>'+mo.group(0)+'</span>'
+    s = re.sub('([Tt]o:.*)',repl_fn,s)
+    s = re.sub('([Ff]rom:.*)',repl_fn,s)
+    s = re.sub('([Ss]ubject:.*)',repl_fn,s)
+    return s
 
 def sanitize(body):
     """
