@@ -37,7 +37,7 @@ def parse(filename, py, cache):
         else:
             break
 
-    preformatter = tools.importName('libs.preformatters', entryData.get('parser', 'plain'))
+    preformatter = tools.importName('libs.preformatters', py.get('parser', 'plain'))
     if preformatter:
         entryData['body'] = preformatter.PreFormatter(story).parse()
     else:
