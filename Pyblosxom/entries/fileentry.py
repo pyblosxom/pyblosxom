@@ -12,8 +12,8 @@ asked for something that we don't have, then we get the file from
 the filesystem, parse it, and populate the rest of the metadata
 and the contents of the file.
 
-The FileEntry doesn't handle caching at all--that's handled by
-the CacheDecorator which wraps the FileEntry.
+The FileEntry calls EntryBase methods addToCache and getFromCache
+to handle caching.
 """
 import time, os, re
 from Pyblosxom import tools
