@@ -78,17 +78,23 @@ class FileEntry(base.EntryBase):
         is done with __populateData.
         """
         # handle file manipulations
+        registry = tools.get_registry()
+        request = registry["request"]
+        data = request.getData()
+
         file_basename = os.path.basename(self._filename)
 
         path = self._filename.replace(self._root, '')
         path = path.replace(os.path.basename(self._filename), '')
-        path = path[1:][:-1]
+        path = path[:-1]
 
         absolute_path = self._filename.replace(self._config['datadir'], '')
         absolute_path = absolute_path.replace(file_basename, '')
         absolute_path = absolute_path[1:][:-1]
 
-        fn = re.sub(r'\.txt$', '', file_basename)
+        ext = '|'.join(data['extensions'].keys())
+
+        fn = re.sub(r'\.(' + ext + ')$', '', file_basename)
         if absolute_path == '':
             file_path = fn
         else:
