@@ -250,11 +250,17 @@ def metaWeblog_getRecentPosts(request, blogid, username, password, numberOfPosts
         numberOfPosts = 5
     entryList = [ x[1] for x in entryList ][: numberOfPosts]
 
+    def fix_path(path):
+        if path == "":
+            return '/'
+        else:
+            return path
+
     posts = [ { 'permaLink': "%s/%s/%s/%s#%s" % (config['base_url'], x['yr'],x['mo_num'],x['da'],x['fn']),
                 'title':x['title'],
                 'description':x['body'], 
                 'postid':re.sub(r'^/', '', "%s/%s"% (x['absolute_path'], x['fn'])),
-                'categories':[x['absolute_path']],
+                'categories':[ fix_path(x['absolute_path'])],
                 'dateCreated':xmlrpclib.DateTime(x['w3cdate']) }  for x in entryList ]
 
     return posts
@@ -279,8 +285,29 @@ def metaWeblog_newMediaObject(request, blogid, username, password, struct):
     @param struct: the metaWeblog API struct
     @type  struct: dict
     """
-    # tools.log("newMediaObject: ", struct)
-    pass
+    # tools.log("newMediaObject")
+    authenticate(request, username, password)
+    config = request.getConfiguration()
+
+    name = struct['name']
+    mimeType = struct['type']
+    bits = struct['bits']
+    
+    root = config['xmlrpc_metaweblog_image_dir']
+
+    path = os.path.join("%s/%s" % (root, name))
+    # tools.log("newMediaObject: %s,%s, %s, %s " % (name, path, mimeType, bits))
+    f = None
+    try:
+        f = open(path, 'wb')
+        f.write(bits.data)
+        f.close()
+    except:
+        if f is not None:
+            f.close()
+        return 0
+#    return { 'url': "%s/%s%s" % (config['base_url'],config['xmlrpc_metaweblog_image_prefix'],name) }
+    return { 'url': "%s/%s" % (config['base_url'],name) }
 
 #
 # helper functions
@@ -394,7 +421,7 @@ def _getCategories(request):
 
     clist = []
     os.path.walk(root, walk_filter, clist)
-    clist.append("")
+    clist.append("/")
     clist.sort()                   
 
     return clist
@@ -434,8 +461,13 @@ def _writePost(config, username, postid, struct, publish=True, ping=False):
         if os.path.isfile(path):
             atime, mtime = os.stat(path)[7:9]
         if struct.has_key('dateCreated'):
-            mtime = time.mktime(time.strptime(struct['dateCreated'], '%Y%m%dT%H:%M:%S'))
-
+            import types
+            dc = struct['dateCreated']
+            if type(dc) == types.StringType:
+                mtime = time.mktime(time.strptime(dc, '%Y%m%dT%H:%M:%S'))
+            elif type(dc) == types.InstanceType:
+                mtime = time.mktime(time.strptime(str(dc), '%Y%m%dT%H:%M:%SZ'))
+                
         f = open(path,'w')
         f.write(content)
         f.close()
@@ -453,6 +485,9 @@ def _writePost(config, username, postid, struct, publish=True, ping=False):
         try:
             os.chdir(root)
             autoping.autoping("%s.txt" % postid)
+        except OSError:
+            # tools.log("autoping failed for %s with OSError %" % postid)
+            pass
         except:
             # tools.log("autoping failed for %s" % path)
             pass
