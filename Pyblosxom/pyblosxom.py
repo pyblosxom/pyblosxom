@@ -557,15 +557,16 @@ def blosxom_file_list_handler(args):
     
     # Match dates with files if applicable
     if data['pi_yr']:
-        # FIXME - when does this actually get called?  does it matter?  (wbg)
+        # This is called when a date has been requested, e.g. /some/category/2004/Sep
         month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
         matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
         valid_list = [x for x in entrylist if re.match(matchstr, x[1]._fulltime)]
     else:
         valid_list = entrylist
 
-    # This is the maximum number of entries we can show
-    valid_list = valid_list[:config['num_entries']]
+    # This is the maximum number of entries we can show (zero indicates show all entries)
+    if config['num_entries']:
+        valid_list = valid_list[:config['num_entries']]
     valid_list = [x[1] for x in valid_list]
 
     return valid_list
