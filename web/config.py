@@ -104,15 +104,3 @@ py['num_entries'] = 40
 # Whether (1) or not (0) you want to create date indexes using month
 # numbers?  (ex. /2004/04/01)  Defaults to 0 (no).
 #py["static_monthnumbers"] = 0
-
-###########################
-# Nothing to modify below #
-###########################
-__author__ = 'Wari Wahab <wari at wari dot per dot sg>'
-__version__ = "CVS"
-__date__ = "$Date$"
-__revision__ = "$Revision$"
-__copyright__ = "Copyright (c) 2003-2004 Wari Wahab"
-__license__ = "MIT License"
-py['pyblosxom_version'] = __version__
-py['pyblosxom_name'] = 'pyblosxom'
