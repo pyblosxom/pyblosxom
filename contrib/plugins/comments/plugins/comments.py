@@ -1,9 +1,37 @@
 """
 This module contains an extension to Blosxom file entries to support
-comments
-"""
-# IMPORTANT: This plugin requires the pyXML module
+comments.
 
+This plugin requires the pyXML module.
+
+This module supports the following config parameters (they are not
+required):
+
+    comment_dir - the directory we're going to store all our comments in.
+                  this defaults to datadir + "comments".
+    comment_ext - the file extension used to denote a comment file.
+                  this defaults to "cmt".
+
+    comment_smtp_server - the smtp server to send comments notifications
+                          through.
+    comment_smtp_from - the person comment notifications will be from.
+    comment_smtp_to - the person to send comment notifications to.
+
+
+Comments are stored 1 per file in a parallel hierarchy to the datadir
+hierarchy.  The filename of the comment is the filename of the blog
+entry, plus the creation time of the comment as a float, plus the 
+comment extension.  The contents of the comment file is an RSS 2.0
+formatted item.
+
+Each entry has to have the following properties in order to work with
+comments:
+
+ 1. absolute_path - the category of the entry.  ex. "dev/pyblosxom"
+ 2. fn - the filename of the entry without the file extension and without
+    the directory.  ex. "staticrendering"
+ 3. file_path - the absolute_path plus the fn.  ex. "dev/pyblosxom/staticrendering"
+"""
 import cgi, glob, os.path, re, time, cPickle
 from xml.sax.saxutils import escape
 from Pyblosxom import tools
@@ -38,14 +66,6 @@ def verify_installation(request):
 
     return retval
 
-#
-# file system  implementation
-# Comments are stored 1 per file, in a parallel hierarchy to the datadir
-# hierarchy The filename of the comment is the filename of the blog
-# entry plus the creation time of the comment as a time float.  The
-# contents of the comment file is an RSS 2.0 item
-#        
-        
 def readComments(entry, config):
     """
     @param: a file entry
@@ -89,12 +109,10 @@ def cmtExpr(entry, config):
     
     @returns: a string containing the regular expression for comment entries
     """
-    
     cmtDir = os.path.join(config['comment_dir'],entry['absolute_path'])
     cmtExpr = os.path.join(cmtDir,entry['fn']+'-*.'+config['comment_ext'])
     return cmtExpr
 
-    
 def readComment(filename):
     """
     Read a comment from filename
@@ -104,7 +122,6 @@ def readComment(filename):
     
     @returns: a comment dict
     """
-    
     from xml.sax import make_parser, SAXException
     from xml.sax.handler import feature_namespaces, ContentHandler
     class cmtHandler(ContentHandler):
@@ -140,14 +157,14 @@ def writeComment(config, data, comment):
     """
     Write a comment
     
-    @param: dict containing pyblosxom config info
-    @type: dict
+    @param config: dict containing pyblosxom config info
+    @type  config: dict
     
-    @param: dict containing entry info
-    @type: dict
+    @param data: dict containing entry info
+    @type  data: dict
     
-    @param: dict containing comment info
-    @type: dict
+    @param comment: dict containing comment info
+    @type  comment: dict
     """
     entry = data['entry_list'][0]
     cdir = os.path.join(config['comment_dir'],entry['absolute_path'])
@@ -332,7 +349,7 @@ def sanitize(body):
         
 def cb_prepare(args):
     """
-    Handle comment related HTTP POST's
+    Handle comment related HTTP POST's.
     
     @param request: pyblosxom request object
     @type request: a Pyblosxom request object
@@ -413,15 +430,8 @@ def cb_story_end(args):
 def cb_start(args):
     request = args['request']
     config = request.getConfiguration()
-    custom_flavours = ['comment-head', 'comment-story', 'comment', 'comment-form']
-    if not config.has_key('blosxom_custom_flavours'):
-        config['blosxom_custom_flavours'] = custom_flavours
-    else:
-        for mem in custom_flavours:
-            if mem not in config['blosxom_custom_flavours']:
-                config['blosxom_custom_flavours'].append(mem)
+
     if not config.has_key('comment_dir'):
         config['comment_dir'] = os.path.join(config['datadir'],'comments')
     if not config.has_key('comment_ext'):
         config['comment_ext'] = 'cmt'
-
