@@ -53,6 +53,11 @@ xmlrpc = {}
 # Username and password to access this server, you can define one or more
 #xmlrpc['usernames'] = {'someuser': 'somepassword'}
 
+# maxrequest_length - How much data do you expect to send via XMLRPC? Default
+# is 10KB, which should actually be enough for quite a large posting. This is
+# added to avoid attacks
+#xmlrpc['maxrequest_length'] = 10000
+
 __author__ = 'Wari Wahab <wari@wari.per.sg>'
 __version__ = "CVS"
 __date__ = "$Date$"
