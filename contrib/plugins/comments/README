@@ -12,7 +12,10 @@ the comment system.
 
 3. If you want pingbacks, install xmlrpcplugins/pingback.py in your
    lib/xmlrpcplugins directory.  You need to have comments.py installed
-   in order for this to work.  You must also define py['base_url'].
+   in order for this to work.  You must also define py['base_url']. 
+   pingback.py also uses Mark Pilgrim's rssfinder and rssparser 
+   (available from http://diveintomark.org/projects) and expects them
+   to be available in the Python search path.
 
 4. If you want support for the CommentAPI, install CommentAPI.cgi in your
    pyblosxom directory and make it executable as a CGI.  If you enable
