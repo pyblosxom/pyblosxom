@@ -128,7 +128,10 @@ class EntryBase:
         """
         cache = tools.get_cache()
         # cache.__getitem__ returns None if the id isn't there
-        return cache[self._filename]
+        if cache.has_key(id):
+            return cache[id]
+        else:
+            return None
 
     def addToCache(self, id, data):
         """
