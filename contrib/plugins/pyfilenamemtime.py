@@ -10,7 +10,7 @@ import os, re, time
 __author__ = 'Tim Roberts http://www.probo.com/timr/blog/'
 __version__ = '$Id$'
 
-DAYMATCH = re.compile('([0-9]{4})-([0-1][0-9])-([0-3][0-9])-([0-2][0-9])-([0-5][0-9]).txt')
+DAYMATCH = re.compile('([0-9]{4})-([0-1][0-9])-([0-3][0-9])-([0-2][0-9])-([0-5][0-9]).[\w]+$')
 
 def cb_filestat(args):
     filename = args["filename"]
