@@ -59,7 +59,7 @@ py['num_entries'] = 40
 # of plugindirectories, the standard pyblosxom plugins, and the xmlrpc
 # plugins.  You can list out as many directories you want, but they
 # should only contain the related plugins.
-# Example: py['load_plugins'] = ['/opt', '/usr/bin']
+# Example: py['plugin_dirs'] = ['/opt', '/usr/bin']
 #py['plugin_dirs'] = ['/path/to/my/plugins']
 
 # There are two ways for PyBlosxom to load plugins.  The first is the
