@@ -1,175 +1,140 @@
-    1. Installation
+Table of Contents
+=================
 
-        1. A quick note
-        2. Prerequisites
-        3. Simple Installation
-        4. Complicated Installation
-        5. Changing the Looks of the blog
-        6. Using .htaccess
-
-    1. Other Examples
-
-         Denying access to config.py or the INI file
-        1. Using a different library path for PyBlosxom files
-        2. Denying configuration via .htaccess
-
-                                1 Installation
-
-1.1 A quick note
-
-   This installation guide is not exhaustive. There are other ways to
-   install Pyblosxom depending on how you want it to behave as well as
-   what webserver you're installing Pyblosxom on top of. This
-   installation assumes you have some understanding of CGI, Apache
-   configuration, and know how to manipulate files and directories. If
-   this doesn't sound like you, maybe you should get a friend to help out
-   or ask for help on the pyblosxom-users mailing list.
-
-   Check out the wiki on the Pyblosxom website for up-to-date installation
-   information:
-
-      http://roughingit.subtlehints.net/pyblosxom
-
-1.2 Prerequisites
-
-   You need:
-     * a web-server (preferably Apache, but PyBlosxom can probably be
-       made to run on any web server with CGI abilities)
-     * python version 2.1 or later (http://wwww.python.org/)
-     * a text editor (notepad, vi, emacs, nano, ...)
-
-1.3 Site-wide Installation
-
-   For a site-wide installation,
-     1 Run the command 'python setup.py install' as superuser (root on u*ix)
-       to install the Pyblosxom libraries in your python installation.
-     2 Then copy the contents of the web/ directory into your cgi-bin
-       directory.  This should include pyblosxom.cgi and config.py.
-     3 Create a data directory that you'll store your flavour templates
-       and blog entries in.
-     4 Edit config.py in your cgi-bin. It is well commented so it
-       shouldn't be to hard.
-     5 Run "./pyblosxom.cgi".  This should run the installation verification
-       code which will verify your datadir and other configured properties.
-     6 Surf away to your new blog using a url (depending on how you did
-       your installation) something like
-       http://your-server-here/~username/cgi-bin/pyblosxom.cgi.
-
-1.4 Local Installation
-
-   If you don't have superuser access on your webserver you might need to
-   install the Pyblosxom library in a non standard directory and
-   set the "codebase" config property in your config.py file to that
-   directory.
-
-1.5 Changing the Looks of the blog
-
-   In the contrib/flavour_examples/ directory of the directory where you
-   untar'd Pyblosxom you find some examples on how you can change the
-   looks of your site by using flavours, just copy them into your content
-   directory and reload your blog. You can also add ?flav=<name> where
-   <name> is the name of your flavours name
-
-   You will want to edit these files after you have things working to
-   change the look and feel of your blog.
-
-1.6 Using .htaccess
-
-   Using .htaccess allows you to customize your installation so that your
-   URL will not look like this:
-
-      http://www.example.com/cgi-bin/pyblosxom.cgi
-
-   This does not make the site url easily accessible. You might want to
-   access your site with URLs like:
-
-      http://www.example.com/blog
-
-   Which looks nicer for people to type it. If you are allowed .htaccess
-   modifications by your hosting provider, and they allow Options
-   overriding, this is what you can do with your PyBlosxom installation.
-
-   Rename pyblosxom.cgi to blog (ensure that pyblosxom.cgi works first in
-   your normal installation).
-
-   Add these lines to your .htaccess file:
-
-      Options ExecCGI
-
-      <Files blog>
-      ForceType application/cgi-script
-      SetHandler cgi-script
-      </Files>
-
-   This will ensure that blog will be executed instead of viewed with
-   text/plain.
-
-   If you want to access blosxom as your main page, without even
-   accessing the /blog url, you can point blog to a directory index. This
-   will allow you to access your blog as:
-
-      http://www.example.com
-
-   Your blog will work as per normal. For this type of installation to
-   work, you need to add one more line in your .htaccess:
-
-      DirectoryIndex blog
-
-   There you go :)
-
-  1.6.1 Other Examples
-
-   Other ways of installing pyblosxom and hiding the cgi-bin/ cruft can
-   be found at
-   http://www.raelity.org/apps/blosxom/faq.shtml#general_hiding_blosxom_cgi 
-
-   Though the instructions are blosxom related they apply to pyblosxom as
-   well.
-
-1.7 Denying access to config.py or the INI file
-
-   In order to prevent visitors from peeking your configuration files,
-   you can do it a couple of ways:
-     * Storing Pyblosxom/ and config.py outside of the web server's
-       document root.
-     * Denying via .htaccess
-
-  1.7.1 Using a different library path for PyBlosxom files
-
-   If you install the Pyblosxom/ directory elsewhere, outside of your
-   www/ or cgi-bin/ directory, you can place config.py there as well.
-   Here's a simple scenario:
-     * You installed pyblosxom.cgi in /home/joe/www
-     * You wanted lib/ to be in /home/joe/pyblosxom directory
-     * Place the config.py in /home/joe/pyblosxom` directory
-
-   Your install tree should look like this:
-.
-`-- home
-    `-- joe
-        |-- pyblosxom
-        |   `-- Pyblosxom
-        |       |-- pyblosxom.py
-        |       `-- tools.py
-        `-- www
-            |-- pyblosxom.cgi
-        |   |-- config.py
-            `-- .htaccess
-
-   You will also need to change the "codebase" property in your config.py
-   file to:
-
-      py["codebase"] = "/home/joe/pyblosxom"
+1. A Quick Note
+2. Prerequisites
+3. Installation
+   3.1. Setting up PyBlosxom as a Single-User Local Installation
+   3.2. Setting up PyBlosxom as a Site-Wide Multi-User Installation
+4. Personalizing/Customizing PyBlosxom
+5. Additional Reading
 
 
-  1.7.2 Denying configuration via .htaccess
+1 A Quick Note
+==============
 
-   If you want to install PyBlosxom in one directory, you will need to
-   use .htaccess to deny access to config.py. This is as simple as:
-<Files config.py>
-order deny, allow
-deny from all
-</Files>
+There are many ways to install PyBlosxom. This particular installation 
+guide covers the typical installation for a single user on Apache with 
+PyBlosxom running as a CGI script.
+
+There are other ways to install Pyblosxom depending on how you want it 
+to behave as well as what webserver you're installing Pyblosxom on top of.
+
+This installation assumes you have some understanding of CGI, Apache 
+configuration, and know how to manipulate files and directories. If this 
+doesn't sound like you, maybe you should get a friend to help out or ask 
+for help on the pyblosxom-users mailing list.
 
 
+2 Prerequisites
+===============
 
+You need:
+
+    * a web-server (preferably Apache, but PyBlosxom can probably be made 
+      to run on any web server with CGI abilities)
+    * python version 2.1 or later
+    * a text editor (notepad, vi, emacs, nano, ...) 
+
+
+3 Installation
+==============
+
+3.1 Setting up PyBlosxom as a Single-User Local Installation
+------------------------------------------------------------
+
+These are the steps for setting up PyBlosxom as a single-user local 
+installation:
+
+   1. untar the PyBlosxom tar ball
+   2. copy web/pyblosxom.cgi and web/config.py to your cgi-bin directory
+   3. create a directory to hold your flavour templates and entries--this 
+      is your datadir
+   4. using any text editor, edit your config.py file--there are comments 
+      as to what all the properties affect
+        * make sure to set the datadir property to the full path of the 
+          directory you just created to store your data in
+        * make sure to set the codebase property to the directory you 
+          untarred PyBlosxom into 
+   5. run ./pyblosxom.cgi--this will verify your configuration and 
+      installation and help you with any issues
+   6. using any text editor, open up a file called firstpost.txt in your 
+      datadir and write: 
+
+%<-------------------------------------------
+First Post 
+<p> 
+   This is the first post in my blog. 
+</p> 
+%<-------------------------------------------
+
+   7. test it in a web-browser 
+
+3.2 Setting up PyBlosxom as a Site-Wide Multi-User Installation
+---------------------------------------------------------------
+
+For a site-wide simple installation:
+
+   1. untar the pyblosxom tar file into a temporary directory
+   2. switch over to a superuser such as root
+   3. run the command "python setup.py install" to install the Pyblosxom 
+      libraries in your python installation 
+
+That installs the PyBlosxom libraries site-wide. Each user needs to copy the 
+config.py and pyblosxom.cgi files into their cgi-bin directory, set up 
+a datadir, set up a plugins dir (though you could have a central one for 
+all users on the server), and edit their config.py file. Follow the steps a
+bove in the single-user installation for these steps.
+
+
+4 Personalizing/Customizing PyBlosxom
+=====================================
+
+After all that works you'll want to customize your blog:
+
+   1. copy flavour templates from contrib/flavour_examples into your datadir 
+      and edit them to your liking
+   2. create a plugins directory to hold your PyBlosxom plugins
+   3. add the new plugins directory to the plugin_dirs property in your 
+      config.py file
+   4. copy plugins from contrib/plugins into your plugins directory
+   5. for each plugin
+         1. open up the plugin file in any text editor and read the top of 
+            the file
+         2. configure the plugin according to the directions you see there
+         3. add the plugin to the load_plugins property in your config.py file 
+   6. run ./pyblosxom.cgi to verify the installation and configuration of 
+      your blog and plugins 
+
+You can find additional plugins in the PyBlosxom plugin registry on the 
+http://www.planetpyblosxom.org/ site.
+
+
+5 Additional Reading
+====================
+
+We have a wiki on the Pyblosxom website at:
+
+   http://wiki.subtlehints.net/moin/PyBlosxom
+
+It contains additional information on installing, configuring, and 
+personalizing your weblog.
+
+Additionally, there's the PlanetPyblosxom website which also provides
+additional documentation and has a plugin registry.  PlanetPyblosxom is
+at:
+
+   http://www.planetpyblosxom.org/
+
+
+6 That's it!
+============
+
+If you have problems, read through the documentation on the Pyblosxom
+website and if you can't find your answer feel free to ask questions 
+on the pyblosxom-users mailing list.
+
+Some of us hang out during the day on IRC at #pyblosxom on freenode.org.
+
+
+Good luck!  Happy blogging!
