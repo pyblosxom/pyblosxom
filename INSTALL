@@ -1,0 +1,6 @@
+For a simple installation, extract pyblosxom.cgi and the libs/ directory into
+your cgi-bin/. If you do not like the libs/ to be in the cgi-bin, you can place
+it elsewhere outside of DocumentRoot of your web server and comment out the 4th
+line in pyblosxom.cgi to reflect where your path is.
+
+sys.path.append('/path/to/where/lib/directory/is')

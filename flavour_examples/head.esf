@@ -1,0 +1,6 @@
+#pyblosxom Newsfeed, in Episula Syndication Feed format (ESF)
+#http://roughingit.subtlehints.net/pyblosxom?flav=esf
+title	$blog_title
+contact	wari@wari.per.sg (Wari Wahab)
+link	$base_url
+

@@ -1,0 +1,4 @@
+The contrib directory contains programs that can be useful to your pyblosxom
+installation, currently it contains a webui for entering entries, a movable
+type export format to blosxom directory formats, and a 404 handler script to
+allow for creation of static pages.

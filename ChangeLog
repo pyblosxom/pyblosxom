@@ -1,0 +1,84 @@
+2002-11-23 Wari Wahab <pyblosxom@wari.per.sg>
+	* 3rd Revision release
+	* Changes in preformatters. All preformatters now resides in
+	  libs/preformatters/ directory. The do not have the preformatter_
+	  prefix in the filename anymore. Preformatters should still work
+	  without changes except for the filename. If possible (for the
+	  future) preformatters should subclass PreFormatterBase
+	* Entry bugs fixed, if you set a date or category in PATH_INFO, you
+	  should get a full list of entries other than just py['num_entries']
+	* Support for Etag and Last-Modified. Should save some bandwidth here.
+	  Unfortunately not a user definable option yet
+	* Pyblosxom now generates 404 errors when a query returns no entries
+	* Added 404_handler.py in contrib directory for users interested in
+	  Funky Caching
+	* Added an excellent preformatter from John Abe
+	* Added a funky preformatter script by Abe Fettig
+	* pyarchives.py is now located in libs/plugins/ directory, to clean up
+	  distribution as well as for future expansion
+	* added logRequest() method in libs/tools.py. Look at pyblosxom.py on
+	  how to activate it (grep logRequest pyblosxom.py). This is useful if
+	  you cannot get access to your own raw http logs. Log format is NCSA
+	  httpd compatible, so you can use tools like webalizer to analyze
+	  your log files.
+	* NOT in this version - Fixes for Windows Webservers. See - 
+	  http://roughingit.subtlehints.net/py_stuff/thingsTodo/pyblosxom_for_Win32_.html
+
+	
+2002-11-03 Wari Wahab <pyblosxom@wari.per.sg>
+	* 2nd Revision release
+	* Added fix to reading files that pyblosxom cannot read by Nick
+	* Flavour Overrides implementation, requested by Wam and done by Nick
+	* Default Parser implementation (by Nick as well)
+	* Code splitup in bite sized chunks
+	* You can add new variables just by using #var stuff in your entries,
+	  useful for "who's responsible" in blogs
+	* Pickles cache files, make pyblosxom really fast (Disabled by
+	  default)
+	* Improved date handling instead of a boring <span>, you can now use
+	  divs, see date_header and date_footer in flavours (request and
+	  partly coded by Juri Pakaste of Straw RSS parser tool)
+	* Includes code to show Monthly archives (see pyarchives.py)
+	  enabled by:
+	        from libs import pyarchives
+		          self.py['archivelinks'] =
+		pyarchives.genLinearArchive(self.py['datadir'],
+			  self.py['base_url'])
+	  so you can use $archivelinks in your flavours. Comment out the two
+	  lines in libs/pyblosxom.py to disable
+	* Murdered more bugs too minor to list out
+			   
+
+2002-09-15 Wari Wahab <pyblosxom@wari.per.sg>
+	* 1st Revision Release - pyblosxom 0+5i_rev1
+	
+	* Fixed sorting mechanism so that it's blagg compatible
+	
+	* New $tags to support better permalinks, these are:
+	$base_url      - URL of pyblosxom
+	$file_path     - Path right up to the filename, without .txt extension
+	$absolute_path - Directory name without filename attached
+
+	* ESF format added in by default:
+	See http://www.aquarionics.com/nodes/view.php?name=esf
+
+	* Links to posts now supports full pathname + flavour:
+	eg: http://roughingit.subtlehints.net/pyblosxom/category/filename.flavour
+	Where flavour is html, rss3, esf or many others possible with
+	templates
+
+	* Supports caching of pages that uses a preformatter (Disabled by default):
+	This speeds up rendering the pages especially if the preformatters are
+	very show.
+
+	* Configuration using Windows style INI:
+	Really helps if you upgrade pyblosxom a lot and hate changing data in
+	the code, just edit *configFile* variable to point to your INI file
+
+	* XML-RPC interface, supports bloggerAPI:
+	Disabled by default, requires the blogs directory to be writable by
+	the webserver, different categories shows up as differing blogIDs,
+	tested with w.bloggar and jericho
+	
+2002-09-15 Wari Wahab <pyblosxom@wari.per.sg>
+	* Initial Release - pyblosxom 0+5i
