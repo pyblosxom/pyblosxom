@@ -153,8 +153,8 @@ def cb_prepare(args):
 
 def cb_logrequest(args):
     """
-    This callback is used to notify plugins of the current PyBlosxom
-    request for the purposes of logging.
+    The logrequest callback is used to notify plugins of the current 
+    PyBlosxom request for the purposes of logging.
 
     Functions that implement this callback will get an args dict
     containing:
@@ -183,26 +183,39 @@ def cb_logrequest(args):
     pass
 
 
-def cb_filelist(args = {'request' : Request()}):
+def cb_filelist(args):
     """
-    A callback to generate a list of L{EntryBase} subclasses. 
+    The filelist callback allows plugins to generate the list of entries
+    to be rendered.  Entries should be L{EntryBase} derivatives--either
+    by instantiating L{EntryBase}, L{FileEntry}, or creating your own
+    L{EntryBase} subclass.
     
-    If C{None} is returned, then the callback chain will try the next plugin in
-    the list.
+    Functions that implement this callback will get an args dict
+    containing:
 
-    @param args: A dict containing a L{Request()} object
-    @type args: dict
-    @returns: None or list of L{EntryBase}.
-    @rtype: list
+     - C{'request'} - the PyBlosxom Request
+
+    Functions that implement this callback should return None if they
+    don't plan on generating the entry list or a list of entries.
+    if they do.  When a function returns None, the callback will continue
+    to the next function to see if it will return a list of entries.
+    When a function returns a list of entries, the callback will stop.
+
+    @param args: a dict containing C{'request'}
+    @type  args: dict
+
+    @returns: None or list of L{EntryBase} objects
+    @rtype:   list
     """
     pass
 
 
-def cb_pathinfo(args = {'request' : Request()}):
+def cb_pathinfo(args):
     """
-    A callback to allow plugins to alter the way HTTP PATH_INFO is parsed.
-    The following keys must be set in args['request'].getData() in order to
-    prevent conflicts with the default renderer and entry parsers::
+    The pathinfo callback allows plugins to parse the HTTP PATH_INFO
+    item.  This item is stored in the http dict of the L{Request} object.
+    Functions would parse this as they desire, then set the following
+    variables in the data dict of the L{Request} object::
 
       'bl_type'       (dir|file)
       'pi_bl'         typically the same as PATH_INFO
@@ -211,62 +224,77 @@ def cb_pathinfo(args = {'request' : Request()}):
       'pi_da'         dd
       'root_datadir'  full path to the entry folder or entry file on filesystem
       'flavour'       The flavour gathered from the URL
+
+    Functions that implement this callback will get an args dict containing:
+
+     - C{'request'} - a L{Request} object
+
+    Functions that implement this callback should make the modifications
+    to the data dict in place--no need to return anything.
+
+    @param args: a dict containing C{'request'}
+    @type  args: dict
     """
     pass
 
 
-def cb_renderer(args = {'request' : Request()}):
+def cb_renderer(args):
     """
-    A callback to returb a L{Pyblosxom.renderers.base.RendererBase} instance.
-    The default renderer is the ones available in the L{Pyblosxom.renderers} as
-    default, and called using::
-                
-      tools.importName('Pyblosxom.renderers', 
-              config.get('renderer', 'blosxom')).Renderer(self._request, 
-              config.get('stdoutput', sys.stdout)))
-    
-    If C{None} is returned, then the callback chain will try the next plugin in
-    the list.
+    The renderer callback allows plugins to specify a renderer to use by
+    returning a renderer instance to use.  If no renderer is specified,
+    we use the default blosxom renderer.
 
-    @param args: A dict containing a L{Request()} object
+    Functions that implement this callback will get an args dict
+    containing:
+
+     - C{'request'} - the PyBlosxom Request
+
+    Functions that implement this callback should return None if they
+    don't want to specify a renderer or the renderer object instanct
+    if they do.  When a function returns a renderer instance, processing
+    stops.
+
+    @param args: a dict containing C{'request'}
     @type args: dict
+
     @returns: None or a L{Pyblosxom.renderers.base.RendererBase} instance
     @rtype: object instace
     """
     pass
 
 
-def cb_entryparser(args = {'txt': 'A blosxom text entryparser'}):
+def cb_entryparser(entryparsingdict):
     """
-    A callback that tranforms a dict, containing a list of keys - the extension
-    of files it can take, and a function reference, that accepts two arguments,
-    a filename, and the standard request object.
+    The entryparser callback allows plugins to register the entryparsers
+    they have.  Entry parsers are linked with a filename extension.  For
+    example, the default blosxom text entry parser will be used for
+    any file ending in ".txt".
 
-    The function is supposed to return a dict, at least containing the key
-    C{'title'} and C{'story'}. Entryparsers can use other callback facilities
-    like L{cb_preformat} and the L{cb_postformat} callbacks. See
-    L{Pyblosxom.pyblosxom.blosxom_entry_parser} on how to use such facilities.
+    Functions that implement this callback will get the entryparser
+    dict consisting of file extension -> entry parsing function pairs.
 
-    All outputs of entryparsers (and together with preformatters and
-    postformatters) will be cached by the caching mechanisms.
-    
-    Plugins are supposed to add more keys as the extension of the file it can
-    handle.  A plugin can also replace the standard txt entryparser if the need
-    be.  All plugins that registers C{cb_entryparser} are given a chance 
-    to take a peek at the args, append to it, or modify it (not advisable).
+    Functions that implement this callback should return the entryparser
+    dict after modifying it.
 
-    By default, typical contents of args::
-        {'txt': L{Pyblosxom.pyblosxom.blosxom_entry_parser}}
+
+    B{A bit about entry parsing functions}
+
+    Entry parsing functions take in a filename and the L{Request} object.
+    They then open the file and parse it out.  The can call L{cb_preformat}
+    and L{cb_postformat} as they see fit.  They should return a dict
+    containing at least C{'title'} and C{'story'} keys.  The C{'title'}
+    should be a single string.  The C{'story'} should be a list of 
+    strings (with \\n at the end).
 
     Here's an example code that reads *.plain files::
 
         import os
-        def cb_entryparser(args):
+        def cb_entryparser(entryparsingdict):
             \"""
             Register self as plain file handler
             \"""
-            args['plain'] = parse
-            return args
+            entryparsingdict['plain'] = parse
+            return entryparsingdict
 
         def parse(filename, request):
             \"""
@@ -278,34 +306,33 @@ def cb_entryparser(args = {'txt': 'A blosxom text entryparser'}):
             entryData['story'] = open(filename).read()
             return entryData
 
-    Upon a successful registration, pyblosxom will now read all *.plain and
-    *.txt files from the data directory
-
-    @param args: A dict that comtains function references to entryparsers
+    @param args: a dict that comtains file extension -> entry parsing 
+        function pairs
     @type args: dict
+
+    @returns: the entry parsing dict
+    @rtype: dict
     """
     pass
 
 
-def cb_preformat(args = 
-        {'parser': 'somepreformatter', 
-         'story': ['The\n','text\n'], 
-         'request': Request()}):
+def cb_preformat(args):
     """
-    A callback for preformatters.
-    
-    A preformatter is a text transformation tool.  Only one preformatter can
-    run at an entry at a time. In this chain, all preformatters are called
-    until one returns a string and not C{None}.
+    The preformat callback acts in conjunction with the entryparser
+    that handled the entry to do a two-pass formatting of the entry.
 
-    Preformatters should act on the parser, and if it matches what the
-    preformatter can handle it can carry on an deal with the story.
+    Functions that implement cb_preformat are text transformation tools.
+    Once one of them returns a transformed entry, then we stop processing.
 
-    C{args} contains:
+    Functions that implement this callback will get an args dict
+    containing:
 
-     - C{'parser'} - A string that determines whether a preformatter should run
-     - C{'story'} - A list containing lines of text (with '\\n' included)
+     - C{'parser'} - a string that indicates whether a preformatter should run
+     - C{'story'} - a list containing lines of text (with '\\n' included)
      - C{'request'} - a L{Request} object
+
+    Functions that implement this callback should return None if they
+    didn't modify the story or a single story string.
 
     A typical preformat plugin look like::
 
@@ -319,10 +346,11 @@ def cb_preformat(args =
             text = re.sub('\\n','<br />',text)
             return '<p>%s</p>' % text
 
-    @param args: A dict containing a L{Request()} object, parser identifier and
-            story list of lines
+    @param args: a dict containing C{'request'} (L{Request} object), 
+        C{'story'} (list of strings), and C{'parser'} (single string)
     @type args: dict
-    @returns: A string containing formatted text
+
+    @returns: string containing the formatted text
     @rtype: string
     """
     pass
@@ -527,4 +555,3 @@ def cb_foot(args = {'renderer':'The Blosxom renderer',
     @type args: dict
     """
     pass
-
