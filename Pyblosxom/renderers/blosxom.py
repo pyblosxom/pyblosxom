@@ -13,39 +13,23 @@ except ImportError:
 
 # Ugly default templates, have to though :(
 HTML = {'content_type' : 'text/html',
-        'head' : """<html><head><link rel="alternate" type="application/rss+xml" title="RSS" href="$url/?flav=rss" /><title>$blog_title $pi_da $pi_mo $pi_yr</title></head><body><center><font size="+3">$blog_title</font><br />$pi_da $pi_mo $pi_yr</center><p />""",
+        'head' : """<html><head><title>$blog_title $pi_da $pi_mo $pi_yr</title></head><body><h1>$blog_title</h1><p>$pi_da $pi_mo $pi_yr</p>""",
         'date_head' : '<div class="blosxomDayDiv">\n<span class="blosxomDate">$date</span>',
-        'story' : """<p><a name="$fn"><b>$title</b></a><br />$body<br /><br />posted at: $ti | path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></p>\n""",
+        'story' : """<div class="blosxomStory"><a name="$fn"><b>$title</b></a><br />$body<br /><br />posted at: $ti | path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></div>\n""",
         'date_foot' : '</div>',
-        'foot' : """<p /><center><a href="http://roughingit.subtlehints.net/pyblosxom"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" border="0" /></body></html>"""}
-
+        'foot' : """<p><a href="http://roughingit.subtlehints.net/pyblosxom"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" alt="Made with PyBlosxom" border="0" /></a></p></body></html>"""}
 
 RSS = {'content_type' : 'text/xml',
        'head' : """<?xml version="1.0"?>\n<!-- name="generator" content="$pyblosxom_name/$pyblosxom_version" -->\n<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n<rss version="0.91">\n  <channel>\n    <title>$blog_title $pi_da $pi_mo $pi_yr</title>\n    <link>$url</link>\n    <description>$blog_description</description>\n    <language>$blog_language</language>\n""",
        'story' : """<item>\n    <title>$title</title>\n    <link>$base_url/$file_path.html</link>\n    <description>$body</description>\n  </item>\n""",
        'foot' : '   </channel>\n</rss>'}
 
-
-RSS3 = {'content_type' : 'text/plain',
-        'head' : """title: $blog_title\ndescription: $blog_description\nlink: $url\ncreator: $blog_author\nerrorsTo: $blog_author\nlang: $blog_language\n\n\n""",
-        'story' :  """title: $title\nlink: $base_url/$file_path.html\ncreated: $w3cdate\nsubject: $path\nguid: $file_path\n\n""",
-        'foot' : ''}
-
-
-ESF = {'content_type' : 'text/plain',
-        'head' : """title: $blog_title\ncontact: contact@example.com (The Contact Person)\nlink: $url\n\n\n""",
-        'story' :  """$mtime\t$title\t$base_url/$file_path\n""",
-        'foot' : ''}
-
-
 ERROR = {'content_type' : 'text/plain',
-         'head' : """ Error: I'm afraid this is the first I've heard of a "$flavour" flavoured pyblosxom.\n Try dropping the "?flav=$flavour" bit from the end of the URL.\n\n"""}
+         'head' : """Error: I'm afraid this is the first I've heard of a "$flavour" flavoured pyblosxom.\n Try dropping the "?flav=$flavour" bit from the end of the URL.\n\n"""}
 
 DEFAULT_FLAVOURS = {'html' : HTML, 
-                    'rss' : RSS, 
-                    'error' : ERROR, 
-                    'rss3' : RSS3, 
-                    'esf' : ESF}
+                    'rss' : RSS,
+                    'error' : ERROR}
 
 class BlosxomRenderer(RendererBase):
     def __init__(self, request, stdoutput = sys.stdout):
