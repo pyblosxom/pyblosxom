@@ -40,8 +40,12 @@ if __name__ == '__main__':
 
     if not os.environ.get("REQUEST_METHOD", ""):
         if len(sys.argv) > 1 and sys.argv[1] == "--static":
+            if "--incremental" in sys.argv:
+                incremental = 1
+            else:
+                incremental = 0
             p = PyBlosxom(req)
-            p.runStaticRenderer()
+            p.runStaticRenderer(incremental)
         else:
             test_installation(req)
 
