@@ -301,6 +301,7 @@ def cb_story(args):
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 and renderer.flavour.has_key('comment-story'):
         template = renderer.flavour.get('comment-story','')
+        args['template'] = template
     else:
         entry['num_comments'] = getCommentCount(entry,config)
         return template
@@ -337,3 +338,4 @@ def cb_start(args):
         config['comment_dir'] = os.path.join(config['datadir'],'comments')
     if not config.has_key('comment_ext'):
         config['comment_ext'] = 'cmt'
+
