@@ -332,10 +332,11 @@ def _buildPostId(request, blogid, struct):
     count = _getEntryCount(request)
 
     if not category == '':
-        postId = os.path.join(structCategories[0], "%d" % count)
+        postId = os.path.join(category, "%d" % count)
     else:
         postId = os.path.join("%d" % count)
 
+    tools.log(postId)
     return postId
 
 def _getEntryCount(request):
