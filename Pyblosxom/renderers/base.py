@@ -53,7 +53,7 @@ class RendererBase:
                     # Modify header
                     renderer.addHeader('Content-type', 'image/gif')
                     renderer.addHeader('Content-Length', len(data))
-                    renderer.showHeader()
+                    renderer.showHeaders()
 
                     # Write to output
                     renderer.write(data)
@@ -133,10 +133,10 @@ class RendererBase:
         """
         if header:
             if self._header:
-                self.showHeader()
+                self.showHeaders()
             else:
                 self.addHeader('Content-Type', 'text/plain')
-                self.showHeader()
+                self.showHeaders()
 
         if self._content:
             self.write(self._content)
