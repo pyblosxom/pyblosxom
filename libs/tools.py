@@ -90,7 +90,7 @@ def logRequest(filename = '', returnCode = '200'):
 
     This calls the chain with (filename, returnCode) and returns None
     """
-    api.logRequest.executeTransform((filename, returnCode))
+    api.logRequest.executeHandler((filename, returnCode))
 
 def Walk(root = '.', 
          recurse = 0, 
@@ -162,3 +162,4 @@ def generateRandStr(minlen=5, maxlen=10):
     for x in range(randStr_size):
         randStr += whrandom.choice(chars)
     return randStr
+
