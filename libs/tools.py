@@ -1,4 +1,4 @@
-import sgmllib, re, os, string
+import sgmllib, re, os, string,  types
 import api
 
 month2num = { 'nil' : '00',
@@ -52,16 +52,22 @@ class Replacer:
         replacement string."""
         key = matchobj.group(1)
         if self.dict.has_key(key):
-            return str(self.dict[key])
+            r = self.dict[key]
+            if type(r) != types.StringType and type(r) != types.UnicodeType:
+                r = str(r)
+            if type(r) != types.UnicodeType: 
+                # convert strings to unicode, assumes strings in iso-8859-1
+                r = unicode(r, 'iso-8859-1', 'replace')
+            return r
         else:
-            return ''
+            return u''
 
 def parse(dict, template):
     """parse(dict) -> string
     This method parses the open file object passed, replacing any keys
     found using the replacement dictionary passed. From OPAGCGI library"""
     replacer = Replacer(dict).replace
-    replaced = '' + re.sub(r'(?<!\\)\$([A-Za-z0-9_\-]+)', replacer, template)
+    replaced = u'' + re.sub(ur'(?<!\\)\$([A-Za-z0-9_\-]+)', replacer, template)
     return replaced
 
 def filestat(filename):
