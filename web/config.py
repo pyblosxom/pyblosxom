@@ -26,6 +26,10 @@ py['blog_encoding'] = "iso-8859-1"
 # Where are this blog's entries kept?
 py['datadir'] = "/path/to/blog"
 
+# List of strings with directories that should be ignored (e.g. "CVS")
+# ex: py['ignore_directories'] = ["CVS", "temp"]
+py['ignore_directories'] = []
+
 # Should I stick only to the datadir for items or travel down the directory
 # hierarchy looking for items?  If so, to what depth?
 # 0 = infinite depth (aka grab everything), 1 = datadir only, n = n levels down
