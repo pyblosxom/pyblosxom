@@ -37,12 +37,18 @@ comments:
 Also, for any entry that you don't want to have comments, just add
 "nocomments" to the properties of the entry.
 """
-import cgi, glob, os.path, re, time, cPickle
+import cgi, glob, os.path, re, time, cPickle, os
 from xml.sax.saxutils import escape
 from Pyblosxom import tools
 from Pyblosxom.entries.base import EntryBase
 
-tools.make_logger('/tmp/comments.log')
+def cb_start(args):
+    request = args["request"]
+    config = request.getConfiguration()
+    logdir = config.get("logdir", "/tmp/")
+
+    logfile = os.path.normpath(logdir + os.sep + "comments.log")
+    tools.make_logger(logfile)
     
 def verify_installation(request):
     config = request.getConfiguration()

@@ -15,11 +15,17 @@ Implemented methods:
   - metaWeblog.getRecentPosts
 
 """
-import os, xmlrpclib, re, time
+import os, xmlrpclib, re, time, os.path
 from Pyblosxom import tools, plugin_utils
 from Pyblosxom.entries.fileentry import FileEntry
 
-# tools.make_logger('/tmp/metaweblog.log')
+def cb_start(args):
+    request = args["request"]
+    config = request.getConfiguration()
+    logdir = config.get("logdir", "/tmp")
+    logfile = os.path.normpath(logdir + os.sep + "metaweblog.log")
+
+    tools.make_logger(logfile)
 
 #
 # Pyblosxom callback API functions

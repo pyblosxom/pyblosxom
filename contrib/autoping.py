@@ -27,7 +27,7 @@ import sys
 import re, sgmllib, sys, urllib, xmlrpclib
 from xml.sax import parseString, SAXParseException
 from xml.sax.handler import ContentHandler
-import cPickle, os
+import cPickle, os, os.path
 
 # Get our pyblosxom specifics here
 from Pyblosxom import tools
@@ -35,7 +35,9 @@ from Pyblosxom.pyblosxom import blosxom_entry_parser
 from Pyblosxom.Request import Request
 import config
 
-tools.make_logger('/tmp/autoping.log')
+logdir = config.get("logdir", "/tmp")
+logfile = os.path.normpath(logdir + os.sep + "autoping.log")
+tools.make_logger(logfile)
 
 def excerpt(filename, title, body, blogname):
     """ filename,title,body => url,args

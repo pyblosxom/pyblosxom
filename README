@@ -35,6 +35,10 @@ Pertinent to users:
    to use for a given category or parent categories.  Thanks to Nathan 
    for fixing this.
 
+10. We added a "logdir" property to config.  PyBlosxom (and plugins) will
+    create logs in this directory so the directory has to have write
+    access for whatever user the webserver uses to run the script.
+
 
 Pertinent to developers and plugin developers:
 ----------------------------------------------

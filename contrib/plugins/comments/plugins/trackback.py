@@ -8,10 +8,8 @@ py['trackback_urltrigger'] = "/trackback"
 %<---------------------------------------------------------
 
 """
-import cgi
+import cgi, os, os.path
 from Pyblosxom import tools
-
-tools.make_logger('/tmp/trackback.log')
 
 tb_good_response = """<?xml version="1.0" encoding="iso-8859-1"?>
 <response>
@@ -23,6 +21,14 @@ tb_bad_response = """<?xml version="1.0" encoding="iso-8859-1"?>
 <error>1</error>
 <message>%s</message>
 </response>"""
+
+def cb_start(args):
+    request = args["request"]
+    config = request.getConfiguration()
+    logdir = config.get("logdir", "/tmp")
+    logfile = os.path.normpath(logdir + os.sep + "trackback.log")
+
+    tools.make_logger(logfile)
 
 def verify_installation(request):
     config = request.getConfiguration()
