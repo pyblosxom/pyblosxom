@@ -78,6 +78,24 @@ def initialize_plugins(plugin_dirs, plugin_list):
         catalogue_plugin(_module)
         plugins.append(_module)
 
+def get_plugin_by_name(name):
+    """
+    This retrieves a plugin instance (it's a Python module instance)
+    by name.
+
+    @param name: the name of the plugin to retrieve (ex: "xmlrpc")
+    @type  name: string
+
+    @returns: the Python module instance for the plugin or None
+    @rtype: Python module
+    """
+    global plugins
+    if plugins:
+        for mem in plugins:
+            if mem.__name__ == name:
+                return mem
+    return None
+
 def get_plugin_list(plugin_list, plugin_dirs):    
     """
     This handles the situation where the user has provided a series of
