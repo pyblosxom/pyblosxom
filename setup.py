@@ -51,6 +51,7 @@ matrix = { "win32": "win32",
            "cygwin": "nix",
            "netbsd": "nix",
            "openbsd": "nix",
+           "darwin": "nix",
            "freebsd": "nix" }
 
 for mem in matrix.keys():
