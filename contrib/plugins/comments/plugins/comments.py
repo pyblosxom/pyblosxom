@@ -286,7 +286,7 @@ def cb_head(args):
 
     newtemplate = renderer.flavour.get('comment-head','')
     if not newtemplate == '' and len(renderer.getContent()) == 1:
-        template = newtemplate
+        args['template'] = newtemplate
     return template
         
 def cb_story(args):
