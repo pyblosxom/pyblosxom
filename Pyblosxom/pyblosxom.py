@@ -4,7 +4,7 @@ and default handlers are defined here.
 """
 
 # Python imports
-from __future__ import nested_scopes
+from __future__ import nested_scopes, generators
 import os, time, re, sys
 import cgi
 try: from cStringIO import StringIO
@@ -388,7 +388,7 @@ class Request(object):
         """
         Copies methods from the underlying input stream to the request object.
         """
-        props = ['next', 'read', 'readline', 'readlines', 'seek', 'tell']
+        props = ['read', 'readline', 'readlines', 'seek', 'tell']
         for prop in props:
             setattr(self, prop, getattr(self._in, prop))
 
@@ -396,7 +396,7 @@ class Request(object):
         """
         Can't copy the __iter__ method over from the StringIO instance cause
         iter looks for the method in the class instead of the instance.
-        So can't do this with _copy_members, have to define it seperatly.
+        So can't do this with __copy_members, have to define it seperatly.
         See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
         """
         return self._in
@@ -580,13 +580,13 @@ class Response(object):
         self._headers_sent = False
         self.headers = {}
         self.status = "200 OK"
-        self._copy_members()
+        self.__copy_members()
     
-    def _copy_members(self):
+    def __copy_members(self):
         """
         Copies methods from the underlying output buffer to the response object.
         """
-        props = ['close', 'flush', 'next', 
+        props = ['close', 'flush', 
             'read', 'readline', 'readlines', 'seek', 'tell',
             'write', 'writelines']
         for prop in props:
@@ -596,7 +596,7 @@ class Response(object):
         """
         Can't copy the __iter__ method over from the StringIO instance cause
         iter looks for the method in the class instead of the instance.
-        So can't do this with _copy_members, have to define it seperatly.
+        So can't do this with __copy_members, have to define it seperatly.
         See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
         """
         return self._out
