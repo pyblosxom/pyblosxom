@@ -1,6 +1,15 @@
 # vim: tabstop=4 shiftwidth=4
+"""
+If a filename contains a timestamp in the form of YYYY-MM-DD-hh-mm,
+change the mtime to be the timestamp instead of the one kept by the
+filesystem. For example, a valid filename would be
+foo-2002-04-01-00-00.txt for April fools day on the year 2002
+"""
 from libs import api
 import os, re, time
+
+__author__ = 'Tim Roberts http://www.probo.com/timr/blog/'
+__version__ = '$Id$'
 
 DAYMATCH = re.compile('([0-9]{4})-([0-1][0-9])-([0-3][0-9])-([0-2][0-9])-([0-5][0-9]).txt')
 
