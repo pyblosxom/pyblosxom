@@ -23,6 +23,7 @@ def catalogue_plugin(plugin_module):
     @param plugin_module: the module to catalogue
     @type  plugin_module: module
     """
+    global callbacks
     listing = dir(plugin_module)
 
     listing = [m for m in listing if m.startswith("cb_")]
@@ -41,6 +42,7 @@ def get_callback_chain(chain):
         empty list)
     @rtype: list of functions
     """
+    global callbacks
     return callbacks.get(chain, [])
 
 def initialize_plugins(configdict):
@@ -54,6 +56,7 @@ def initialize_plugins(configdict):
     load_plugins key does not exist, then we load all the plugins in the
     plugins directory using an alphanumeric sorting order.
     """
+    global callbacks, plugins
     if callbacks != {}:
         return
 
@@ -93,6 +96,7 @@ def initialize_xmlrpc_plugins(configdict):
             return {'system.testing': test,
                     'system.helloWorld': helloWorld}
     """
+    global methods
     if methods != {}:
         return
 

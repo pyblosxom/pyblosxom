@@ -46,6 +46,8 @@ class PyBlosxom:
         else:
             config['base_url'] = config.get('base_url', '')
 
+        if len(config['datadir']) > 0 and config['datadir'][-1] == os.sep:
+            config['datadir'] = config['datadir'][:-1]
 
     def defaultEntryParser(self, filename, request):
         """
@@ -265,7 +267,9 @@ class PyBlosxom:
         import plugin_utils
         plugin_utils.initialize_plugins(config)
 
-        
+        # inject our own startup into the callback thing
+        plugin_utils.callbacks.setdefault("startup", []).append(self.startup)
+
         # get the renderer we want to use
         r = config.get("renderer", "blosxom")
 
