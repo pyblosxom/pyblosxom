@@ -1,3 +1,19 @@
+2003-01-15 Wari Wahab <pyblosxom@wari.per.sg>
+	* Modified 404_handler.py to work with new pyblosxom subsystem
+
+2003-01-15 Will http://www.bluesock.org/~willg/me/
+	* Split the plugin initializtion into two stages - initialization and
+	  load.
+	* Added an api module which holds things the plugin can register with
+	  to receive specific event notices as well as become part of the
+	  callback chains for manipulating data.
+	* Added a filestats function to the tools module which wraps os.stat
+	  as well as other members in the api.filestats callback chain.
+	* Added a pyfilenamemtime module that examines file names and if they
+	  match yyyy-mm-dd-HH-MM, then it fixes the mtime on the os.stat
+	  tuple.
+	
+
 2003-01-09 Wari Wahab <pyblosxom@wari.per.sg>
 	* Cleanup some codes of the main pyblosxom.cgi
 	* Remove conditionalHTTP and 404 error generator to be plugins (placed
