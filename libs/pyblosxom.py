@@ -248,21 +248,22 @@ class PyBlosxom:
             print 'Back to <a href="%(base_url)s">%(blog_title)s</a>' % self.py
             sys.exit()
     
-        # Get our first file timestamp for ETag and Last Modified
-        # Last-Modified: Wed, 20 Nov 2002 10:08:12 GMT
-        # ETag: "2bdc4-7b5-3ddb5f0c"
-        lastModed = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(valid_list[0]['mtime']))
-        if ((os.environ.get('HTTP_IF_NONE_MATCH','') == '"%s"' % valid_list[0]['mtime']) or
-            (os.environ.get('HTTP_IF_NONE_MATCH','') == '%s' % valid_list[0]['mtime']) or
-            (os.environ.get('HTTP_IF_MODIFIED_SINCE','') == lastModed)):
-            print 'Status: 304 Not Modified\nETag: "%s"\nLast-Modified: %s' % (
-                    valid_list[0]['mtime'], lastModed)
-            # Enable if you want logging
-            #tools.logRequest(returnCode = '304')
-            import sys
-            sys.exit()
-        print 'ETag: "%s"' % valid_list[0]['mtime']
-        print 'Last-Modified: %s' % lastModed
+        if self.py['conditionalHTTP'] = 'yes':
+            # Get our first file timestamp for ETag and Last Modified
+            # Last-Modified: Wed, 20 Nov 2002 10:08:12 GMT
+            # ETag: "2bdc4-7b5-3ddb5f0c"
+            lastModed = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(valid_list[0]['mtime']))
+            if ((os.environ.get('HTTP_IF_NONE_MATCH','') == '"%s"' % valid_list[0]['mtime']) or
+                (os.environ.get('HTTP_IF_NONE_MATCH','') == '%s' % valid_list[0]['mtime']) or
+                (os.environ.get('HTTP_IF_MODIFIED_SINCE','') == lastModed)):
+                print 'Status: 304 Not Modified\nETag: "%s"\nLast-Modified: %s' % (
+                        valid_list[0]['mtime'], lastModed)
+                # Enable if you want logging
+                #tools.logRequest(returnCode = '304')
+                import sys
+                sys.exit()
+            print 'ETag: "%s"' % valid_list[0]['mtime']
+            print 'Last-Modified: %s' % lastModed
 
         self.flavour = self.getFlavour(self.py['flavour'])
         self.py['content-type'] = self.flavour['content_type'].strip()

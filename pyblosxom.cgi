@@ -40,6 +40,9 @@ py['cache_enable'] = 0
 # Cached file extension.
 py['cache_ext'] = '.compiled'
 
+# Enable Etag and Last-Modified headers? 'yes' to enable
+py['conditionalHTTP'] = ''
+
 # XML-RPC data
 trackback = {}
 # enable XML-RPC interface? Default no. Use 1 to enable
@@ -61,6 +64,7 @@ xmlrpc['path'] = '/RPC2'
 __author__ = 'Wari Wahab <wari@wari.per.sg>'
 __version__ = "0+5i_rev3"
 __date__ = "$Date$"
+__revision__ = "$Revision$"
 __copyright__ = "Copyright (c) 2002 Wari Wahab"
 __license__ = "Python"
 py['pyblosxom_version'] = __version__
