@@ -1,3 +1,6 @@
+2003-02-02 Wari Wahab <pyblosxom@wari.per.sg> pyblosxom 0.6
+	* Released as version 0.6
+
 2003-01-29 Wari Wahab <pyblosxom@wari.per.sg>
 	* Added configuration override feature in flavours. This allows users
 	  to modify their main configuration based on the templates' needs.
