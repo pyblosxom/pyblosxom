@@ -1,3 +1,52 @@
+2004-02-19 Will Guaraldi <willg at bluesock dot org>
+	* added testinstallation mode to ease pyblosxom installation and
+	  configuration
+	* added a "codebase" parameter to config.py allowing users
+	  to put their PyBlosxom installation wherever they want without
+	  having to edit their pyblosxom.cgi script.
+
+2004-02-18 Will Guaraldi <willg at bluesock dot org>
+	* added plugin_utils.get_plugin_by_name function
+
+2004-02-17 Will Guaraldi <willg at bluesock dot org>
+	* replaced the existing xmlrpc code with an xmlrpc dispatcher
+	  plugin and an xmlrpc blogger plugin.
+	* added a handle callback allowing plugins to handle an entire
+	  PyBlosxom request as they so desire.
+
+2004-02-15 Will Guaraldi <willg at bluesock dot org>
+	* added the portalocker locking code to the tools module.
+
+2004-02-13  Theodore W. Leung  <twl@dev>
+	* overhauled autoping
+
+2004-02-07 Theodore W. Leung <twl@dev>
+	* added a logger
+
+2004-01-31 Will Guaraldi <willg at bluesock dot org>
+	* massive overhaul of the code base to remove the registry
+	  and global variables.  we're now passing the Request object
+	  to almost all the callbacks.
+
+2004-01-25 Theodore W. Leung <twl@dev>
+	* refactored pyblosxom.py startup to create a common_start for cgis.
+
+2003-08-08 Will Guaraldi <willg at bluesock dot org>
+	* changed variable expansion rules to handle functions 
+	  with valid argument lists
+
+2003-07-31 Will Guaraldi <willg at bluesock dot org>
+	* added setup.py
+
+2003-07-28 Wari Wahab <wari@homedotwaridotorg>
+	* Python 2.1 compatability changes
+
+2003-07-28 Will Guaraldi <willg at bluesock dot org>
+	* documentation changes
+
+2003-07-23 Wari Wahab <wari@homedotwaridotorg>
+	* encoding fixes
+
 2003-06-24 Wari Wahab <wari@homedotwaridotorg>
 	* Updated the xmlrpc plugins system
 	* Moved and removed a whole lot of files around
@@ -8,7 +57,7 @@
 	* Added documentation for cb_renderer()
 	* Cleaned up setup.py installation script
 
-2003-06-08 Will
+2003-06-08 Will Guaraldi <willg at bluesock dot org>
 	* Revamped the plugin system so that plugin directories can be defined
 	  by the user and is no longer tied to the pyblosxom system
 
