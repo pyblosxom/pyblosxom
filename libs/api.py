@@ -20,6 +20,7 @@ what they're used for.
 """
 
 FIRST = 0
+MIDDLE = 50
 LAST = 99
 
 HANDLED = 1
@@ -43,16 +44,30 @@ class CallbackChain:
         if firstfunc:
             self._chain.append(firstfunc)
 
-    def register(self, func, place=LAST):
+    def register(self, func, place=MIDDLE):
         """
         Registers a function with the callback chain.  All functions
         should take one argument.  This argument's contents will depend
         on the callback chain involved.
+
+        @param func: the function to be called which takes in the argument
+            tuple specified by the callback chain in question
+        @type  func: callable
+
+        @param place: the priority for the function to kick off.  0 is the
+            lowest, 99 is the highest, and we default to 50 if you don't
+            care
+        @type  place: int
         """
-        if place == FIRST:
-            self._chain.insert(0, func)
-        else:
-            self._chain.append(func)
+        self._chain.append((place, func))
+
+    def __getchain__(self):
+        """
+        Returns a list of the functions in order of priority.
+        """
+        self._chain.sort(lambda x,y: cmp(x[0], y[0]))
+        chain = [mem[1] for mem in self._chain]
+        return chain
 
     def executeHandler(self, data):
         """
@@ -66,11 +81,27 @@ class CallbackChain:
         registered functions until we hit the end (none of them 
         handled it) or one of the functions has handled the data 
         and we don't need to proceed further.
+
+        This is will stop when one function returns something other
+        than None.  It is not guaranteed that every link in the chain
+        will be called.
+
+        @param data: data is a tuple--refer to the callback chain 
+            documentation for what it might hold
+        @type  data: tuple of stuff
+
+        @return: returns whatever is returned by the handler or None
+            if nothing handled the thing
+        @rtype: varies
         """
-        for mem in self._chain:
-            if mem(data) == HANDLED:
+        chain = self.__getchain__()
+        ret = None
+        for mem in chain:
+            ret = mem(data)
+            if ret:
                 break
-        return
+                
+        return ret
 
     def executeListHandler(self, data):
         """
@@ -85,7 +116,8 @@ class CallbackChain:
         we hit the end (none of them handled it) or one of the
         functions has handled the data and we don't need to proceed further.
         """
-        for mem in self._chain:
+        chain = self.__getchain__()
+        for mem in chain:
             result = mem(data)
             if result != None:
                 break
@@ -106,8 +138,18 @@ class CallbackChain:
         in the chain as input and we proceed until all registered
         functions have had a chance to operate on the data.  We then
         return the data to the caller.
+
+        This is guaranteed to be adjusted by every link in the chain.
+
+        @param data: data is a tuple--refer to the callback chain 
+            documentation for what it might hold
+        @type  data: tuple of stuff
+
+        @returns: the transformed tuple
+        @rtype: varies
         """
-        for mem in self._chain:
+        chain = self.__getchain__()
+        for mem in chain:
             data = mem(data)
 
         return data
