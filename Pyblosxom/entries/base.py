@@ -282,3 +282,18 @@ class EntryBase:
         if CONTENT_KEY not in keys:
             keys.append(CONTENT_KEY)
         return keys
+
+def generate_entry(properties, data, mtime):
+    """
+    Takes a properties dict and a data string and generates a generic
+    entry.
+    """
+    entry = EntryBase()
+
+    entry.update(properties)
+    entry.setData(data)
+    if mtime:
+        entry.setTime(mtime)
+    else:
+        entry.setTime(time.localtime())
+    return entry
