@@ -103,13 +103,18 @@ class PyBlosxom:
         """
         return self._request.getResponse()
 
-    def run(self):
+    def run(self, static=False):
         """
         Main loop for pyblosxom.  This method will run the handle callback
         to allow registered handlers to handle the request.  If nothing
         handles the request, then we use the default_blosxom_handler.
         """
         self.initialize()
+
+        # buffer the input stream in a StringIO instance if dynamic rendering is used.
+        # This is done to have a known/consistent way of accessing incomming data.
+        if static == False:
+            self.getRequest().buffer_input_stream()
 
         # run the start callback
         tools.run_callback("start", {'request': self._request})
@@ -364,14 +369,12 @@ class Request(object):
         else:
             self._data = data
 
-        # buffer the input stream in a StringIO instance.
-        # TODO: tests on memory consumption when uploading huge files
+        # this holds the input stream.
+        # initialized for dynamic rendering in Pyblosxom.run.
+        # for static rendering there is no input stream.
         self._in = StringIO()
-        self._in.write(environ['wsgi.input'].read())
-        # rewind to start
-        self._in.seek(0)
         # copy methods to the Request object.
-        self._copy_members()
+        self.__copy_members()
 
         # this holds the FieldStorage instance.
         # initialized when request.getForm is called the first time
@@ -381,7 +384,7 @@ class Request(object):
         self.setResponse(Response(self))
 
 
-    def _copy_members(self):
+    def __copy_members(self):
         """
         Copies methods from the underlying input stream to the request object.
         """
@@ -397,6 +400,19 @@ class Request(object):
         See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
         """
         return self._in
+
+    def buffer_input_stream(self):
+        """
+        Buffer the input stream in a StringIO instance.
+        This is done to have a known/consistent way of accessing incomming data.
+        For example the input stream passed by mod_python does not offer the same 
+        functionallity as sys.stdin.
+        """
+        # TODO: tests on memory consumption when uploading huge files
+        input = self.getHttp()['wsgi.input']
+        self._in.write(input.read())
+        # rewind to start
+        self._in.seek(0)
 
     def setResponse(self, response):
         """

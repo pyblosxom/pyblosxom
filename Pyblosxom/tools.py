@@ -606,7 +606,7 @@ def render_url(cdict, pathinfo, querystring=""):
     }
     data = {"STATIC": 1}
     p = PyBlosxom(cdict, env, data)
-    p.run()
+    p.run(static=True)
     response = p.getResponse()
     response.seek(0)
 
