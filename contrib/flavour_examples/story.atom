@@ -1,0 +1,15 @@
+ <entry>
+  <title>$title</title>
+  <summary></summary>
+  <author>
+   <name></name>
+   <url>$base_url</url>
+  </author>
+  <link rel="alternate" type="text/html" href="$base_url/$yr/$mo_num/$da#$fn" />  <id>$base_url/$yr/$mo_num/$da#$fn</id>
+  <created>$w3cdate</created>
+  <issued>$w3cdate</issued>
+  <modified>$w3cdate</modified>
+  <content type="text/html" mode="escaped" xml:lang="en-us">
+   $body
+  </content> 
+ </entry>
