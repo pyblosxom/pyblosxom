@@ -117,6 +117,10 @@ class PyBlosxom:
         staticdir = config.get("static_dir", "")
         datadir = config["datadir"]
 
+        # this way plugins know we're rendering statically so they
+        # can do something different if they need to.
+        data["STATIC"] = 1
+
         if not staticdir:
             raise Exception("You must set static_dir in your config file.")
 
@@ -208,50 +212,7 @@ class PyBlosxom:
             print "rendering '%s' ..." % url
             tools.render_entry(self._request, url, "", i)
 
-        """
-        # now we render everything...
-        oldstdout = sys.stdout
-        for path, fn in renderme:
-            print "rendering: %s -> %s ..." % (path, fn)
 
-            if path.find("?") != -1:
-                querystring = path[path.find("?")+1:]
-                path = path[0:path.find("?")]
-            else:
-                querystring = ""
-
-            req = Request()
-            req.addHttp( {
-                "HTTP_USER_AGENT": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7b) Gecko/20040421",
-                "REQUEST_METHOD": "GET",
-                "HTTP_HOST": "localhost",
-                "PATH_INFO": path,
-                "QUERY_STRING": querystring,
-                "REQUEST_URI": path + "?" + querystring })
-            req.addConfiguration(config)
-
-            buffer = StringIO.StringIO()
-            sys.stdout = buffer
-            p = PyBlosxom(req)
-            p.run()
-            sys.stdout = oldstdout
-
-            if not os.path.isdir(os.path.dirname(fn)):
-                os.makedirs(os.path.dirname(fn))
-
-            output = buffer.getvalue().splitlines()
-            while 1:
-                if len(output[0].strip()) == 0:
-                    break
-                output.pop(0)
-
-            output.pop(0)
-
-            f = open(fn, "w")
-            f.write("\n".join(output))
-            f.close()
-        """
- 
 class Request:
     """
     This class holds the PyBlosxom request.  It holds configuration
