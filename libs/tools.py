@@ -93,7 +93,7 @@ class Replacer:
             # course, the things it allows us to do can be done using
             # plugins much more easily--so it's kind of a moot point.
             try:
-                args = eval(key[key.find("("):])
+                args = eval(key[key.find("("):] + ",")
             except:
                 args = ()
 

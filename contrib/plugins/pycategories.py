@@ -9,10 +9,6 @@ Additionally, you can specify the flavour for the link by creating an
 entry in the config.py file or the ini file with the name 
 "category_flavour" and the value of the flavour you want to use.
 
-ini-file example (in the pyblosxom section)::
-
-   category_flavour = index
-
 config.py example::
 
    py["category_flavour"] = "index"

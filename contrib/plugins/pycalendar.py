@@ -35,7 +35,6 @@ It uses the following CSS classes:
 
 
 To use, place $calendar in your head/foot template.
-
 """
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
