@@ -1,3 +1,7 @@
+"""
+This is the debug renderer.  This is very useful for debugging plugins
+and templates.
+"""
 from Pyblosxom.renderers.base import RendererBase
 from Pyblosxom import tools
 import types

@@ -1,5 +1,12 @@
-# vim: shiftwidth=4 tabstop=4 expandtab
+"""
+The is the base renderer module.  If you were to dislike the blosxom
+renderer and wanted to build a renderer that used a different templating
+system, you would extend the RendererBase class and implement the
+functionality required by the other rendering system.
 
+For examples, look at the BlosxomRenderer and the Renderer in the debug
+module.
+"""
 import sys
 
 class RendererBase:
