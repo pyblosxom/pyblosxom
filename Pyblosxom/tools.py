@@ -498,8 +498,45 @@ def make_logger(filename):
             logger.info(str)
 
 
+def update_static_entry(cdict, entry_filename):
+    """
+    This is a utility function that allows plugins to easily update
+    statically rendered entries without going through all the rigamarole.
+
+    First we figure out whether this blog is set up for static rendering.
+    If not, then we return--no harm done.
+
+    If we are, then we call render_url for each static_flavour of the entry
+    and then for each static_flavour of the index page.
+
+    @param cdict: the config.py dict
+    @type  cdict: dict
+
+    @param entry_filename: the filename of the entry (ex. /movies/xmen2)
+    @type  entry_filename: string
+    """
+    staticdir = cdict.get("static_dir", "")
+
+    if not staticdir:
+        return
+
+    staticflavours = cdict.get("static_flavours", ["html"])
+
+    renderme = []
+    for mem in staticflavours:
+        renderme.append( "/index" + "." + mem, "" )
+        renderme.append( entry_filepath + "." + mem, "" )
+    
+    for mem in renderme:
+        render_url(cdict, mem[0], mem[1])
+
+
 def render_url(cdict, pathinfo, querystring=""):
     """
+    Takes a url and a querystring and renders the page that corresponds
+    with that by creating a Request and a PyBlosxom object and passing
+    it through.
+
     @param cdict: the config.py dict
     @type  cdict: dict
 
@@ -511,6 +548,8 @@ def render_url(cdict, pathinfo, querystring=""):
     """
     staticdir = cdict.get("static_dir", "")
 
+    # if there is no staticdir, then they're not set up for static
+    # rendering.
     if not staticdir:
         raise Exception("You must set static_dir in your config file.")
 
