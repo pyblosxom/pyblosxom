@@ -31,8 +31,9 @@ from libs import tools
 import time, os, calendar, sys, string
 
 class PyblCalendar:
-	def __init__(self, py):
+	def __init__(self, py, entryList):
 		self._py = py
+		self._entryList = entryList
 		self._cal = None
 
 	def __str__(self):
@@ -54,11 +55,10 @@ class PyblCalendar:
 		root = self._py["datadir"]
 		baseurl = self._py.get("base_url", "")
 		markup = self._py.get("calendarstyle", "pre")
+		
+		today = self._entryList[0]["timetuple"]
 
-		today = time.localtime()
-
-
-		# this ocmes in as 2001, 2002, 2003, ...  so we can convert it
+		# this comes in as 2001, 2002, 2003, ...  so we can convert it
 		# without an issue
 		temp = self._py["pi_yr"]
 		if temp:
@@ -201,4 +201,4 @@ class PyblCalendar:
 
 
 def load(py, entryList):
-	py["calendar"] = PyblCalendar(py)
+	py["calendar"] = PyblCalendar(py, entryList)
