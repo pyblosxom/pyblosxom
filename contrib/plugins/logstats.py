@@ -20,13 +20,14 @@ refer_blacklist property in config.py:
 TODO:
 Compute some additional statistics
 
-(1/10/2004 - Heavy edits by Will)
+(2/15/2004 - Added locking [will])
+(1/10/2004 - Added referrer page [will])
 """
 
 __author__ = "Ted Leung - twl@sauria.com"
 __version__ = "$Id$"
 
-import os, re, string, time, cPickle
+import os, re, string, time, pickle
 from Pyblosxom import tools, entries
 
 INIT_KEY = "logstats_static_file_initiated"
@@ -216,6 +217,7 @@ class PyblStats:
 
         return "".join(output)
 
+
 def cb_prepare(args):
     """
     Callback registered with prepareChain.  This does all the work
@@ -229,18 +231,23 @@ def cb_prepare(args):
     httpData = request.getHttp()
     datadir = config["datadir"]
 
-    filename = datadir + '/logfile.dat'
     try:
-        f = open(filename)
-        stats = cPickle.load(f)
-        stats._request = request
-        stats._config = config
-        stats._referrer_length = int(config.get('referrer_length', 15))
-        stats._num_referrers = int(config.get('num_referrers', 15))
-        f.close()
+        f = open(datadir + "/logfile.dat", "r+")
+        tools.lock(f, tools.LOCK_EX)
 
-    except (EOFError, IOError):
+        stats = pickle.load(f)
+        f.seek(0, 0)
+
+    except:
+        f = open(datadir + "/logfile.dat", "w")
+        tools.lock(f, tools.LOCK_EX)
+
         stats = PyblStats(config)
+
+    stats._request = request
+    stats._config = config
+    stats._referrer_length = int(config.get('referrer_length', 15))
+    stats._num_referrers = int(config.get('num_referrers', 15))
 
     stats.addReferer(httpData.get('HTTP_REFERER', '-'))
     stats.addDestination(httpData.get('REQUEST_URI', '-'))
@@ -251,8 +258,10 @@ def cb_prepare(args):
     # next 2 lines null out modules vars for pickling
     stats._request = None
     stats._config = None
-    f = open(filename,"w")
-    cPickle.dump(stats, f)
+
+    pickle.dump(stats, f)
+
+    tools.unlock(f)
     f.close()
 
 
@@ -274,6 +283,7 @@ def generate_entry(request, output):
     entry.setData(output)
     return entry
 
+
 def cb_date_head(args):
     request = args["request"]
     data = request.getData()
@@ -281,6 +291,7 @@ def cb_date_head(args):
         entry = args["entry"]
         entry["date"] = ""
     return args
+
 
 def cb_filelist(args):
     request = args["request"]
@@ -292,7 +303,6 @@ def cb_filelist(args):
     if not pyhttp["PATH_INFO"].startswith("/referrers"):
         return
 
-    
     data[INIT_KEY] = 1
     filename = datadir + '/logfile.dat'
     try:
