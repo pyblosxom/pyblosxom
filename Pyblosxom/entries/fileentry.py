@@ -41,10 +41,14 @@ class FileEntry(base.EntryBase):
         self._config = request.getConfiguration()
         self._filename = filename
         self._root = root
+        if self._root.endswith(os.sep): self._root = self._root[:-1]
 
         self._original_metadata_keys = []
         self._populated_data = 0
         self.__populateBasicMetadata()
+
+    def __repr__(self):
+        return "<fileentry f'%s' r'%s'>" % (self._filename, self._root)
 
     def getId(self):
         """
@@ -94,7 +98,7 @@ class FileEntry(base.EntryBase):
         path = path.replace(os.path.basename(self._filename), '')
         path = path[:-1]
 
-        absolute_path = self._filename.replace(self._config['datadir'], '')
+        absolute_path = self._filename.replace(self._root, '')
         absolute_path = absolute_path.replace(file_basename, '')
         absolute_path = absolute_path[1:][:-1]
 
