@@ -62,11 +62,12 @@ elif sys.platform in ["linux1", "linux2"]:
 
     # we want to move the web script files as well, so we sneak them
     # in here.
-    pydf.append( ("/usr/share/doc/" + PVER, doc_files) )
-    pydf.append( ("/usr/share/" + PVER + "/web", ["web/pyblosxom.cgi", 
-                                                  "web/xmlrpc.cgi", 
-                                                  "web/config.py"]) )
+    web_files = [os.path.normpath("web/pyblosxom.cgi"), 
+                 os.path.normpath("web/xmlrpc.cgi"), 
+                 os.path.normpath("web/config.py")]
 
+    pydf.append( ("/usr/share/" + PVER + "/web", web_files) )
+    # pydf.append( ("/usr/share/doc/" + PVER, doc_files) )
 
 else:
     # we don't know what platform they have, so we print out
