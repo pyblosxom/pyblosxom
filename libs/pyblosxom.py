@@ -54,8 +54,9 @@ class PyBlosxom:
 
         # Get our URL
         if os.environ.has_key('SCRIPT_NAME'):
-            self.py['url'] = 'http://%s%s%s' % (os.environ['HTTP_HOST'], os.environ['SCRIPT_NAME'], self.py['pi_bl'])
-            self.py['base_url'] = 'http://%s%s' % (os.environ['HTTP_HOST'], os.environ['SCRIPT_NAME'])
+            if not self.py.has_key('base_url'):
+                self.py['base_url'] = 'http://%s%s' % (os.environ['HTTP_HOST'], os.environ['SCRIPT_NAME'])
+            self.py['url'] = '%s%s' % (self.py['base_url'], self.py['pi_bl'])
 
         # Python is unforgiving as perl in this case
         self.py['pi_yr'] = (len(path_info) > 0 and path_info.pop(0) or '')
