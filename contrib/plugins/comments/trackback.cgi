@@ -77,7 +77,7 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
     try:
         path = os.path.join(datadir, d['PATH_INFO'][1:])
         ext = tools.what_ext(data['extensions'].keys(), path)
-        entry = FileEntry(config, '%s.%s' % (path, ext), datadir )
+        entry = FileEntry(request, '%s.%s' % (path, ext), datadir )
         data = {}
         data['entry_list'] = [ entry ]
         writeComment(config, data, cdict)

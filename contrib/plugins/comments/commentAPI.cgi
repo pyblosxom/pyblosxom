@@ -77,7 +77,7 @@ if __name__ == '__main__':
         # synthesize a file entry and put it on the entry list
         # TODO: I think this can be eliminated when we make the pyblosxom.py
         #       entry point in 0.8
-        entry = FileEntry(config, filename, datadir )
+        entry = FileEntry(request, filename, datadir )
         data = {}
         data['entry_list'] = [ entry ]
        
