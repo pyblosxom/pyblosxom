@@ -266,6 +266,7 @@ def what_ext(extensions, filepath):
     @type  filepath: string
 
     @return: the extension that was successful or None
+    @rtype: string
     """
     for ext in extensions:
         if os.path.isfile(filepath + '.' + ext):
@@ -320,38 +321,6 @@ def generateRandStr(minlen=5, maxlen=10):
         randStr += random.choice(chars)
     return randStr
 
-
-def original_default(x):
-    """
-    Takes the original arguments passed in and returns them.  This is
-    useful for callback chains that modify the data as it gets passed
-    along when there are no functions registered in the chain.  Then
-    you're guaranteed to get the input you passed in as output.
-
-    @param x: the input argument passed into the callback chain
-    @type  x: varies
-
-    @returns: the input argument passed into the callback chain
-    @rtype: varies
-    """
-    return x
-
-def chain_mapper(x, y):
-    """
-    Takes the input (x) and output (y) of the last function and passes
-    the output to the next function as input.
-
-    This is useful for callback chains where each function gets a chance
-    to modify the arguments and pass the modified arguments to the next
-    link in the chain.
-
-    @param x: the input to function a
-    @type  x: varies
-
-    @param y: the output function a returned
-    @type  y: varies
-    """
-    return y
 
 def run_callback(chain, input, 
         mappingfunc=lambda x,y:x, 
