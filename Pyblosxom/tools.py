@@ -254,6 +254,38 @@ def _walk_internal( root, recurse, pattern, ignorere, return_folders ):
 
     return result
 
+
+def filestat(request, filename):     
+     """     
+     Returns the filestat on a given file.  We store the filestat    
+     in case we've already retrieved it this time.   
+     
+     @param request: the Pyblosxom Request object    
+     @type  request: Request     
+     
+     @param filename: the name of the file to stat   
+     @type  filename: string     
+     
+     @returns: the mtime of the file (same as returned by time.localtime(...))   
+     @rtype: tuple of 9 ints     
+     """     
+     data = request.getData()    
+     filestat_cache = data.setdefault("filestat_cache", {})      
+     
+     if filestat_cache.has_key(filename):    
+         return filestat_cache[filename]     
+     
+     argdict = {"request": request, "filename": filename,    
+                "mtime": os.stat(filename)}      
+     argdict = run_callback("filestat",      
+                            argdict,     
+                            mappingfunc=lambda x,y:y,    
+                            defaultfunc=lambda x:x)      
+     timetuple = time.localtime(argdict["mtime"][8])     
+     filestat_cache[filename] = timetuple    
+     
+     return timetuple
+
 def what_ext(extensions, filepath):
     """
     Takes in a filepath and a list of extensions and tries them all until

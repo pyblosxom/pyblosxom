@@ -55,7 +55,7 @@ class PyblArchives:
         template = config.get('archive_template', 
                     '<a href="%(base_url)s/%(Y)s/%(b)s">%(Y)s-%(b)s</a><br />')
         for mem in archiveList:
-            timetuple = time.localtime(os.stat(mem)[8])
+            timetuple = tools.filestat(self._request, mem)
             timedict = {}
             for x in ["B", "b", "m", "Y", "y"]:
                 timedict[x] = time.strftime("%" + x, timetuple)

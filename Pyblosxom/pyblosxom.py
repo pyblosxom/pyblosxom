@@ -162,7 +162,7 @@ class PyBlosxom:
                 continue
 
             # grab the mtime of the entry file
-            mtime = time.mktime(time.localtime(os.stat(mem)[8]))
+            mtime = time.mktime(tools.filestat(self._request, mem))
 
             # remove the datadir from the front and the bit at the end
             mem = mem[len(datadir):mem.rfind(".")]

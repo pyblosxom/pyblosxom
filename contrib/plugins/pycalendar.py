@@ -129,7 +129,7 @@ class PyblCalendar:
         yearmonth = {}
 
         for mem in archiveList:
-            timetuple = time.localtime(os.stat(mem)[8])
+            timetuple = tools.filestat(self._request, mem)
 
             # if we already have an entry for this date, we skip to the
             # next one because we've already done this processing
