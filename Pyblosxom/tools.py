@@ -541,13 +541,17 @@ def render_entry(req, pathinfo, querystring="", index=0):
     oldstdout = sys.stdout
     for url, query, fn in renderme:
         req = pyblosxom.Request()
-        req.addHttp( {
-            "HTTP_USER_AGENT": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7b) Gecko/20040421",
+        req.addHttp({
+            "HTTP_USER_AGENT": "static renderer",
             "REQUEST_METHOD": "GET",
             "HTTP_HOST": "localhost",
             "PATH_INFO": url,
             "QUERY_STRING": query,
-            "REQUEST_URI": url + "?" + query })
+            "REQUEST_URI": url + "?" + query,
+            "PATH_INFO": url,
+            "HTTP_REFERER": "",
+            "REMOTE_ADDR": ""
+             })
         req.addConfiguration(config)
 
         buffer = StringIO.StringIO()
