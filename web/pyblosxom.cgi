@@ -23,7 +23,7 @@ __license__ = "Python"
 if __name__ == '__main__':
     from Pyblosxom.pyblosxom import PyBlosxom
     from Pyblosxom.Request import Request
-    import os, cgi
+    import os
 
     req = Request()
     req.addConfiguration(config.py)
@@ -34,8 +34,6 @@ if __name__ == '__main__':
             "SCRIPT_NAME", "HTTP_IF_NONE_MATCH", "HTTP_IF_MODIFIED_SINCE"]:
         d[mem] = os.environ.get(mem, "")
     req.addHttp(d)
-
-    req.addHttp({"form": cgi.FieldStorage()})
 
     p = PyBlosxom(req)
     p.startup()
