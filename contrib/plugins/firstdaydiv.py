@@ -3,17 +3,18 @@ This is my fancy module to add a token which tells us whether we're
 the first day being displayed or not.
 
 To install:
-1. Copy this file into your pyblosxom/libs/plugins directory.
+ 1. Copy this file into your pyblosxom/libs/plugins directory.
 
-2. Create a file named date_head.html in your datadir containing::
+ 2. Create a file named date_head.html in your datadir containing::
 
-   <div class="$dayDivClass">
-   <span class="blosxomDate">$date</span>
+    <div class="$dayDivClass">
+    <span class="blosxomDate">$date</span>
 
-3. Edit your config.py and add the line:
-   py['firstDayDiv'] = 'blosxomFirstDayDiv'
+ 3. Edit your config.py and add the line::
 
-4. That's it.  You're done.
+    py['firstDayDiv'] = 'blosxomFirstDayDiv'
+
+ 4. That's it.  You're done.
 
 Questions, comments, concerns?  Email bwinton@latte.ca for help.
 """
@@ -37,7 +38,7 @@ class PyFirstDate:
         Initialize the PyFirstDate class.
 
         @type py: dictionary
-        @param py: A reference to the L{global py dictionary<py>}.
+        @param py: A reference to the L{libs.Request.Request.getConfiguration()}.
         """
         config = request.getConfiguration()
         self._dayDiv = config.get("firstDayDiv", "blosxomDayDiv")
@@ -60,7 +61,7 @@ class PyFirstDate:
 
 def cb_prepare(args):
     """
-    Populate the L{global py dictionary<py>} with an instance of the
+    Populate the L{libs.Request.Request} with an instance of the
     L{PyFirstDate} class in the "dayDivClass" key.
     """
     request = args["request"]
