@@ -2,36 +2,38 @@
 Allow searching of the blog by using a Lucene search for a set of terms
 
 To install:
-1) Put lucene.py in pyblosxom/Pyblosxom/plugins
-2) In config.py add lucene to py['load_plugins']
-3) Place the contents of pyblosxom/contrib/plugins/lucene/bin in a
-   directory readable by pybloxsom.  In config.py, set py['lucene_bin'] to
-   this path
-4) Download lucene from http://jakarta.apache.org/lucene and unzip/untar it.
-   In config.py, set py['lucene_home'] to the lucene directory (which contains
-   lucene-1.2.jar and lucene-demos-1.2.jar)
-5) In config.py set py['lucene_index'] to the name of the Lucene index file
-   (pybosxom must be able to read and write this file)
-6) In config.py set py['JAVA_HOME'] to point at the 'java' command
-7) Set up a cron job to run py['lucene_bin']/index.sh periodically to
-   reindex your blog
-8) Somewhere in your web page you need a lucene search form:
+ 1) Put lucene.py in pyblosxom/Pyblosxom/plugins
+ 2) In config.py add lucene to py['load_plugins']
+ 3) Place the contents of pyblosxom/contrib/plugins/lucene/bin in a
+    directory readable by pybloxsom.  In config.py, set py['lucene_bin'] to
+    this path
+ 4) Download lucene from http://jakarta.apache.org/lucene and unzip/untar it.
+    In config.py, set py['lucene_home'] to the lucene directory (which contains
+    lucene-1.3-final.jar and lucene-demos-1.3-final.jar)
+ 5) In config.py set py['lucene_index'] to the name of the Lucene index file
+    (pybosxom must be able to read and write this file)
+ 6) In config.py set py['JAVA_HOME'] to point at the 'java' command
+ 7) Set up a cron job to run py['lucene_bin']/index.sh periodically to
+    reindex your blog
+ 8) Somewhere in your web page you need a lucene search form:
 
-  <form id="searchform" method="get" action="/blog">
-   <table>
-    <tr>
-     <td><input type="text" id="search" name="search" size="18" maxlength="255" value="" /></td>
-     <td><input type="submit" value=Search /></td>
-    </tr>
-   </table>
-  </form>
+   <form id="searchform" method="get" action="/blog">
+    <table>
+     <tr>
+      <td><input type="text" id="search" name="search" size="18" maxlength="255" value="" /></td>
+      <td><input type="submit" value=Search /></td>
+     </tr>
+    </table>
+   </form>
 
-   The action of the form should be the top level URI of your blog
+    The action of the form should be the top level URI of your blog
 
-9) You should add $searchHeader somewhere in the header of your webpage; this
+ 9) You should add $searchHeader somewhere in the header of your webpage; this
    is where statements like, "Your search returned X results for Y" are
    placed. This statement is enclosed in a div tag with a class of 
    "searchtext" so that you can define it as you like in your stylesheet.
+
+10) Uses of Apple's Java on Mac OS X should be sure to use Lucene 1.3
 
 """
 
