@@ -1,3 +1,27 @@
+2004-03-09 Will Guaraldi <willg at bluesock dot org>
+	* Minor adjustments to Walk, Replacer, and parse in the
+	  tools module.
+
+2004-03-08 Will Guaraldi <willg at bluesock dot org>
+	* Added the runCallback method to the PyBlosxom object to
+	  enable command-line executed callbacks.
+
+2004-02-24  Theodore W. Leung  <twl@dev>
+	* Added Atom 0.3 flavour.
+
+2004-02-23  Theodore W. Leung  <twl@dev>
+	* Migrated comments/feedback system to use the new handler
+	  architecture.
+	* Removed unnecessary cgi scripts.
+
+2004-02-22  Theodore W. Leung  <twl@dev>
+	* Implement blogger.deletePost -- use at your own risk.
+
+2004-02-21  Theodore W. Leung  <twl@dev>
+	* Fix for blasterattacko comment SMTP exploit.
+	* Add a configuration flag to control behavior when used in 
+	  conjunction with metaweblog API.
+
 2004-02-19 Will Guaraldi <willg at bluesock dot org>
 	* added testinstallation mode to ease pyblosxom installation and
 	  configuration
