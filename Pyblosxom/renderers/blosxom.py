@@ -67,7 +67,7 @@ class BlosxomRenderer(RendererBase):
         else:
             custom_flavours = ""
         
-        pattern = re.compile(r'(config|content_type|head|date_head|date_foot|foot|story'+custom_flavours+')\.' 
+        pattern = re.compile(r'(content_type|head|date_head|date_foot|foot|story'+custom_flavours+')\.' 
                              + taste)
         flavourlist = tools.Walk(data['root_datadir'], 1, pattern)
         if not flavourlist:
@@ -85,14 +85,6 @@ class BlosxomRenderer(RendererBase):
         if not flavours.has_key(taste):
             taste = 'error'
 
-        # Check for any configuration override in flavours
-        if flavours[taste].has_key('config'):
-            for s in flavours[taste]['config'].split('\n'):
-                if s.strip() != '':
-                    match = re.match(r'(\w+)\s+(.*)', s)
-                    if match:
-                        config[match.groups()[0]] = match.groups()[1].strip()
-            
         return flavours[taste]
 
     def _printTemplate(self, entry, template):
