@@ -24,6 +24,14 @@ __version__ = "$Id$"
 from Pyblosxom import tools
 import time
 
+def verify_installation(request):
+    config = request.getConfiguration()
+    if not config.has_key("archive_template"):
+        print "missing optional config property 'archive_template' which "
+        print "allows you to specify how the archive links are created.  "
+        print "refer to pyarchive plugin documentation for more details."
+    return 1
+
 class PyblArchives:
     def __init__(self, request):
         self._request = request

@@ -42,6 +42,10 @@ __version__ = "$Id$"
 from Pyblosxom import tools
 import time, calendar, string
 
+def verify_installation(request):
+    # there's no configuration needed for this plugin.
+    return 1
+
 class PyblCalendar:
     def __init__(self, request):
         self._request = request

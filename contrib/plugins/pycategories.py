@@ -19,6 +19,14 @@ __version__ = "$Id$"
 from Pyblosxom import tools
 import re, os
 
+def verify_installation(request):
+    config = request.getConfiguration()
+    if not config.has_key("category_flavour"):
+        print "missing optional config property 'category_flavour' which allows "
+        print "you to specify the flavour for the category link.  refer to "
+        print "pycategory plugin documentation for more details."
+    return 1
+
 class PyblCategories:
     def __init__(self, request):
         self._request = request
