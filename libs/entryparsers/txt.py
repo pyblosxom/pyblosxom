@@ -1,10 +1,13 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
 """
-The standard pyblosxom entry parser, uses preformatters that's located in
-libs/preformatters/ .
+The standard pyblosxom entry parser, uses preformat and postformat plugins
+that's located in C{/contrib/plugins/preformatters} and C{/contrib/plugins}.
 
-To define a default parser add this line in your config.py
+To define a default parser/preformatter add this line in your config.py
 py['parser'] = xxxx
+
+Where xxxx is the preformatter id (Look at the preformatter's plugin
+documentation)
 
 To use other preformatters than the default one you define, add the following
 text in your entry text file:
@@ -18,6 +21,17 @@ from libs import tools
 import re
 
 def parse(filename, request):
+    """
+    Open up a txt file and read its contents
+
+    @param filename: A filename to extra data and meta data from
+    @type filename: string
+    @param request: A standard request object
+    @type request: L{libs.Request.Request} object
+    @returns: A dict containing parsed data and meta data with the particular
+            file (and plugin)
+    @rtype: dict
+    """
     config = request.getConfiguration()
 
     entryData = {}
@@ -38,11 +52,18 @@ def parse(filename, request):
         else:
             break
 
-    preformatter = tools.importName('libs.preformatters', 
-            (entryData.get('parser', '') or config.get('parser', 'plain')))
-    if preformatter:
-        entryData['body'] = preformatter.PreFormatter(story).parse()
-    else:
-        entryData['body'] = ''.join(story)
-    
+    # Call the preformat function
+    entryData['body'] = tools.run_callback('preformat',
+            {'parser': (entryData.get('parser', '') 
+                    or config.get('parser', 'plain')),
+             'story': story,
+             'request': request},
+            donefunc = lambda x:x != None,
+            defaultfunc = lambda x: ''.join(x['story']))
+
+    # Call the postformat callbacks
+    tools.run_callback('postformat',
+            {'request': request,
+             'entry_data': entryData})
+            
     return entryData
