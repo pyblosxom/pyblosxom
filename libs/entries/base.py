@@ -183,6 +183,7 @@ class EntryBase:
         self['mo'] = time.strftime('%b', timeTuple)
         self['mo_num'] = time.strftime('%m', timeTuple)
         self['da'] = time.strftime('%d', timeTuple)
+        self['dw'] = time.strftime('%A', timeTuple)
         self['yr'] = time.strftime('%Y', timeTuple)
         self['fulltime'] = time.strftime('%Y%m%d%H%M%S', timeTuple)
         # YYYY-MM-DDThh:mm:ssZ
