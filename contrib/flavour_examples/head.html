@@ -1,0 +1,37 @@
+<html>
+
+<head>
+	<title>$blog_title</title>
+<style>
+#content {
+float:left;
+width:67%;
+background:#fff;
+border-right:2px solid #000;
+border-bottom:2px solid #000;
+margin-right:15px;
+padding-bottom:20px;
+}
+#rightmenu {}
+#title {border-bottom:1px solid #000;}
+body,td { font-family: Verdana,Geneva,Arial,Sans-serif; 
+          font-size: 12px; color: #111111; }
+a { text-decoration: none; }
+a:hover { text-decoration: none; color: #FFFF99; background: #00F}
+.title { font-size: 14pt; font-weight: bold; color: #336699; }
+.rightMenu { font-size: 10pt; font-weight: bold; color: #336699; }
+.blosxomDate {font-weight: bold; color: #336699; }
+.blosxomTitle {font-size: 13pt; font-weight: bold; color: #000000; }
+.blosxomTime { text-decoration: italicize; color: #336699; }
+</style>
+<link rel="alternate" type="application/rss+xml" title="RSS" href="$url/?flav=rss" />
+<link rel="alternate" type="text/plain" title="RSS3" href="$url/?flav=rss3" />
+
+</head>
+
+<body bgcolor="#ffffff">
+<div id='content'>
+<div id='title'>
+<span class="title"><a href="$base_url">$blog_title</a><br />$blog_description</span>
+</div>
+<br />
