@@ -246,8 +246,8 @@ def cb_prepare(args):
         
         body = sanitize(body)
 
-	# Chech if the form has a URL
-	url = (form.has_key('url') and [form['url'].value] or [''])[0]
+        # Chech if the form has a URL
+        url = (form.has_key('url') and [form['url'].value] or [''])[0]
         
         cdict = {'title': form['title'].value, \
                  'author' : form['author'].value, \
