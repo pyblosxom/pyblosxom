@@ -1,3 +1,16 @@
+2003-01-29 Wari Wahab <pyblosxom@wari.per.sg>
+	* Added configuration override feature in flavours. This allows users
+	  to modify their main configuration based on the templates' needs.
+	  There could be problems though is users change essential
+	  configuration items like datadir. To activate this feature, simple
+	  create a file called config.$flav where $flav is replaced by
+	  whatever flavours the users are overriding the configuration. The
+	  contents are key-value pairs, for example
+	  ------
+	  num_entries 9999
+	  ------
+	  This will change the value that was configured in config.py.
+
 2003-01-27 Wari Wahab <pyblosxom@wari.per.sg>
 	* Fixed some ugly defaults in the example flavours
 

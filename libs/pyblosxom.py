@@ -94,7 +94,8 @@ class PyBlosxom:
         # End of ugly portion! Yucks :)
         # Look for flavours in datadir
 
-        pattern = re.compile(r'(content_type|head|date_head|date_foot|foot|story)\.' + taste)
+        pattern = re.compile(r'(config|content_type|head|date_head|date_foot|foot|story)\.' 
+                + taste)
         flavourlist = tools.Walk(self.py['root_datadir'], 1, pattern)
         if not flavourlist:
             flavourlist = tools.Walk(self.py['datadir'], 1, pattern)
@@ -108,6 +109,15 @@ class PyBlosxom:
 
         if not flavours.has_key(taste):
             taste = 'error'
+
+        # Check for any configuration override in flavours
+        if flavours[taste].has_key('config'):
+            for s in flavours[taste]['config'].split('\n'):
+                if s.strip() != '':
+                    match = re.match(r'(\w+)\s+(.*)', s)
+                    if match:
+                        self.py[match.groups()[0]] = match.groups()[1].strip()
+            
         return flavours[taste]
 
     def getProperties(self, filename, root):
