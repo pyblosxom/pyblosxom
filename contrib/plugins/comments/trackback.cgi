@@ -24,14 +24,6 @@ tb_bad_response = """<?xml version="1.0" encoding="iso-8859-1"?>
 <message>%s</message>
 </response>"""
 
-def get_file(path, extlist):
-    """Get a valid file from a list of available extensions"""
-    for ext in extlist:
-        filename = '%s.%s' % (path, ext)
-        if os.path.isfile(filename):
-            return filename
-
-
 d = {}
 for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER", "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR", "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME"]:
     d[mem] = os.environ.get(mem, "")
@@ -88,7 +80,9 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
     datadir = config['datadir']
     
     try:
-        entry = FileEntry(config, get_file(path, data['extensions']), datadir )
+        path = os.path.join(datadir, d['PATH_INFO'][1:])
+        ext = tools.what_ext(data['extensions'].keys(), path)
+        entry = FileEntry(config, '%s.%s' % (path, ext), datadir )
         data = {}
         data['entry_list'] = [ entry ]
         writeComment(config, data, cdict)
