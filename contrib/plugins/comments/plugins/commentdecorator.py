@@ -316,7 +316,7 @@ def cb_head(dict):
     entry = dict['entry']
     template = dict['template']
     newtemplate = renderer.flavour.get('comment-head','')
-    if not newtemplate == '':
+    if not newtemplate == '' and len(renderer.getContent()) == 1:
         template = newtemplate
     return template
         
