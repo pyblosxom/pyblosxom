@@ -115,8 +115,10 @@ class BlosxomRenderer(RendererBase):
 
         output = []
 
-        if re.search(r'\Wxml', data['content-type']):
-            quotes = {"'":"&apos;", '"':"&quot;"}
+        if data["content-type"] == "text/xml":
+            # if the content-type is text/xml then this is an RSS feed
+            # of some kind and we escape the entry content accordingly
+            quotes = {"'": "&apos;", '"': "&quot;"}
             entry['title'] = escape(entry['title'],quotes)
             entry.setData(escape(entry.getData(),quotes))
 
