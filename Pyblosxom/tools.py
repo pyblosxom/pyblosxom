@@ -525,3 +525,31 @@ def get_cache(request):
         data["data_cache"] = mycache
 
     return mycache
+
+def make_logger(file):
+    """
+    Create a logging function called log, which logs to the supplied filename
+
+    usage is:
+    tools.make_logger('/tmp/pybloxom.log') # or whatever you want
+    tools.log('log message')
+
+    @param file: the name of a file to log to
+    @type file: string
+    """
+    global log
+    try:
+        import logging
+    except ImportError:    
+        def log(str):
+            pass
+    else:
+        logger = logging.getLogger('trackback')
+        hdlr = logging.FileHandler(file)
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        hdlr.setFormatter(formatter)
+        logger.addHandler(hdlr) 
+        logger.setLevel(logging.INFO)
+
+        def log(str):
+            logger.info(str)
