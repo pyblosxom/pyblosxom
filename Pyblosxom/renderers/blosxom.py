@@ -76,7 +76,7 @@ class BlosxomRenderer(RendererBase):
             dirname = os.path.dirname(dirname)
 
         template_files = None
-        while dirname != datadir:
+        while len(dirname) >= len(datadir):
             template_files = tools.Walk(self._request, dirname, 1, pattern)
             if template_files: break
             dirname = os.path.split(dirname)[0]
