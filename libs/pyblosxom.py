@@ -4,9 +4,10 @@ from libs import tools
 import cPickle as pickle
 
 class PyBlosxom:
-    def __init__(self, py, xmlrpc):
+    def __init__(self, py, xmlrpc, xmlRpcCall = 0):
         self.py = py
         self.xmlrpc = xmlrpc
+        self.xmlRpcCall = xmlRpcCall
         self.flavour = {}
         self.dayFlag = 1 # Used to print valid date footers
         
@@ -15,7 +16,7 @@ class PyBlosxom:
         path_info = []
 
         # If we use XML-RPC, we don't need favours and GET/POST fields
-        if not (os.environ.get('PATH_INFO','') == self.xmlrpc['path'] and int(self.xmlrpc['enable'])):
+        if not self.xmlRpcCall:
             form = cgi.FieldStorage()
             self.py['flavour'] = (form.has_key('flav') and form['flav'].value or 'html')
 

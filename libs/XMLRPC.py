@@ -1,8 +1,7 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
+import xmlrpclib, string, re, sys, os
 from libs import tools
-import xmlrpclib
 from libs.pyblosxom import PyBlosxom
-import string, re, sys, os
 
 
 def debug(str):
