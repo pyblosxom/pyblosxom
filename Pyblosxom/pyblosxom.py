@@ -387,13 +387,13 @@ def blosxom_handler(request):
     data = request.getData()
 
     # go through the renderer callback to see if anyone else
-    # wants to render.  the default is the renderer object we
-    # figured out from above.  this renderer gets stored in
-    # the data dict for downstream processing.
+    # wants to render.  this renderer gets stored in the data dict 
+    # for downstream processing.
     r = tools.run_callback('renderer', 
                            {'request': request},
                            donefunc = lambda x: x != None, 
                            defaultfunc = lambda x: None)
+
     if not r:
         # get the renderer we want to use
         r = config.get("renderer", "blosxom")
