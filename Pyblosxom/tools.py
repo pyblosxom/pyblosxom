@@ -10,7 +10,7 @@ The swiss army knife for all things pyblosxom
 @var VAR_REGEXP: Regular expression for detection and substituion of variables
 """
 import plugin_utils
-import sgmllib, re, os, string,  types
+import sgmllib, re, os, string, types
 
 month2num = { 'nil' : '00',
               'Jan' : '01',
@@ -209,6 +209,23 @@ def Walk(root = '.', recurse = 0, pattern = '', return_folders = 0 ):
 
     return result
 
+def what_ext(extensions, filepath):
+    """
+    Takes in a filepath and a list of extensions and tries them all until
+    it finds the first extension that works.
+
+    @param extensions: the list of extensions to test
+    @type  extensions: list of strings
+
+    @param filepath: the complete file path (minus the extension) to test
+    @type  filepath: string
+
+    @return: the extension that was successful or None
+    """
+    for ext in extensions:
+        if os.path.isfile(filepath + '.' + ext):
+            return ext
+    return None
 
 def importName(modulename, name):
     """

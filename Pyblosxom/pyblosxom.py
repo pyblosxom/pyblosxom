@@ -232,13 +232,8 @@ class PyBlosxom:
         # Else we may have a file
         if not data['bl_type']:
             # Try for file
-            def what_ext(path):
-                for ext in data['extensions'].keys():
-                    if os.path.isfile(path + '.' + ext):
-                        return ext
-                return None
 
-            ext = what_ext(blog_result)
+            ext = tools.what_ext(data["extensions"].keys(), blog_result)
             if ext:
                 config['blog_title'] += ' : %s' % data['pi_bl']
                 data['bl_type'] = 'file'
@@ -246,7 +241,7 @@ class PyBlosxom:
             else:
                 # We may have flavour embedded here
                 filename, ext = os.path.splitext(blog_result)
-                fileext = what_ext(filename)
+                fileext = tools.what_ext(data["extensions"].keys(), filename)
                 dirname = os.path.dirname(filename)
 
                 if fileext:
