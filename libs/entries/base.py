@@ -79,6 +79,11 @@ class EntryBase:
         """
         Returns the list of keys for which we have values in our
         stored metadata.
+
+        Note: This list gets modified later downstream.  If you
+        cache your list of metadata keys, then this method should
+        return a copy of that list and not the list itself
+        lest it get adjusted.
         """
         return self._metadata.keys()
 
@@ -193,5 +198,6 @@ class EntryBase:
         @rtype: list of varies
         """
         keys = self.getMetadataKeys()
-        keys.append(CONTENT_KEY)
+        if CONTENT_KEY not in keys:
+            keys.append(CONTENT_KEY)
         return keys
