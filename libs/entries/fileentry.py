@@ -120,7 +120,7 @@ class FileEntry(base.EntryBase):
         argdict = tools.run_callback("filestat", 
                                      argdict,
                                      mappingfunc=lambda x,y:y,
-                                     defaultfunc=lamda x:x)
+                                     defaultfunc=lambda x:x)
         mtime = argdict["mtime"][8]
         
         timeTuple = time.localtime(mtime)
