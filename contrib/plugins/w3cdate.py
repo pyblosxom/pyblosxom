@@ -14,11 +14,10 @@ __license__ = "Python"
 
 import xml.utils.iso8601
 import time
+from Pyblosxom import tools
 
-def cb_prepare(args):
-    request = args["request"]
-    form = request.getHttp()['form']
-    config = request.getConfiguration()
+def cb_story(args):
+    request = tools.get_registry()["request"]
     data = request.getData()
 
     entry_list = data['entry_list']
@@ -27,5 +26,7 @@ def cb_prepare(args):
         entry = entry_list[i]
         t = entry['timetuple']
         # adjust for daylight savings time
-        t = t[0],t[1],t[2],t[3]+time.localtime()[-1],t[4],t[5],t[6],t[7],t[8]
-        entry['w3cdate'] = xml.utils.iso8601.ctime(time.mktime(t))
+        tzoffset = 0
+        if time.timezone != 0:
+            tzoffset = time.altzone
+        entry['w3cdate'] = xml.utils.iso8601.tostring(time.mktime(t),tzoffset)
