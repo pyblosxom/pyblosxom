@@ -124,3 +124,5 @@ class Request:
 
         return default
 
+    def __repr__(self):
+        return "Request.Request"
