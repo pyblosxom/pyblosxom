@@ -289,8 +289,7 @@ def cb_prepare(args):
     config = request.getConfiguration()
     data = request.getData()
     
-    if form.has_key("title") and form.has_key("author") and form.has_key("url") \
-       and form.has_key("body"):
+    if form.has_key("title") and form.has_key("author") and form.has_key("body"):
 
         body = form['body'].value
         
