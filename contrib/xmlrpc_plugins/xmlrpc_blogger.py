@@ -194,8 +194,16 @@ def blogger_deletePost(request, appkey, postid, username, password, publish):
     url = config.get('base_url', '')
     cache_driver = tools.importName('Pyblosxom.cache', 
             config.get('cacheDriver', 'base'))
-    cache = cache_driver.BlosxomCache(config.get('cacheConfig', ''))
-    filename = os.path.normpath(os.path.join(config['datadir'], postid[1:]))
+    cache = cache_driver.BlosxomCache(request, config.get('cacheConfig', ''))
+    fn = os.path.normpath(os.path.join(config['datadir'], postid))
+
+    data = request.getData()
+    extensions = data['extensions']
+    for e in extensions.keys():
+        filename = fn+'.'+e
+        if os.path.isfile(filename):
+            break
+            
     if os.path.isfile(filename):
         if cache.has_key(filename):
             del cache[filename]
