@@ -19,21 +19,21 @@ class PreFormatter(PreFormatterBase):
             googleSearchWords = getGoogleSearch(referer)
      
             if googleSearchWords:
-		# don't match in tags
-		tagChars = "A-Za-z \"\'=:/\."
+                # don't match in tags
+                tagChars = "A-Za-z \"\'=:/\."
                 pattern = "(?!<[" + tagChars + "]*)"
                 pattern = pattern + "("
                 for word in urllib.unquote_plus(googleSearchWords).split():
                     for letter in word:
-			pattern = pattern + "[" + letter.lower() + letter.upper() + "]"
+                        pattern = pattern + "[" + letter.lower() + letter.upper() + "]"
                     pattern = pattern + "|"
-		pattern = pattern[:-1] + ")"
+                pattern = pattern[:-1] + ")"
                 pattern = pattern + "(?![" + tagChars + "]*>)"
                 result = re.sub(pattern, highlight, result)
         return result
 
 def getGoogleSearch(url):
-	# taken from Mark's log parser tool
+    # taken from Mark's log parser tool
     search = ''
     argstr = urlparse.urlparse(url)[4]
     if argstr:

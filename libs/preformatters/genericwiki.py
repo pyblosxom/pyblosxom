@@ -6,9 +6,6 @@ import re
 from libs.preformatters.base import PreFormatterBase
 
 class PreFormatter(PreFormatterBase):
-    def __init__(self, text = ''):
-        self.text = text
-
     def parse(self):
         # url of your wiki up to page name
         wikibaseurl = "http://ourpla.net/cgi/pikie?"
@@ -16,7 +13,8 @@ class PreFormatter(PreFormatterBase):
         wikinamepattern = r'\b(([A-Z]+[a-z]+){2,})\b' # original
         mailurlpattern = r'mailto\:[\"\-\_\.\w]+\@[\-\_\.\w]+\w'
         newsurlpattern = r'news\:(?:\w+\.){1,}\w+'
-	fileurlpattern = r'(mailto|http(s)?|ftp):(//)?[\w]+(\.[\w]+)([-\w.,@?^=%&;:/~+#]*)?'
+        fileurlpattern = 
+            r'(mailto|http(s)?|ftp):(//)?[\w]+(\.[\w]+)([-\w.,@?^=%&;:/~+#]*)?'
         result = ''
         for line in self.text:
             result += line
