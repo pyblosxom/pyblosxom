@@ -38,9 +38,9 @@
      * python version 2.1 or later (http://wwww.python.org/)
      * a text editor (notepad, vi, emacs, nano, ...)
 
-1.3 Simple Installation
+1.3 Site-wide Installation
 
-   For a site-wide simple installation,
+   For a site-wide installation,
      1 Run the command 'python setup.py install' as superuser (root on u*ix)
        to install the Pyblosxom libraries in your python installation.
      2 Then copy the contents of the web/ directory into your cgi-bin
@@ -55,11 +55,12 @@
        your installation) something like
        http://your-server-here/~username/cgi-bin/pyblosxom.cgi.
 
-1.4 Complicated Installation
+1.4 Local Installation
 
    If you don't have superuser access on your webserver you might need to
-   install the Pyblosxom library in a non standard directory and either
-   set the "codebase" config property in your config.py file.
+   install the Pyblosxom library in a non standard directory and
+   set the "codebase" config property in your config.py file to that
+   directory.
 
 1.5 Changing the Looks of the blog
 
@@ -68,6 +69,9 @@
    looks of your site by using flavours, just copy them into your content
    directory and reload your blog. You can also add ?flav=<name> where
    <name> is the name of your flavours name
+
+   You will want to edit these files after you have things working to
+   change the look and feel of your blog.
 
 1.6 Using .htaccess
 
@@ -144,18 +148,19 @@
 `-- home
     `-- joe
         |-- pyblosxom
-        |   |-- config.py
         |   `-- Pyblosxom
         |       |-- pyblosxom.py
         |       `-- tools.py
         `-- www
             |-- pyblosxom.cgi
+        |   |-- config.py
             `-- .htaccess
 
-   You will also need to modify your pyblosxom.cgi and add the path of
-   your pyblosxom installation:
-    1 import sys
-    2 sys.path.append('/home/joe/pyblosxom')
+   You will also need to change the "codebase" property in your config.py
+   file to:
+
+      py["codebase"] = "/home/joe/pyblosxom"
+
 
   1.7.2 Denying configuration via .htaccess
 
