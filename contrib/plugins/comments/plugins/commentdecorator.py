@@ -2,7 +2,8 @@
 # Comment poster
 #
 
-import cgi, glob, os.path, string, time
+import cgi, glob, os.path, re, string, time
+from xml.sax.saxutils import escape
 from libs import tools
 from libs.entries.base import EntryBase
 
@@ -203,16 +204,79 @@ def writeComment(config, data, comment):
     except:
         cfile.close()
     
-    import smtplib
-    try:
-        server = smtplib.SMTP('192.168.0.1')
-        server.sendmail("blog@sauria.com", "twl@sauria.com", \
-                        "Subject: write back by %s\r\n\r\n%s\r\n%s" \
-                        %  (comment['author'], cfn, comment['description']))
-        server.quit()
-    except:
-        pass
+    # if the right config keys are set, notify by e-mail
+    if config.has_key('comment_smtp_server') and \
+       config.has_key('comment_smtp_from') and \
+       config.has_key('comment_smtp_to'):
+        import smtplib
+        try:
+            server = smtplib.SMTP(config['comment_smtp_server'])
+            server.sendmail(config['comment_smtp_from'], config['comment_smtp_to'], \
+                            "Subject: write back by %s\r\n\r\n%s\r\n%s" \
+                            %  (comment['author'], cfn, comment['description']))
+            server.quit()
+        except:
+            pass
 
+def sanitize(body):
+    """
+    This code shamelessly lifted from Sam Ruby's mombo/post.py
+    """
+    body=re.sub(r'\s+$','',body)
+    body=re.sub('\r\n?','\n', body)
+
+    # naked urls become hypertext links
+    body=re.sub('(^|[\\s.:;?\\-\\]<])' + 
+                '(http://[-\\w;/?:@&=+$.!~*\'()%,#]+[\\w/])' +
+                '(?=$|[\\s.:;?\\-\\[\\]>])',
+                '\\1<a href="\\2">\\2</a>',body)
+
+    # html characters used in text become escaped
+    body=escape(body)
+
+    # passthru <a href>, <em>, <i>, <b>, <blockquote>, <br/>, <p>
+    body=re.sub('&lt;a href="([^"]*)"&gt;([^&]*)&lt;/a&gt;',
+                '<a href="\\1">\\2</a>', body)
+    body=re.sub('&lt;a href=\'([^\']*)\'&gt;([^&]*)&lt;/a&gt;',
+                '<a href="\\1">\\2</a>', body)
+    body=re.sub('&lt;em&gt;([^&]*)&lt;/em&gt;', '<em>\\1</em>', body)
+    body=re.sub('&lt;i&gt;([^&]*)&lt;/i&gt;', '<i>\\1</i>', body)
+    body=re.sub('&lt;b&gt;([^&]*)&lt;/b&gt;', '<b>\\1</b>', body)
+    body=re.sub('&lt;blockquote&gt;([^&]*)&lt;/blockquote&gt;', 
+                '<blockquote>\\1</blockquote>', body)
+    body=re.sub('&lt;br\s*/?&gt;\n?','\n',body)
+    body=re.sub('&lt;/?p&gt;','\n\n',body).strip()
+
+    # wiki like support: _em_, *b*, [url title]
+    body=re.sub(r'\b_(\w.*?)_\b', r'<em>\1</em>', body)
+    body=re.sub(r'\*(\w.*?)\*', r'<b>\1</b>', body)
+    body=re.sub(r'\[(\w+:\S+\.gif) (.*?)\]', r'<img src="\1" alt="\2" />', body)
+    body=re.sub(r'\[(\w+:\S+\.jpg) (.*?)\]', r'<img src="\1" alt="\2" />', body)
+    body=re.sub(r'\[(\w+:\S+\.png) (.*?)\]', r'<img src="\1" alt="\2" />', body)
+    body=re.sub(r'\[(\w+:\S+) (.*?)\]', r'<a href="\1">\2</a>', body).strip()
+
+    # unordered lists: consecutive lines starting with spaces and an asterisk
+    chunk=re.compile(r'^( *\*.*(?:\n *\*.*)+)',re.M).split(body)
+    for i in range(1, len(chunk), 2):
+        (html,stack)=('', [''])
+        for indent,line in re.findall(r'( +)\* +(.*)', chunk[i]) + [('','')]:
+            if indent>stack[-1]: (stack,html)=(stack+[indent],html+'<ul>\r')
+            while indent<stack[-1]: (stack,html)=(stack[:-1],html+'</ul>\r')
+            if line: html += '<li>'+line+'</li>\r'
+            chunk[i]=html
+
+    # white space
+    chunk=re.split('\n\n+', ''.join(chunk))
+#    if len(chunk)>1: body='<p>' + '</p>\r<p>'.join(chunk) + '</p>\r'
+    body=re.sub('\n','<br />\n', body)
+    body=re.compile('<p>(<ul>.*?</ul>)\r</p>?',re.M).sub(r'\1',body)
+    body=re.compile('<p>(<blockquote>.*?</blockquote>)</p>?',re.M).sub(r'\1',body)
+    body=re.sub('\r', '\n', body)
+    body=re.sub('  +', '&nbsp; ', body)
+
+    return body        
+        
+        
 def cb_prepare(args):
     """
     Handle comment related HTTP POST's
@@ -228,12 +292,16 @@ def cb_prepare(args):
     if form.has_key("title") and form.has_key("author") and form.has_key("url") \
        and form.has_key("body"):
 
+        body = form['body'].value
+        
+        body = sanitize(body)
+        
         cdict = {'title': form['title'].value, \
                  'author' : form['author'].value, \
                  'pubDate' : str(time.time()), \
                  'link' : form['url'].value, \
                  'source' : '', \
-                 'description' : form['body'].value }
+                 'description' : body }
         
         writeComment(config, data, cdict)
 
@@ -242,12 +310,22 @@ def cb_prepare(args):
         
     for i in range(len(entry_list)):
         entry_list[i] = CommentDecorator(entry_list[i])
-            
+
+def cb_head(dict):
+    renderer = dict['renderer']
+    entry = dict['entry']
+    template = dict['template']
+    newtemplate = renderer.flavour.get('comment-head','')
+    if not newtemplate == '':
+        template = newtemplate
+    return template
+        
 def cb_story(dict):
     renderer = dict['renderer']
     entry = dict['entry']
     template = dict['template']
     if len(renderer.getContent()) == 1:
+        template = renderer.flavour.get('comment-story','')
         output = []
         if entry.has_key('comments'):        
             for comment in entry['comments']:
@@ -256,3 +334,13 @@ def cb_story(dict):
         return template +u"".join(output)
     else:
         return template
+    
+def cb_start(dict):
+    request = dict['request']
+    config = request.getConfiguration()
+    if not config.has_key('blosxom_custom_flavours'):
+        config['blosxom_custom_flavours'] = '|comment-head|comment-story|comment|comment-form'
+    if not config.has_key('comment_dir'):
+        config['comment_dir'] = 'comments'
+    if not config.has_key('comment_ext'):
+        config['comment_ext'] = 'cmt'
