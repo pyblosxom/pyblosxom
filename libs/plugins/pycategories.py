@@ -40,6 +40,7 @@ class PyblCategories:
 		clist = tools.Walk(root, pattern=re.compile('.*'), return_folders=1)
 		clist = [mem[len(root)+1:] for mem in clist]
 		clist.sort()
+		clist.insert(0, "")
 
 		# build the list of entries
 		elist = tools.Walk(root)
