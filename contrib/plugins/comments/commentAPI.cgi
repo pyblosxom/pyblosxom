@@ -33,11 +33,11 @@ from xml.dom.minidom import parseString
 if __name__ == '__main__':
     from libs import tools
     from libs.entries.fileentry import FileEntry
-    from libs.plugins.commentdecorator import writeComment
+    from libs.plugins.comments import writeComment
     from libs.Request import Request
     
     d = {}
-    for mem in ["PATH_INFO", "SCRIPT_NAME", "REQUEST_METHOD", "HTTP_HOST", "QUERY_STRING", "REQUEST_URI", "HTTP_USER_AGENT", "REMOTE_ADDR"]:
+    for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER", "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR", "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME"]:
         d[mem] = os.environ.get(mem, "")
     
     request = Request()
@@ -66,7 +66,10 @@ if __name__ == '__main__':
     
     datadir = config['datadir']
     try:
-        entry = FileEntry(config, datadir+d['PATH_INFO']+'.txt', datadir )
+        path = d['PATH_INFO']
+        if len(path) > 0:
+            path = path[1:]
+        entry = FileEntry(config, os.path.join(datadir, path+'.txt'), datadir )
         data = {}
         data['entry_list'] = [ entry ]
        
