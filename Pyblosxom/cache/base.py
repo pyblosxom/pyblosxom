@@ -6,18 +6,18 @@ class BlosxomCacheBase:
     """
     Base Class for Caching stories in pyblosxom.
 
-    A cache is a disposable piece of data that gets updated when an entry is in a
-    fresh state.
+    A cache is a disposable piece of data that gets updated when an entry 
+    is in a fresh state.
 
-    Drivers are to subclass this object, overriding methods defined in this class.
-    If there is an error in creating cache data, be as quite as possible, document
-    how a user could check whether his cache works.
+    Drivers are to subclass this object, overriding methods defined in 
+    this class.  If there is an error in creating cache data, be as quite 
+    as possible, document how a user could check whether his cache works.
 
     Driver should expect empty caches and should attempt to create them from
     scratch.
 
-    @cvar _config: String containing config on where to store the cache. The Value
-        of config is derived from C{py['cacheConfig']} in L{config}.
+    @cvar _config: String containing config on where to store the cache.
+        The Value of config is derived from C{py['cacheConfig']} in L{config}.
     @type _config: string
     """
     def __init__(self, config):
