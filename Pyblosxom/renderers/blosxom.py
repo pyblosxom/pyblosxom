@@ -103,7 +103,7 @@ class BlosxomRenderer(RendererBase):
         """
         if template:
             template = unicode(template)
-            finaltext = tools.parse(self._encoding, entry, template)
+            finaltext = tools.parse(self._request, self._encoding, entry, template)
             return finaltext.replace(r'\$', '$')
         return ""
 
@@ -171,7 +171,7 @@ class BlosxomRenderer(RendererBase):
             # if the content is a dict, then we parse it as if it were an
             # entry--except it's distinctly not an EntryBase derivative
             self._content.update(data)
-            output = tools.parse(self._encoding, self._content, self.flavour['story'])
+            output = tools.parse(self._request, self._encoding, self._content, self.flavour['story'])
             outputbuffer.append(output)
 
         elif content_type is type([]):
@@ -249,7 +249,7 @@ class BlosxomRenderer(RendererBase):
         template = args["template"]
         entry = args["entry"]
 
-        self.write(tools.parse(self._encoding, entry, template))
+        self.write(tools.parse(self._request, self._encoding, entry, template))
             
     def outputTemplate(self, output, entry, template_name, override=0):
         """

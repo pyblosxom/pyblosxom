@@ -64,10 +64,13 @@ class Replacer:
     This class is a utility class used to provide a bound method to the
     C{re.sub()} function.  Gotten from OPAGCGI.
     """
-    def __init__(self, encoding, var_dict):
+    def __init__(self, request, encoding, var_dict):
         """
         It's only duty is to populate itself with the replacement dictionary
         passed.
+
+        @param request: the Request object
+        @type  request: Request 
 
         @param encoding: the encoding to use
         @type  encoding: string
@@ -75,6 +78,7 @@ class Replacer:
         @param var_dict: The dict for variable substitution
         @type var_dict: dict
         """
+        self._request = request
         self._encoding = encoding
         self.var_dict = var_dict
 
@@ -91,6 +95,7 @@ class Replacer:
         @returns: Substitutions
         @rtype: string
         """
+        request = self._request
         key = matchobj.group(1)
 
         if key.find("(") != -1 and key.find(")"):
@@ -110,7 +115,7 @@ class Replacer:
                 # course, the things it allows us to do can be done using
                 # plugins much more easily--so it's kind of a moot point.
                 if args:
-                    r = eval("r(" + args + ")")
+                    r = eval("r(request, " + args + ")")
                 else:
                     r = r()
 
@@ -126,11 +131,14 @@ class Replacer:
         else:
             return u''
 
-def parse(encoding, var_dict, template):
+def parse(request, encoding, var_dict, template):
     """
     This method parses the open file object passed, replacing any keys
     found using the replacement dictionary passed.  Uses the L{Replacer} 
     object.  From OPAGCGI library
+
+    @param request: the Request object
+    @type  request: Request
 
     @param encoding: the encoding to use
     @type  encoding: string
@@ -149,7 +157,7 @@ def parse(encoding, var_dict, template):
         # convert strings to unicode, assumes strings in iso-8859-1
         template = unicode(template, encoding, 'replace')
 
-    return u'' + VAR_REGEXP.sub(Replacer(encoding, var_dict).replace, template)
+    return u'' + VAR_REGEXP.sub(Replacer(request, encoding, var_dict).replace, template)
 
 
 def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):

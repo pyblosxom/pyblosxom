@@ -7,8 +7,8 @@ import os, time, re, sys
 import tools
 from entries.fileentry import FileEntry
 
-VERSION = "0.9.1"
-VERSION_DATE = VERSION + " April 05, 2004"
+VERSION = "1.0.0"
+VERSION_DATE = VERSION + " not yet released"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
 class PyBlosxom:
@@ -20,17 +20,18 @@ class PyBlosxom:
     """
     def __init__(self, request):
         """
-        Initializes the PyBlosxom class
+        Sets the request.
 
         @param request: A L{Pyblosxom.Request.Request} object
         @type request: L{Pyblosxom.Request.Request} object
         """
         self._request = request
 
-    def startup(self):
+    def initialize(self):
         """
-        The startup step further initializes the Request by setting
-        additional information in the _data dict.
+        The initialize step further initializes the Request by setting
+        additional information in the _data dict, registering plugins,
+        and entryparsers.
         """
         global VERSION_DATE
 
@@ -51,68 +52,30 @@ class PyBlosxom:
         if len(config['datadir']) > 0 and config['datadir'][-1] == os.sep:
             config['datadir'] = config['datadir'][:-1]
 
-   
-    def common_start(self, start_callbacks=1, render=1):
-        """
-        Common pyblosxom initialization used by other CGI scripts.
-
-        @param start_callbacks: whether (1) or not (0) we add Pyblosxom
-            startup method to the startup callback.
-        @type  start_callbacks: boolean
-
-        @param render: whether (1) or not (0) we instantiate a renderer
-        @type  render: boolean
-
-        @returns: a tuple containing the config and data dicts
-        @rtype: (config dict, data dict)
-        """
-        config = self._request.getConfiguration()
-        data = self._request.getData()
-
         # import and initialize plugins
         import plugin_utils
         plugin_utils.initialize_plugins(config.get("plugin_dirs", []), config.get("load_plugins", None))
 
-        # inject our own startup into the callback thing
-        if start_callbacks:
-            plugin_utils.callbacks.setdefault("startup", []).append(self.startup)
-
-        if render:
-            # get the renderer we want to use
-            r = config.get("renderer", "blosxom")
-
-            # import the renderer
-            r = tools.importName("Pyblosxom.renderers", r)
-
-            # get the renderer object
-            r = r.Renderer(self._request, config.get("stdoutput", sys.stdout))
-
-            # go through the renderer callback to see if anyone else
-            # wants to render.  the default is the renderer object we
-            # figured out from above.  this renderer gets stored in
-            # the data dict for downstream processing.
-            data['renderer'] = tools.run_callback('renderer', 
-                                                  {'request': self._request},
-                                                  donefunc = lambda x: x != None, 
-                                                  defaultfunc = lambda x: r)
-        
-        # do start callback
-        tools.run_callback("start", {'request': self._request})
-
-        # entryparser callback is runned first here to allow other plugins
+        # entryparser callback is run here first to allow other plugins
         # register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
                                         {'txt': blosxom_entry_parser},
                                         mappingfunc=lambda x,y:y,
                                         defaultfunc=lambda x:x)
-        return (config, data)
-        
+
     def run(self):
         """
-        Main loop for pyblosxom.
+        Main loop for pyblosxom.  This should be called _after_
+        initialization.  This method will run the handle callback
+        to allow registered handlers to handle the request.  If nothing
+        handles the request, then we use the default_blosxom_handler.
         """
-        config, data = self.common_start()
-        
+        self.initialize()
+
+        data = self._request.getData()
+        pyhttp = self._request.getHttp()
+        config = self._request.getConfiguration()
+
         # allow anyone else to handle the request at this point
         handled = tools.run_callback("handle", 
                         {'request': self._request},
@@ -120,75 +83,108 @@ class PyBlosxom:
                         donefunc=lambda x:x)
 
         if not handled == 1:
-            self.defaultHandler(config, data)
-
-        # do end callback
-        tools.run_callback("end", {'request':self._request})
-
-    def defaultHandler(self, config, data):
-        import cgi
-
-        self._request.addHttp( {"form": cgi.FieldStorage() } )
-        # process the path info to determine what kind of blog entry(ies) 
-        # this is
-        tools.run_callback("pathinfo",
-                               {"request": self._request},
-                               donefunc=lambda x:x != None,
-                               defaultfunc=blosxom_process_path_info)
-
-        # call the filelist callback to generate a list of entries
-        data["entry_list"] = tools.run_callback("filelist",
-                                   {"request": self._request},
-                                   donefunc=lambda x:x != None,
-                                   defaultfunc=blosxom_file_list_handler)
-        
-        # we pass the request with the entry_list through the prepare callback
-        # giving everyone a chance to transform the data.  the request is
-        # modified in place.
-        tools.run_callback("prepare", {"request": self._request})
-
-        # now we pass the entry_list through the renderer
-        entry_list = data["entry_list"]
-        renderer = data['renderer']
-
-        if renderer and not renderer.rendered:
-            if entry_list:
-                renderer.setContent(entry_list)
-                # Log it as success
-                tools.run_callback("logrequest", 
-                        {'filename':config.get('logfile',''), 
-                         'return_code': '200', 
-                         'request': self._request})
-            else:
-                renderer.addHeader('Status', '404 Not Found')
-                renderer.setContent(
-                    {'title': 'The page you are looking for is not available',
-                     'body': 'Somehow I cannot find the page you want. ' + 
-                     'Go Back to <a href="%s">%s</a>?' 
-                     % (config["base_url"], config["blog_title"])})
-                # Log it as failure
-                tools.run_callback("logrequest", 
-                        {'filename':config.get('logfile',''), 
-                         'return_code': '404', 
-                         'request': self._request})
-            renderer.render()
-
-        elif not renderer:
-            output = config.get('stdoutput', sys.stdout)
-            output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
+            blosxom_handler(self._request)
 
     def runCallback(self, callback="help"):
         """
         Generic method to run the engine for a specific callback
         """
         # treated as a non-rendering startup
-        config, data = self.common_start(render=0)
+        self.initialize()
+        config = self._request.getConfig()
+        data = self._request.getData()
 
         # invoke all callbacks for the 'callback'
         handled = tools.run_callback(callback,
                         {'request': self._request},
                         mappingfunc=lambda x,y:x,
                         donefunc=lambda x:x)
+
+
+def blosxom_handler(request):
+    """
+    This is the default blosxom handler.
+    """
+    import cgi
+
+    config = request.getConfiguration()
+    data = request.getData()
+
+    # go through the renderer callback to see if anyone else
+    # wants to render.  the default is the renderer object we
+    # figured out from above.  this renderer gets stored in
+    # the data dict for downstream processing.
+    r = tools.run_callback('renderer', 
+                           {'request': request},
+                           donefunc = lambda x: x != None, 
+                           defaultfunc = lambda x: None)
+    if not r:
+        # get the renderer we want to use
+        r = config.get("renderer", "blosxom")
+
+        # import the renderer
+        r = tools.importName("Pyblosxom.renderers", r)
+
+        # get the renderer object
+        r = r.Renderer(request, config.get("stdoutput", sys.stdout))
+
+    data['renderer'] = r
+
+    # run the start callback
+    tools.run_callback("start", {'request': request})
+
+    request.addHttp( {"form": cgi.FieldStorage() } )
+    # process the path info to determine what kind of blog entry(ies) 
+    # this is
+    tools.run_callback("pathinfo",
+                           {"request": request},
+                           donefunc=lambda x:x != None,
+                           defaultfunc=blosxom_process_path_info)
+
+    # call the filelist callback to generate a list of entries
+    data["entry_list"] = tools.run_callback("filelist",
+                               {"request": request},
+                               donefunc=lambda x:x != None,
+                               defaultfunc=blosxom_file_list_handler)
+    
+    # we pass the request with the entry_list through the prepare callback
+    # giving everyone a chance to transform the data.  the request is
+    # modified in place.
+    tools.run_callback("prepare", {"request": request})
+
+    # now we pass the entry_list through the renderer
+    entry_list = data["entry_list"]
+    renderer = data['renderer']
+
+    if renderer and not renderer.rendered:
+        if entry_list:
+            renderer.setContent(entry_list)
+            # Log it as success
+            tools.run_callback("logrequest", 
+                    {'filename':config.get('logfile',''), 
+                     'return_code': '200', 
+                     'request': request})
+        else:
+            renderer.addHeader('Status', '404 Not Found')
+            renderer.setContent(
+                {'title': 'The page you are looking for is not available',
+                 'body': 'Somehow I cannot find the page you want. ' + 
+                 'Go Back to <a href="%s">%s</a>?' 
+                 % (config["base_url"], config["blog_title"])})
+            # Log it as failure
+            tools.run_callback("logrequest", 
+                    {'filename':config.get('logfile',''), 
+                     'return_code': '404', 
+                     'request': request})
+        renderer.render()
+
+    elif not renderer:
+        output = config.get('stdoutput', sys.stdout)
+        output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
+
+    # do end callback
+    tools.run_callback("end", {'request': request})
+
 
 def blosxom_entry_parser(filename, request):
     """
@@ -239,6 +235,7 @@ def blosxom_entry_parser(filename, request):
              'entry_data': entryData})
         
     return entryData
+
 
 def blosxom_file_list_handler(args):
     """
@@ -397,5 +394,132 @@ def blosxom_process_path_info(args):
                 
     # Construct our final URL
     data['url'] = '%s/%s' % (config['base_url'], data['pi_bl'])
+
+
+def test_installation(request):
+    """
+    This function gets called when someone starts up pyblosxom.cgi
+    from the command line with no REQUEST_METHOD environment variable.
+
+    It:
+
+    1. tests properties in their config.py file
+    2. verifies they have a datadir and that it exists
+    3. initializes all the plugins they have installed
+    4. runs "cb_verify_installation"--plugins can print out whether
+       they are installed correctly (i.e. have valid config property
+       settings and can read/write to data files)
+    5. exits
+
+    The goal is to be as useful and informative to the user as we can be
+    without being overly verbose and confusing.
+
+    This is designed to make it much much much easier for a user to
+    verify their PyBlosxom installation is working and also to install
+    new plugins and verify that their configuration is correct.
+    """
+    import sys, os, os.path
+    from Pyblosxom import pyblosxom
+
+    config = request.getConfiguration()
+
+    # BASE STUFF
+    print "Welcome to PyBlosxom's installation verification system."
+    print "------"
+    print "]] printing diagnostics [["
+    print "pyblosxom:   %s" % pyblosxom.VERSION_DATE
+    print "sys.version: %s" % sys.version.replace("\n", " ")
+    print "os.name:     %s" % os.name
+    print "codebase:    %s" % config.get("codebase", "--default--")
+    print "------"
+
+    # CONFIG FILE
+    print "]] checking config file [["
+    print "config has %s properties set." % len(config)
+    print ""
+    required_config = ["datadir"]
+
+    nice_to_have_config = ["blog_title", "blog_author", "blog_description",
+                           "blog_language", "blog_encoding", 
+                           "blosxom_custom_flavours", "base_url", "depth",
+                           "num_entries", "renderer", "cacheDriver", 
+                           "cacheConfig", "plugin_dirs", "load_plugins"]
+    missing_properties = 0
+    for mem in required_config:
+        if not config.has_key(mem):
+            print "   missing required property: '%s'" % mem
+            missing_properties = 1
+
+    for mem in nice_to_have_config:
+        if not config.has_key(mem):
+            print "   missing optional property: '%s'" % mem
+
+    print ""
+    print "Refer to the documentation for what properties are available"
+    print "and what they do."
+
+    if missing_properties:
+        print ""
+        print "Missing properties must be set in order for your blog to"
+        print "work."
+        print ""
+        print "This must be done before we can go further.  Exiting."
+        return
+
+    print "PASS: config file is fine."
+
+    print "------"
+    print "]] checking datadir [["
+
+    # DATADIR
+    # FIXME - we should check permissions here?
+    if not os.path.isdir(config["datadir"]):
+        print "datadir '%s' does not exist." % config["datadir"]          
+        print "You need to create your datadir and give it appropriate"
+        print "permissions."
+        print ""
+        print "This must be done before we can go further.  Exiting."
+        return
+
+    print "PASS: datadir is fine."
+
+    print "------"
+    print "Now we're going to verify your plugin configuration."
+
+    if config.has_key("plugin_dirs"):
+
+        from Pyblosxom import plugin_utils
+        plugin_utils.initialize_plugins(config["plugin_dirs"],
+                                        config.get("load_plugins", None))
+
+        no_verification_support = []
+
+        for mem in plugin_utils.plugins:
+            if "verify_installation" in dir(mem):
+                print "=== plugin: '%s'" % mem.__name__
+
+                if "__version__" in dir(mem):
+                    print "    version: %s" % mem.__version__
+                else:
+                    print "    plugin has no version."
+
+                try:
+                    if mem.verify_installation(request) == 1:
+                        print "    PASS"
+                    else:
+                        print "    FAIL!!!"
+                except AssertionError, error_message:
+                    print " FAIL!!! ", error_message
+
+            else:
+                no_verification_support.append(mem.__name__)
+
+        if len(no_verification_support) > 0:
+            print ""
+            print "The following plugins do not support installation verification:"
+            for mem in no_verification_support:
+                print "   %s" % mem
+    else:
+        print "You have chosen not to load any plugins."
 
 # vim: shiftwidth=4 tabstop=4 expandtab
