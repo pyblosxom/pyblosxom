@@ -31,7 +31,6 @@ Implements the blogger xmlrpc interface.  Adds methods for:
    blogger.getRecentPosts:
 """
 import os, xmlrpclib, re
-from Pyblosxom.xmlrpc import authenticate
 from Pyblosxom import tools, plugin_utils
 
 LINEFEED = os.linesep
@@ -51,6 +50,22 @@ def cb_xmlrpc_register(args):
 
     return args
 
+def authenticate(request, username, password):
+    """
+    Handles authentication.  This works by getting the xmlrpc dispatcher
+    plugin Python module and then calling authenticate on that.
+
+    @param request: the pyblosxom Request instance
+    @type  request: Request
+
+    @param username: the username
+    @type  username: string
+
+    @param password: the password
+    @type  password: string
+    """
+    xmlrpc_plugin = plugin_utils.get_plugin_by_name("xmlrpc")
+    xmlrpc_plugin.authenticate(request, username, password)
 
 def blogger_newPost(request, appkey, blogid, username, password, content,
         publish=1):
@@ -58,6 +73,7 @@ def blogger_newPost(request, appkey, blogid, username, password, content,
     Used for creating new posts on the server
     """
     authenticate(request, username, password)
+
     config = request.getConfiguration()
     if os.path.isdir(os.path.normpath(os.path.join(config['datadir'],
             blogid[1:]))):

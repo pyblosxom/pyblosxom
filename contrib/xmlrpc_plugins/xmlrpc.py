@@ -6,13 +6,10 @@ Requires the following block in your config.py file:
 
 %<---------------------------------------------------------
 # XML-RPC data
-xmlrpc = {}
 
-# Username to access this server
-xmlrpc['usernames'] = {'username': 'password'}
-xmlrpc['urltrigger'] = "/RPC"
-xmlrpc['maxrequest_length'] = 10000
-xmlrpc['load_xmlrpc_plugins'] = ["xmlrpc_blogger"]
+py['xmlrpc_usernames'] = {'username': 'password'}
+py['xmlrpc_urltrigger'] = "/RPC"
+py['xmlrpc_maxrequest_length'] = 10000
 %<---------------------------------------------------------
 
 'usernames'  - a dict of username -> password key/value pairs.
@@ -20,9 +17,6 @@ xmlrpc['load_xmlrpc_plugins'] = ["xmlrpc_blogger"]
                to handle the request.
 'maxrequest_length' - the maximum content length of a post.  this is
                partially to protect your blog from bad people.
-'load_xmlrpc_plugins' - the list of plugins that are xmlrpc plugins
-               and implement xmlrpc methods.  these are stored in
-               the same directory as your other plugins.
 """
 
 __author__ = "Wari"
@@ -112,16 +106,17 @@ def authenticate(request, username, password):
     @raises xmlrpclib.Fault: This happens when the username password combo is
         wrong
     @warning: The L{Pyblosxom.Request.Request} must contain a configuration dict
-        with C{['xmlrpc']['usernames']} in it. The username is derived from the
+        with C{['xmlrpc_usernames']} in it. The username is derived from the
         key value pair dict there:
 
         >>> req = Pyblosxom.Request.Request()
-        >>> req.addConfiguration({'xmlrpc': {'usernames': {'foo': 'bar'}}})
         >>> authenticate(req, 'foo', 'bar')
     """
     config = request.getConfiguration()
-    xmlconfig = config["xmlrpc"]
-    auth = xmlconfig['usernames']
+    auth = config.get('xmlrpc_usernames', None)
+
+    if not auth:
+        raise xmlrpclib.Fault('ConfigurationError', 'xmlrpc plugin has not been configured correctly')
 
     if not auth.has_key(username) or password != auth[username]:
         raise xmlrpclib.Fault('PasswordError', 'Error in username or password')
@@ -134,14 +129,13 @@ def cb_handle(args):
     request = args["request"]
     pyhttp = request.getHttp()
     config = request.getConfiguration()
-    xmlconfig = config.get("xmlrpc", {})
 
-    urltrigger = xmlconfig.get("urltrigger", "/RPC")
+    urltrigger = config.get("xmlrpc_urltrigger", "/RPC")
 
     if os.environ.get("PATH_INFO", "").startswith(urltrigger):
         try:
             content_length = int(os.environ.get("CONTENT_LENGTH", "0"))
-            maxrequest_length = xmlconfig.get("maxrequest_length", 10000)
+            maxrequest_length = config.get("xmlrpc_maxrequest_length", 10000)
 
             if content_length > maxrequest_length:
                 raise ValueError, 'Request too large - %s bytes' % content_length
@@ -159,11 +153,6 @@ def cb_handle(args):
         # everything is cool--so we handle the xmlrpc request
 
         data = sys.stdin.read(content_length)
-        request.addConfiguration( {"xmlrpc": xmlconfig} )
-
-        # load the xmlrpc plugins
-        xmlrpc_plugins = xmlconfig.get("load_xmlrpc_plugins", [])
-        plugin_utils.initialize_plugins([], xmlrpc_plugins)
 
         # here we call the xmlrpc_init callback passing in a dict.
         # each function that registers with this callback adds their
