@@ -276,7 +276,7 @@ class PyBlosxom:
             for entry in valid_list:
                 self.py.update(entry)
                 current_date = self.processEntry(entry['filename'], current_date)
-                if (self.py['pi_bl'] == '' and self.py['pi_yr'] == '') and count >= int(self.py['num_entries']):
+                if self.py['pi_yr'] == '' and count >= int(self.py['num_entries']):
                     break
                 count += 1
         

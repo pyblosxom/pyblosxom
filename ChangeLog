@@ -1,5 +1,7 @@
 2003-01-05 Wari Wahab <pyblosxom@wari.per.sg>
 	* Fixed directory recursion when depth is more than one
+	* Made rendering of categories to work more like blosxom (Do not honor
+	  num_entries)
 
 2002-11-25 Wari Wahab <pyblosxom@wari.per.sg>
 	* Made Conditional HTTP as a user option
