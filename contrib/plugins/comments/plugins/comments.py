@@ -185,7 +185,9 @@ def sanitize(body):
     # html characters used in text become escaped
     body=escape(body)
 
-    # passthru <a href>, <em>, <i>, <b>, <blockquote>, <br/>, <p>
+    # passthru <a href>, <em>, <i>, <b>, <blockquote>, <br/>, <p>, 
+    # <abbr>, <acronym>, <big>, <cite>, <code>, <dfn>, <kbd>, <pre>, <small>
+    # <strong>, <sub>, <sup>, <tt>, <var>
     body=re.sub('&lt;a href="([^"]*)"&gt;([^&]*)&lt;/a&gt;',
                 '<a href="\\1">\\2</a>', body)
     body=re.sub('&lt;a href=\'([^\']*)\'&gt;([^&]*)&lt;/a&gt;',
@@ -196,6 +198,22 @@ def sanitize(body):
     body=re.sub('&lt;blockquote&gt;([^&]*)&lt;/blockquote&gt;', 
                 '<blockquote>\\1</blockquote>', body)
     body=re.sub('&lt;br\s*/?&gt;\n?','\n',body)
+
+    body=re.sub('&lt;abbr&gt;([^&]*)&lt;/abbr&gt;', '<abbr>\\1</abbr>', body)
+    body=re.sub('&lt;acronym&gt;([^&]*)&lt;/acronym&gt;', '<acronym>\\1</acronym>', body)
+    body=re.sub('&lt;big&gt;([^&]*)&lt;/big&gt;', '<big>\\1</big>', body)
+    body=re.sub('&lt;cite&gt;([^&]*)&lt;/cite&gt;', '<cite>\\1</cite>', body)
+    body=re.sub('&lt;code&gt;([^&]*)&lt;/code&gt;', '<code>\\1</code>', body)
+    body=re.sub('&lt;dfn&gt;([^&]*)&lt;/dfn&gt;', '<dfn>\\1</dfn>', body)
+    body=re.sub('&lt;kbd&gt;([^&]*)&lt;/kbd&gt;', '<kbd>\\1</kbd>', body)
+    body=re.sub('&lt;pre&gt;([^&]*)&lt;/pre&gt;', '<pre>\\1</pre>', body)
+    body=re.sub('&lt;small&gt;([^&]*)&lt;/small&gt;', '<small>\\1</small>', body)
+    body=re.sub('&lt;strong&gt;([^&]*)&lt;/strong&gt;', '<strong>\\1</strong>', body)
+    body=re.sub('&lt;sub&gt;([^&]*)&lt;/sub&gt;', '<sub>\\1</sub>', body)
+    body=re.sub('&lt;sup&gt;([^&]*)&lt;/sup&gt;', '<sup>\\1</sup>', body)
+    body=re.sub('&lt;tt&gt;([^&]*)&lt;/tt&gt;', '<tt>\\1</tt>', body)
+    body=re.sub('&lt;var&gt;([^&]*)&lt;/var&gt;', '<var>\\1</var>', body)
+
     body=re.sub('&lt;/?p&gt;','\n\n',body).strip()
 
     # wiki like support: _em_, *b*, [url title]
@@ -246,7 +264,7 @@ def cb_prepare(args):
         
         body = sanitize(body)
 
-        # Chech if the form has a URL
+        # Check if the form has a URL
         url = (form.has_key('url') and [form['url'].value] or [''])[0]
         
         cdict = {'title': form['title'].value, \
