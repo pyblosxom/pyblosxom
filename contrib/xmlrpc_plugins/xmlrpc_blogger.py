@@ -1,29 +1,56 @@
-# vim: tabstop=4 expandtab shiftwidth=4
-from Pyblosxom.xmlrpc import authenticate
-import os, Pyblosxom, xmlrpclib
-from Pyblosxom import tools
-import re
+"""
+Implements the blogger xmlrpc interface.  Adds methods for:
 
-EXTENSIONS = {}
+   blogger.newPost:
+       - appkey    (string)
+       - blogid    (string)
+       - username  (string)
+       - password  (string)
+       - content   (string)
+       - publish   (boolean)
+   
+   blogger.editPost:
+       - appkey    (string)
+       - postid    (string)
+       - username  (string)
+       - password  (string)
+       - content   (string)
+       - publish   (boolean)
+
+   blogger.getUsersBlogs:
+       - appkey    (string)
+       - username  (string)
+       - password  (string)
+
+   blogger.getUserInfo:
+       - appkey    (string)
+       - username  (string)
+       - password  (string)
+
+   blogger.deletePost:
+   blogger.getRecentPosts:
+"""
+import os, xmlrpclib, re
+from Pyblosxom.xmlrpc import authenticate
+from Pyblosxom import tools, plugin_utils
+
 LINEFEED = os.linesep
 
-def startup(request):
-    """
-    Grabs extension lists if not initialized
-    """
-    global EXTENSIONS
-    if EXTENSIONS == {}:
-        from Pyblosxom import plugin_utils
-        from Pyblosxom.pyblosxom import PyBlosxom
-        import config
-        plugin_utils.initialize_plugins(config.py)
 
-        p = PyBlosxom(request)
+def cb_xmlrpc_register(args):
+    """
+    Binds the methods that we handle with the function instances.
+    """
+    args["methods"].update( 
+          { "blogger.getUserInfo": blogger_getUserInfo,
+            "blogger.getUsersBlogs": blogger_getUsersBlogs,
+            "blogger.getRecentPosts": blogger_getRecentPosts,
+            "blogger.newPost": blogger_newPost,
+            "blogger.editPost": blogger_editPost,
+            "blogger.deletePost": blogger_deletePost })
 
-        EXTENSIONS = tools.run_callback("entryparser",
-                {'txt': p.defaultEntryParser},
-                mappingfunc=lambda x,y:y,
-                defaultfunc=lambda x:x)
+    return args
+
 
 def blogger_newPost(request, appkey, blogid, username, password, content,
         publish=1):
@@ -36,6 +63,7 @@ def blogger_newPost(request, appkey, blogid, username, password, content,
             blogid[1:]))):
         # Look at content
         blogTitle = content.split(LINEFEED)[0].strip()
+
         tempMarker = (not publish and '-' or '')
         blogID = os.path.normpath(
             os.path.join(
@@ -75,7 +103,7 @@ def blogger_editPost(request, appkey, postid, username, password, content,
         switchTo = filename
     cache_driver = tools.importName('Pyblosxom.cache', 
             config.get('cacheDriver', 'base'))
-    cache = cache_driver.BlosxomCache(config.get('cacheConfig', ''))
+    cache = cache_driver.BlosxomCache(request, config.get('cacheConfig', ''))
     # Check if file exists or not, edit everything here
     if os.path.isfile(filename):
         if filename != switchTo:
@@ -106,9 +134,9 @@ def blogger_getUsersBlogs(request, appkey, username, password):
     authenticate(request, username, password)
     config = request.getConfiguration()
     url = config.get('base_url', '')
-    result = [{'url':url + '/', 'blogid':'/', 'blogName':'/'}]
-    for directory in tools.Walk(config['datadir'], 0, re.compile(r'.*'), 1):
-        blogpath = directory.replace(config['datadir'],'') + '/'
+    result = [{'url': url + '/', 'blogid': '/', 'blogName': '/'}]
+    for directory in tools.Walk(request, config['datadir'], 0, re.compile(r'.*'), 1):
+        blogpath = directory.replace(config['datadir'], '') + '/'
         blogpath = blogpath.replace(os.sep, '/')
         result.append({'url' : url + blogpath, 
                        'blogid' : blogpath, 
@@ -155,22 +183,27 @@ def blogger_getRecentPosts(request, appkey, blogid, username, password,
     """
     Get recent posts from a blog tree
     """
-    global EXTENSIONS
     authenticate(request, username, password)
     config = request.getConfiguration()
     data = request.getData()
     from Pyblosxom.entries.fileentry import FileEntry
-    startup(request)
-    data['extensions'] = EXTENSIONS
+    from Pyblosxom import pyblosxom
+
+    exts = tools.run_callback("entryparser",
+                {'txt': pyblosxom.blosxom_entry_parser},
+                mappingfunc=lambda x,y:y,
+                defaultfunc=lambda x:x)
+
+    data['extensions'] = exts
     
     result = []
     dataList = []
-    filelist = tools.Walk(os.path.join(config['datadir'], blogid[1:]), 
+    filelist = tools.Walk(request, os.path.join(config['datadir'], blogid[1:]), 
             pattern = re.compile(r'.*\.(' +
-            '|'.join(EXTENSIONS.keys()) + ')-?$'), 
+            '|'.join(exts.keys()) + ')-?$'), 
             recurse = 1)
     for ourfile in filelist:
-        entry = FileEntry(config, ourfile, config['datadir'])
+        entry = FileEntry(request, ourfile, config['datadir'])
         dataList.append((entry._mtime, entry))
 
     # this sorts entries by mtime in reverse order.  entries that have
@@ -191,23 +224,4 @@ def blogger_getRecentPosts(request, appkey, blogid, username, password,
         count += 1
     return result
 
-def register_xmlrpc_methods():
-    return {'blogger.getUsersBlogs': blogger_getUsersBlogs,
-            'blogger.getUserInfo': blogger_getUserInfo,
-            'blogger.getRecentPosts': blogger_getRecentPosts,
-            'blogger.newPost': blogger_newPost,
-            'blogger.editPost': blogger_editPost,
-            'blogger.deletePost': blogger_deletePost}
-
-if __name__ == '__main__':
-    # Simple tests
-    from Pyblosxom.Request import Request
-    req = Request()
-    req.addConfiguration({'base_url': 'http://sync.wari.org'})
-    req.addConfiguration({'datadir': '/home/wari/test/blosxom'})
-    req.addConfiguration({'xmlrpc': {'usernames': {'foo': 'bar'}}})
-    from pprint import pprint
-    pprint(blogger_getUsersBlogs(req, '', 'foo', 'bar'))
-    pprint(blogger_getUserInfo(req, '', 'foo', 'bar'))
-    pprint(blogger_getRecentPosts(req, '', '/tests/', 'foo', 'bar', 5))
-
+# vim: tabstop=4 expandtab shiftwidth=4

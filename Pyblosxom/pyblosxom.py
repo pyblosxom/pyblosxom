@@ -22,8 +22,6 @@ class PyBlosxom:
         @type request: L{Pyblosxom.Request.Request} object
         """
         self._request = request
-        self.flavour = {}
-        self.dayFlag = 1 # Used to print valid date footers
 
     def startup(self):
         """
@@ -46,119 +44,7 @@ class PyBlosxom:
         if len(config['datadir']) > 0 and config['datadir'][-1] == os.sep:
             config['datadir'] = config['datadir'][:-1]
 
-
-    def processPathInfo(self, args):
-        """ 
-        Process HTTP PATH_INFO for URI according to path specifications, fill in
-        data dict accordingly
-        
-        The paths specification looks like this:
-            - C{/cat} - category
-            - C{/2002} - year
-            - C{/2002/Feb} (or 02) - Year and Month
-            - C{/cat/2002/Feb/31} - year and month day in category.
-            - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
-        To simplify checking, four digits directory name is not allowed.
-
-        @param args: dict containing the incoming Request object
-        @type args: L{Pyblosxom.Request.Request}
-        """
-        request = args['request']
-        config = request.getConfiguration()
-        data = request.getData()
-        pyhttp = request.getHttp()
-
-        form = self._request.getHttp()["form"]
-        data['flavour'] = (form.has_key('flav') and 
-                form['flav'].value or 
-                config.get('defaultFlavour', 'html'))
-
-        path_info = []
-        data['pi_yr'] = ''
-        data['pi_mo'] = ''
-        data['pi_da'] = ''
-        
-        if pyhttp.get('PATH_INFO', ''):
-            path_info = pyhttp['PATH_INFO'].split('/')
-        path_info = [x for x in path_info if x != '']
-
-        data['path_info'] = list(path_info)
-        data['root_datadir'] = config['datadir']
-
-        got_date = 0
-        for path_data in path_info:
-            if not path_data:
-                continue
-            elif len(path_data) == 4 and path_data.isdigit():
-                # We got a hot date here guys :)
-                got_date = 1
-                break
-            else:
-                data['pi_bl'] = os.path.join(data['pi_bl'], path_data)
-
-        if got_date:
-            # Get messy with dates
-            while not (len(path_info[0]) == 4 and path_info[0].isdigit()):
-                path_info.pop(0)
-            # Year
-            data['pi_yr'] = path_info.pop(0)
-            # Month
-            if path_info and path_info[0] in tools.MONTHS:
-                data['pi_mo'] = path_info.pop(0)
-                # Day
-                if path_info and re.match("^([0-2][0-9]|3[0-1])", path_info[0]):
-                    # Potential day here
-                    data['pi_da'] = path_info.pop(0)
-
-            if path_info and path_info[0]:
-                # Potential flavour after date
-                filename, ext = os.path.splitext(path_info[0])
-                if filename == 'index':
-                    data['flavour'] = ext[1:]
-
-        blog_result = os.path.join(config['datadir'], data['pi_bl'])
-        
-        data['bl_type'] = ''
-
-        # If all we've got is a directory, things are simple
-        if os.path.isdir(blog_result):
-            if data['pi_bl'] != '':
-                config['blog_title'] += ' : %s' % data['pi_bl']
-            data['root_datadir'] = blog_result
-            data['bl_type'] = 'dir'
-
-        # Else we may have a file
-        if not data['bl_type']:
-            # Try for file
-
-            ext = tools.what_ext(data["extensions"].keys(), blog_result)
-            if ext:
-                config['blog_title'] += ' : %s' % data['pi_bl']
-                data['bl_type'] = 'file'
-                data['root_datadir'] = blog_result + '.' + ext
-            else:
-                # We may have flavour embedded here
-                filename, ext = os.path.splitext(blog_result)
-                fileext = tools.what_ext(data["extensions"].keys(), filename)
-                dirname = os.path.dirname(filename)
-
-                if fileext:
-                    data['flavour'] = ext[1:]
-                    data['root_datadir'] = filename + '.' + fileext
-                    config['blog_title'] += ' : %s' % data['pi_bl']
-                    data['bl_type'] = 'file'
-                elif (os.path.basename(filename) == 'index' and 
-                        os.path.isdir(dirname)):
-                    # blanket flavours?
-                    data['flavour'] = ext[1:]
-                    if data['pi_bl'] != '':
-                        config['blog_title'] += ' : %s' % os.path.dirname(data['pi_bl'])
-                    data['root_datadir'] = dirname
-                    data['bl_type'] = 'dir'
-                    
-        # Construct our final URL
-        data['url'] = '%s/%s' % (config['base_url'], data['pi_bl'])
-    
+   
     def common_start(self, start_callbacks=1, render=1):
         """
         Common pyblosxom initialization used by other CGI scripts.
@@ -178,7 +64,7 @@ class PyBlosxom:
 
         # import and initialize plugins
         import plugin_utils
-        plugin_utils.initialize_plugins(config)
+        plugin_utils.initialize_plugins(config.get("plugin_dirs", []), config.get("load_plugins", None))
 
         # inject our own startup into the callback thing
         if start_callbacks:
@@ -209,7 +95,7 @@ class PyBlosxom:
         # entryparser callback is runned first here to allow other plugins
         # register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
-                                        {'txt': default_entry_parser},
+                                        {'txt': blosxom_entry_parser},
                                         mappingfunc=lambda x,y:y,
                                         defaultfunc=lambda x:x)
         return (config, data)
@@ -220,18 +106,30 @@ class PyBlosxom:
         """
         config, data = self.common_start()
         
+        # allow anyone else to handle the request at this point
+        handled = tools.run_callback("handle", 
+                        {'request': self._request},
+                        mappingfunc=lambda x,y:x,
+                        donefunc=lambda x:x)
+
+        if handled:
+            return
+
+        import cgi
+
+        self._request.addHttp( {"form": cgi.FieldStorage() } )
         # process the path info to determine what kind of blog entry(ies) 
         # this is
         tools.run_callback("pathinfo",
                            {"request": self._request},
                            donefunc=lambda x:x != None,
-                           defaultfunc=self.processPathInfo)
+                           defaultfunc=blosxom_process_path_info)
 
         # call the filelist callback to generate a list of entries
         data["entry_list"] = tools.run_callback("filelist",
                                    {"request": self._request},
                                    donefunc=lambda x:x != None,
-                                   defaultfunc=default_file_list_handler)
+                                   defaultfunc=blosxom_file_list_handler)
         
         # we pass the request with the entry_list through the prepare callback
         # giving everyone a chance to transform the data.  the request is
@@ -272,7 +170,7 @@ class PyBlosxom:
             output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
 
 
-def default_entry_parser(filename, request):
+def blosxom_entry_parser(filename, request):
     """
     Open up a *.txt file and read its contents
 
@@ -322,7 +220,7 @@ def default_entry_parser(filename, request):
         
     return entryData
 
-def default_file_list_handler(args):
+def blosxom_file_list_handler(args):
     """
     This is the default handler for getting entries.  It takes the
     request object in and figures out which entries based on the
@@ -368,4 +266,116 @@ def default_file_list_handler(args):
 
     return valid_list
 
+def blosxom_process_path_info(args):
+    """ 
+    Process HTTP PATH_INFO for URI according to path specifications, fill in
+    data dict accordingly
+    
+    The paths specification looks like this:
+        - C{/cat} - category
+        - C{/2002} - year
+        - C{/2002/Feb} (or 02) - Year and Month
+        - C{/cat/2002/Feb/31} - year and month day in category.
+        - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
+    To simplify checking, four digits directory name is not allowed.
+
+    @param args: dict containing the incoming Request object
+    @type args: L{Pyblosxom.Request.Request}
+    """
+    request = args['request']
+    config = request.getConfiguration()
+    data = request.getData()
+    pyhttp = request.getHttp()
+
+    form = pyhttp["form"]
+    data['flavour'] = (form.has_key('flav') and 
+            form['flav'].value or 
+            config.get('defaultFlavour', 'html'))
+
+    path_info = []
+    data['pi_yr'] = ''
+    data['pi_mo'] = ''
+    data['pi_da'] = ''
+    
+    if pyhttp.get('PATH_INFO', ''):
+        path_info = pyhttp['PATH_INFO'].split('/')
+    path_info = [x for x in path_info if x != '']
+
+    data['path_info'] = list(path_info)
+    data['root_datadir'] = config['datadir']
+
+    got_date = 0
+    for path_data in path_info:
+        if not path_data:
+            continue
+        elif len(path_data) == 4 and path_data.isdigit():
+            # We got a hot date here guys :)
+            got_date = 1
+            break
+        else:
+            data['pi_bl'] = os.path.join(data['pi_bl'], path_data)
+
+    if got_date:
+        # Get messy with dates
+        while not (len(path_info[0]) == 4 and path_info[0].isdigit()):
+            path_info.pop(0)
+        # Year
+        data['pi_yr'] = path_info.pop(0)
+        # Month
+        if path_info and path_info[0] in tools.MONTHS:
+            data['pi_mo'] = path_info.pop(0)
+            # Day
+            if path_info and re.match("^([0-2][0-9]|3[0-1])", path_info[0]):
+                # Potential day here
+                data['pi_da'] = path_info.pop(0)
+
+        if path_info and path_info[0]:
+            # Potential flavour after date
+            filename, ext = os.path.splitext(path_info[0])
+            if filename == 'index':
+                data['flavour'] = ext[1:]
+
+    blog_result = os.path.join(config['datadir'], data['pi_bl'])
+    
+    data['bl_type'] = ''
+
+    # If all we've got is a directory, things are simple
+    if os.path.isdir(blog_result):
+        if data['pi_bl'] != '':
+            config['blog_title'] += ' : %s' % data['pi_bl']
+        data['root_datadir'] = blog_result
+        data['bl_type'] = 'dir'
+
+    # Else we may have a file
+    if not data['bl_type']:
+        # Try for file
+
+        ext = tools.what_ext(data["extensions"].keys(), blog_result)
+        if ext:
+            config['blog_title'] += ' : %s' % data['pi_bl']
+            data['bl_type'] = 'file'
+            data['root_datadir'] = blog_result + '.' + ext
+        else:
+            # We may have flavour embedded here
+            filename, ext = os.path.splitext(blog_result)
+            fileext = tools.what_ext(data["extensions"].keys(), filename)
+            dirname = os.path.dirname(filename)
+
+            if fileext:
+                data['flavour'] = ext[1:]
+                data['root_datadir'] = filename + '.' + fileext
+                config['blog_title'] += ' : %s' % data['pi_bl']
+                data['bl_type'] = 'file'
+            elif (os.path.basename(filename) == 'index' and 
+                    os.path.isdir(dirname)):
+                # blanket flavours?
+                data['flavour'] = ext[1:]
+                if data['pi_bl'] != '':
+                    config['blog_title'] += ' : %s' % os.path.dirname(data['pi_bl'])
+                data['root_datadir'] = dirname
+                data['bl_type'] = 'dir'
+                
+    # Construct our final URL
+    data['url'] = '%s/%s' % (config['base_url'], data['pi_bl'])
+ 
 # vim: shiftwidth=4 tabstop=4 expandtab

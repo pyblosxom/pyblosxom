@@ -12,9 +12,6 @@ plugins = []
 # list of function instances that support that callback.
 callbacks = {}
 
-# XMLRPC methods
-methods = {}
-
 def catalogue_plugin(plugin_module):
     """
     Goes through the plugin's contents and catalogues all the functions
@@ -45,7 +42,7 @@ def get_callback_chain(chain):
     global callbacks
     return callbacks.get(chain, [])
 
-def initialize_plugins(configdict):
+def initialize_plugins(plugin_dirs, plugin_list):
     """
     Imports and initializes plugins from the directories in the list
     specified by "plugins_dir".  If no such list exists, then we don't
@@ -55,19 +52,23 @@ def initialize_plugins(configdict):
     we explicitly load those plugins in the order they're listed.  If the
     load_plugins key does not exist, then we load all the plugins in the
     plugins directory using an alphanumeric sorting order.
+
+    @param plugin_dirs: the list of directories to add to the sys.path
+        because that's where our plugins are located.
+    @type  plugin_dirs: list of strings
+
+    @param plugin_list: the list of plugins to load, or if None, we'll
+        load all the plugins we find in those dirs.
+    @type  plugin_list: list of strings or None
     """
-    global callbacks, plugins
-    if callbacks != {}:
-        return
+    global plugins
 
     # handle plugin_dirs here
-    plugin_dirs = configdict.get("plugin_dirs", [])
     for mem in plugin_dirs:
         # FIXME - do we want to check to see if the dir exists first
         # or just not worry about it?
         sys.path.append(mem)
 
-    plugin_list = configdict.get("load_plugins", None)
     plugin_list = get_plugin_list(plugin_list, plugin_dirs)
 
     for mem in plugin_list:
@@ -76,53 +77,6 @@ def initialize_plugins(configdict):
             _module = getattr(_module, comp)
         catalogue_plugin(_module)
         plugins.append(_module)
-
-def initialize_xmlrpc_plugins(configdict):
-    """
-    Imports and initializes plugins from a specified directory so they can
-    register with the xmlrpc method callbacks.
-
-    Plugins must have the C{register_xmlrpc_methods} in the plugin module. It
-    must return a dict containing the XMLRPC method name as the key, and a
-    function reference as its value. For example::
-
-        def helloWorld(request, name):
-            return "Hello %s" % name
-
-        def test(request):
-            return "Test Passed"
-
-        def register_xmlrpc_methods():
-            return {'system.testing': test,
-                    'system.helloWorld': helloWorld}
-    """
-    global methods
-    if methods != {}:
-        return
-
-    # handle plugin_dirs here
-    plugin_dirs = configdict.get("xmlrpc_plugin_dirs", [])
-    for mem in plugin_dirs:
-        # FIXME - do we want to check to see if the dir exists first
-        # or just not worry about it?
-        sys.path.append(mem)
-
-    plugin_list = configdict.get("load_xmlrpc_plugins", None)
-    plugin_list = get_plugin_list(plugin_list, plugin_dirs)
-
-    for mem in plugin_list:
-        _module = __import__(mem)
-        for comp in mem.split(".")[1:]:
-            _module = getattr(_module, comp)
-
-        # if the module has a register_xmlrpc_methods function, we call it with
-        # our py dict so it can bind itself to variable names of its own accord
-        if _module.__dict__.has_key("register_xmlrpc_methods"):
-            api = _module.register_xmlrpc_methods()
-        else:
-            api = {}
-
-        methods.update(api)
 
 def get_plugin_list(plugin_list, plugin_dirs):    
     """
