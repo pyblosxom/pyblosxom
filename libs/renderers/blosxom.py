@@ -80,8 +80,7 @@ class BlosxomRenderer(RendererBase):
         @rtype: string
         """
         if template:
-            finaltext = tools.parseitem(entry, tools.parse(entry, template))
-            return finaltext.replace(r'\$', '$')
+            return tools.parse(entry, template).replace(r'\$', '$')
         return ""
 
     def __processEntry(self, entry, current_date):

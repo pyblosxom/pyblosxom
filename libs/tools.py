@@ -64,19 +64,6 @@ def parse(dict, template):
     replaced = '' + re.sub(r'(?<!\\)\$([A-Za-z0-9_\-]+)', replacer, template)
     return replaced
 
-
-def parseitem(entry_dict, text_string):
-    """
-    Takes in an entry dict and a text string and passes it through the 
-    parseitem CallbackChain, allowing plugins to expand variables they 
-    know about.
-
-    This calls the chain with the data dict and then returns the final
-    text string.
-    """
-    args = { "entry_dict": entry_dict, "text": text_string }
-    return api.parseitem.executeTransform(args)["text"]
-
 def filestat(filename):
     """
     Calls the api's filestat callback chain to figure out what the

@@ -175,15 +175,6 @@ import os
 # 
 filestat = CallbackChain()
 
-# CallbackChain to parse a given story item (head, foot, or story)
-# and expand variables.
-#
-# Data dict:
-#    "entry_dict": entry_dict (dict)
-#    "text": the story item (string)
-# 
-parseitem = CallbackChain()
-
 # CallbackChain to do a final logging based on a log plugin
 #
 # Data dict:
