@@ -182,10 +182,6 @@ class BlosxomRenderer(RendererBase):
         elif content_type is type([]):
             current_date = ''
 
-            maxcount = config['num_entries']
-            if maxcount and len(self._content) > maxcount:
-                self._content = self._content[:maxcount]
-
             for entry in self._content:
                 # FIXME - commented this next line out
                 # data.update(entry)
