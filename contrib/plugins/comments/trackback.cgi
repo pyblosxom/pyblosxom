@@ -8,8 +8,6 @@ __license__ = "Python"
 import cgitb; cgitb.enable()
 import cgi
 
-import wingdbstub
-
 import os, time
 import config
     
