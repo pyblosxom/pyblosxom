@@ -1,7 +1,7 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
 from Pyblosxom import tools
 from Pyblosxom.renderers.base import RendererBase
-import re, os, sys, cgi, codecs
+import re, os, sys, codecs
 try:
     from xml.sax.saxutils import escape
 except ImportError:
@@ -27,7 +27,7 @@ class BlosxomRenderer(RendererBase):
         self._out = sw(self._out)
         self.dayFlag = 1
 
-    def __getFlavour(self, taste = 'html'):
+    def _getFlavour(self, taste = 'html'):
         """
         Flavours, or views, or templates, as some may call it, defaults are
         given, but can be overidden with files on the datadir. Don't like the
@@ -95,7 +95,7 @@ class BlosxomRenderer(RendererBase):
             
         return flavours[taste]
 
-    def __printTemplate(self, entry, template):
+    def _printTemplate(self, entry, template):
         """
         @param entry: either a dict or the Entry object
         @type  entry: dict or Entry
@@ -112,7 +112,7 @@ class BlosxomRenderer(RendererBase):
             return finaltext.replace(r'\$', '$')
         return ""
 
-    def __processEntry(self, entry, current_date):
+    def _processEntry(self, entry, current_date):
         """
         Main workhorse of pyblosxom stories, comments and other miscelany goes
         here
@@ -150,7 +150,7 @@ class BlosxomRenderer(RendererBase):
             
         return u"".join(output), current_date    
 
-    def __processContent(self):
+    def _processContent(self):
         """
         Processes the content for the story portion of a page.
 
@@ -185,7 +185,7 @@ class BlosxomRenderer(RendererBase):
             for entry in self._content:
                 # FIXME - commented this next line out
                 # data.update(entry)
-                output, current_date = self.__processEntry(entry, current_date)
+                output, current_date = self._processEntry(entry, current_date)
                 outputbuffer.append(output)
 
                 # FIXME what's this do?
@@ -212,7 +212,7 @@ class BlosxomRenderer(RendererBase):
         for mem in data.keys():
             parsevars[mem] = data[mem]
 
-        self.flavour = self.__getFlavour(data.get('flavour', 'html'))
+        self.flavour = self._getFlavour(data.get('flavour', 'html'))
         data['content-type'] = self.flavour['content_type'].strip()
         if header:
             if self._needs_content_type:
@@ -222,13 +222,13 @@ class BlosxomRenderer(RendererBase):
         
         if self._content:
             if self.flavour.has_key('head'):
-                self.__outputFlavour(parsevars,'head')
+                self._outputFlavour(parsevars,'head')
             if self.flavour.has_key('story'):
-                self.__processContent()
+                self._processContent()
             if self.flavour.has_key('date_foot'): 
-                self.__outputFlavour(parsevars,'date_foot')                
+                self._outputFlavour(parsevars,'date_foot')                
             if self.flavour.has_key('foot'): 
-                self.__outputFlavour(parsevars,'foot')                
+                self._outputFlavour(parsevars,'foot')                
         
         self.rendered = 1
 
@@ -237,7 +237,7 @@ class BlosxomRenderer(RendererBase):
         if cache:
             cache.close()
                 
-    def __outputFlavour(self, entry, template_name):
+    def _outputFlavour(self, entry, template_name):
         """
         Find the flavour template for template_name, run any blosxom callbacks, 
         substitute vars into it and write the template to the output
@@ -277,7 +277,7 @@ class BlosxomRenderer(RendererBase):
         template = args["template"]
         entry = args["entry"]
 
-        output.append(self.__printTemplate(entry, template))
+        output.append(self._printTemplate(entry, template))
 
     def _run_callback(self, chain, input):
         """
