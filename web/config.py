@@ -82,12 +82,14 @@ py['num_entries'] = 40
 
 
 # Doing static rendering?  Static rendering essentially "compiles" your
-# blog into a series of static html pages.
+# blog into a series of static html pages.  For more details, read:
+# http://wiki.subtlehints.net/moin/PyBlosxom_2fStaticRendering
+# 
 # What directory do you want your static html pages to go into?
 #py["static_dir"] = "/path/to/static/dir"
 
-# What flavours should get generated?
-#py["static_flavours"] = ["html", "rss"]
+# What flavours shouldt get generated?
+#py["static_flavours"] = ["html"]
 
 # What other paths should we statically render?
 # This is for additional urls handled by other plugins like the booklist
