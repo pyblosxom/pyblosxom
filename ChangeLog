@@ -1,3 +1,12 @@
+2003-02-11 Wari Wahab <pyblosxom@wari.per.sg>
+	* Added a contrib/entryparsers/ directory and basically store what we
+	  can handle over there. Users get a standard txt.py entryparser as
+	  default
+	* Added a modified version of autoping code from Sam Ruby that's cache
+	  and entryparsers compliant. Sadly you need to modify one line in the
+	  code that states where you you installed pyblosxom (This is not in
+	  config)
+
 2003-02-10 Wari Wahab <pyblosxom@wari.per.sg>
 	* Added ability for pyblosxom to read entries of different extensions,
 	  given a proper extension driver, this means that if you associate
