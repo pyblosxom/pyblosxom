@@ -201,10 +201,10 @@ class BlosxomRenderer(RendererBase):
         data['content-type'] = self.flavour['content_type'].strip()
         if header:
             if self._needs_content_type:
-                self.addHeader(['Content-type: %(content_type)s' % self.flavour])
+                self.addHeader(['Content-type: %(content-type)s' % data])
 
             self._out.write('\n'.join(self._header))
-            self._out.write('\n')
+            self._out.write('\n\n')
         
         if self._content:
             if self.flavour.has_key('head'):
