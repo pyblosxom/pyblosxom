@@ -29,6 +29,13 @@ Implements the blogger xmlrpc interface.  Adds methods for:
 
    blogger.deletePost:
    blogger.getRecentPosts:
+
+
+If the configuration parameter config['xmlrpc_blogger_metaweblog']
+is set to 'True' then blogger.getUsersBlogs returns one blog, otherwise
+it returns one blog for each category.   If you are using a metaweblog
+enabled client, you should probably set xmlrpc_blogger_metaweblog to 'True'
+
 """
 import os, xmlrpclib, re
 from Pyblosxom import tools, plugin_utils
@@ -157,7 +164,10 @@ def blogger_getUsersBlogs(request, appkey, username, password):
         result.append({'url' : url + blogpath, 
                        'blogid' : blogpath, 
                        'blogName':blogpath})
-    return result
+    if config.get('xmlrpc_blogger_metaweblog','') == 'True':
+        return result[:1]
+    else:
+        return result
 
 def blogger_getUserInfo(request, appkey, username, password):
     """
