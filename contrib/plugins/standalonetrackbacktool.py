@@ -25,41 +25,18 @@ Please refer to the documentation at:
     - http://www.raelity.org/archives/computers/internet/weblogs/blosxom/youve_got_trackbacks.html
     - http://www.raelity.org/archives/computers/internet/weblogs/blosxom/trackback_blosxom_conversion_chart.html
 """
+import libs, os
 
-import os, libs
-
-class StandAloneTrackBackTool:
+def cb_story(args):
     """
-    This class will spit out - or + depending on the existence of
-    py['tb_data'] + self._ob[tb_id] + '.stor' file.
+    This method will spit out - or + depending on the existence of
+    py['tb_data'] + entry['tb_id'] + '.stor' file.
     """
-    def __init__(self, ob):
-        self._ob = ob
-    
-    def __str__(self):
-        """
-        Determine if the trackback file exists
+    entry = args['entry']
+    request = libs.tools.get_registry()["request"]
+    config = request.getConfiguration()
 
-        @returns: A '+' or '-' depending on the availability of the file
-        produced by the standalone trackback tool
-        @rtype: string
-        """
-        request = libs.tools.get_registry()["request"]
-        config = request.getConfiguration()
-        datadir = config["tb_data"]
-        id = self._ob['tb_id']
+    datadir = config.get('tb_data', '')
+    id = entry['tb_id'] or ''
 
-        return (os.path.isfile(os.path.join(datadir, id + '.stor')) and '+' or '-')
-
-
-def cb_prepare(args):
-    """
-    This method gets called in the prepareChain.  It gets passed
-    the Request object as the first member of the args tuple.
-    """
-    request = args["request"]
-    entry_list = request.getData()["entry_list"]
-    for mem in entry_list:
-        # this creates a loop--but since this is a cgi we don't
-        # really care about potential garbage collection issues
-        mem["tb"] = StandAloneTrackBackTool(mem)
+    entry['tb'] = (os.path.isfile(os.path.join(datadir, id + '.stor')) and '+' or '-')
