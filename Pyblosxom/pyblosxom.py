@@ -26,7 +26,7 @@ class PyBlosxom:
     request through all the steps until the output is rendered and
     we're complete.
     """
-    def __init__(self, config, environ, data={}):
+    def __init__(self, config, environ, data=None):
         """
         Sets configuration and environment.
         Creates the L{Request} object.
@@ -359,7 +359,10 @@ class Request(object):
 
         # this holds run-time data which gets created and transformed
         # by pyblosxom during execution
-        self._data = data
+        if data == None:
+            self._data = dict()
+        else:
+            self._data = data
 
         # buffer the input stream in a StringIO instance.
         # TODO: tests on memory consumption when uploading huge files
