@@ -55,7 +55,11 @@ class PyblStats:
         Generate the list of referring files
         """
         # initialize blacklist
-        bad_list = string.split(self._config.get('refer_blacklist',''),',')
+        list = self._config.get('refer_blacklist','')
+        if list:
+            bad_list = string.split(list,',')
+        else:
+            bad_list = []
 
         def url(tuple):
             """
@@ -70,7 +74,8 @@ class PyblStats:
                     if re.search(pat, uri):
                         return ""
             if len(uri) > size: vis = vis[:size]+'...'
-            return '<a href="'+uri+'" title="'+uri+'">'+vis+' ('+str(count)+')'+'</a><br />\n'
+            return ("""<a href="%(uri)s" title="%(uri)s">%(vis)s (%(count)d)</a><br />\n""" 
+                    % {'uri': uri, 'vis': vis, 'count': count})
 
         def compareCounts(tuple1, tuple2):
             count1 = tuple1[1]
@@ -80,7 +85,7 @@ class PyblStats:
             if count1 < count2:
                 return 1
             return 0
-        
+
         items = self._referrers.items()
         # sort list by number of occurances
         items.sort(compareCounts)
