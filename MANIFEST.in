@@ -6,3 +6,4 @@ recursive-include Pyblosxom *.py
 recursive-include contrib *.py
 recursive-include web *
 recursive-include docs *
+recursive-include contrib/plugins/comments *
