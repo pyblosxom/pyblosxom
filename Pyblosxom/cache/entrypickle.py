@@ -29,7 +29,7 @@ class BlosxomCache(BlosxomCacheBase):
         Get data from pickle
         """
         try:
-            fp = file(self._cacheFile, 'rb')
+            fp = open(self._cacheFile, 'rb')
             return pickle.load(fp)
         except IOError:
             return None
@@ -49,7 +49,7 @@ class BlosxomCache(BlosxomCacheBase):
         """
         try:
             self.__makepath(self._cacheFile)
-            fp = file(self._cacheFile, "w+b")
+            fp = open(self._cacheFile, "w+b")
             entrydata.update({'realfilename': self._entryid})
             pickle.dump(entrydata, fp, 1)
         except IOError:
@@ -68,7 +68,7 @@ class BlosxomCache(BlosxomCacheBase):
         if os.path.isdir(self._config):
             cached = tools.Walk(self._config, 1, re.compile(r'.*\.entrypickle$'))
         for cache in cached:
-            cache_data = pickle.load(file(cache))
+            cache_data = pickle.load(open(cache))
             key = cache_data.get('realfilename', '')
             if not key and os.path.isfile(cache):
                 os.remove(cache)

@@ -63,7 +63,7 @@ class PyBlosxom:
         entryData = {}
 
         try:
-            story = file(filename).readlines()
+            story = open(filename).readlines()
         except IOError:
             raise IOError
 

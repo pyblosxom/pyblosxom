@@ -128,7 +128,7 @@ def cb_prepare(args):
 
     try:
         filename = config['logfile']+'.dat'
-        f = file(filename)
+        f = open(filename)
         stats = cPickle.load(f)
         stats._request = request
         stats._config = config
@@ -148,5 +148,5 @@ def cb_prepare(args):
     # next 2 lines null out modules vars for pickling
     stats._request = None
     stats._config = None
-    f = file(filename,"w")
+    f = open(filename,"w")
     cPickle.dump(stats, f)

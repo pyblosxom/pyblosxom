@@ -84,7 +84,7 @@ def readfile(filename, request):
     @rtype: dict
     """
     entryData = {}
-    d = file(filename).read()
+    d = open(filename).read()
     entryData['title'] = d.split('\n')[0]
     d = d[len(entryData['title']):] 
     entryData['body'] = parse(d)

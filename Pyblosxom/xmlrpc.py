@@ -9,7 +9,7 @@ def debug(dbg):
     """
     Just a simple Debugger to see what happens when I screwed up.
     """
-    file('xmlrpc.debug','a').write('DEBUG: %s\n' % str(dbg))
+    open('xmlrpc.debug','a').write('DEBUG: %s\n' % str(dbg))
 
 class xmlrpcHandler:
     """

@@ -42,7 +42,7 @@ def parse(story):
 
 def readfile(filename, request):
     entryData = {}
-    d = file(filename).read()
+    d = open(filename).read()
     title = d.split('\n')[0]
     d = d[len(title):]
     body = parse(d)

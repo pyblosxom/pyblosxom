@@ -225,7 +225,7 @@ def cb_entryparser(args = {'txt': 'A blosxom text entryparser'}):
             \"""
             entryData = {}
             entryData['title'] = os.path.basename(filename)
-            entryData['story'] = file(filename).read()
+            entryData['story'] = open(filename).read()
             return entryData
 
     Upon a successful registration, pyblosxom will now read all *.plain and

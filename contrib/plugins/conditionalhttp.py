@@ -26,7 +26,7 @@ def cb_prepare(args):
             try: 
                 import os.path
                 latestFilename = os.path.join(config['comment_dir'],'LATEST.cmt')
-                latest = file(latestFilename)
+                latest = open(latestFilename)
                 import cPickle
                 latest_cmtime = cPickle.load(latest)
                 latest.close()

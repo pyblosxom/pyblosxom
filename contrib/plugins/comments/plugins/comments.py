@@ -85,7 +85,7 @@ def readComment(filename):
     cmt = {}
     
     try:
-        story = file(filename)
+        story = open(filename)
         parser = make_parser()
         parser.setFeature(feature_namespaces, 0)
         handler = cmtHandler(cmt)
@@ -123,7 +123,7 @@ def writeComment(config, data, comment):
      
     # write comment
     try :
-        cfile = file(cfn, "w")
+        cfile = open(cfn, "w")
     
         def makeXMLField(name, field):
             return "<"+name+">"+cgi.escape(field[name])+"</"+name+">\n";
@@ -144,7 +144,7 @@ def writeComment(config, data, comment):
     #write latest pickle
     try:
         latestFilename = os.path.join(config['comment_dir'],'LATEST.cmt')
-        latest = file(latestFilename,"w")
+        latest = open(latestFilename,"w")
         modTime = float(comment['pubDate'])
         cPickle.dump(modTime,latest)
         latest.close()

@@ -75,7 +75,7 @@ class BlosxomRenderer(RendererBase):
 
         for filename in flavourlist:
             flavouring = os.path.basename(filename).split('.')
-            flav_template = unicode(file(filename).read(), 
+            flav_template = unicode(open(filename).read(), 
                     config.get('blog_encoding', 'iso8859-1'))
             if flavours.has_key(flavouring[1]):
                 flavours[flavouring[1]][flavouring[0]] = flav_template

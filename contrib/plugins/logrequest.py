@@ -23,7 +23,7 @@ def cb_logrequest(args):
     returnCode = args["return_code"]
     httpData = args['request'].getHttp()
 
-    file(filename, 'a').write('%s - - [%s] "%s %s" %s - "%s" "%s"\n' %
+    open(filename, 'a').write('%s - - [%s] "%s %s" %s - "%s" "%s"\n' %
         (httpData.get('REMOTE_ADDR', '-'),
         time.strftime('%d/%b/%Y:%H:%M:%S %Z', time.localtime()),
         httpData.get('REQUEST_METHOD', '-'),

@@ -52,7 +52,7 @@ def saveData(filename, document):
         if line == 'Status: 404 Not Found':
             return
         line = data.pop(0)
-    file(filename, "w").write('\n'.join(data))
+    open(filename, "w").write('\n'.join(data))
 
 if __name__ == '__main__':
     redir = os.environ.get('REDIRECT_URI', '')

@@ -48,7 +48,7 @@ class RendererBase:
 
                 if reqIsGif and gifFileExists(theGifFile):
                     # Read the file
-                    data = file(theGifFile).read()
+                    data = open(theGifFile).read()
                     
                     # Modify header
                     renderer.addHeader('Content-type', 'image/gif')

@@ -53,7 +53,7 @@ def blogger_newPost(request, appkey, blogid, username, password, content,
                     tools.generateRandStr() + '.txt' + tempMarker
                 )
             )
-        file(blogID, 'w').write(content)
+        open(blogID, 'w').write(content)
         # Generate BlogID
         return blogID.replace(config['datadir'], '')
     else: 
@@ -92,7 +92,7 @@ def blogger_editPost(request, appkey, postid, username, password, content,
                         tools.generateRandStr() + ext
                     )
                 )
-        file(switchTo, 'w').write(content)
+        open(switchTo, 'w').write(content)
                 
         return xmlrpclib.True
     else:
@@ -184,7 +184,7 @@ def blogger_getRecentPosts(request, appkey, blogid, username, password,
                        'userid' : '01',
                        'postid' : entry['filename'].replace(
                                   config['datadir'],''),
-                       'content' : file(entry['filename']).read()})
+                       'content' : open(entry['filename']).read()})
         if count >= int(numberOfPosts):
             break
         count += 1

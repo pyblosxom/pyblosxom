@@ -14,7 +14,7 @@ After doing so, change the self._file value in __init__() and you're game.
 You can read the data of the self._file using cPickle in python interactive
 mode to see if your ping is successful:
 >>> import cPickle
->>> cPickle.load(file('/path/to/data/file'))
+>>> cPickle.load(open('/path/to/data/file'))
 """
 __author__ = "Wari Wahab pyblosxom@wari.per.sg"
 __version__ = "$Id$"
@@ -44,7 +44,7 @@ class WeblogsPing:
     def ping(self):
         if os.path.isfile(self._file):
             try:
-                fp = file(self._file, 'rb')
+                fp = open(self._file, 'rb')
                 self._pingData = pickle.load(fp)
                 fp.close()
             except IOError:
@@ -82,7 +82,7 @@ class WeblogsPing:
                          'response1' : response1,
                          'latest' : latest}
         try:
-            fp = file(self._file, 'w+b')
+            fp = open(self._file, 'w+b')
             pickle.dump(self._pingData, fp, 1)
             fp.close()
             return 1
