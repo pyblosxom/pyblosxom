@@ -8,6 +8,7 @@ __author__ = "Will Guaraldi - willg@bluesock.org"
 __version__ = "$Id$"
 
 from libs import tools
+import re, os
 
 class PyblCategories:
 	def __init__(self, py):
@@ -21,18 +22,36 @@ class PyblCategories:
 
 	def genitem(self, item):
 		itemlist = item.split("/")
+
+		num = 0
+		for key in self._elistmap:
+			if key.find(item) == 0:
+				num = num + self._elistmap[key]
+		num = " (%d)" % num
+
 		return (((len(itemlist)-1) * "&nbsp;&nbsp;") + 
-				"<a href=\"%s/%s\">%s</a>" % (self._baseurl, item, itemlist[-1] +"/"))
+				"<a href=\"%s/%s\">%s</a>%s" % (self._baseurl, item, itemlist[-1] +"/", num))
 
 	def genCategories(self):
 		root = self._py["datadir"]
 		self._baseurl = self._py.get("base_url", "")
-		clist = tools.Walk(root, pattern=None, return_folders=1)
-		clist = [mem[len(root)+1:] for mem in clist]
 
+		# build the list of directories (categories)
+		clist = tools.Walk(root, pattern=re.compile('.*'), return_folders=1)
+		clist = [mem[len(root)+1:] for mem in clist]
 		clist.sort()
+
+		# build the list of entries
+		elist = tools.Walk(root)
+		elist = [mem[len(root)+1:] for mem in elist]
+
+		elistmap = {}
+		for mem in elist:
+			mem = os.path.dirname(mem)
+			elistmap[mem] = 1 + elistmap.get(mem, 0)
+		self._elistmap = elistmap
+
 		clist = map(self.genitem, clist)
-		# clist = ["<a href=\"%s/%s\">%s</a>" % (baseurl, mem, mem) for mem in clist]
 		self._categories = "<br>".join(clist)
 
 def load(py, entryList):
