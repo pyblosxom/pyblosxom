@@ -1,4 +1,7 @@
-# vim: shiftwidth=4 tabstop=4 expandtab
+"""
+This is the main module for PyBlosxom functionality.  PyBlosxom's setup 
+and default handlers are defined here.
+"""
 import os, time, re, sys
 import tools
 from entries.fileentry import FileEntry
@@ -257,20 +260,31 @@ class PyBlosxom:
         config = self._request.getConfiguration()
         data = self._request.getData()
 
-        # import plugins
+        # import and initialize plugins
         import plugin_utils
         plugin_utils.initialize_plugins(config)
 
-        # instantiate the renderer with the current request and store it
-        # in the data dict
-        data['renderer'] = tools.run_callback('renderer', {'request': self._request},
-                donefunc = lambda x: x != None, 
-                defaultfunc = lambda x: tools.importName('Pyblosxom.renderers', 
-                        config.get('renderer', 'blosxom')).Renderer(self._request, 
-                        config.get('stdoutput', sys.stdout)))
+        
+        # get the renderer we want to use
+        r = config.get("renderer", "blosxom")
+
+        # import the renderer
+        r = tools.importName("Pyblosxom.renderers", r)
+
+        # get the renderer object
+        r = r.Renderer(self._request, config.get("stdoutput", sys.stdout))
+
+        # go through the renderer callback to see if anyone else
+        # wants to render.  the default is the renderer object we
+        # figured out from above.  this renderer gets stored in
+        # the data dict for downstream processing.
+        data['renderer'] = tools.run_callback('renderer', 
+                                 {'request': self._request},
+                                 donefunc = lambda x: x != None, 
+                                 defaultfunc = lambda x: r)
         
         # do start callback
-        tools.run_callback("start", {'request': self._request}, mappingfunc=lambda x,y:y)
+        tools.run_callback("start", {'request': self._request})
 
         # entryparser callback is runned first here to allow other plugins
         # register what file extensions can be used
@@ -296,12 +310,11 @@ class PyBlosxom:
         # giving everyone a chance to transform the data.  the request is
         # modified in place.
         tools.run_callback("prepare", {"request": self._request})
-        
 
         # now we pass the entry_list through the renderer
         entry_list = data["entry_list"]
-
         renderer = data['renderer']
+
         if renderer and not renderer.rendered:
             if entry_list:
                 renderer.setContent(entry_list)
@@ -323,9 +336,12 @@ class PyBlosxom:
                          'return_code': '404', 
                          'request': self._request})
             renderer.render()
+
             # do end callback
-            tools.run_callback("end", {'request':self._request}, mappingfunc=lambda x,y:y)
+            tools.run_callback("end", {'request':self._request})
 
         elif not renderer:
             output = config.get('stdoutput', sys.stdout)
-            output.write("Content-Type: text/plain\n\nThere is something wrong with your setup\n")
+            output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
+
+# vim: shiftwidth=4 tabstop=4 expandtab

@@ -1,3 +1,4 @@
+# vim: shiftwidth=4 tabstop=4 expandtab
 """
 This module holds the Request class which encapsulates the data
 involved in executing a pyblosxom request.
@@ -28,12 +29,39 @@ class Request:
         self._data = {}
 
     def getConfiguration(self):
+        """
+        Returns the _actual_ configuration dict.  The configuration
+        dict holds values that the user sets in their config.py file.
+
+        Modifying the contents of the dict will affect all downstream 
+        processing.
+
+        @returns: dict
+        """
         return self._configuration
 
     def getHttp(self):
+        """
+        Returns the _actual_ http dict.   Holds HTTP/CGI data derived 
+        from the environment of execution.
+
+        Modifying the contents of the dict will affect all downstream 
+        processing. 
+
+        @returns: dict
+        """
         return self._http
 
     def getData(self):
+        """
+        Returns the _actual_ data dict.   Holds run-time data which is 
+        created and transformed by pyblosxom during execution.
+
+        Modifying the contents of the dict will affect all downstream 
+        processing. 
+
+        @returns: dict
+        """
         return self._data
 
     def dumpRequest(self):
@@ -96,4 +124,3 @@ class Request:
 
         return default
 
-# vim: shiftwidth=4 tabstop=4 expandtab

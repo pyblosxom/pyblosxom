@@ -317,6 +317,8 @@ def run_callback(chain, input,
     in which converts the output of a given function in the chain
     to the input for the next function.
 
+    If this is confusing, read through the code for this function.
+
     @param chain: the callback chain to run
     @type  chain: string
 

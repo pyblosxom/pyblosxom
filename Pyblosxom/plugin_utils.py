@@ -1,4 +1,9 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
+"""
+Holds a series of utility functions for cataloguing, retrieving, and
+manipulating callback functions and chains.  Refer to the documentation
+for which callbacks are available and what their behavior is.
+"""
 import os, glob, sys
 
 plugins = []
@@ -12,8 +17,8 @@ methods = {}
 
 def catalogue_plugin(plugin_module):
     """
-    We go through the plugin's contents and catalogue all the
-    functions that start with cb_.  These are callbacks.
+    Goes through the plugin's contents and catalogues all the functions
+    that start with cb_.  Functions that start with cb_ are callbacks.
 
     @param plugin_module: the module to catalogue
     @type  plugin_module: module
@@ -32,7 +37,8 @@ def get_callback_chain(chain):
     """
     Returns a list of functions registered with the callback.
 
-    @returns: list of functions registered with the callback
+    @returns: list of functions registered with the callback (or an
+        empty list)
     @rtype: list of functions
     """
     return callbacks.get(chain, [])
@@ -59,16 +65,13 @@ def initialize_plugins(configdict):
         sys.path.append(mem)
 
     plugin_list = configdict.get("load_plugins", None)
-
     plugin_list = get_plugin_list(plugin_list, plugin_dirs)
 
     for mem in plugin_list:
         _module = __import__(mem)
         for comp in mem.split(".")[1:]:
             _module = getattr(_module, comp)
-
         catalogue_plugin(_module)
-
         plugins.append(_module)
 
 def initialize_xmlrpc_plugins(configdict):
@@ -119,14 +122,19 @@ def initialize_xmlrpc_plugins(configdict):
 
 def get_plugin_list(plugin_list, plugin_dirs):    
     """
-    Grabs a list of plugins in a list of plugin dirs, and returns the who
-    possible importable list of plugins. If load_plugins is None, then we grab
-    all the plugins in the directory and sort them alphanumerically
+    This handles the situation where the user has provided a series of
+    plugin dirs, but has not specified which plugins they want to load
+    from those dirs.  In this case, we load all possible plugins except
+    the ones whose names being with _ .  
 
     @param plugin_list: List of plugins to load
     @type plugin_list: list or None
+
     @param plugin_dirs: A list of directories where plugins can be loaded from
     @type plugin_dirs: list
+
+    @return: list of python module names of the plugins to load
+    @rtype: list of strings
     """
     if plugin_list == None:
         plugin_list = []
@@ -141,3 +149,4 @@ def get_plugin_list(plugin_list, plugin_dirs):
         plugin_list.sort()
 
     return plugin_list
+
