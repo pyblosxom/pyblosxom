@@ -390,115 +390,6 @@ def run_callback(chain, input,
     return output
 
 
-
-# These next few lines are for locking.  At first, they'll be
-# ultra-simple.  We can add sophistication to them later.
-LOCKS = {}
-
-def get_lock(request, lockname):
-    """
-    This gets a lock as determined by the lockname.  Locks are
-    implemented as files that we open for writing (thus the file
-    system acts as the lock arbiter) but don't actually write
-    anything in them.  We return a 0 if we cannot get the lock
-    or some other such issue occurs and a 1 if we successfully
-    got the lock.
-
-    @param request: the Request object associated with this
-        run
-    @type  request: Request
-
-    @param lockname: the name of the lock to retrieve.  this
-        could be the name of the file you're trying to synchronize
-        on if you like.  we add a ".lock" to the end of the lock
-        name to create the filename we use as the lock.
-    @type  lockname: string
-
-    @returns: 0 if not successful, 1 if we are successful
-    @rtype:   boolean
-    """
-    global LOCKS
-    datadir = request.getConfiguration()["datadir"]
-    if datadir[-1] != os.sep:
-        datadir += os.sep 
-
-    lockfilename = datadir + lockname + ".lock"
-
-    # note: right now locks are done globally to the pyblosxom
-    # instance and not the specific request.
-
-    counter = 100
-    lockfile = None
-    if not LOCKS.has_key(lockfilename):
-        while lockfile == None and counter > 0:
-            try:
-                lockfile = open(lockfilename, "w")
-            except:
-                time.sleep(.05)
-                counter -= 1
-
-    
-
-    if lockfile:
-        LOCKS[lockfilename] = lockfile
-        request.getData()["lock_" + lockname] = 1
-        return 1
-    request.getData()["lock_" + lockname] = 0
-    return 0
-
-def has_lock(request, lockname):
-    """
-    Lets you know whether this Pyblosxom instance has the lock
-    in question.
-
-    @returns: 1 if we have the lock and 0 if we don't
-    @rtype:   boolean
-    """
-    return request.getData()["lock_" + lockname]
-
-def return_lock(request, lockname):
-    """
-    Returns the lock that you opened earlier.
-
-    If the lock doesn't exist, then we'll do nothing so feel free to
-    call this method as often as you like.
-
-    NOTE: if you do not return the lock, then we maintain an open
-    file on the lock file we use.  If Pyblosxom is running as a CGI
-    script this probably won't matter much since when the process dies
-    it'll close the open files.  If Pyblosxom is running as a thread
-    of a single Python interpreter, then this will hose all the other
-    threads until you restart the interpreter.
-
-    @param request: the Request object associated with this
-        run
-    @type  request: Request
-
-    @param lockname: the name of the lock to retrieve.  this
-        could be the name of the file you're trying to synchronize
-        on if you like.  we add a ".lock" to the end of the lock
-        name to create the filename we use as the lock.
-    @type  lockname: string
-    """
-    global LOCKS
-    datadir = request.getConfiguration()["datadir"]
-    if datadir[-1] != os.sep:
-        datadir += os.sep 
-
-    lockfilename = datadir + lockname + ".lock"
-
-    if LOCKS.has_key(lockfilename) and LOCKS[lockfilename]:
-        try:
-            LOCKS[lockfilename].close()
-        except:
-            pass
-
-        del LOCKS[lockfilename]
-
-    if request.getData().has_key("lock_" + lockname):
-        del request.getData()["lock_" + lockname]
-
-
 def get_cache(request):
     """
     Retrieves the cache from the request or fetches a new CacheDriver
@@ -526,26 +417,29 @@ def get_cache(request):
 
     return mycache
 
-def make_logger(file):
+
+def make_logger(filename):
     """
     Create a logging function called log, which logs to the supplied filename
-
     usage is:
-    tools.make_logger('/tmp/pybloxom.log') # or whatever you want
-    tools.log('log message')
 
-    @param file: the name of a file to log to
-    @type file: string
+    >>> tools.make_logger('/tmp/pybloxom.log')
+    >>> tools.log('log message')
+
+    @param filename: the name of a file to log to
+    @type filename: string
     """
     global log
     try:
         import logging
     except ImportError:    
         def log(str):
-            pass
+            f = open(filename, "a")
+            f.write(str + "\n")            
+            f.close()
     else:
         logger = logging.getLogger('trackback')
-        hdlr = logging.FileHandler(file)
+        hdlr = logging.FileHandler(filename)
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr.setFormatter(formatter)
         logger.addHandler(hdlr) 
@@ -553,3 +447,80 @@ def make_logger(file):
 
         def log(str):
             logger.info(str)
+
+
+# %<-------------------------
+# BEGIN portalocking block from Python Cookbook.
+# LICENSE is located in docs/LICENSE.portalocker.
+# It's been modified for use in Pyblosxom.
+
+# """Cross-platform (posix/nt) API for flock-style file locking.
+# 
+# Synopsis:
+# 
+#    import portalocker
+#    file = open("somefile", "r+")
+#    portalocker.lock(file, portalocker.LOCK_EX)
+#    file.seek(12)
+#    file.write("foo")
+#    file.close()
+# 
+# If you know what you're doing, you may choose to
+# 
+#    portalocker.unlock(file)
+# 
+# before closing the file, but why?
+# 
+# Methods:
+# 
+#    lock( file, flags )
+#    unlock( file )
+# 
+# Constants:
+# 
+#    LOCK_EX
+#    LOCK_SH
+#    LOCK_NB
+# 
+# I learned the win32 technique for locking files from sample code
+# provided by John Nielsen <nielsenjf@my-deja.com> in the documentation
+# that accompanies the win32 modules.
+# 
+# Author: Jonathan Feinberg <jdf@pobox.com>
+# Version: $Id$
+
+if os.name == 'nt':
+    import win32con
+    import win32file
+    import pywintypes
+    LOCK_EX = win32con.LOCKFILE_EXCLUSIVE_LOCK
+    LOCK_SH = 0 # the default
+    LOCK_NB = win32con.LOCKFILE_FAIL_IMMEDIATELY
+    # is there any reason not to reuse the following structure?
+    __overlapped = pywintypes.OVERLAPPED()
+elif os.name == 'posix':
+    import fcntl
+    LOCK_EX = fcntl.LOCK_EX
+    LOCK_SH = fcntl.LOCK_SH
+    LOCK_NB = fcntl.LOCK_NB
+else:
+    raise RuntimeError("PortaLocker only defined for nt and posix platforms")
+
+if os.name == 'nt':
+    def lock(f, flags):
+        hfile = win32file._get_osfhandle(f.fileno())
+        win32file.LockFileEx(hfile, flags, 0, 0xffff0000, __overlapped)
+
+    def unlock(f):
+        hfile = win32file._get_osfhandle(f.fileno())
+        win32file.UnlockFileEx(hfile, 0, 0xffff0000, __overlapped)
+
+elif os.name =='posix':
+    def lock(f, flags):
+        fcntl.flock(f.fileno(), flags)
+
+    def unlock(f):
+        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+
+# END portalocking block from Python Cookbook.
+# %<-------------------------
