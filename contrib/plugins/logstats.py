@@ -70,6 +70,12 @@ class PyblStats:
             count = tuple[1]
             size = 40
             vis = uri
+            # process blacklist
+            if self._py.has_key('refer_blacklist'):
+                bad_list = string.split(self._py['refer_blacklist'],',')
+                for pat in bad_list:
+                    if re.search(pat, uri):
+                        return ""
             if len(uri) > size: vis = vis[:size]+'...'
             return '<a href="'+uri+'" title="'+uri+'">'+vis+' ('+str(count)+')'+'</a><br />'
 
@@ -123,6 +129,7 @@ def load(py, entryList):
         filename = py['logfile']+'.dat'
         f = file(filename)
         stats = cPickle.load(f)
+        stats._py = py
         f.close()
     except IOError:
         stats = PyblStats(py)
