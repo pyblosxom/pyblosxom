@@ -320,25 +320,27 @@ def cb_postformat(args = {'entry_data': {}, 'request': Request()}):
     A callback for postformatters
 
     Postformatters are callbacks that may make further modification to the
-    entry text, called after a preformatter, it can also be used for extensive
-    operations on a particular entry, adding extra keys to the given
-    'entry_data' dict. If a cache is used in a particular installation, the
-    resulting data will be saved in the cache, so using this chain may not be
-    useful for dynamic data like comment counts, for example. Acceptable
-    operations includes:
+    entry text, called after a preformatter. It can also be used for 
+    extensive operations on a particular entry, adding extra keys to the 
+    given 'entry_data' dict. If a cache is used in a particular installation, 
+    the resulting data will be saved in the cache, so using this chain may 
+    not be useful for dynamic data like comment counts, for example. 
 
-        - Adding a word count
+    Examples of usage:
+
+        - Adding a word count property to the entry
         - Using a macro replacement plugin (Radio Userland glossary)
         - Acronym expansion
         - A 'more' text processor
 
     A typical C{args} contains the following:
 
-        - C{'entry_data'} - A dict that minimally contains a C{'title'} and a
-              C{'story'}
+        - C{'entry_data'} - A dict that minimally contains a C{'title'} and
+              a C{'story'}
         - C{'request'} - A typical L{Request} object
 
-    @param args: A dict containing a L{Request()} object, and an entry_data dict
+    @param args: A dict containing a L{Request()} object, and an entry_data 
+         dict
     @type args: dict
     """
     pass
