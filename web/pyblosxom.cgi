@@ -28,7 +28,8 @@ if __name__ == '__main__':
     d = {}
     for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER", "PATH_INFO", 
             "QUERY_STRING", "REMOTE_ADDR", "REQUEST_METHOD", "REQUEST_URI", 
-            "SCRIPT_NAME", "HTTP_IF_NONE_MATCH", "HTTP_IF_MODIFIED_SINCE"]:
+            "SCRIPT_NAME", "HTTP_IF_NONE_MATCH", "HTTP_IF_MODIFIED_SINCE",
+            "HTTP_COOKIE"]:
         d[mem] = os.environ.get(mem, "")
     req.addHttp(d)
 
