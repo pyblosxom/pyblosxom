@@ -2,8 +2,9 @@ from config import py
 from Pyblosxom.pyblosxom import PyBlosxom
 from Pyblosxom.Request import Request
 from Pyblosxom import tools
+from xmlrpclib import Fault
 
-import os, re, sgmllib, time, urllib
+import os, re, sgmllib, time, urllib, urlparse
 
 class parser(sgmllib.SGMLParser):
     """ Shamelessly grabbed from Sam Ruby
@@ -29,10 +30,14 @@ class parser(sgmllib.SGMLParser):
     def handle_data(self,text):
         if self.intitle: self.title = self.title + text
 
-        
 def fileFor(req, uri):
     config = req.getConfiguration()
     data = req.getData()
+    urldata = urlparse.urlsplit(uri)
+
+    # Reconstruct uri to something sane
+    uri = "%s://%s%s" % (urldata[0], urldata[1], urldata[2])
+    fragment = urldata[4]
 
     # import plugins
     import Pyblosxom.plugin_utils
@@ -49,22 +54,34 @@ def fileFor(req, uri):
                                             mappingfunc=lambda x,y:y,
                                             defaultfunc=lambda x:x)
 
-    uri = uri.replace(config['base_url'], '')
-    req.addHttp({'PATH_INFO': uri, "form": {}})
+    # We get our path here
+    path = uri.replace(config['base_url'], '')
+    req.addHttp({'PATH_INFO': path, "form": {}})
     p.processPathInfo({'request': req})
     
     args = { 'request': req }
     es =  p.defaultFileListHandler(args)
 
-    if len(es) == 1 and uri.find(es[0]['file_path']) >= 0:
+    # We're almost there
+    if len(es) == 1 and path.find(es[0]['file_path']) >= 0:
         return es[0]
 
+    # Could be a fragment link
     for i in es:
-        if i['fn'] == data['pi_frag'][1:]:
+        if i['fn'] == fragment:
             return i
+
+    # Point of no return
+    if len(es) >= 1:
+        raise Fault(0x0021, "%s cannot be used as a target" % uri)
+    else:
+        raise Fault(0x0020, "%s does not exist")
+
             
 def pingback(request, source, target):
     source_file = urllib.urlopen(source.split('#')[0])
+    if source_file.headers.get('error', '') == '404':
+        raise Fault(0x0010, "Target %s not exists" % target)
     source_page = parser()
     source_page.feed(source_file.read())
     source_file.close()
@@ -83,7 +100,7 @@ def pingback(request, source, target):
             for feed in getFeeds(baseurl):
                 for item in parse(feed)['items']:
                     if item['link']==source:
-                        if 'title' in item: title = item['title']
+                        if 'title' in item: source_page.title = item['title']
                         if 'content_encoded' in item: body = item['content_encoded'].strip()
                         if 'description' in item: body = item['description'].strip() or body
                         body=re.compile('<.*?>',re.S).sub('',body)
@@ -102,7 +119,6 @@ def pingback(request, source, target):
         from comments import writeComment
         config = request.getConfiguration()
         data = request.getData()
-        datadir = config['datadir']
         data['entry_list'] = [ target_entry ]
 
         # TODO: Check if comment from the URL exists
@@ -110,7 +126,7 @@ def pingback(request, source, target):
                
         return "success pinging %s from %s\n" % (source, target)
     else:
-        return "produce xmlrpc fault here"
+        raise Fault(0x0011, "%s does not point to %s" % (target, source))
 
 def register_xmlrpc_methods():
     return {'pingback.ping': pingback }

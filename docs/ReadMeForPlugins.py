@@ -159,7 +159,6 @@ def cb_pathinfo(args = {'request' : Request()}):
       'pi_yr'         yyyy
       'pi_mo'         (mm|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
       'pi_da'         dd
-      'pi_frag'       #someanchor  (everything following the #)
       'root_datadir'  full path to the entry folder or entry file on filesystem
       'flavour'       The flavour gathered from the URL
     """

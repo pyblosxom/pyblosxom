@@ -147,7 +147,6 @@ class PyBlosxom:
             - C{/cat} - category
             - C{/2002} - year
             - C{/2002/Feb} (or 02) - Year and Month
-            - C{/2002/Feb/03#entry} - Year, Month, Date, fragment id = entry name
             - C{/cat/2002/Feb/31} - year and month day in category.
             - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
         To simplify checking, four digits directory name is not allowed.
@@ -169,7 +168,6 @@ class PyBlosxom:
         data['pi_yr'] = ''
         data['pi_mo'] = ''
         data['pi_da'] = ''
-        data['pi_frag'] = ''
         
         if pyhttp.get('PATH_INFO', ''):
             path_info = pyhttp['PATH_INFO'].split('/')
@@ -201,16 +199,7 @@ class PyBlosxom:
                 # Day
                 if path_info and re.match("^([0-2][0-9]|3[0-1])", path_info[0]):
                     # Potential day here
-                    data['pi_da'] = path_info[0][0:2]
-                    # grab date - must be 2 digits if there is a fragment 
-                    # identifier #entryname, place that in "pi_frag"
-                    # the fragment identifier won't appear when this code 
-                    # is call via CGI, but will appear when called to 
-                    # processing string URI's for pingback
-                    match = re.search("(?P<frag>\#.+)",path_info[0])
-                    if match != None and match.lastgroup == 'frag':
-                        data['pi_frag'] = match.group('frag')
-                    path_info.pop(0)
+                    data['pi_da'] = path_info.pop(0)
 
             if path_info and path_info[0]:
                 # Potential flavour after date
@@ -267,7 +256,6 @@ class PyBlosxom:
         """
         config = self._request.getConfiguration()
         data = self._request.getData()
-        pyhttp = self._request.getHttp()
 
         # import plugins
         import plugin_utils
