@@ -432,29 +432,43 @@ def get_lock(request, lockname):
     @rtype:   boolean
     """
     global LOCKS
-    datadir = request.getData()["datadir"]
+    datadir = request.getConfiguration()["datadir"]
     if datadir[-1] != os.sep:
         datadir += os.sep 
 
-    lockname = datadir + lockname + ".lock"
+    lockfilename = datadir + lockname + ".lock"
 
     # note: right now locks are done globally to the pyblosxom
     # instance and not the specific request.
 
     counter = 100
     lockfile = None
-    if not LOCKS.has_key(lockname):
+    if not LOCKS.has_key(lockfilename):
         while lockfile == None and counter > 0:
             try:
-                lockfile = open(lockname, "w")
+                lockfile = open(lockfilename, "w")
             except:
                 time.sleep(.05)
                 counter -= 1
 
+    
+
     if lockfile:
-        LOCKS[lockname] = lockfile
+        LOCKS[lockfilename] = lockfile
+        request.getData()["lock_" + lockname] = 1
         return 1
+    request.getData()["lock_" + lockname] = 0
     return 0
+
+def has_lock(request, lockname):
+    """
+    Lets you know whether this Pyblosxom instance has the lock
+    in question.
+
+    @returns: 1 if we have the lock and 0 if we don't
+    @rtype:   boolean
+    """
+    return request.getData()["lock_" + lockname]
 
 def return_lock(request, lockname):
     """
@@ -481,19 +495,22 @@ def return_lock(request, lockname):
     @type  string:
     """
     global LOCKS
-    datadir = request.getData()["datadir"]
+    datadir = request.getConfiguration()["datadir"]
     if datadir[-1] != os.sep:
         datadir += os.sep 
 
-    lockname = datadir + lockname + ".lock"
+    lockfilename = datadir + lockname + ".lock"
 
-    if LOCKS.has_key(lockname) and LOCKS[lockname]:
+    if LOCKS.has_key(lockfilename) and LOCKS[lockfilename]:
         try:
-            LOCKS[lockname].close()
+            LOCKS[lockfilename].close()
         except:
             pass
 
-        del LOCKS[lockname]
+        del LOCKS[lockfilename]
+
+    if request.getData().has_key("lock_" + lockname):
+        del request.getData()["lock_" + lockname]
 
 
 # These next few lines are to save a sort of run-time global registry

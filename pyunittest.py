@@ -13,7 +13,7 @@ from Pyblosxom.Request import Request
 class TestLocking(unittest.TestCase):
     def testLocking(self):
         req = Request()
-        req.addData( { "datadir": "./" } )
+        req.addConfiguration( { "datadir": "./" } )
 
         # get a lock
         self.failUnlessEqual(tools.get_lock(req, "testlock"), 1)
