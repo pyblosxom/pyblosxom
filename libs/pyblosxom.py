@@ -4,7 +4,7 @@ from libs import tools
 import cPickle as pickle
 
 class PyBlosxom:
-    def __init__(self, py, xmlrpc, xmlRpcCall = 0):
+    def __init__(self, py, xmlrpc, xmlRpcCall=0):
         self.py = py
         self.xmlrpc = xmlrpc
         self.xmlRpcCall = xmlRpcCall
@@ -112,7 +112,7 @@ class PyBlosxom:
 
     def getProperties(self, filename, root):
         """Returns a dictionary of file related contents"""
-        mtime = os.stat(filename)[8]
+        mtime = tools.filestat(filename)[8]
         timetuple = time.localtime(mtime)
         path = string.replace(filename, root, '')
         path = string.replace(path, os.path.basename(filename), '')
@@ -227,6 +227,10 @@ class PyBlosxom:
 
     def run(self):
         """Main loop for pyblosxom"""
+        # import plugins and allow them to register with the api
+        import libs.plugins.__init__
+        libs.plugins.__init__.initialize_plugins()
+        
         filelist = (self.py['bl_type'] == 'dir' and 
             tools.Walk(self.py['root_datadir'], 
             int(self.py['depth'])) or 
@@ -245,7 +249,6 @@ class PyBlosxom:
             valid_list = dataList
 
         # load the plugins that have load methods
-        import libs.plugins.__init__
         libs.plugins.__init__.load_plugins(self.py, valid_list)
         
         self.flavour = self.getFlavour(self.py['flavour'])

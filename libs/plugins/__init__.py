@@ -1,10 +1,22 @@
 # vim: tabstop=4 shiftwidth=4
 import os, glob
 
-def load_plugins(py, entryList):
+plugins = []
+
+def load_plugins(py, valid_list):
 	"""
-	Loads plugins from this directory and binds them to the py
-	dict.
+	Allows the plugin to register itself with the py_dict.
+	"""
+	global plugins
+
+	for mem in plugins:
+		if mem.__dict__.has_key("load"):
+			mem.load(py, valid_list)
+
+def initialize_plugins():
+	"""
+	Imports and initializes plugins from this directory so they can register
+	with the api callbacks.
 	"""
 	index = __file__.rfind(os.sep)
 	if index == -1:
@@ -33,10 +45,11 @@ def load_plugins(py, entryList):
 			# with our py dict so it can bind itself to variable
 			# names of its own accord
 
-			if _module.__dict__.has_key("load"):
-				_module.load(py, entryList)
-		except SystemExit:
-			raise SystemExit
+			if _module.__dict__.has_key("initialize"):
+				_module.initialize()
+
+			plugins.append(_module)
+
 		except Exception, e:
 			# FIXME - we kicked up an exception--where to we spit 
 			# it out to?

@@ -1,4 +1,5 @@
 import sgmllib, re, os, string
+import api
 
 month2num = { 'nil' : '00',
               'Jan' : '01',
@@ -13,6 +14,7 @@ month2num = { 'nil' : '00',
               'Oct' : '10',
               'Nov' : '11',
               'Dec' : '12'}
+
 # This is not python 2.1 compatible (Nifty though)
 # num2month = dict(zip(month2num.itervalues(), month2num))
 num2month = {}
@@ -58,6 +60,17 @@ def parse(dict, template):
     replacer = Replacer(dict).replace
     replaced = '' + re.sub(r'\$([A-Za-z0-9_\-]+)', replacer, template)
     return replaced
+
+
+def filestat(filename):
+    """
+    Calls the api's filestat callback chain to figure out what the
+    stats on a given file are.  
+
+    This calls the chain with (filename, os.stat(filename)) and returns
+    just the os.stats-type tuple.
+    """
+    return api.filestat.executeChain((filename, os.stat(filename)))[1]
 
 
 def Walk(root = '.', 

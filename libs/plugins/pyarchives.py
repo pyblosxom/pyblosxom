@@ -18,7 +18,7 @@ class PyblArchives:
 		archives = {}
 		archiveList = tools.Walk(root)
 		for file in archiveList:
-			mtime = os.stat(file)[8]
+			mtime = tools.filestat(file)[8]
 			timetuple = time.localtime(mtime)
 			mo = time.strftime('%b',timetuple)
 			mo_num = time.strftime('%m',timetuple)

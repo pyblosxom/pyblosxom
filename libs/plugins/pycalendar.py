@@ -13,18 +13,18 @@ Mo Tu We Th Fr Sa Su
 It walks through all your entries and marks the dates that have entries
 so you can click on the date and see entries for that date.
 
-It uses a "calendarstyle" entry in the pyblosxom.ini file under the 
-pyblosxom section:
+It uses the following CSS classes:
 
-   calendarstyle = pre | css
-
-with default for pre.  In css mode, it uses the following CSS classes:
-
-   blosxomCalendar      - for the calendar table
-   blosxomCalendarHead  - for the month year header
-   blosxomCalendarEmpty - for filler days
-   blosxomCalendarCell  - for calendar days that aren't today
-   blosxomCalendarToday - today (if it's on the calendar)
+  blosxomCalendar             - for the calendar table
+  blosxomCalendarHeader       - for the month year header (January 2003)
+  blosxomCalendarWeekHeader   - for the week header (Su, Mo, Tu, ...)
+  blosxomCalendarEmpty        - for filler days
+  blosxomCalendarCell         - for calendar days that aren't today
+  blosxomCalendarBlogged      - for calendar days that aren't today that 
+                                have entries
+  blosxomCalendarSpecificDay  - for the specific day we're looking at
+                                (if we're looking at a specific day)
+  blosxomCalendarToday        - for today's calendar day
 
 """
 __author__ = "Will Guaraldi - willg@bluesock.org"
@@ -33,15 +33,17 @@ __version__ = "$Id$"
 from libs import tools
 import time, os, calendar, sys, string
 
-YEAR = 0
-MONTH = 1
-DAY = 2
-
 class PyblCalendar:
 	def __init__(self, py, entryList):
 		self._py = py
 		self._entryList = entryList
 		self._cal = None
+
+		self._today = None
+		self._view = None
+		self._specificday = None
+
+		self._entries = {}
 
 	def __str__(self):
 		"""
@@ -61,21 +63,22 @@ class PyblCalendar:
 		"""
 		root = self._py["datadir"]
 		baseurl = self._py.get("base_url", "")
-		markup = self._py.get("calendarstyle", "pre")
 		
-		if len(self._entryList) > 0:
-			today = self._entryList[0]["timetuple"]
-		else:
+		self._today = time.localtime()
+
+		if len(self._entryList) == 0:
 			# if there are no entries, we shouldn't even try to
 			# do something fancy.
 			self._cal = ""
 			return
 
+		view = list(self._entryList[0]["timetuple"])
+
 		# this comes in as 2001, 2002, 2003, ...  so we can convert it
 		# without an issue
 		temp = self._py["pi_yr"]
 		if temp:
-			today = tuple([int(temp)] + list(today)[1:])
+			view[0] = int(temp)
 
 		# the month is a bit harder since it can come in as "08", "", or
 		# "Aug" (in the example of August).
@@ -86,47 +89,53 @@ class PyblCalendar:
 			if tools.month2num.has_key(temp):
 				temp = int(tools.month2num[temp])
 			else:
-				temp = today[MONTH]
-		today = tuple([today[YEAR]] + [temp] + list(today)[2:])
+				temp = view[1]
+		view[1] = temp
+
+		view = tuple(view)
+		self._view = view
+
+		# if we're looking at a specific day, we figure out what it is
+		if self._py["pi_yr"] and self._py["pi_mo"] and self._py["pi_da"]:
+			if self._py["pi_mo"].isdigit():
+				mon = self._py["pi_mo"]
+			else:
+				mon = tools.month2num[self._py["pi_mo"]]
+
+			self._specificday = [self._py["pi_yr"], mon, self._py["pi_da"]]
+			self._specificday = tuple([int(mem) for mem in self._specificday])
 
 		archiveList = tools.Walk(root)
 
-		highlight = {}
 		yearmonth = {}
 
 		for mem in archiveList:
-			timetuple = time.localtime(os.stat(mem)[8])
+			timetuple = time.localtime(tools.filestat(mem)[8])
 
-			# we keep track of all the ones we got so we can figure
-			# out what the previous and next months are
-			yearmonth[str(timetuple[YEAR]) + string.zfill(timetuple[MONTH], 2)] = time.strftime("%b", timetuple)
-
-			if timetuple[0:2] != today[0:2]:
+			# if we already have an entry for this date, we skip to the
+			# next one because we've already done this processing
+			day = str(timetuple[2]).rjust(2)
+			if self._entries.has_key(day):
 				continue
 
-			day = str(timetuple[DAY]).rjust(2)
-			
-			if highlight.has_key(day):
+			# add an entry for yyyymm so we can figure out next/previous
+			year = str(timetuple[0])
+			dayzfill = string.zfill(timetuple[1], 2)
+			yearmonth[year + dayzfill] = time.strftime("%b", timetuple)
+
+			# if the entry isn't in the year/month we're looking at with
+			# the calendar, then we skip to the next one
+			if timetuple[0:2] != view[0:2]:
 				continue
 
+			# mark the entry because it's one we want to show
 			datepiece = time.strftime("%Y/%b/%d", timetuple)
-			highlight[day] = (0, baseurl + "/" + datepiece, day)
+			self._entries[day] = (baseurl + "/" + datepiece, day)
 
-
-		# we figure out what today's date actually is and if it's on
-		# the calendar we're showing, then we toss in a highlight
-		# for that day
-		todaysdate = time.localtime()
-		if todaysdate[0:2] == today[0:2]:
-			day = str(todaysdate[DAY]).rjust(2)
-			if highlight.has_key(day):
-				highlight[day] = tuple([1] + list(highlight[day])[1:])
-			else:
-				highlight[day] = (1, "", day)
 
 		# create the calendar
 		calendar.setfirstweekday(calendar.SUNDAY)
-		cal = calendar.monthcalendar(today[0], today[1])
+		cal = calendar.monthcalendar(view[0], view[1])
 		
 		# insert the days of the week
 		cal.insert(0, ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"])
@@ -137,105 +146,82 @@ class PyblCalendar:
 		# (index-1) is prev, and the one after (index+1) is next.
 		keys = yearmonth.keys()
 		keys.sort()
-		thismonth = time.strftime("%Y%m", today)
+		thismonth = time.strftime("%Y%m", view)
 
 		index = keys.index(thismonth)
 		if index == 0:
 			prev = None
 		else:
-			prev = (baseurl + "/" + keys[index-1][:4] + "/" + yearmonth[keys[index-1]], "<")
+			prev = ("%s/%s/%s" % (baseurl, keys[index-1][:4], yearmonth[keys[index-1]]), "<")
 
 		if index == len(yearmonth)-1:
 			next = None
 		else:
-			next = (baseurl + "/" + keys[index+1][:4] + "/" + yearmonth[keys[index+1]], ">")
+			next = ("%s/%s/%s" % (baseurl, keys[index+1][:4], yearmonth[keys[index+1]]), ">")
 
 		# insert the month name and next/previous links
-		cal.insert(0, [prev, time.strftime("%B %Y", today), next])
+		cal.insert(0, [prev, time.strftime("%B %Y", view), next])
 
-		if markup == "pre":
-			self._cal = self.formatWithPre(highlight, cal)
-		elif markup == "css":
-			self._cal = self.formatWithCSS(highlight, cal)
+		self._cal = self.formatWithCSS(cal)
+
+
+	def _fixlink(self, link):
+		if link:
+			return "<a href=\"%s\">%s</a>" % (link[0], link[1])
 		else:
-			self._cal = "Invalid calendarstyle '%s'" % markup
+			return " "
+
+	def _fixday(self, day):
+		if day == 0:
+			return "<td class=\"blosxomCalendarEmpty\">&nbsp;</td>"
+
+		strday = str(day).rjust(2)
+		if self._entries.has_key(strday):
+			entry = self._entries[strday]
+			link = "<a href=\"%s\">%s</a>" % (entry[0], entry[1])
+		else:
+			link = strday
+
+		# if it's today
+		if (self._view[0], self._view[1], day) == self._today[0:3]:
+			return "<td class=\"blosxomCalendarToday\">%s</td>" % link
+
+		if self._specificday:
+			# if it's the day we're viewing
+			if (self._view[0], self._view[1], day) == self._specificday:
+				return "<td class=\"blosxomCalendarSpecificDay\">%s</td>" % link
+
+		# if it's a day that's been blogged
+		if self._entries.has_key(strday):
+			return "<td class=\"blosxomCalendarBlogged\">%s</td>" % link
+
+		return "<td class=\"blosxomCalendarCell\">%s</td>" % strday
+
+	def _fixweek(self, item):
+		return "<td class=\"blosxomCalendarWeekHeader\">%s</td>" % item
 
 
-	def formatWithCSS(self, highlight, cal):
+	def formatWithCSS(self, cal):
 		"""
 		This formats the calendar using HTML table and CSS.  The output
 		can be made to look prettier.
 		"""
-		def fixl(link):
-			if link:
-				return "<a href=\"%s\">%s</a>" % (link[0], link[1])
-			else:
-				return " "
-
 		cal2 = ["<table class=\"blosxomCalendar\">"]
 		cal2.append("<tr>")
-		cal2.append("<td align=\"left\">" + fixl(cal[0][0]) + "</td>")
+		cal2.append("<td align=\"left\">" + self._fixlink(cal[0][0]) + "</td>")
 		cal2.append("<td colspan=\"5\" align=\"center\" class=\"blosxomCalendarHead\">" + cal[0][1] + "</td>")
-		cal2.append("<td align=\"right\">" + fixl(cal[0][2]) + "</td>")
+		cal2.append("<td align=\"right\">" + self._fixlink(cal[0][2]) + "</td>")
 		cal2.append("</tr>")
-		cal2.append("<tr><td>" + "</td><td>".join(cal[1]) + "</td></tr>")
 
-		def fixday(highlight, day):
-			if day == 0: return "<td class=\"blosxomCalendarEmpty\">&nbsp;</td>"
-			day = str(day).rjust(2)
-			if highlight.has_key(day):
-				key = highlight[day]
-				if key[0] == 1:
-					out = ["<td class=\"blosxomCalendarToday\">"]
-				else:
-					out = ["<td class=\"blosxomCalendarBlogged\">"]
-
-				if key[1]:
-					out.append("<a href=\"%s\">%s</a>" % (key[1], key[2]))
-				else:
-					out.append("%s" % key[2])
-				out.append("</td>")
-				return "".join(out)
-			return "<td class=\"blosxomCalendarCell\">%s</td>" % day
+		cal2.append("<tr>%s</tr>" % "".join([self._fixweek(m) for m in cal[1]]))
 
 		for mem in cal[2:]:
-			mem = [fixday(highlight, m) for m in mem]
+			mem = [self._fixday(m) for m in mem]
 			cal2.append("<tr>" + "".join(mem) + "</tr>")
 
 		cal2.append("</table>")
 
 		return "\n".join(cal2)
-
-
-	def formatWithPre(self, highlight, cal):
-		"""
-		This formats the calendar using <pre>...</pre> tags.  The
-		output isn't exceptionally pretty, but it sure gets the job
-		done.
-		"""
-		def fixl(link):
-			if link:
-				return "<a href=\"%s\">%s</a>" % (link[0], link[1])
-			else:
-				return " "
-
-		cal2 = fixl(cal[0][0]) + cal[0][1].center(18) + fixl(cal[0][2]) + "\n" \
-					+ " ".join(cal[1]) + "\n"
-
-		def fixday(highlight, day):
-			if day == 0: return "  "
-			day = str(day).rjust(2)
-			if highlight.has_key(day):
-				key = highlight[day]
-				if key[0] == 0 and key[1]:
-					return "<a href=\"%s\">%s</a>" % (key[1], key[2])
-			return day
-
-		for mem in cal[2:]:
-			mem = [fixday(highlight, m) for m in mem]
-			cal2 += " ".join(mem) + "\n"
-
-		return "<pre>%s</pre>" % cal2
 
 
 def load(py, entryList):
