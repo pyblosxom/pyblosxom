@@ -1,7 +1,7 @@
 # vim: tabstop=4 shiftwidth=4
 import os, glob
 
-def load_plugins(py, list):
+def load_plugins(py, entryList):
 	"""
 	Loads plugins from this directory and binds them to the py
 	dict.
@@ -34,7 +34,7 @@ def load_plugins(py, list):
 			# names of its own accord
 
 			if _module.__dict__.has_key("load"):
-				_module.load(py, list)
+				_module.load(py, entryList)
 		except Exception, e:
 			# FIXME - we kicked up an exception--where to we spit 
 			# it out to?

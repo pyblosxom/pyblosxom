@@ -105,5 +105,5 @@ class PyblCalendar:
 		cal = "<pre>" + "\n".join(cal) + "</pre>"
 		self._cal = cal
 
-def load(py, list):
+def load(py, entryList):
 	py["calendar"] = PyblCalendar(py)
