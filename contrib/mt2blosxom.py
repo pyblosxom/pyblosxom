@@ -34,7 +34,7 @@ def convert(inputfile, output_dir_root):
             category = ""
             author = ""
             publish = 1
-	    breaks = DEFAULTBREAKS
+            breaks = DEFAULTBREAKS
             for field in fields:
                 if field.strip():
                     tag, value = field.split(": ", 1)
@@ -87,7 +87,7 @@ def convert(inputfile, output_dir_root):
 
             output = open(outputfile, "w")
             output.write(title+"\n")
-	    if breaks:
+            if breaks:
                 output.write('#parser linebreaks\n')
             output.write("<!--timestamp:%s:-->"%timestamp)
             output.write("<!--category:%s:-->"%category)

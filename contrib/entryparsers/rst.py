@@ -12,12 +12,12 @@ marked up as reStructuredText.
 
 You can configure this as your default preformatter for .txt files by
 configuring it in your config file as follows::
-	
+
     py['parser'] = 'reST'
-	    
+
 or in your blosxom .txt file entries, place a '#parser reST' line after the
 title of your blog::
-		    
+
     My Little Blog Entry
     #parser reST
     My main story...

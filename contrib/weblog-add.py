@@ -32,40 +32,40 @@ blog_root='/home/wam/weblog'
 include_html_syntax = 1
 
 def user2Link(user): 
-	"""given a username, return some representation of that user
-	Generally, this will be an anchor ref of a mailto URL
-	""" 
-	# could also look up mail addrs via a table lookup, etc
-	return '<a href="mailto:%(user)s@somewebsite.com">%(user)s</a>' % {"user": user}
+    """given a username, return some representation of that user
+    Generally, this will be an anchor ref of a mailto URL
+    """ 
+    # could also look up mail addrs via a table lookup, etc
+    return '<a href="mailto:%(user)s@somewebsite.com">%(user)s</a>' % {"user": user}
 
 # Nothing below here should need to be tailored...
 
 def get_blog_dirs():
-	logdirs=[]
-	os.path.walk(blog_root, lambda arg, dirPath, paths: logdirs.append(dirPath[len(blog_root)+1:]), None)
-	logdirs.sort()
-	return logdirs
+    logdirs=[]
+    os.path.walk(blog_root, lambda arg, dirPath, paths: logdirs.append(dirPath[len(blog_root)+1:]), None)
+    logdirs.sort()
+    return logdirs
 
 def getUser(): return os.environ.get("REMOTE_USER", None)
 
 def validPath(category, filename):
-	if category == ".": 
-		category = ""		# special case for main directory
-	categories=get_blog_dirs()
-	if category not in categories:
-		# XXX: I should escape any html in category to prevent
-		# error page from cross site scripting (of course, it's
-		# assumed that the person submitting has been authenticated
-		# and is trusted...)
-		raise RuntimeError, "Category `%s' does not exist" % category
-	for hostile_char in r"/.`$&*?|;":
-		if hostile_char in filename:
-			raise RuntimeError, "Invalid character `%s' in filename.  Try to stay with alphanumerics, space, and underscore." % hostile_char
-	return os.path.join(blog_root, category, filename +".txt")
-	
+    if category == ".": 
+        category = ""        # special case for main directory
+    categories=get_blog_dirs()
+    if category not in categories:
+        # XXX: I should escape any html in category to prevent
+        # error page from cross site scripting (of course, it's
+        # assumed that the person submitting has been authenticated
+        # and is trusted...)
+        raise RuntimeError, "Category `%s' does not exist" % category
+    for hostile_char in r"/.`$&*?|;":
+        if hostile_char in filename:
+            raise RuntimeError, "Invalid character `%s' in filename.  Try to stay with alphanumerics, space, and underscore." % hostile_char
+    return os.path.join(blog_root, category, filename +".txt")
+    
 def genFormPage():
-	categories=get_blog_dirs()
-	print """\
+    categories=get_blog_dirs()
+    print """\
 <html>
 <head>
 <title>content creation</title>
@@ -74,13 +74,13 @@ def genFormPage():
 <form action="weblog-add.py">
 <b>Category:</b>
 <select name="category">"""
-	for path in categories:
-		name=path
-		if path == "":   	# special case for root
-			path="."
-			name="MAIN"
-		print """<option value="%s">%s</option>""" %(path, name)
-	print """\
+    for path in categories:
+        name=path
+        if path == "":       # special case for root
+            path="."
+            name="MAIN"
+        print """<option value="%s">%s</option>""" %(path, name)
+    print """\
 </select>
 <p> 
 <b>Title:</b>
@@ -93,8 +93,8 @@ def genFormPage():
 <p>
 """
 
-	if include_html_syntax:
-		print """\
+    if include_html_syntax:
+        print """\
 <b>HTML Summary:</b>
 <br>
 <table border=1>
@@ -105,7 +105,7 @@ def genFormPage():
 <tr><th>Strongly emphasized text</th><td>&lt;strong&gt;<strong>Text to emphasize</strong>&lt;/strong&gt;</td></tr>
 </table>
 <p>"""
-	print """\
+    print """\
 <b>Content:</b> 
 <br>
 <textarea cols=80 rows=10 name="text"></textarea>
@@ -116,32 +116,32 @@ def genFormPage():
 """
 
 def error(msg):
-	print "<html><head><title>Content Error!</title></head><body><h1>Content Error!</h1>%s</body></html>" % msg
-	sys.exit(0)
+    print "<html><head><title>Content Error!</title></head><body><h1>Content Error!</h1>%s</body></html>" % msg
+    sys.exit(0)
 
 def addContent(form):
-	try:
-		filename=validPath(form.getfirst("category"), form.getfirst("filename"))
-	except RuntimeError, msg:
-		error(msg)
-	# XXX: should perhaps do more error checking here
-	datafile=open(filename, "w")
-	print >>datafile, form.getfirst("title")
-	print >>datafile, '#author %s' % user2Link(getUser())
-	print >>datafile, form.getfirst("text")
-	datafile.close()
-	print '<html><body><h1>Posted!</h1><a href="/">Return to webroot</a></body></html>'
-	# XXX: return page should probably link to page to which 
-	# content was added...  HTTP_REFERRER seems to be broken for
-	# for me though...
+    try:
+        filename=validPath(form.getfirst("category"), form.getfirst("filename"))
+    except RuntimeError, msg:
+        error(msg)
+    # XXX: should perhaps do more error checking here
+    datafile=open(filename, "w")
+    print >>datafile, form.getfirst("title")
+    print >>datafile, '#author %s' % user2Link(getUser())
+    print >>datafile, form.getfirst("text")
+    datafile.close()
+    print '<html><body><h1>Posted!</h1><a href="/">Return to webroot</a></body></html>'
+    # XXX: return page should probably link to page to which 
+    # content was added...  HTTP_REFERRER seems to be broken for
+    # for me though...
 
 if __name__ == '__main__':
-	form = cgi.FieldStorage()
-	print "Content-type: text/html\n"
-	if not getUser(): 
-		error("User not authenticated.")
-	if form.has_key("text"):
-		addContent(form)
-		sys.exit(0)
-	genFormPage()
-	sys.exit(0)
+    form = cgi.FieldStorage()
+    print "Content-type: text/html\n"
+    if not getUser(): 
+        error("User not authenticated.")
+    if form.has_key("text"):
+        addContent(form)
+        sys.exit(0)
+    genFormPage()
+    sys.exit(0)
