@@ -3,8 +3,7 @@
 import os.path, sys, os
 from distutils.core import setup
 
-def fixf(f):
-    return f.replace("/", os.sep)
+fixf = os.path.normpath
 
 def Walk(root='.'):
     """
@@ -109,7 +108,6 @@ setup(name="pyblosxom",
 """Pyblosxom is a weblog engine that uses the filesystem as the database of
 your entries.
 """,
-    scripts=['web/pyblosxom.cgi', 'web/xmlrpc.cgi'],
     data_files=pydf,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
