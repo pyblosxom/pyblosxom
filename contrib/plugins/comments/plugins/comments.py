@@ -1,25 +1,20 @@
-#
-# Comment poster
-#
+"""
+This module contains an extension to Blosxom file entries to support
+comments
+"""
 # IMPORTANT: This plugin requires the pyXML module
-#
-#
 
 import cgi, glob, os.path, re, time, cPickle
 from xml.sax.saxutils import escape
 from Pyblosxom import tools
 from Pyblosxom.entries.base import EntryBase
     
-"""
-This module contains an extension to Blosxom file entries to support comments
-"""
-
 #
 # file system  implementation
-# Comments are stored 1 per file, in a parallel hierarchy to the datadir hierarchy
-# The filename of the comment is the filename of the blog entry plus the creation
-# time of the comment as a time float.
-# The contents of the comment file is an RSS 2.0 item
+# Comments are stored 1 per file, in a parallel hierarchy to the datadir
+# hierarchy The filename of the comment is the filename of the blog
+# entry plus the creation time of the comment as a time float.  The
+# contents of the comment file is an RSS 2.0 item
 #        
         
 def readComments(entry, config):
