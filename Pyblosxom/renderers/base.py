@@ -123,12 +123,12 @@ class RendererBase:
 
     def showHeaders(self):
         """
-        Show HTTP Headers. Override this if your renderer uses headers in a
-        different way
+        Updated the headers of the L{Response<Pyblosxom.pyblosxom.Response>} instance.
+        This is just for backwards compatibility.
         """
-        self.write('\n'.join(['%s: %s' % (x, self._header[x]) 
-                for x in self._header.keys()]))
-        self.write('\n\n')
+        response = self._request.getResponse()
+        for k,v in self._header.items():
+            response.addHeader(k,v)
 
 
     def render(self, header = 1):

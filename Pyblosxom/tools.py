@@ -488,7 +488,7 @@ def get_cache(request):
 
     return mycache
 
-
+_logger_registry = {}
 def make_logger(filename):
     """
     Create a logging function called log, which logs to the supplied filename
@@ -511,16 +511,21 @@ def make_logger(filename):
             f.write("\n")
             f.close()
     else:
-        logger = logging.getLogger('trackback')
+        global _logger_registry
         # if all loggers have the same name,
         # everything is logged to all files.
         logger_name = os.path.splitext(os.path.basename(filename))[0]
-        logger = logging.getLogger(logger_name)
-        hdlr = logging.FileHandler(filename)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        hdlr.setFormatter(formatter)
-        logger.addHandler(hdlr) 
-        logger.setLevel(logging.INFO)
+        # only add one handler per logger
+        if not logger_name in _logger_registry:
+            _logger = logging.getLogger(logger_name)
+            hdlr = logging.FileHandler(filename)
+            formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+            hdlr.setFormatter(formatter)
+            _logger.addHandler(hdlr)
+            _logger.setLevel(logging.INFO)
+            _logger_registry[logger_name] = _logger
+
+        logger = _logger_registry[logger_name]
 
         def log(*args):
             # adjusted to match the 'manual' log func
@@ -583,12 +588,9 @@ def render_url(cdict, pathinfo, querystring=""):
     if not staticdir:
         raise Exception("You must set static_dir in your config file.")
 
-    from Pyblosxom import pyblosxom
-       
-    oldstdout = sys.stdout
+    from Pyblosxom.pyblosxom import PyBlosxom
 
-    req = pyblosxom.Request()
-    req.addHttp({
+    env = {
         "HTTP_USER_AGENT": "static renderer",
         "REQUEST_METHOD": "GET",
         "HTTP_HOST": "localhost",
@@ -597,32 +599,25 @@ def render_url(cdict, pathinfo, querystring=""):
         "REQUEST_URI": pathinfo + "?" + querystring,
         "PATH_INFO": pathinfo,
         "HTTP_REFERER": "",
-        "REMOTE_ADDR": ""
-         })
-    req.addConfiguration(cdict)
-    req.addData( {"STATIC": 1} )
-
-    buffer = StringIO.StringIO()
-    sys.stdout = buffer
-    p = pyblosxom.PyBlosxom(req)
+        "REMOTE_ADDR": "",
+        "SCRIPT_NAME": "",
+        "wsgi.errors": sys.stderr,
+        "wsgi.input": None
+    }
+    data = {"STATIC": 1}
+    p = PyBlosxom(cdict, env, data)
     p.run()
-    sys.stdout = oldstdout
+    response = p.getResponse()
+    response.seek(0)
 
     fn = os.path.normpath(staticdir + os.sep + pathinfo)
     if not os.path.isdir(os.path.dirname(fn)):
         os.makedirs(os.path.dirname(fn))
 
-    # this is cheesy--we need to remove the HTTP headers
-    # from the file.
-    output = buffer.getvalue().splitlines()
-    while 1:
-        if len(output[0].strip()) == 0:
-            break
-        output.pop(0)
-    output.pop(0)
-
+    # by using the response object the cheesy part of removing 
+    # the HTTP headers from the file is history.
     f = open(fn, "w")
-    f.write("\n".join(output))
+    f.write(response.read())
     f.close()
 
  

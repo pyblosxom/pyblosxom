@@ -2,13 +2,21 @@
 This is the main module for PyBlosxom functionality.  PyBlosxom's setup 
 and default handlers are defined here.
 """
+
+# Python imports
 from __future__ import nested_scopes
-import os, time, re, sys, StringIO
+import os, time, re, sys
+import cgi
+try: from cStringIO import StringIO
+except ImportError: from StringIO import StringIO
+
+# Pyblosxom imports
 import tools
 from entries.fileentry import FileEntry
 
-VERSION = "1.1"
-VERSION_DATE = VERSION + " 01/05/2005"
+
+VERSION = "1.2"
+VERSION_DATE = VERSION + " devel"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
 class PyBlosxom:
@@ -18,14 +26,23 @@ class PyBlosxom:
     request through all the steps until the output is rendered and
     we're complete.
     """
-    def __init__(self, request):
+    def __init__(self, config, environ, data={}):
         """
-        Sets the request.
+        Sets configuration and environment.
+        Creates the L{Request} object.
 
-        @param request: A L{Pyblosxom.pyblosxom.Request} object
-        @type request: L{Pyblosxom.pyblosxom.Request} object
+        @param config: A dict containing the configuration variables.
+        @type config: dict
+
+        @param environ: A dict containing the environment variables.
+        @type environ: dict
+
+        @param data: A dict containing data variables.
+        @type data: dict
         """
-        self._request = request
+        config['pyblosxom_name'] = "pyblosxom"
+        config['pyblosxom_version'] = VERSION_DATE
+        self._request = Request(config, environ, data)
 
     def initialize(self):
         """
@@ -45,7 +62,8 @@ class PyBlosxom:
         # Get our URL and configure the base_url param
         if pyhttp.has_key('SCRIPT_NAME'):
             if not config.has_key('base_url'):
-                config['base_url'] = 'http://%s%s' % (pyhttp['HTTP_HOST'], pyhttp['SCRIPT_NAME'])
+				# allow http and https
+                config['base_url'] = '%s://%s%s' % (pyhttp['wsgi.url_scheme'], pyhttp['HTTP_HOST'], pyhttp['SCRIPT_NAME'])
         else:
             config['base_url'] = config.get('base_url', '')
 
@@ -65,10 +83,29 @@ class PyBlosxom:
                                         mappingfunc=lambda x,y:y,
                                         defaultfunc=lambda x:x)
 
+    def getRequest(self):
+        """
+        Returns the L{Request} object.
+        
+        @returns: the request object 
+        @rtype: L{Request}
+        """
+        return self._request
+
+    def getResponse(self):
+        """
+        Returns the L{Response} object which handles all output 
+        related functionality.
+        
+        @see: L{Response}
+        @returns: the reponse object 
+        @rtype: L{Response}
+        """
+        return self._request.getResponse()
+
     def run(self):
         """
-        Main loop for pyblosxom.  This should be called _after_
-        initialization.  This method will run the handle callback
+        Main loop for pyblosxom.  This method will run the handle callback
         to allow registered handlers to handle the request.  If nothing
         handles the request, then we use the default_blosxom_handler.
         """
@@ -262,6 +299,29 @@ class PyBlosxom:
             tools.render_url(config, url, q)
 
 
+    def testInstallation(self):
+        test_installation(self._request)
+
+
+class EnvDict(dict):
+    """
+    Wrapper arround a dict to provide a backwards compatible way
+    to get the L{form<cgi.FieldStorage>} with syntax as:
+    request.getHttp()['form'] 
+    instead of:
+    request.getForm()
+    """
+    def __init__(self, request, env):
+        self._request = request
+        for key in env:
+            self[key] = env[key]
+
+    def __getitem__(self, key):
+        if key == "form":
+            return self._request.getForm()
+        else:
+            return dict.__getitem__(self, key)   
+
 class Request:
     """
     This class holds the PyBlosxom request.  It holds configuration
@@ -273,18 +333,107 @@ class Request:
     PyBlosxom instance which will do further manipulation on the
     Request instance.
     """
-    def __init__(self):
+    def __init__(self, config, environ, data):
+        """
+        Sets configuration and environment.
+        Creates the L{Response} object which handles all output 
+        related functionality.
+        
+        @param config: A dict containing the configuration variables.
+        @type config: dict
+
+        @param environ: A dict containing the environment variables.
+        @type environ: dict
+
+        @param data: A dict containing data variables.
+        @type data: dict
+        """
         # this holds configuration data that the user changes 
         # in config.py
-        self._configuration = {}
+        self._configuration = config
 
         # this holds HTTP/CGI oriented data specific to the request
         # and the environment in which the request was created
-        self._http = {}
+        #self._http = environ
+        self._http = EnvDict(self, environ)
 
         # this holds run-time data which gets created and transformed
         # by pyblosxom during execution
-        self._data = {}
+        self._data = data
+
+        # this holds the input stream
+        self._in = environ['wsgi.input']
+
+        # this holds the FieldStorage instance.
+        # initialized when request.getForm is called the first time
+        self._form = None
+        
+        # create and set the Response
+        self.setResponse(Response(self))
+
+        # if a input stream is given, copy it's read related methods
+        # to the Request object.
+        if self._in:
+            self._copy_members()
+
+    def _copy_members(self):
+        """
+        Copies methods from the underlying input stream to the request object.
+        """
+        props = ['__iter__', 'next', 'read', 'readline', 'readlines', 'seek', 'tell']
+        for prop in props:
+            setattr(self, prop, getattr(self._in, prop))
+
+    def setResponse(self, response):
+        """
+        Sets the L{Response} object.
+
+        @param response: A pyblosxom Response object
+        @type response: L{Response}
+        """
+        self._response = response
+        # for backwards compatibility
+        self.getConfiguration()['stdoutput'] = response
+
+    def getResponse(self):
+        """
+        Returns the L{Response} object which handles all output 
+        related functionality.
+        
+        @returns: L{Response}
+        """
+        return self._response
+
+    def __getForm(self):
+        """
+        Parses and returns the form data submitted by the client.
+        The input stream self._in is consumed/empty after a call
+        to cgi.FieldStorage. If the created FieldStorage instance
+        has a 'file' member this is set as the new input stream.
+
+        @returns: L{cgi.FieldStorage}
+        """        
+        form = cgi.FieldStorage(fp=self._in, environ=self._http, keep_blank_values=0)
+        if form.file:
+            #FIXME - why is this line commented out?
+            #self._in = environ['wsgi.input'] = form.file
+            self._in = form.file
+            self._in.seek(0)
+            self._copy_members()
+        return form
+
+    def getForm(self):
+        """
+        Returns the form data submitted by the client.
+        The L{form<cgi.FieldStorage>} instance is created
+        only when requested to prevent overhead and unnecessary
+        consumption of the input stream.
+
+        @returns: L{cgi.FieldStorage}
+        """
+        if self._form == None:
+            self._form = self.__getForm()
+        return self._form
 
     def getConfiguration(self):
         """
@@ -386,11 +535,121 @@ class Request:
         return "Request"
 
 
+class Response(object):
+    """
+    Response class to handle all output related tasks in one place.
+
+    This class is basically a wrapper arround a StringIO instance.
+    It also provides methods for managing http headers.
+    """
+
+    def __init__(self, request):
+        """
+        Sets the L{Request} object that leaded to this response.
+        Creates a L{StringIO} that is used as a output buffer.
+        
+        @param request: request object.
+        @type request: L{Request}
+        """
+        self._request = request
+        self._out = StringIO()
+        self._headers_sent = False
+        self.headers = {}
+        self.status = "200 OK"
+        self._copy_members()
+    
+    def _copy_members(self):
+        """
+        Copies methods from the underlying output buffer to the response object.
+        """
+        props = ['__iter__', 'close', 'flush', 'next', 
+            'read', 'readline', 'readlines', 'seek', 'tell',
+            'write', 'writelines']
+        for prop in props:
+            #if not hasattr(self, prop):
+            setattr(self, prop, getattr(self._out, prop))
+
+    def setStatus(self, status):
+        """
+        Sets the status code for this response.
+        
+        @param status: A status code and message like '200 OK'.
+        @type status: str
+        """
+        self.status = status
+
+    def getStatus(self):
+        """
+        Returns the status code and message of this response.
+        
+        @returns: str
+        """
+        return self.status
+
+    def addHeader(self, *args):
+        """
+        Populates the HTTP header with lines of text.
+        Sets the status code on this response object if the given argument
+        list containes a 'Status' header.
+
+        @param args: Paired list of headers
+        @type args: argument lists
+        @raises ValueError: This happens when the parameters are not correct
+        """
+        args = list(args)
+        if not len(args) % 2:
+            while args:
+                key = args.pop(0).strip()
+                if key.find(' ') != -1 or key.find(':') != -1:
+                    raise ValueError, 'There should be no spaces in header keys'
+                value = args.pop(0).strip()
+
+                if key.lower() == "status":
+                    self.setStatus(str(value))
+                else:
+                    self.headers.update({key: str(value)})
+        else:
+            raise ValueError, 'Headers recieved are not in the correct form'
+
+    def getHeaders(self):
+        """
+        Returns the headers of this response.
+        
+        @returns: the HTTP response headers
+        @rtype: dict
+        """
+        return self.headers
+
+    def sendHeaders(self, out):
+        """
+        Send HTTP Headers to the given output stream.
+
+        @param out: File like object
+        @type out: file
+        """
+        out.write("Status: %s\n" % self.status)
+        out.write('\n'.join(['%s: %s' % (x, self.headers[x]) 
+                for x in self.headers.keys()]))
+        out.write('\n\n')
+        self._headers_sent = True
+
+    def sendBody(self, out):
+        """
+        Send the response body to the given output stream.
+
+        @param out: File like object
+        @type out: file
+        """
+        #if not self._headers_sent:
+        #    self.sendHeaders(out)
+        self.seek(0)
+        out.write(self.read())
+
+
 def blosxom_handler(request):
     """
     This is the default blosxom handler.
     """
-    import cgi
 
     config = request.getConfiguration()
     data = request.getData()
@@ -414,9 +673,6 @@ def blosxom_handler(request):
         r = r.Renderer(request, config.get("stdoutput", sys.stdout))
 
     data['renderer'] = r
-
-    if not request.getHttp().has_key("form"):
-        request.addHttp( {"form": cgi.FieldStorage() } )
 
     # process the path info to determine what kind of blog entry(ies) 
     # this is
@@ -595,7 +851,7 @@ def blosxom_process_path_info(args):
     data = request.getData()
     pyhttp = request.getHttp()
 
-    form = pyhttp["form"]
+    form = request.getForm()
     data['flavour'] = (form.has_key('flav') and form['flav'].value or 
             config.get('defaultFlavour', 'html'))
 
@@ -764,7 +1020,6 @@ def test_installation(request):
     print "]] checking datadir [["
 
     # DATADIR
-    # FIXME - we should check permissions here?
     if not os.path.isdir(config["datadir"]):
         print "datadir '%s' does not exist." % config["datadir"]          
         print "You need to create your datadir and give it appropriate"
@@ -773,7 +1028,8 @@ def test_installation(request):
         print "This must be done before we can go further.  Exiting."
         return
 
-    print "PASS: datadir is fine."
+    print "PASS: datadir is there.  Note: this does not check whether"
+    print "      your webserver has permissions to view files therein!"
 
     print "------"
     print "Now we're going to verify your plugin configuration."
