@@ -17,7 +17,7 @@ class BlosxomCacheBase:
     scratch.
 
     @ivar _config: String containing config on where to store the cache.
-        The Value of config is derived from C{py['cacheConfig']} in L{config}.
+        The value of config is derived from C{py['cacheConfig']} in config.py.
     @type _config: string
     """
     def __init__(self, req, config):

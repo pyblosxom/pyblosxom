@@ -25,6 +25,10 @@ configuration, and know how to manipulate files and directories. If this
 doesn't sound like you, maybe you should get a friend to help out or ask 
 for help on the pyblosxom-users mailing list.
 
+If you are upgrading your version of PyBlosxom, follow the instructions
+here and also read the README for differences between this version and
+the previous versions.
+
 
 2 Prerequisites
 ===============

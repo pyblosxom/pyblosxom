@@ -22,7 +22,7 @@ __author__ = "Wari Wahab - wari at wari dot per dot sg"
 __version__ = "$Id$"
 
 from Pyblosxom import tools
-import time
+import time, os
 
 def verify_installation(request):
     config = request.getConfiguration()
@@ -55,7 +55,7 @@ class PyblArchives:
         template = config.get('archive_template', 
                     '<a href="%(base_url)s/%(Y)s/%(b)s">%(Y)s-%(b)s</a><br />')
         for mem in archiveList:
-            timetuple = tools.filestat(self._request, mem)
+            timetuple = time.localtime(os.stat(mem)[8])
             timedict = {}
             for x in ["B", "b", "m", "Y", "y"]:
                 timedict[x] = time.strftime("%" + x, timetuple)

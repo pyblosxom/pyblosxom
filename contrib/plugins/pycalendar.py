@@ -40,7 +40,7 @@ __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
 
 from Pyblosxom import tools
-import time, calendar, string
+import time, calendar, string, os
 
 def verify_installation(request):
     # there's no configuration needed for this plugin.
@@ -129,7 +129,7 @@ class PyblCalendar:
         yearmonth = {}
 
         for mem in archiveList:
-            timetuple = tools.filestat(self._request, mem)
+            timetuple = time.localtime(os.stat(mem)[8])
 
             # if we already have an entry for this date, we skip to the
             # next one because we've already done this processing

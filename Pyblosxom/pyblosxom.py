@@ -8,7 +8,7 @@ import tools
 from entries.fileentry import FileEntry
 
 VERSION = "1.0.0"
-VERSION_DATE = VERSION + " not yet released"
+VERSION_DATE = VERSION + " alpha 1 (May 12, 2004)"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
 class PyBlosxom:
@@ -159,7 +159,7 @@ class PyBlosxom:
                 continue
 
             # grab the mtime of the entry file
-            mtime = time.mktime(tools.filestat(self._request, mem))
+            mtime = time.mktime(time.localtime(os.stat(mem)[8]))
 
             # remove the datadir from the front and the bit at the end
             mem = mem[len(datadir):mem.rfind(".")]
@@ -677,13 +677,13 @@ def test_installation(request):
 
     It:
 
-    1. tests properties in their config.py file
-    2. verifies they have a datadir and that it exists
-    3. initializes all the plugins they have installed
-    4. runs "cb_verify_installation"--plugins can print out whether
-       they are installed correctly (i.e. have valid config property
-       settings and can read/write to data files)
-    5. exits
+      1. tests properties in their config.py file
+      2. verifies they have a datadir and that it exists
+      3. initializes all the plugins they have installed
+      4. runs "cb_verify_installation"--plugins can print out whether
+         they are installed correctly (i.e. have valid config property
+         settings and can read/write to data files)
+      5. exits
 
     The goal is to be as useful and informative to the user as we can be
     without being overly verbose and confusing.

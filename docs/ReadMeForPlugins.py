@@ -1,7 +1,7 @@
 # vim: tabstop=4 shiftwidth=4 expandtab
 # This document uses epydoc syntax, see http://epydoc.sf.net
 """
-C{README} for Plugins
+C{README} for Plugins and Plugin writing
 
 Inside the C{contrib/} directory, you'll see the C{plugins/} directory. To
 install a given plugin, move the plugin file you want from the C{contrib/}
@@ -12,17 +12,33 @@ C{statusnotfound.py}.  Some plugins require some setup before they work.
 Read the plugin file in a text editor to see what installation steps are
 required.
 
-Below is some basic documentation for plugin developers and details
-callbacks available, how they should be used, and what they do.
+Below is documentation for plugin developers detailing the standard
+callbacks that they can use to implement plugins.
+
+
+B{Implementing a callback in a plugin}
+
+If you want to implement a callback, you add a function corresponding
+to the callback name to your plugin module.  For example, if you wanted
+to modify the L{Request} object just before rendering, you'd implement
+cb_prepare something like this::
+
+    def cb_prepare(args):
+        pass
+
+Each callback passes in arguments through a single dictionary.  Each
+callback passes in different arguments and expects different return
+values.  Consult the documentation for the callback you're seeking
+before implementing it in your code to understand what it does and
+how to use it.
+
 
 B{The BlosxomRenderer plugin callbacks}
 
-The L{BlosxomRenderer} plugins supports set of callback functions based on the
-blosxom 2.0 callbacks.  The names arguments are different, but the
-L{BlosxomRenderer} callbacks are called at the same points that the blosxom 2.0
-callbacks are called.
-
-All of the BlosxomRenderer callbacks take the same three arguments
+The L{BlosxomRenderer} plugins are based on the blosxom 2.0 callbacks.
+The names of the arguments are different, but the callbacks are called
+at the same points that the blosxom 2.0 callbacks are called and serve
+the same function.
 
 The available blosxom renderer callbacks are:
  
@@ -31,17 +47,23 @@ The available blosxom renderer callbacks are:
     - L{cb_story} (corresponds to blosxom 2.0 story)
     - L{cb_foot} (corresponds to blosoxm 2.0 foot)
 
-In PyBlosxom, the functionality some of the blosxom 2.0 callbacks are taken
-care of by callback chains.
+Some of the other blosxom 2.0 callbacks are handled slightly differently
+in PyBlosxom.
 
      - The blosxom 2.0 entries callback is handled by L{cb_filelist}
      - The blosxom 2.0 filter callback is handled by L{cb_prepare}
      - The blosxom 2.0 sort callback is handled by L{cb_prepare}
 
+See the callback documentation below for more details.
+
+
 B{verify_installation}
 
-For 0.9, I made changes to pyblosxom.cgi so that you could run it from 
-the prompt::
+As of PyBlosxom 0.9, the pyblosxom.cgi is able to test your PyBlosxom
+installation.  It verifies certain items in your config file and also
+loads all the plugins and lets them verify their configuration as well.
+
+At the prompt, you would run::
 
    ./pyblosxom.cgi
 
@@ -78,34 +100,41 @@ without involving the web server's error logs and debugging information
 being sent to a web-browser and things of that nature.
 """
 import Pyblosxom, os
-from Pyblosxom.Request import Request
+from Pyblosxom.pyblosxom import Request
 from Pyblosxom.renderers.blosxom import BlosxomRenderer
 from Pyblosxom.entries.base import EntryBase
 from Pyblosxom.pyblosxom import PyBlosxom
 
 def cb_prepare(args):
     """
-    A callback to prepare data before a renderin.
-    
-    This callback is called before we go through the renderer. Arguments
-    contains:
+    The prepare callback is called in the default blosxom handler after 
+    we've figured out what we're rendering and before we actually go to the
+    renderer.
+
+    Plugins should implement cb_prepare to modify the data dict which 
+    is in the L{Request}.  Inside the data dict is C{'entry_list'} 
+    (amongst other things) which holds the list of entries to be renderered 
+    (in the order they will be rendered).
+
+    Functions that implement this callback will get an args dict
+    containing:
 
      - C{'request'} - The L{Request} object at the particular moment
 
-    Most plugins can use the prepare chain to either transform or add to the
-    L{Request.getData()} dict. Some plugins could also use the C{'entry_list'}
-    list of entries and modify data there.
+    Functions that implement this callback can return whatever they want--it
+    doesn't affect the callback chain.
 
-    Here's an example of a prepare chain plugin::
+    Example of a C{cb_prepare} function in a plugin::
 
         def cb_prepare(args):
             \"""
-            This plugin shows the number of entry we are going to print and
-            place the result in $countNoOfEntries
+            This plugin shows the number of entries we are going to render and
+            place the result in $countNoOfEntries.
             \"""
             request = args['request']
             data = request.getData()
             config = request.getConfiguration()
+
             # Can anyone say Ternary? :)
             IF = lambda a,b,c:(a() and [b()] or [c()])[0]
 
@@ -113,59 +142,43 @@ def cb_prepare(args):
             entries = len(data['entry_list'])
 
             data['countNoOfEntries'] = IF(num_entry > entries, num_entry, entries)
+    @param args: dict containing C{'request'}
+    @type  args: dict
 
-    @param args: A dict containing a L{Request()} object
-    @type args: dict
+    @return: none
+    @rtype:  none
     """
     pass
 
 
-def cb_logrequest(args = {'filename': 'A file', 
-        'return_code': 'A http return code', 'request': Request()}):
+def cb_logrequest(args):
     """
-    This callback is responsible for logging a typical request. 
-    
-    A dict, C{args} is given containing:
+    This callback is used to notify plugins of the current PyBlosxom
+    request for the purposes of logging.
+
+    Functions that implement this callback will get an args dict
+    containing:
 
      - C{'filename'} - a filename (typically a base filename)
      - C{'return_code'} - A HTTP error code (e.g 200, 404, 304)
      - C{'request'} - a L{Request} object
 
-    No return is expected from this callback. This is usually called at the
-    last point of rendering
+    Functions that implement this callback can return whatever they want--it
+    doesn't affect the callback chain.
 
-    A typical contents of args::
-        filename = config.get('logfile', '')
-        {'filename': filename, 
-         'return_code': '200',
-         'request': Request()}
+    cb_logrequest is called after rendering and will contain all the
+    modifications to the L{Request} object made by the plugins.
 
-    @param args: A dict containing the keys request, filename and return_code
-    @type args: dict
-    """
-    pass
+    An example input args dict is like this::
 
+        {'filename': filename, 'return_code': '200', 'request': Request()}
 
-def cb_filestat(args = {'filename': 'A file', 'mtime': os.stat('/')}):
-    """
-    A callback that returns a file C{stat} based on the arguments received. 
-    
-    The args received is a dict containing:
-        
-     - C{'filename'} - a physical file and 
-     - C{'mtime'} - what is returned by C{os.stat} function. 
+    @param args: a dict containing C{'filename'}, C{'return_code'}, and
+        C{'request'}
+    @type  args: dict
 
-    Plugins are supposed to transform the value of mtime if a certain condition
-    is met, according to the plugin. All plugins that registers C{cb_filestat}
-    are given a chance to take a peek at the args.
-
-    A typical contents of args::
-        filename = '/home/someone/blosxom/cat/file.txt'
-        {'filename': filename, 
-         'mtime': os.stat(filename)}
-
-    @param args: A dict with two keys, filename and mtime
-    @type args: dict
+    @return: none
+    @rtype:  none
     """
     pass
 
@@ -238,9 +251,9 @@ def cb_entryparser(args = {'txt': 'A blosxom text entryparser'}):
     postformatters) will be cached by the caching mechanisms.
     
     Plugins are supposed to add more keys as the extension of the file it can
-    handle. A plugin can also replace the standard txt entryparser if the need
-    be.  All plugins that registers C{cb_filestat} are given a chance to take a
-    peek at the args, append to it, or modify it (not advisable).
+    handle.  A plugin can also replace the standard txt entryparser if the need
+    be.  All plugins that registers C{cb_entryparser} are given a chance 
+    to take a peek at the args, append to it, or modify it (not advisable).
 
     By default, typical contents of args::
         {'txt': L{Pyblosxom.pyblosxom.blosxom_entry_parser}}
@@ -439,12 +452,16 @@ def cb_date_head(args = {'renderer':'The Blosxom renderer',
     """
     pass
 
-def cb_story(args = {'renderer':'The Blosxom renderer', 
-                     'entry':'The entry to render',
-                     'template':'The template to be filled in'}):
+def cb_story(args = {'renderer': 'The Blosxom renderer', 
+                     'request': 'The PyBlosxom Request',
+                     'entry': 'The entry to render',
+                     'template': 'The template to be filled in'}):
     """
-    A callback that is called before a story flavour template is rendered
-    
+    This callback gets called before the entry is rendered.  The template
+    used is typically the story template, but we allow entries to override
+    this if they have a "template" property.  If they have the "template"
+    property, then we'll use that template instead.
+
     C{cb_story} is called before the variables in the entry are substituted
     into the template.  This is the place to modify the story template based
     on the entry content.  You have access to all the content variables via 
@@ -455,10 +472,13 @@ def cb_story(args = {'renderer':'The Blosxom renderer',
     C{args} contains
     
       - C{'renderer'} - the L{BlosxomRenderer} that called the callback
-      - C{'entry'} - a L{EntryBase} to be rendered
+      - C{'request'} - the PyBlosxom a L{Request} being handled
       - C{'template'} - a string containing the flavour template to be processed
+      - C{'entry'} - a L{EntryBase} object to be rendered
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
+    Example:
+
+    @param args: a dict containing a L{BlosxomRenderer}, L{Request}, L{EntryBase}, and template
     @type args: dict
     """
     pass

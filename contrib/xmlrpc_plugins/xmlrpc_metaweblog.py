@@ -19,7 +19,7 @@ import os, xmlrpclib, re, time
 from Pyblosxom import tools, plugin_utils
 from Pyblosxom.entries.fileentry import FileEntry
 
-tools.make_logger('/tmp/metaweblog.log')
+# tools.make_logger('/tmp/metaweblog.log')
 
 #
 # Pyblosxom callback API functions
@@ -96,7 +96,7 @@ def metaWeblog_editPost(request, postid, username, password, struct, publish):
 
     @returns an xmlrpclib boolean -- true if the edit was successful, false otherwise
     """
-    tools.log("editPost %s %s %s" % (postid, struct, publish))
+    # tools.log("editPost %s %s %s" % (postid, struct, publish))
     authenticate(request, username, password)
     config = request.getConfiguration()
     ping = config.get('xmlrpc_metaweblog_ping',0)
@@ -126,7 +126,7 @@ def metaWeblog_newPost(request, blogid, username, password, struct, publish):
     @param publish: to publish (true) or not
     @type  publish: boolean
     """
-    tools.log("newPost %s %s %s" % (blogid, struct, publish))
+    # tools.log("newPost %s %s %s" % (blogid, struct, publish))
     authenticate(request, username, password)
     config = request.getConfiguration()
     ping = config.get('xmlrpc_metaweblog_ping',0)
@@ -160,11 +160,11 @@ def metaWeblog_getPost(request, postid, username, password):
     @returns the post whose id is postid
     @rtype dict
     """
-    tools.log("getPost: postid: %s" % (postid,))
+    # tools.log("getPost: postid: %s" % (postid,))
     authenticate(request, username, password)
     config = request.getConfiguration()
 
-    tools.log("datadir = %s, file = %s.txt" % (config['datadir'], postid))
+    # tools.log("datadir = %s, file = %s.txt" % (config['datadir'], postid))
     entry = FileEntry(request, os.path.join(config['datadir'],"%s.txt" % postid), config['datadir'])
     post = { 'permaLink': "%s/%s/%s/%s#%s" % (config['base_url'], entry['yr'],entry['mo_num'],entry['da'],entry['fn']),
              'title':entry['title'],
@@ -194,7 +194,7 @@ def metaWeblog_getCategories(request, blogid, username, password):
     @returns list of categories (each category is a string)
     @rtype list
     """
-    tools.log("getCategories blogid: %s" % blogid)
+    # tools.log("getCategories blogid: %s" % blogid)
     authenticate(request, username, password)
     config = request.getConfiguration()
 
@@ -225,7 +225,7 @@ def metaWeblog_getRecentPosts(request, blogid, username, password, numberOfPosts
     @returns list of dicts, one per post
     @rtype list
     """
-    tools.log("getRecentPosts blogid:%s count:%s" % (blogid, numberOfPosts))
+    # tools.log("getRecentPosts blogid:%s count:%s" % (blogid, numberOfPosts))
     authenticate(request, username, password)
     config = request.getConfiguration()
 
@@ -240,7 +240,7 @@ def metaWeblog_getRecentPosts(request, blogid, username, password, numberOfPosts
     try:
         numberOfPosts = int(numberOfPosts)
     except:
-        tools.log("Couldn't convert numberOfPosts")
+        # tools.log("Couldn't convert numberOfPosts")
         numberOfPosts = 5
     entryList = [ x[1] for x in entryList ][: numberOfPosts]
 
@@ -273,7 +273,7 @@ def metaWeblog_newMediaObject(request, blogid, username, password, struct):
     @param struct: the metaWeblog API struct
     @type  struct: dict
     """
-    tools.log("newMediaObject: ", struct)
+    # tools.log("newMediaObject: ", struct)
     pass
 
 #
@@ -336,7 +336,7 @@ def _buildPostId(request, blogid, struct):
     else:
         postId = os.path.join("%d" % count)
 
-    tools.log(postId)
+    # tools.log(postId)
     return postId
 
 def _getEntryCount(request):
@@ -417,7 +417,7 @@ def _writePost(config, username, postid, struct, publish=True, ping=False):
     """
     root = config['datadir']
     path = os.path.join(root,"%s.txt" % postid)
-    tools.log("path = "+path)
+    # tools.log("path = "+path)
     if not publish:
         path += '-'
 
@@ -448,5 +448,6 @@ def _writePost(config, username, postid, struct, publish=True, ping=False):
             os.chdir(root)
             autoping.autoping("%s.txt" % postid)
         except:
-            tools.log("autoping failed for %s" % path)
+            # tools.log("autoping failed for %s" % path)
+            pass
     return 1
