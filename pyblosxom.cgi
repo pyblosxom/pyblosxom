@@ -3,6 +3,13 @@
 """pyblosxom
 A Bloxsom clone in python, see http://www.raelity.org/apps/blosxom/ for details
 """
+import os, cgi, sys
+from libs.pyblosxom import PyBlosxom
+# Uncomment this if you put libs directory outside of pyblosxom.cgi
+#sys.path.append('/path/to/libs/directory')
+# Uncomment this if something goes wrong (for debugging)
+#import cgitb; cgitb.enable()
+
 # Windows INI style file to read to override the values below
 configFile = '../../p.ini'
 
@@ -40,9 +47,6 @@ py['cache_enable'] = 0
 # Cached file extension.
 py['cache_ext'] = '.compiled'
 
-# Enable Etag and Last-Modified headers? 'yes' to enable
-py['conditionalHTTP'] = ''
-
 # XML-RPC data
 trackback = {}
 # enable XML-RPC interface? Default no. Use 1 to enable
@@ -70,12 +74,9 @@ __license__ = "Python"
 py['pyblosxom_version'] = __version__
 py['pyblosxom_name'] = 'pyblosxom'
 
-#import fnmatch, os, string, re, cgi, time, urllib, sgmllib, traceback, sys, ConfigParser
-import os, ConfigParser, cgi, sys, traceback
-from libs.pyblosxom import PyBlosxom
-
 # Override default configurations
 if os.path.isfile(configFile):
+    import ConfigParser
     cp = ConfigParser.ConfigParser()
     cp.read(configFile)
     if cp.has_section('pyblosxom'):
@@ -89,28 +90,12 @@ p = PyBlosxom(py, xmlrpc)
 p.startup()
 
 if __name__ == '__main__':
-    try:
-        path_info = os.environ.get('PATH_INFO','')
-        if  path_info != xmlrpc['path'] and path_info != trackback['path']: p.run()
-        elif path_info == trackback['path']:
-            if not int(trackback['enable']): p.run()
-            from libs.trackback import TrackBack
-            TrackBack(p.py).process()
-        else:
-            if not int(xmlrpc['enable']): p.run()
-            # XML-RPC, starts here
-            from libs.XMLRPC import xmlrpcHandler
-            xmlrpcHandler(p.py, p.xmlrpc, sys.stdin.read()).process()
-
-    except Exception, errmessage:
-        (tbtype, value, tb) = sys.exc_info()
-        if tbtype == SystemExit:
-            raise tbtype, value
-        else:
-            print "Content-Type: text/html\n"
-            print "<pre>"
-            traceback.print_tb(tb)
-            print tbtype, value
-            print "</pre>"
-            del tb
-            sys.exit(1)
+    path_info = os.environ.get('PATH_INFO','')
+    if  path_info != xmlrpc['path']: 
+        p.run()
+    else:
+        if not int(xmlrpc['enable']): 
+            p.run()
+        # XML-RPC, starts here
+        from libs.XMLRPC import xmlrpcHandler
+        xmlrpcHandler(p.py, p.xmlrpc, sys.stdin.read()).process()
