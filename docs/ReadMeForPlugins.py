@@ -211,6 +211,28 @@ def cb_filelist(args):
     pass
 
 
+def cb_filestat(args):
+    """
+    The filestat callback allows plugins to override the mtime of
+    the entry.  One of the contributed plugins uses this to set the
+    mtime to the time specified in the entry's filename.
+
+    Functions that implement this callback will get an args dict containing:
+    
+     - C{'filename'} - the filename of the entry
+     - C{'mtime'} - the result of an os.stat on the filename of the entry
+
+    Functions that implement this callback must return the input args
+    dict whether or not they adjust anything in it.
+
+    @param args: a dict containing C{'filename'} and C{'mtime'}
+    @type args: dict
+
+    @returns: the args dict
+    @rtype: dict
+    """
+    pass
+
 def cb_pathinfo(args):
     """
     The pathinfo callback allows plugins to parse the HTTP PATH_INFO
