@@ -49,100 +49,6 @@ class PyBlosxom:
         if len(config['datadir']) > 0 and config['datadir'][-1] == os.sep:
             config['datadir'] = config['datadir'][:-1]
 
-    def defaultEntryParser(self, filename, request):
-        """
-        Open up a *.txt file and read its contents
-
-        @param filename: A filename to extra data and meta data from
-        @type filename: string
-        @param request: A standard request object
-        @type request: L{Pyblosxom.Request.Request} object
-        @returns: A dict containing parsed data and meta data with the particular
-                file (and plugin)
-        @rtype: dict
-        """
-        config = request.getConfiguration()
-
-        entryData = {}
-
-        try:
-            story = open(filename).readlines()
-        except IOError:
-            raise IOError
-
-        if len(story) > 0:
-            entryData['title'] = story.pop(0).strip()
-
-        while len(story) > 0:
-            match = re.match(r'^#(\w+)\s+(.*)', story[0])
-            if match:
-                story.pop(0)
-                entryData[match.groups()[0]] = match.groups()[1].strip()
-            else:
-                break
-
-        # Call the preformat function
-        entryData['body'] = tools.run_callback('preformat',
-                {'parser': (entryData.get('parser', '') 
-                        or config.get('parser', 'plain')),
-                 'story': story,
-                 'request': request},
-                donefunc = lambda x:x != None,
-                defaultfunc = lambda x: ''.join(x['story']))
-
-        # Call the postformat callbacks
-        tools.run_callback('postformat',
-                {'request': request,
-                 'entry_data': entryData})
-                
-        return entryData
-
-
-    def defaultFileListHandler(self, args):
-        """
-        This is the default handler for getting entries.  It takes the
-        request object in and figures out which entries based on the
-        default behavior that we want to show and generates a list of
-        EntryBase subclass objects which it returns.
-
-        @param args: dict containing the incoming Request object
-        @type args: L{Pyblosxom.Request.Request}
-
-        @returns: the content we want to render
-        @rtype: list of EntryBase objects
-        """
-        request = args["request"]
-
-        data = request.getData()
-        config = request.getConfiguration()
-
-        if data['bl_type'] == 'dir':
-            filelist = tools.Walk(data['root_datadir'], int(config['depth']))
-        elif data['bl_type'] == 'file':
-            filelist = [data['root_datadir']]
-        else:
-            filelist = []
-
-        entrylist = []
-        for ourfile in filelist:
-            entry = FileEntry(config, ourfile, data['root_datadir'])
-            entrylist.append((entry._mtime, entry))
-
-        # this sorts entries by mtime in reverse order.  entries that have
-        # no mtime get sorted to the top.
-        entrylist.sort()
-        entrylist.reverse()
-        entrylist = [x[1] for x in entrylist]
-        
-        # Match dates with files if applicable
-        if data['pi_yr']:
-            month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
-            matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
-            valid_list = [x for x in entrylist if re.match(matchstr, x['fulltime'])]
-        else:
-            valid_list = entrylist
-
-        return valid_list
 
     def processPathInfo(self, args):
         """ 
@@ -294,7 +200,7 @@ class PyBlosxom:
         # entryparser callback is runned first here to allow other plugins
         # register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
-                                        {'txt': self.defaultEntryParser},
+                                        {'txt': default_entry_parser},
                                         mappingfunc=lambda x,y:y,
                                         defaultfunc=lambda x:x)
 
@@ -309,7 +215,7 @@ class PyBlosxom:
         data["entry_list"] = tools.run_callback("filelist",
                                    {"request": self._request},
                                    donefunc=lambda x:x != None,
-                                   defaultfunc=self.defaultFileListHandler)
+                                   defaultfunc=default_file_list_handler)
         
         # we pass the request with the entry_list through the prepare callback
         # giving everyone a chance to transform the data.  the request is
@@ -348,5 +254,100 @@ class PyBlosxom:
         elif not renderer:
             output = config.get('stdoutput', sys.stdout)
             output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
+
+
+def default_entry_parser(filename, request):
+    """
+    Open up a *.txt file and read its contents
+
+    @param filename: A filename to extra data and meta data from
+    @type filename: string
+    @param request: A standard request object
+    @type request: L{Pyblosxom.Request.Request} object
+    @returns: A dict containing parsed data and meta data with the 
+            particular file (and plugin)
+    @rtype: dict
+    """
+    config = request.getConfiguration()
+
+    entryData = {}
+
+    try:
+        story = open(filename).readlines()
+    except IOError:
+        raise IOError
+
+    if len(story) > 0:
+        entryData['title'] = story.pop(0).strip()
+
+    while len(story) > 0:
+        match = re.match(r'^#(\w+)\s+(.*)', story[0])
+        if match:
+            story.pop(0)
+            entryData[match.groups()[0]] = match.groups()[1].strip()
+        else:
+            break
+
+    # Call the preformat function
+    entryData['body'] = tools.run_callback('preformat',
+            {'parser': (entryData.get('parser', '') 
+                    or config.get('parser', 'plain')),
+             'story': story,
+             'request': request},
+            donefunc = lambda x:x != None,
+            defaultfunc = lambda x: ''.join(x['story']))
+
+    # Call the postformat callbacks
+    tools.run_callback('postformat',
+            {'request': request,
+             'entry_data': entryData})
+        
+    return entryData
+
+def default_file_list_handler(args):
+    """
+    This is the default handler for getting entries.  It takes the
+    request object in and figures out which entries based on the
+    default behavior that we want to show and generates a list of
+    EntryBase subclass objects which it returns.
+
+    @param args: dict containing the incoming Request object
+    @type args: L{Pyblosxom.Request.Request}
+
+    @returns: the content we want to render
+    @rtype: list of EntryBase objects
+    """
+    request = args["request"]
+
+    data = request.getData()
+    config = request.getConfiguration()
+
+    if data['bl_type'] == 'dir':
+        filelist = tools.Walk(data['root_datadir'], int(config['depth']))
+    elif data['bl_type'] == 'file':
+        filelist = [data['root_datadir']]
+    else:
+        filelist = []
+
+    entrylist = []
+    for ourfile in filelist:
+        entry = FileEntry(config, ourfile, data['root_datadir'])
+        entrylist.append((entry._mtime, entry))
+
+    # this sorts entries by mtime in reverse order.  entries that have
+    # no mtime get sorted to the top.
+    entrylist.sort()
+    entrylist.reverse()
+    entrylist = [x[1] for x in entrylist]
+    
+    # Match dates with files if applicable
+    if data['pi_yr']:
+        month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
+        matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
+        valid_list = [x for x in entrylist if re.match(matchstr, x['fulltime'])]
+    else:
+        valid_list = entrylist
+
+    return valid_list
 
 # vim: shiftwidth=4 tabstop=4 expandtab
