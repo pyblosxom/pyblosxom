@@ -1,5 +1,7 @@
 """
-This plugin allows pyblosxom to process trackback pings.  You must have the comments plugin installed as well, although you don't need to enable comments on your blog in order for trackbacks to work
+This plugin allows pyblosxom to process trackback pings.  You must have the 
+comments plugin installed as well, although you don't need to enable comments 
+on your blog in order for trackbacks to work
 
 %<---------------------------------------------------------
 py['trackback_urltrigger'] = "/trackback"

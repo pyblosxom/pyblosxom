@@ -1,35 +1,46 @@
-To install comments:
+OVERVIEW
+--------
 
-IMPORTANT:  You must have the pyXML module installed in order to use 
-the comment system.
+This README covers installing comments, pingbacks, trackbacks, and the
+commentAPI.  Even though you may only want to install some or all of these 
+things, you should read through the whole file.
 
-1. Install plugins/comments.py in your plugins directory
+In order for comments/trackbacks/pingbacks to work, you have to install
+the pyXML module.  It can be found at http://pyxml.sourceforge.net/ .
 
-2. If you want trackbacks, install trackback.cgi in your CGI bin
-   directory and make it executable as a CGI.  The CGI must be callable
-   via a URI on your blog site. You need to have comments.py installed 
-   in order for this to work.
 
-3. If you want pingbacks, install xmlrpcplugins/pingback.py in your
-   lib/xmlrpcplugins directory.  You need to have comments.py installed
-   in order for this to work.  You must also define py['base_url']. 
-   pingback.py also uses Mark Pilgrim's rssfinder and rssparser 
-   (available from http://diveintomark.org/projects) and expects them
-   to be available in the Python search path.
+INSTRUCTIONS
+------------
 
-4. If you want support for the CommentAPI, install CommentAPI.cgi in your
-   pyblosxom directory and make it executable as a CGI.  If you enable
-   CommentAPI in your RSS feed (see below), some RSS aggregator programs
-   will provide an interface that can post a comment to a blog entry.
+1. Copy contrib/plugins/comments/plugins/comments.py to your plugins
+   directory.  Then add "comments" to the "load_plugins" property
+   in your config.py file.
+
+2. If you want trackbacks (this is optional), copy 
+   contrib/plugins/comments/plugins/trackback.py to your plugins 
+   directory.  Then add "trackback" to the "load_plugins" property
+   in your config.py file.
+
+3. If you want pingbacks (this is optional), copy
+   contrib/plugins/comments/plugins/xmlrpc_pingback.py to your
+   plugins directory.  You must also define py["base_url"].
+   xmlrpc_pingback.py also uses Mark Pilgrin's rssfinder and
+   rssparser (available from http://diveintomark.org/projects) and 
+   expects them to be installed.  Then add "xmlrpc_pingback" to the
+   "load_plugins" property in your config.py file.
+
+4. If you want support for the CommentAPI, copy
+   contrib/plugins/comments/plugins/commentAPI.py to your plugins 
+   directory.  If you enable CommentAPI in your RSS feed (see below), 
+   some RSS aggregator programs will provide an interface that can 
+   post a comment to a blog entry.
    For more information on CommentAPI, the specification is at
    http://wellformedweb.org/story/9 and a list of implementations is at
    http://wellformedweb.org/news/35
 
-   The CGI must be callable via a URI on your blog site (see below for 
-   more details). You need to have comments.py installed in order for this 
-   to work.  
+   You need to have comments.py installed in order for this to work.  
 
-   Then you must add the commentAPI tags to your RSS 2.0 feed.  The best 
+   Then you must add the CommentAPI tags to your RSS 2.0 feed.  The best 
    way to do this is to add an XML namespace declaration to the rss
    element:
 
@@ -43,66 +54,77 @@ the comment system.
    CommentAPI.cgi to  At the moment, you need to map to a URI one level
    below the $base_url of the blog
 
-5. In config.py, 
-   add 'comments' to py['load_plugins']
-
-   Comments are stored in a directory which will parallel the data
+5. Comments are stored in a directory which will parallel the data
    directory.  The comments themselves are stored as XML files named
    entryname-datetime.suffix.  The comment system allows you to specify
    the directory where the comment directory tree will stored, and the
    suffix used for comment files.  You need to make sure that this
    directory is writable by the pyblosxom CGI scripts.
 	 
-   set py['comment_dir'] to the directory (in your data directory)
+   Set py['comment_dir'] to the directory (in your data directory)
    where you want the comments to be stored.  The default value is a
    directory named 'comments' in your data directory.
 
-   set py['comment_ext'] to the change comment file extension.  The
-   default file extension is 'cmt'
+   Set py['comment_ext'] to the change comment file extension.  The
+   default file extension is 'cmt'.
 
 6. The comment system can notify you via e-mail when new
    comments/trackbacks/pingbacks are posted.  If you want to enable this 
    feature, create the following config.py entries:
 
    py['comment_smtp_server'] - your SMTP server
-   py['comment_smtp_from'] - the address sending the notification
-   py['comment_smtp_to'] - the address receiving the notification
+   py['comment_smtp_from']   - the address sending the notification
+   py['comment_smtp_to']     - the address receiving the notification
 
-   set for e-mail notification stuff - fix vars
+   For example:
 
-7. Copy the flavour files from the flavours directory.  There are
-   flavours for .html and rss.  You should copy both.  The comment-story
-   template is used to format a single entry that has comments .  The
-   comment template is used to format a single
-   comment/trackback/pingback.  The comment-form template provides the
-   form used to enter new comments.  You need to make sure that the
-	 flavour files are readable by your web server.
+   py['comment_smtp_server'] = "localhost"
+   py['comment_smtp_from']   = "joe@joe.com"
+   py['comment_smtp_to']     = "joe@joe.com"
 
-8. Edit the comment-story, comment, and comment-form templates. 
+7. Copy the flavour files from the contrib/plugins/comments/flavours 
+   directory.  There are flavours for .html and rss.  You should copy all
+   the files to your data directory.  
+
+   The "comment-story" template is used to format a single entry that 
+   has comments .  
+
+   The "comment" template is used to format a single
+   comment/trackback/pingback.  
+
+   The "comment-form" template provides the form used to enter new 
+   comments.
+
+8. Edit the "comment-story", "comment", and "comment-form" templates. 
    Variables that are available are:
 
-   Available in the story and comment-story templates:
-   $num_comments - Contains an integer count of the number of comments
-   associated with this entry
+   Available in the "story" and "comment-story" templates:
+
+      $num_comments - Contains an integer count of the number of comments
+                      associated with this entry
    
-   Available in the comment template:
-   $cmt_title - the title of the comment
-   $cmt_description - the content of the comment or excerpt of the trackback/pingback
-   $cmt_link - the pingback link referring to this entry
-   $cmt_author - the author of the comment or trackback
-   $cmt_pubDate - the date and time of the comment/trackback/pingback
-   $cmt_source - the source of the trackback
+   Available in the "comment" template:
+
+      $cmt_title - the title of the comment
+      $cmt_description - the content of the comment or excerpt of the 
+                         trackback/pingback
+      $cmt_link - the pingback link referring to this entry
+      $cmt_author - the author of the comment or trackback
+      $cmt_pubDate - the date and time of the comment/trackback/pingback
+      $cmt_source - the source of the trackback
 
    If you want trackbacks you need to advertise the trackback ping URL
    for a particular entry.  There are two possible ways of doing this.
 
    1.  You advertise a manual trackback ping link.  You can do this by
-   inserting the following HTML in story.html and comment-story.html
-	  
-    <a href="$base_url/trackback.cgi/$file_path" title="Trackback">TB</a> 
+       inserting the following HTML in story.html and comment-story.html
+       files:
+ 
+       <a href="$base_url/trackback.cgi/$file_path" title="Trackback">TB</a> 
 
-   You may need to change the $base_url/trackback.cgi portion of the
-   URL to match the way that you have configured your webserver / CGI scripts.
+       You may need to change the $base_url/trackback.cgi portion of the
+       URL to match the way that you have configured your webserver / CGI 
+       scripts.
 
    2.  You can supply an embedded RDF description of the trackback ping
 
@@ -119,10 +141,15 @@ the comment system.
     </rdf:RDF>
 -->
 
-   You may need to change the $base_url/trackback.cgi portion of the
-   trackback:ping attribute to match the way that you have configured
-   your webserver / CGI scripts.
+       You may need to change the $base_url/trackback.cgi portion of the
+       trackback:ping attribute to match the way that you have configured
+       your webserver / CGI scripts.
 
-   This RDF should also be inserted in story.html and
-   comment-story.html.  Since it is in an HTML comment, it doesn't
-   matter where you put it.
+       This RDF should also be inserted in story.html and
+       comment-story.html.  Since it is in an HTML comment, it doesn't
+       matter where you put it.
+
+
+That should be about it!
+
+Good luck!

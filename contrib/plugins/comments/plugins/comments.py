@@ -221,18 +221,26 @@ def writeComment(config, data, comment):
         return
     
     # if the right config keys are set, notify by e-mail
-    if config.has_key('comment_smtp_server') and \
-       config.has_key('comment_smtp_from') and \
-       config.has_key('comment_smtp_to'):
+    if config.has_key('comment_smtp_server') \
+            and config.has_key('comment_smtp_from') \
+            and config.has_key('comment_smtp_to'):
         import smtplib
         author = escape_SMTP_commands(clean_author(comment['author']))
         description = escape_SMTP_commands(comment['description'])
         try:
             server = smtplib.SMTP(config['comment_smtp_server'])
             curl = config['base_url']+'/'+entry['file_path']
-            message = "Subject: write back by %s\r\n\r\n%s\r\n%s\r\n%s" \
-                      %  (author, description, cfn, curl)
-            server.sendmail(from_addr=config['comment_smtp_from'], to_addrs=config['comment_smtp_to'], msg=message)
+        
+            message = []
+            message.append("From: %s" % config["comment_smtp_from"])
+            message.append("To: %s" % config["comment_smtp_to"])
+            message.append("Date: %s" % time.ctime(modTime))
+            message.append("Subject: write back by %s" % author)
+            message.append("")
+            message.append("%s\n%s\n%s\n" % (description, cfn, curl))
+            server.sendmail(from_addr=config['comment_smtp_from'], 
+                            to_addrs=config['comment_smtp_to'], 
+                            msg="\n".join(message))
             server.quit()
         except:
             tools.log("Error sending mail: %s" % message)
@@ -392,7 +400,6 @@ def cb_head(args):
         single_entry['title'] # force lazy evaluation
         entry.update(single_entry)
         args['entry'] = entry
-
     return template
         
 
@@ -402,12 +409,14 @@ def cb_story(args):
     template = args['template']
     request = args["request"]
     config = request.getConfiguration()
-    if len(renderer.getContent()) == 1 and renderer.flavour.has_key('comment-story'):
+    if len(renderer.getContent()) == 1 \
+            and renderer.flavour.has_key('comment-story') \
+            and not entry.has_key("no_comments"):
         template = renderer.flavour.get('comment-story','')
         args['template'] = template
-    else:
-        entry['num_comments'] = getCommentCount(entry,config)
-        return template
+
+    entry['num_comments'] = getCommentCount(entry, config)
+    return template
 
 def cb_story_end(args):
     renderer = args['renderer']
@@ -415,7 +424,9 @@ def cb_story_end(args):
     template = args['template']
     request = args["request"]
     config = request.getConfiguration()
-    if len(renderer.getContent()) == 1 and renderer.flavour.has_key('comment-story'):
+    if len(renderer.getContent()) == 1 \
+            and renderer.flavour.has_key('comment-story') \
+            and not entry.has_key("no_comments"):
         output = []
         entry['comments'] = readComments(entry, config)
         if entry.has_key('comments'):        
@@ -423,9 +434,9 @@ def cb_story_end(args):
                 renderer.outputTemplate(output, comment, 'comment')
             renderer.outputTemplate(output, entry, 'comment-form')
         args['template'] = template +u"".join(output)
-    else:
-        entry['num_comments'] = getCommentCount(entry,config)
-        return template
+
+    entry['num_comments'] = getCommentCount(entry, config)
+    return template
     
 def cb_start(args):
     request = args['request']
