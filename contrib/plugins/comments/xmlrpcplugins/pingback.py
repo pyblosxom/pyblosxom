@@ -47,7 +47,7 @@ def fileFor(req, uri):
     p.startup()
 
     data['extensions'] = tools.run_callback("entryparser",
-                                            {'txt': PyBlosxom.defaultEntryParser},
+                                            {'txt': p.defaultEntryParser},
                                             mappingfunc=lambda x,y:y,
                                             defaultfunc=lambda x:x)
 
@@ -97,13 +97,13 @@ def pingback(request, source, target):
             pass
 
         cmt = {'title':source_page.title, \
-               'author':'Pingback',
+               'author':'Pingback from %s' % source_page.title,
                'pubDate' : str(time.time()), \
                'link': source,
                'source' : '',
                'description' : body}
         
-        from libs.plugins.commentdecorator import writeComment
+        from libs.plugins.comments import writeComment
         config = request.getConfiguration()
         data = request.getData()
         from libs.entries.fileentry import FileEntry

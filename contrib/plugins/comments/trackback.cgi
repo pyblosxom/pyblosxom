@@ -8,6 +8,8 @@ __license__ = "Python"
 import cgitb; cgitb.enable()
 import cgi
 
+#import wingdbstub
+
 import os, time
 import config
     
@@ -43,7 +45,7 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
               'description' : form['excerpt'].value }
     from libs import tools
     from libs.entries.fileentry import FileEntry
-    from libs.plugins.commentdecorator import writeComment
+    from libs.plugins.comments import writeComment
     from libs.Request import Request
 
     request = Request()
