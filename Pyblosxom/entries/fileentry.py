@@ -23,6 +23,16 @@ class FileEntry(base.EntryBase):
     """
     This class gets it's data and metadata from the file specified
     by the filename argument.
+
+    @param config: the dict to grab configuration parameters from
+    @type  config: dict
+
+    @param filename: the complete filename for the file in question
+        including path
+    @type  filename: string
+
+    @param root: i have no clue what this is
+    @type  root: string
     """
     def __init__(self, config, filename, root):
         base.EntryBase.__init__(self)
@@ -109,15 +119,7 @@ class FileEntry(base.EntryBase):
         self['filename'] = self._filename
 
         # handle the time portions
-        argdict = {"filename": self._filename, "mtime": os.stat(self._filename)}
-        argdict = tools.run_callback("filestat", 
-                                     argdict,
-                                     mappingfunc=lambda x,y:y,
-                                     defaultfunc=lambda x:x)
-        mtime = argdict["mtime"][8]
-        
-        timeTuple = time.localtime(mtime)
-        # self['mtime'] = mtime
+        timeTuple = tools.filestat(self._filename)
         self.setTime(timeTuple)
 
         # when someone does a getMetadata and they're looking for
