@@ -10,6 +10,8 @@ replace the EDITOR line below to reflect the command to your favourite
 editor, be it nano, pico or bbedit, etc. Tested on un*x only.
 """
 EDITOR='vim -c "set tabstop=4 shiftwidth=4 expandtab"'
+from os import environ
+EDITOR=environ.get('VISUAL')
 
 from os import stat, path, system, utime
 import sys, time
