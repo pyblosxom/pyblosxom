@@ -50,26 +50,37 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
 
     request = Request()
     request.addConfiguration(config.py)
+    config = request.getConfiguration()
     data = request.getData()
-    import libs.entryparsers.__init__
-    libs.entryparsers.__init__.initialize_extensions()
-    data['extensions'] = libs.entryparsers.__init__.ext
 
     # import plugins
     import libs.plugins.__init__
-    libs.plugins.__init__.initialize_plugins(config.py)
+    libs.plugins.__init__.initialize_plugins(config)
     
+    # do start callback
+    tools.run_callback("start", {'request': request}, mappingfunc=lambda x,y:y)
+
+    # entryparser callback is runned first here to allow other plugins
+    # register what file extensions can be used
+    from libs.pyblosxom import PyBlosxom
+    data['extensions'] = tools.run_callback("entryparser",
+                                            {'txt': PyBlosxom.defaultEntryParser},
+                                            mappingfunc=lambda x,y:y,
+                                            defaultfunc=lambda x:x)
+   
     registry = tools.get_registry()
     registry["request"] = request
     
-    datadir = config.py['datadir']
-    entry = FileEntry(config.py, datadir+d['PATH_INFO']+'.txt', datadir )
-    data = {}
-    data['entry_list'] = [ entry ]
-    writeComment(config.py, data, cdict)
+    datadir = config['datadir']
+    try:
+        entry = FileEntry(config, datadir+d['PATH_INFO']+'.txt', datadir )
+        data = {}
+        data['entry_list'] = [ entry ]
+        writeComment(config, data, cdict)
+        print tb_good_response
+    except OSError:
+        message = 'URI '+d['PATH_INFO']+" doesn't exist"
+        print tb_bad_response % message
     
-    print tb_good_response
 else:
     print tb_bad_response % message
-    
-#print config.py
