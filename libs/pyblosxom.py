@@ -12,12 +12,11 @@ class PyBlosxom:
     request through all the steps until the output is rendered and
     we're complete.
     """
-    def __init__(self, request, xmlRpcCall=0):
+    def __init__(self, request):
         global myrequest
         myrequest = request
 
         self._request = request
-        self.xmlRpcCall = xmlRpcCall
         self.flavour = {}
         self.dayFlag = 1 # Used to print valid date footers
 
@@ -66,8 +65,10 @@ class PyBlosxom:
 
         if data['bl_type'] == 'dir':
             filelist = tools.Walk(data['root_datadir'], int(config['depth']))
-        else:
+        elif data['bl_type'] == 'file':
             filelist = [data['root_datadir']]
+        else:
+            filelist = []
 
         entrylist = []
         for ourfile in filelist:
@@ -206,12 +207,7 @@ class PyBlosxom:
                         config['blog_title'] += ' : %s' % os.path.dirname(data['pi_bl'])
                     data['root_datadir'] = dirname
                     data['bl_type'] = 'dir'
-                else:
-                    # Give up? Assume that no categories are given (This
-                    # behaviour may change)
-                    data['pi_bl'] = ''
-                    data['bl_type'] = 'dir'
-            
+
         # calling fileList will generate a list of entries from the
         # api.fileListHandler
         data["entry_list"] = tools.fileList(self._request)
