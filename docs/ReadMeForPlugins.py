@@ -347,13 +347,19 @@ def cb_postformat(args = {'entry_data': {}, 'request': Request()}):
 
 def cb_start(args = {'request': Request()}):
     """
-    A start up callback for plugins
-    
-    The start callback can be used to perform initialization of a callback.
-    Use this callback for any setup code that your plugin needs, like
+    Callback that allows plugins to execute startup/initialization code.
+    Use this callback for any setup code that your plugin needs, like:
     
         - reading saved data from a file
         - checking to make sure configuration variables are set
+        - allocating resources
+
+    Note: The cb_start callback is slightly different than in blosxom in 
+    that cb_start is called for every PyBlosxom request regardless of 
+    whether it's handled by the default blosxom handler.  In general,
+    it's better to delay allocating resources until you absolutely know 
+    you are going to use them.
+    
     
     @param args: A dict containing a L{Request()} object
     @type args: dict
@@ -362,15 +368,22 @@ def cb_start(args = {'request': Request()}):
 
 def cb_end(args = {'request' : Request()}):
     """
-    A finalization callback for plugins
+    Allows plugins to perform teardown.
     
-    The end callback can be used to perform finalization for a callback.
+    The cb_end callback should be used to return any resources allocated,
+    save any data that hasn't been saved, clean up temporary files,
+    and otherwise return the system to a normal state.
+
     Use the end callback to clean up after your plugin has executed.  This
     is the place to
     
         - save data to a file
         - clean up any temporary files
     
+    Note: The cb_end callback is called for every PyBlosxom request regardless
+    of whether it's handled by the default blosxom handler.  This is slightly
+    different than blosxom.
+
     @param args: A dict containing a L{Request()} object
     @type args: dict
     """

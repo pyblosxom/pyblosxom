@@ -56,9 +56,6 @@ class PyBlosxom:
         import plugin_utils
         plugin_utils.initialize_plugins(config.get("plugin_dirs", []), config.get("load_plugins", None))
 
-        # run the start callback
-        tools.run_callback("start", {'request': self._request})
-
         # entryparser callback is run here first to allow other plugins
         # register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
@@ -75,6 +72,9 @@ class PyBlosxom:
         """
         self.initialize()
 
+        # run the start callback
+        tools.run_callback("start", {'request': self._request})
+
         data = self._request.getData()
         pyhttp = self._request.getHttp()
         config = self._request.getConfiguration()
@@ -88,11 +88,18 @@ class PyBlosxom:
         if not handled == 1:
             blosxom_handler(self._request)
 
+        # do end callback
+        tools.run_callback("end", {'request': self._request})
+
+
     def runCallback(self, callback="help"):
         """
         Generic method to run the engine for a specific callback
         """
         self.initialize()
+
+        # run the start callback
+        tools.run_callback("start", {'request': self._request})
 
         config = self._request.getConfig()
         data = self._request.getData()
@@ -102,6 +109,10 @@ class PyBlosxom:
                         {'request': self._request},
                         mappingfunc=lambda x,y:x,
                         donefunc=lambda x:x)
+
+        # do end callback
+        tools.run_callback("end", {'request': request})
+
 
     def runStaticRenderer(self, incremental=0):
         """
@@ -121,21 +132,17 @@ class PyBlosxom:
 
         config = self._request.getConfiguration()
         data = self._request.getData()
-        print "Perofrming static rendering."
+        print "Performing static rendering."
         if incremental:
             print "Incremental is set."
 
         staticdir = config.get("static_dir", "")
         datadir = config["datadir"]
 
-        # this way plugins know we're rendering statically so they
-        # can do something different if they need to.
-        data["STATIC"] = 1
-
         if not staticdir:
             raise Exception("You must set static_dir in your config file.")
 
-        flavours = config.get("static_flavours", ["html", "rss"])
+        flavours = config.get("static_flavours", ["html"])
 
         renderme = []
 
@@ -160,7 +167,7 @@ class PyBlosxom:
             # this is the static filename
             fn = os.path.normpath(staticdir + mem)
 
-            # grab the mtime of the statically rendered file
+            # grab the mtime of one of the statically rendered file
             try:
                 smtime = os.stat(fn + "." + flavours[0])[8]
             except:
@@ -168,6 +175,7 @@ class PyBlosxom:
 
             # if the entry is more recent than the static, we want to re-render
             if smtime < mtime or not incremental:
+
                 # grab the categories
                 temp = os.path.dirname(mem).split(os.sep)
                 for i in range(len(temp)+1):
@@ -188,7 +196,8 @@ class PyBlosxom:
                 # dates[year + "/" + monthname + "/" + day] = 1
 
                 # toss in the render queue
-                renderme.append( (mem, "", 0) )  # url, index
+                for f in flavours:
+                    renderme.append( (mem + "." + f, "") )
 
         print "rendering %d entries." % len(renderme)
 
@@ -199,7 +208,9 @@ class PyBlosxom:
         print "rendering %d category indexes." % len(categories)
 
         for mem in categories:
-            renderme.append( (mem, "", 1) )
+            mem = os.path.normpath( mem + "/index." )
+            for f in flavours:
+                renderme.append( (mem + f, "") )
 
         # now we handle dates
         dates = dates.keys()
@@ -208,7 +219,9 @@ class PyBlosxom:
         print "rendering %d date indexes." % len(dates)
 
         for mem in dates:
-            renderme.append( (mem, "", 1) )
+            mem = os.path.normpath( mem + "/index." )
+            for f in flavours:
+                renderme.append( (mem + f, "") )
             
         # now we handle arbitrary urls
         additional_stuff = config.get("static_urls", [])
@@ -222,17 +235,20 @@ class PyBlosxom:
                 url = mem
                 query = ""
 
-            renderme.append( (url, query, 0) )
+            renderme.append( (url, query) )
+
+        # now we pass the complete render list to all the plugins
+        # via cb_staticrender_filelist and they can add to the filelist
+        # any ( url, query ) tuples they want rendered.
+        print "(before) building %s files." % len(renderme)
+        handled = tools.run_callback("staticrender_filelist",
+                        {'request': self._request, 'filelist': renderme})
 
         print "building %s files." % len(renderme)
 
-        for url, q, i in renderme:
+        for url, q in renderme:
             print "rendering '%s' ..." % url
-            req = Request()
-            req.addData(self._request.getData())
-            req.addConfiguration(self._request.getConfiguration())
-            req.addHttp(self._request.getHttp())
-            tools.render_entry(req, url, q, i)
+            tools.render_entry(config, url, q)
 
 
 class Request:
@@ -436,9 +452,6 @@ def blosxom_handler(request):
     elif not renderer:
         output = config.get('stdoutput', sys.stdout)
         output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
-
-    # do end callback
-    tools.run_callback("end", {'request': request})
 
 
 def blosxom_entry_parser(filename, request):
