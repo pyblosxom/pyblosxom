@@ -233,10 +233,10 @@ class PyBlosxom:
         import libs.plugins.__init__
         libs.plugins.__init__.initialize_plugins()
         
-        filelist = (self.py['bl_type'] == 'dir' and 
-            tools.Walk(self.py['root_datadir'], 
-            int(self.py['depth'])) or 
-            [self.py['root_datadir']])
+        # CGI command handling
+        tools.cgiRequest(self.py)
+        filelist = tools.fileList(self.py)
+        
         dataList = []
         for ourfile in filelist:
             dataList.append(self.getProperties(ourfile, self.py['root_datadir']))
