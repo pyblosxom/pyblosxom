@@ -1,8 +1,7 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
 """
 The standard pyblosxom entry parser, uses preformatters that's located in
-libs/preformatters/ After retrieving all the relevant information, it saves all
-the data in the cache
+libs/preformatters/ .
 
 To define a default parser add this line in your config.py
 py['parser'] = xxxx
@@ -18,7 +17,7 @@ Text of entry, etc, etc
 from libs import tools
 import re
 
-def parse(filename, request, cache):
+def parse(filename, request):
     config = request.getConfiguration()
 
     entryData = {}
@@ -45,6 +44,4 @@ def parse(filename, request, cache):
     else:
         entryData['body'] = ''.join(story)
     
-    cache[filename] = entryData
-
     return entryData

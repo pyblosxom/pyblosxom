@@ -181,3 +181,37 @@ def generateRandStr(minlen=5, maxlen=10):
         randStr += whrandom.choice(chars)
     return randStr
 
+# These next few lines are to save a sort of run-time global registry
+# of important things so that they're global to all the components
+# of pyblosxom whether or not we actually pass them through.
+
+my_registry = {}
+
+def get_registry():
+    """
+    Returns the registry of run-time global things which really should
+    be global to everything in the system.
+
+    @returns: the run-time global registry of things
+    @rtype: dict
+    """
+    return my_registry
+
+def get_cache():
+    registry = get_registry()
+
+    mycache = registry.get("cache", "")
+
+    if not mycache:
+        request = registry["request"]
+        config = request.getConfiguration()
+
+        cacheDriverConfig = config.get('cacheDriver', 'base')
+        cacheConfigConfig = config.get('cacheConfigConfig', '')
+
+        cache_driver = importName('libs.cache', cacheDriverConfig)
+        mycache = cache_driver.BlosxomCache(cacheConfigConfig)
+
+        registry["cache"] = mycache
+
+    return mycache

@@ -14,8 +14,7 @@ class EntryBase:
     whether it came from a file, or a database, or even somewhere off 
     the InterWeeb.
     """
-    def __init__(self, config={}):
-        self._config = config
+    def __init__(self):
         self._data = None
         self._metadata = {}
 
@@ -160,7 +159,7 @@ class EntryBase:
            if mem == CONTENT_KEY:
                self.setData(newdict[mem])
            else:
-               self.setMetadata(key, value)
+               self.setMetadata(mem, newdict[mem])
 
     def has_key(self, key):
         """

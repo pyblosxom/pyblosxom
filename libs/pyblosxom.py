@@ -12,10 +12,16 @@ class PyBlosxom:
     we're complete.
     """
     def __init__(self, request, xmlRpcCall=0):
+        global myrequest
+        myrequest = request
+
         self._request = request
         self.xmlRpcCall = xmlRpcCall
         self.flavour = {}
         self.dayFlag = 1 # Used to print valid date footers
+
+        registry = tools.get_registry()
+        registry["request"] = request
         
     def startup(self):
         """
