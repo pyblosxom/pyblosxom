@@ -60,17 +60,17 @@ class PyBlosxom:
         config = request.getConfiguration()
         pyhttp = request.getHttp()
 
-        path_info = []
+        path_info = data['path_info']
 
         # Python is unforgiving as perl in this case
         data['pi_yr'] = (len(path_info) > 0 and path_info.pop(0) or '')
         data['pi_mo'] = (len(path_info) > 0 and path_info.pop(0) or '')
         data['pi_da'] = (len(path_info) > 0 and path_info.pop(0) or '')
 
-
-        filelist = (data['bl_type'] == 'dir' and 
-                tools.Walk(data['root_datadir'], int(config['depth'])) or 
-                [data['root_datadir']])
+        if data['bl_type'] == 'dir':
+            filelist = tools.Walk(data['root_datadir'], int(config['depth']))
+        else:
+            filelist = [data['root_datadir']]
 
         entrylist = []
         for ourfile in filelist:
@@ -79,7 +79,7 @@ class PyBlosxom:
         entrylist = tools.sortDictBy(entrylist, "mtime")
         
         # Match dates with files if applicable
-        if not data['pi_yr'] == '':
+        if data['pi_yr']:
             month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
             matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
             valid_list = [x for x in entrylist if re.match(matchstr, x['fulltime'])]
@@ -123,6 +123,8 @@ class PyBlosxom:
             form = self._request.getHttp()["form"]
             data['flavour'] = (form.has_key('flav') and form['flav'].value or 'html')
 
+            path_info = []
+
             # Get the blog name if possible
             if pyhttp.get('PATH_INFO', ''):
                 path_info = pyhttp['PATH_INFO'].split('/')
@@ -133,6 +135,8 @@ class PyBlosxom:
                     data['pi_bl'] += '/%s' % path_info.pop(0)
                     if len(path_info) == 0:
                         break
+
+            data['path_info'] = list(path_info)
 
             data['root_datadir'] = config['datadir']
             if os.path.isdir(config['datadir'] + data['pi_bl']):
@@ -147,12 +151,13 @@ class PyBlosxom:
                 data['root_datadir'] = "%s%s.txt" % (config['datadir'], data['pi_bl'])
 
             else:
-                match = re.search(r'\.(\w+)$',data['pi_bl'])
-                probableFile = config['datadir'] + re.sub(r'\.\w+$','',data['pi_bl']) + '.txt'
-                if match and os.path.isfile(probableFile):
-                    data['flavour'] = match.groups()[0]
+                filename, ext = os.path.splitext(data['pi_bl'])
+                probableFile = config['datadir'] + filename + '.txt'
+
+                if ext and os.path.isfile(probableFile):
+                    data['flavour'] = ext[1:]
                     data['root_datadir'] = probableFile
-                    config['blog_title'] += ' : %s' % re.sub(r'/[^/]+\.\w+$','',data['pi_bl'])
+                    config['blog_title'] += ' : %s' % filename
                     data['bl_type'] = 'file'
                 else:
                     data['pi_bl'] = ''
