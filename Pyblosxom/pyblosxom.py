@@ -39,8 +39,8 @@ class PyBlosxom:
         if pyhttp.has_key('SCRIPT_NAME'):
             if not config.has_key('base_url'):
                 config['base_url'] = 'http://%s%s' % (pyhttp['HTTP_HOST'], pyhttp['SCRIPT_NAME'])
-
-            data['url'] = '%s%s' % (config['base_url'], data['pi_bl'])
+        else:
+            config['base_url'] = config.get('base_url', '')
 
 
     def defaultEntryParser(self, filename, request):
@@ -246,6 +246,8 @@ class PyBlosxom:
                     data['root_datadir'] = dirname
                     data['bl_type'] = 'dir'
                     
+        # Construct our final URL
+        data['url'] = '%s/%s' % (config['base_url'], data['pi_bl'])
     
     def run(self):
         """
