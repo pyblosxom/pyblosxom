@@ -1,6 +1,6 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
 import os, time, string, re, cgi
-from libs import tools
+import tools, api
 import cPickle as pickle
 
 class PyBlosxom:
@@ -202,6 +202,11 @@ class PyBlosxom:
         printTemplate(entryData, self.flavour.get('story' ,''))
         return current_date
 
+    def defaultFileListHandler(self, py):
+        return (py['bl_type'] == 'dir' and 
+                tools.Walk(py['root_datadir'], 
+                           int(py['depth'])) or 
+                [py['root_datadir']])
 
     def run(self):
         """Main loop for pyblosxom"""
@@ -214,6 +219,8 @@ class PyBlosxom:
         # import plugins and allow them to register with the api
         import libs.plugins.__init__
         libs.plugins.__init__.initialize_plugins()
+
+        api.fileListHandler.register(self.defaultFileListHandler, api.LAST)
         
         # CGI command handling
         tools.cgiRequest(self.py)
