@@ -76,6 +76,17 @@ class EntryBase:
         """
         self._metadata[key] = value
 
+    def getMetadataKeys(self):
+        """
+        Returns the list of keys for which we have values in our
+        stored metadata.
+        """
+        return self._metadata.keys()
+
+
+    # everything below this point involves convenience functions
+    # that work with the above functions.
+
     def setTime(self, timeTuple):
         """
         This takes in a given time tuple and sets all the magic metadata
@@ -137,6 +148,20 @@ class EntryBase:
         else:
             self.setMetadata(key, value)
 
+    def update(self, newdict):
+        """
+        Updates the contents in this entry with the contents in the
+        dict.  It does so by calling setData and setMetadata.
+
+        @param newdict: the dict we're updating this one with
+        @type newdict: dict
+        """
+        for mem in newdict.keys():
+           if mem == CONTENT_KEY:
+               self.setData(newdict[mem])
+           else:
+               self.setMetadata(key, value)
+
     def has_key(self, key):
         """
         Returns whether a given key is in the metadata dict.  If the key
@@ -150,9 +175,14 @@ class EntryBase:
         """
         if key == CONTENT_KEY:
             return 1
+
+        # we do this cheesy little thing in case the metadata dict
+        # has to be populated in order to figure out if it has a given
+        # key.
         value = self.getMetadata(key, DOESNOTEXIST)
         if value == DOESNOTEXIST:
             return 0
+
         return 1
 
     def keys(self):
@@ -163,4 +193,6 @@ class EntryBase:
         @returns: list of key names
         @rtype: list of varies
         """
-        return self._metadata.keys() + [CONTENT_KEY,]
+        keys = self.getMetadataKeys()
+        keys.append(CONTENT_KEY)
+        return keys
