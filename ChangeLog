@@ -1,3 +1,7 @@
+2003-04-20 Wari Wahab <wari at home dot wari dot org>
+	* Added blog_encoding configuration, default set to iso-8859-1
+	* Templates read are converted to unicode
+
 2003-04-02 Wari Wahab <wari at home dot wari dot org>
 	* Deprecated $tb, we have an almost working feedback plugin, and also
 	  $tb is very much dependent on the MovableType Standalone Trackback

@@ -7,6 +7,7 @@ The swiss army knife for all things pyblosxom
 @var month2num: A dict of literal months to its number format
 @var num2month: A dict of number month format to its literal format
 @var MONTHS: A list of valid literal and numeral months
+@var VAR_REGEXP: Regular expression for detection and substituion of variables
 """
 import plugins.__init__
 import sgmllib, re, os, string,  types
@@ -86,6 +87,9 @@ class Replacer:
         @returns: Substitutions
         @rtype: string
         """
+        registry = get_registry()
+        request = registry["request"]
+        config = request.getConfiguration()
         key = matchobj.group(1)
 
         if key.find("(") != -1 and key.find(")"):
@@ -115,7 +119,7 @@ class Replacer:
 
             if type(r) != types.UnicodeType: 
                 # convert strings to unicode, assumes strings in iso-8859-1
-                r = unicode(r, 'iso-8859-1', 'replace')
+                r = unicode(r, config.get('blog_encoding', 'iso-8859-1'), 'replace')
 
             return r
 
@@ -138,6 +142,12 @@ def parse(var_dict, template):
     @returns: Substituted template
     @rtype: string
     """
+    registry = get_registry()
+    request = registry["request"]
+    config = request.getConfiguration()
+    if type(template) != types.UnicodeType: 
+        # convert strings to unicode, assumes strings in iso-8859-1
+        r = unicode(template, config.get('blog_encoding', 'iso-8859-1'), 'replace')
     return u'' + VAR_REGEXP.sub(Replacer(var_dict).replace, template)
 
 
