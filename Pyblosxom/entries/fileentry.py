@@ -25,7 +25,7 @@ class FileEntry(base.EntryBase):
     by the filename argument.
 
     """
-    def __init__(self, request, filename, root):
+    def __init__(self, request, filename, root, datadir=""):
         """
         @param request: the Request object
         @type  request: Request
@@ -36,12 +36,18 @@ class FileEntry(base.EntryBase):
 
         @param root: i have no clue what this is
         @type  root: string
+
+        @param datadir: the datadir
+        @type  datadir: string
         """
         base.EntryBase.__init__(self, request)
         self._config = request.getConfiguration()
         self._filename = filename
         self._root = root
-        if self._root.endswith(os.sep): self._root = self._root[:-1]
+
+        self._datadir = datadir or self._config["datadir"]
+        if self._datadir.endswith(os.sep):
+            self._datadir = self._datadir[:-1]
 
         self._original_metadata_keys = []
         self._populated_data = 0
@@ -98,7 +104,7 @@ class FileEntry(base.EntryBase):
         path = path.replace(os.path.basename(self._filename), '')
         path = path[:-1]
 
-        absolute_path = self._filename.replace(self._root, '')
+        absolute_path = self._filename.replace(self._datadir, '')
         absolute_path = absolute_path.replace(file_basename, '')
         absolute_path = absolute_path[1:][:-1]
 
