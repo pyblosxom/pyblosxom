@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import sys, time, os, re, random, pdb
-pdb.set_trace()
+import sys, time, os, re, random
 
 entryDelim = re.compile( r"^--------$", re.MULTILINE )
 sectionDelim = re.compile( r"^-----$", re.MULTILINE )
