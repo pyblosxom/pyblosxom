@@ -25,4 +25,7 @@ def cb_prepare(args):
         
     for i in range(len(entry_list)):
         entry = entry_list[i]
-        entry['w3cdate'] = xml.utils.iso8601.ctime(time.mktime(entry['timetuple']))
+        t = entry['timetuple']
+        # adjust for daylight savings time
+        t = t[0],t[1],t[2],t[3]+time.localtime()[-1],t[4],t[5],t[6],t[7],t[8]
+        entry['w3cdate'] = xml.utils.iso8601.ctime(time.mktime(t))
