@@ -1,12 +1,113 @@
-For a simple installation, extract pyblosxom.cgi, config.py and the libs/
-directory into your cgi-bin/. If you do not like the libs/ to be in the
-cgi-bin, you can place it elsewhere outside of DocumentRoot of your web server
-and comment out the 4th line in pyblosxom.cgi to reflect where your path is.
+                            PyBlosxom/InstalLation
+     _________________________________________________________________
 
-import sys
-sys.path.append('/path/to/where/lib/directory/is')
+    1. Installing PyBlosxom
+       1. Simple Installation
+       2. Using .htaccess
+       3. Denying access to config.py or the INI file
+          1. Using a different library path for PyBlosxom files
+          2. Denying configuration via .htaccess
 
-For bloggerAPI and other (not planned yet) xmlrpc capabilities, copy xmlrpc.cgi
-to your cgi-/bin directory as well. Be sure that config.py is there as well.
+                            1 Installing PyBlosxom
 
-TODO: Better installation instructions
+1.1 Simple Installation
+
+   For  a  simple  installation, extract pyblosxom.cgi, config.py and the
+   libs/ directory into your cgi-bin/. If you do not like the libs/ to be
+   in  the  cgi-bin/, you can place it elsewhere outside of Document Root
+   of  your  web  server and comment out the 4th line in pyblosxom.cgi to
+   reflect where your path is.
+    1 import sys
+    2 sys.path.append('/path/to/where/lib/directory/is')
+
+   For  bloggerAPI  and other (not planned yet) xmlrpc capabilities, copy
+   xmlrpc.cgi  to your cgi-/bin directory as well. Be sure that config.py
+   is there as well.
+
+1.2 Using .htaccess
+
+   Using .htaccess allows you to customise your installation so that your
+   URL will not look like this:
+http://www.example.com/cgi-bin/pyblosxom.cgi
+
+   This  does  not make the site url easily accessible. You might want to
+   access your site with URLs like:
+http://www.example.com/blog
+
+   Which  looks nicer for people to type it. If you are allowed .htaccess
+   modifications  by  your  hosting  provider,  and  they  allow  Options
+   overriding, this is what you can do with your PyBlosxom installation.
+
+   Rename pyblosxom.cgi to blog (ensure that pyblosxom.cgi works first in
+   your normal installation).
+
+   Add these lines to your .htaccess file:
+Options ExecCGI
+
+<Files blog>
+ForceType application/cgi-script
+SetHandler cgi-script
+</Files>
+
+   This  will  ensure  that  blog will be executed instead of viewed with
+   text/plain.
+
+   If  you  want  to  access  blosxom  as  your  main  page, without even
+   accessing the /blog url, you can point blog to a directory index. This
+   will allow you to access your blog as:
+http://www.example.com
+
+   Your  blog  will  work as per normal. For this type of installation to
+   work, you need to add one more line in your .htaccess:
+DirectoryIndex blog
+
+   There you go :)
+
+1.3 Denying access to config.py or the INI file
+
+   In  order  to  prevent visitors from peeking your configuration files,
+   you can do it a couple of ways:
+     * Storing  libs/  and config.py outside of the web server's document
+       root.
+     * Denying via .htaccess
+
+  1.3.1 Using a different library path for PyBlosxom files
+
+   If  you install the libs/ directory elsewhere, outside of your www/ or
+   cgi-bin/  directory,  you  can place config.py there as well. Here's a
+   simple scenario:
+     * You installed pyblosxom.cgi in /home/joe/www
+     * You wanted lib/ to be in /home/joe/pyblosxom directory
+     * Place the config.py in /home/joe/pyblosxom` directory
+
+   Your install tree should look like this:
+.
+`-- home
+    `-- joe
+        |-- pyblosxom
+        |   |-- config.py
+        |   `-- libs
+        |       |-- plugins
+        |       |   |-- pyarchives.py
+        |       |   |-- pycalendar.py
+        |       |   `-- pycategory.py
+        |       |-- preformatters
+        |       |-- pyblosxom.py
+        |       `-- tools.py
+        `-- www
+            |-- pyblosxom.cgi
+            `-- .htaccess
+
+   You  will  also  need to modify your pyblosxom.cgi and add the path of
+   your pyblosxom installation:
+    1 import sys
+    2 sys.path.append('/home/joe/pyblosxom')
+
+  1.3.2 Denying configuration via .htaccess
+
+   If  you  want  to install PyBlosxom in one directory, you will need to
+   use .htaccess to deny access to config.py. This is as simple as:
+<Files config.py>
+order deny, allow
+deny from all
+</Files>
