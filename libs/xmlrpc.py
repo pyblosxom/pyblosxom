@@ -1,5 +1,5 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
-import xmlrpclib, string, re, sys, os
+import xmlrpclib, sys
 
 def debug(dbg):
     """
@@ -10,7 +10,6 @@ def debug(dbg):
 class xmlrpcHandler:
 
     def __init__(self, request, data):
-        import sys
         import libs.xmlrpcplugins.__init__
         self._request = request
         self._data = data
