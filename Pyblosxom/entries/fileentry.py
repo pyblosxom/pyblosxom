@@ -87,11 +87,6 @@ class FileEntry(base.EntryBase):
         The rest of the metadata comes from parsing the file itself which
         is done with __populateData.
         """
-        # handle file manipulations
-        registry = tools.get_registry()
-        request = registry["request"]
-        data = request.getData()
-
         file_basename = os.path.basename(self._filename)
 
         path = self._filename.replace(self._root, '')
