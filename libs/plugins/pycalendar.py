@@ -77,7 +77,7 @@ class PyblCalendar:
 			temp = int(temp)
 		else:
 			if tools.month2num.has_key(temp):
-				temp = tools.month2num[temp]
+				temp = int(tools.month2num[temp])
 			else:
 				temp = today[1]
 		today = tuple([today[0]] + [temp] + list(today)[2:])
