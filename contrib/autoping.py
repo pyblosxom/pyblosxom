@@ -31,9 +31,11 @@ import cPickle, os
 
 # Get our pyblosxom specifics here
 from Pyblosxom import tools
-from Pyblosxom.pyblosxom import default_entry_parser
+from Pyblosxom.pyblosxom import blosxom_entry_parser
 from Pyblosxom.Request import Request
 import config
+
+tools.make_logger('/tmp/autoping.log')
 
 def excerpt(filename, title, body, blogname):
     """ filename,title,body => url,args
@@ -154,17 +156,17 @@ def trackback(parser):
 
     for url in parser.trackbacks:
         try:
-            print ""
-            print "*** Trackback " + url
-            print parser.args
+            tools.log("")
+            tools.log( "*** Trackback " + url)
+            tools.log(parser.args)
             if url.find('?tb_id=') >= 0:
                 file=urllib.urlopen(url + "&" + parser.args)
             else:
                 file=urllib.urlopen(url, parser.args)
-            print file.read()
+            tools.log(file.read())
             file.close()
-        except:
-            pass
+        except Exception, e:
+            tools.log(e)
 
 
 def pingback(parser):
@@ -175,18 +177,18 @@ def pingback(parser):
 
     for target,server in parser.pingbacks:
         try:
-            print ""
-            print "*** Pingback " + server
+            tools.log("")
+            tools.log("*** Pingback " + server)
             server=xmlrpclib.Server(server)
-            print server.pingback.ping(parser.url,target)
-        except:
-            pass
+            tools.log(server.pingback.ping(parser.url,target))
+        except Exception, e:
+            tools.log(e)
 
 def autoping(name):
+    request = Request()
     # Load up the cache (You can just import the base cache here)
     cache_driver = tools.importName('Pyblosxom.cache', config.py.get('cacheDriver', 'base'))
-    req = Request()
-    cache = cache_driver.BlosxomCache(req, config.py.get('cacheConfig', ''))
+    cache = cache_driver.BlosxomCache(request, config.py.get('cacheConfig', ''))
     try:
         filename = os.path.join(config.py['datadir'], name)
         entryData = {}
@@ -199,16 +201,16 @@ def autoping(name):
         if not entryData:
             fileExt = re.search(r'\.([\w]+)$', filename)
             try:
-                entryData = default_entry_parser(filename,req)
-            except IOError:
-                pass
+                entryData = blosxom_entry_parser(filename, request)
+            except IOError, e:
+                tools.log(e)
         
         name = re.sub(config.py['datadir'],'',name)
         parser = link(name, entryData['title'].strip(), entryData['body'].strip(), config.py['blog_title'])
         trackback(parser)
         pingback(parser)
-    except:
-        pass
+    except Exception, e:
+        tools.log(e)
     
 
 if __name__ == '__main__':
