@@ -304,10 +304,11 @@ def cb_filelist(args):
         return
 
     data[INIT_KEY] = 1
+
     filename = datadir + '/logfile.dat'
     try:
         f = open(filename)
-        stats = cPickle.load(f)
+        stats = pickle.load(f)
         stats._request = request
         stats._config = config
         stats._referrer_length = int(config.get('referrer_length', 15))
@@ -316,5 +317,4 @@ def cb_filelist(args):
 
     except (EOFError, IOError):
         stats = PyblStats(config)
-
     return [generate_entry(request, stats.genReferrerStats())]
