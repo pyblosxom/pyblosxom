@@ -92,9 +92,7 @@ class FileEntry(base.EntryBase):
         absolute_path = absolute_path.replace(file_basename, '')
         absolute_path = absolute_path[1:][:-1]
 
-        ext = '|'.join(data['extensions'].keys())
-
-        fn = re.sub(r'\.(' + ext + ')$', '', file_basename)
+        fn, ext = os.path.splitext(file_basename)
         if absolute_path == '':
             file_path = fn
         else:
