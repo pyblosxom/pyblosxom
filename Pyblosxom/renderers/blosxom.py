@@ -23,7 +23,7 @@ class BlosxomRenderer(RendererBase):
         RendererBase.__init__(self, request, stdoutput)
         config = request.getConfiguration()
         (e, d, sr, sw) = codecs.lookup(config.get('blog_encoding', 
-                'iso-8859-1'))
+                'iso8859-1'))
         self._out = sw(self._out)
         self.dayFlag = 1
 
