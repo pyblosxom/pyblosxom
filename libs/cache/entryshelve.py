@@ -11,17 +11,17 @@ If successful, you will see the cache file. Be sure that you have write access
 to the cache file.
 """
 from libs import tools
-from libs.cache.base import blosxomCacheBase
+from libs.cache.base import BlosxomCacheBase
 import shelve
 import os
 
-class blosxomCache(blosxomCacheBase):
+class BlosxomCache(BlosxomCacheBase):
     def __init__(self, config):
-        blosxomCacheBase.__init__(self, config)
+        BlosxomCacheBase.__init__(self, config)
         self._db = None
 
-    def load(self, entryID):
-        blosxomCacheBase.load(self, entryID)
+    def load(self, entryid):
+        BlosxomCacheBase.load(self, entryid)
         if self._db is None:
             self._db = shelve.open(self._config)
 
@@ -29,29 +29,29 @@ class blosxomCache(blosxomCacheBase):
         """
         Get data from shelve
         """
-        data = self._db.get(self._entryID, {})
-        return data.get('entryData', {})
+        data = self._db.get(self._entryid, {})
+        return data.get('entrydata', {})
         
 
     def isCached(self):
-        data = self._db.get(self._entryID, {'mtime':0})
-        return data['mtime'] == os.stat(self._entryID)[8]
+        data = self._db.get(self._entryid, {'mtime':0})
+        return data['mtime'] == os.stat(self._entryid)[8]
 
 
-    def saveEntry(self, entryData):
+    def saveEntry(self, entrydata):
         """
         Save data in the pickled file
         """
         payload = {}
-        payload['mtime'] = os.stat(self._entryID)[8]
-        payload['entryData'] = entryData
+        payload['mtime'] = os.stat(self._entryid)[8]
+        payload['entrydata'] = entrydata
         
-        self._db[self._entryID] = payload
+        self._db[self._entryid] = payload
 
 
     def rmEntry(self):
-        if self._db.has_key(self._entryID):
-            del self._db[self._entryID]
+        if self._db.has_key(self._entryid):
+            del self._db[self._entryid]
 
     def close(self):
         self._db.close()

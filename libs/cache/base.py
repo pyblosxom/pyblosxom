@@ -2,7 +2,7 @@
 """
 A basic driver, used by default in pyblosxom, does not do anything at all
 """
-class blosxomCacheBase:
+class BlosxomCacheBase:
     """
     Base Class for Caching stories in pyblosxom.
 
@@ -23,16 +23,16 @@ class blosxomCacheBase:
                                 # what should be set here
     
     
-    def load(self, entryID):
-        self._entryID = entryID # The filename of the entry
-        self._entryData = {}    # The data of the entry
+    def load(self, entryid):
+        self._entryid = entryid # The filename of the entry
+        self._entrydata = {}    # The data of the entry
 
 
     def getEntry(self):
         """
         Gets the data from the cache, returns a dict or an empty dict.
         """
-        return self._entryData
+        return self._entrydata
 
     
     def isCached(self):
@@ -43,9 +43,9 @@ class blosxomCacheBase:
         return 0
 
     
-    def saveEntry(self, entryData):
+    def saveEntry(self, entrydata):
         """
-        Store entryData in cache
+        Store entrydata in cache
         """
         pass
 
@@ -65,7 +65,7 @@ class blosxomCacheBase:
         pass
 
 
-class blosxomCache(blosxomCacheBase):
+class BlosxomCache(BlosxomCacheBase):
     """
     A Null cache
     """

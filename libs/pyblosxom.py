@@ -241,8 +241,8 @@ class PyBlosxom:
         
         if self.flavour.has_key('head'): print tools.parse(self.py, self.flavour['head'])
         if self.flavour.has_key('story'):
-            cacheDriver = tools.importName('libs.cache', self.py.get('cacheDriver', 'base'))
-            cache = cacheDriver.blosxomCache(self.py.get('cacheConfig', ''))
+            cache_driver = tools.importName('libs.cache', self.py.get('cacheDriver', 'base'))
+            cache = cache_driver.BlosxomCache(self.py.get('cacheConfig', ''))
             # Body stuff
             current_date = ''
             count = 1

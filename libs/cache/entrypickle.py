@@ -11,17 +11,17 @@ If successful, you will see the cache directory filled up with files that ends
 with .entryplugin extention in the drectory.
 """
 from libs import tools
-from libs.cache.base import blosxomCacheBase
+from libs.cache.base import BlosxomCacheBase
 import cPickle as pickle
 import os
 from os import makedirs
 from os.path import normpath,dirname,exists,abspath
 
-class blosxomCache(blosxomCacheBase):
-    def load(self, entryID):
-        blosxomCacheBase.load(self, entryID)
-        self._cacheFile = os.path.join(self._config, entryID.replace('/', '_')) + \
-                '.entryplugin'
+class BlosxomCache(BlosxomCacheBase):
+    def load(self, entryid):
+        BlosxomCacheBase.load(self, entryid)
+        self._cacheFile = os.path.join(self._config, entryid.replace('/', '_')) + \
+                '.entrypickle'
 
 
     def getEntry(self):
@@ -40,17 +40,17 @@ class blosxomCache(blosxomCacheBase):
         Check if file is updated
         """
         return os.path.isfile(self._cacheFile) and \
-            os.stat(self._cacheFile)[8] >= os.stat(self._entryID)[8]
+            os.stat(self._cacheFile)[8] >= os.stat(self._entryid)[8]
 
 
-    def saveEntry(self, entryData):
+    def saveEntry(self, entrydata):
         """
         Save data in the pickled file
         """
         try:
             self.__makepath(self._cacheFile)
             fp = file(self._cacheFile, "w+b")
-            pickle.dump(entryData, fp, 1)
+            pickle.dump(entrydata, fp, 1)
         except IOError:
             pass
 
