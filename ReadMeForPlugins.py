@@ -35,9 +35,9 @@ The available blosxom renderer callbacks are:
 In PyBlosxom, the functionality some of the blosxom 2.0 callbacks are taken
 care of by callback chains.
 
-The blosxom 2.0 entries callback is handled by L{cb_filelist}
-The blosxom 2.0 filter callback is handled by L{cb_prepare}
-The blosxom 2.0 sort callback is handled by L{cb_prepare}
+     - The blosxom 2.0 entries callback is handled by L{cb_filelist}
+     - The blosxom 2.0 filter callback is handled by L{cb_prepare}
+     - The blosxom 2.0 sort callback is handled by L{cb_prepare}
 """
 import libs, os
 from libs.Request import Request

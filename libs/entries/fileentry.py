@@ -100,15 +100,10 @@ class FileEntry(base.EntryBase):
         else:
             file_path = os.path.join(absolute_path, fn)
 
-        tb = '-'
         tb_id = '%s/%s' % (absolute_path, fn)
         tb_id = re.sub(r'[^A-Za-z0-9]', '_', tb_id)
-        tb_data = self._config.get('tb_data', '')
-        if os.path.isfile('%s/%s.stor' % (tb_data, tb_id)):
-            tb = '+'
 
         self['path'] = path
-        self['tb'] = tb
         self['tb_id'] = tb_id
         self['absolute_path'] = absolute_path
         self['file_path'] = file_path

@@ -65,6 +65,8 @@ def cb_entryparser(args):
 
     @param args: dict containing function references for each extensions
     @type args: dict
+    @returns: updated dict containing the reference for .wiki entryparser
+    @rtype: dict
     """
     args['wiki'] = readfile
     return args
@@ -78,6 +80,8 @@ def readfile(filename, request):
     @param request: The request object
     @type filename: string
     @type request: L{libs.Request.Request} object
+    @returns: Data of the entry
+    @rtype: dict
     """
     entryData = {}
     d = file(filename).read()
@@ -98,6 +102,8 @@ def parse(story):
 
     @param story: A text for conversion
     @type story: string
+    @returns: formatted string
+    @rtype: string
     """
     s = StringIO()
     oldstdout = sys.stdout

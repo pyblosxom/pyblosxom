@@ -22,9 +22,6 @@ py['depth'] = 0
 # How many entries should I show on the home page?
 py['num_entries'] = 40
 
-# Trackback data directory (If you install Standalone Trackback Tool)
-#py['tb_data'] = '/path/to/tb_data/directory'
-
 # Default parser/preformatter. Defaults to plain (does nothing)
 #py['parser'] = 'plain'
 

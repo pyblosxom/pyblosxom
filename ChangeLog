@@ -1,3 +1,11 @@
+2003-04-02 Wari Wahab <wari at home dot wari dot org>
+	* Deprecated $tb, we have an almost working feedback plugin, and also
+	  $tb is very much dependent on the MovableType Standalone Trackback
+	  Tool, which has no business in pyblosxom land except for in a
+	  plugin.
+	* Removed $tb of course needs a $tb plugin replacement, hence the
+	  standalonetrackbacktool.py (What a long name)
+
 2003-04-01 Wari Wahab <wari at home dot wari dot org>
 	* Definitely not an all fools day joke. Moved entryparsers to the much
 	  cleaner and unified callback mechanisms. Callback added -
@@ -7,7 +15,7 @@
 	* Moved preformatters to be plugins. This is a much cleaner approach
 	  then what have been done previously. Callbacks added - preformat and
 	  postformat
-	
+
 2003-03-26 Will Guaraldi <willg at bluesock dot org>
 	* Re-wrote the callback chain mechanisms so it's a passive
 	  registration chain like blosxom and it's more magical and
