@@ -1,3 +1,8 @@
+2003-03-11 Blake Winston (with some followup from Will Guaraldi)
+        * Introduced the EntryBase API and adjusted the code base so that
+	  content can be dynamically created from whatever is handling
+	  the URL.
+
 2003-03-01 Will Guaraldi <willg@bluesock.org>
 	* Changes initialize_plugins(...) to load plugins listed in
 	  the "load_plugins" key in the config file.  If no "load_plugins"
