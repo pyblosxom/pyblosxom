@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """Ping all traceback-eligable or pingback-elibable servers associated with 
 hrefs found in a given blog entry - Most code is by Sam Ruby
 
@@ -17,11 +17,12 @@ the site.
 """
 
 # Please change this value to where you pyblosxom is installed.
-BASEURL = 'http://www.sauria.com/blog/'
+#BASEURL = 'http://roughingit.subtlehints.net/pyblosxom/'
 # Modify this to where your pyblosxom and config.py is installed
 import sys
-sys.path.append('/home/twl/pyblog/blosxom')
-sys.path.append('/home/twl/pyblog/pyblosxom')
+#sys.path.append('/path/to/config')
+#sys.path.append('/path/to/Pyblosxom/dir')
+
 
 import re, sgmllib, sys, urllib, xmlrpclib
 from xml.sax import parseString, SAXParseException
