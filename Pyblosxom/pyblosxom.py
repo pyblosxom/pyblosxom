@@ -381,5 +381,5 @@ def blosxom_process_path_info(args):
                 
     # Construct our final URL
     data['url'] = '%s/%s' % (config['base_url'], data['pi_bl'])
- 
+
 # vim: shiftwidth=4 tabstop=4 expandtab

@@ -5,7 +5,7 @@ directory to where you define your plugins directory, located in the config.py
 file.
 
 Some plugins take effect immediately, like the conditionalhttp.py and the
-statusnotfound.py. Some requires a little bit more information in using it,
-like files to store data, or some variables to put inside your flavour
-templates.  Do read the plugin file itself to see what extra steps you need 
-to do before installing it.
+statusnotfound.py.  Some require some setup before they will work--things
+like variables to add to your flavour templates, data storage, settings....
+Read the plugin file itself with a text editor to see what installation
+steps are required.

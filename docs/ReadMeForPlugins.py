@@ -8,14 +8,12 @@ install a given plugin, move the plugin file you want from the C{contrib/}
 directory to the C{Pyblosxom/plugins/} directory of your installation.
 
 Some plugins take effect immediately, like the C{conditionalhttp.py} and the
-C{statusnotfound.py}. Some requires a little bit more information in using it,
-like files to store data, or some variables to put inside your flavour
-templates.  Do read the plugin file itself to see what extra steps you need 
-to do before installing it.
+C{statusnotfound.py}.  Some plugins require some setup before they work.
+Read the plugin file in a text editor to see what installation steps are
+required.
 
-Below is a basic documentation for plugin developers and it exposes them
-of what callbacks are available to them and documents on how to use them
-if possible.
+Below is some basic documentation for plugin developers and details
+callbacks available, how they should be used, and what they do.
 
 B{The BlosxomRenderer plugin callbacks}
 
