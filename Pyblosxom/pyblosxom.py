@@ -49,7 +49,7 @@ class PyBlosxom:
         else:
             config['base_url'] = config.get('base_url', '')
 
-        if len(config['datadir']) > 0 and config['datadir'][-1] == os.sep:
+        if config["datadir"].endswith("\\") or config["datadir"].endswith("/"):
             config['datadir'] = config['datadir'][:-1]
 
         # import and initialize plugins
@@ -100,7 +100,7 @@ class PyBlosxom:
                         mappingfunc=lambda x,y:x,
                         donefunc=lambda x:x)
 
-    def runStaticRenderer(self):
+    def runStaticRenderer(self, incremental=0):
         """
         This will go through all possible things in the blog
         and statically render everything to the "static_dir"
@@ -108,11 +108,19 @@ class PyBlosxom:
 
         This figures out all the possible path_info settings
         and calls self.run() a bazillion times saving each file.
+
+        @param incremental: whether (1) or not (0) to incrementally
+            render the pages.  if we're incrementally rendering pages,
+            then we render only the ones that have changed.
+        @type  incremental: boolean
         """
         self.initialize()
 
         config = self._request.getConfiguration()
         data = self._request.getData()
+        print "Perofrming static rendering."
+        if incremental:
+            print "Incremental is set."
 
         staticdir = config.get("static_dir", "")
         datadir = config["datadir"]
@@ -156,7 +164,7 @@ class PyBlosxom:
                 smtime = 0
 
             # if the entry is more recent than the static, we want to re-render
-            if smtime < mtime:
+            if smtime < mtime or not incremental:
                 # grab the categories
                 temp = os.path.dirname(mem).split(os.sep)
                 for i in range(len(temp)+1):
@@ -177,7 +185,7 @@ class PyBlosxom:
                 # dates[year + "/" + monthname + "/" + day] = 1
 
                 # toss in the render queue
-                renderme.append( (mem, 0) )  # url, index
+                renderme.append( (mem, "", 0) )  # url, index
 
         print "rendering %d entries." % len(renderme)
 
@@ -188,7 +196,7 @@ class PyBlosxom:
         print "rendering %d category indexes." % len(categories)
 
         for mem in categories:
-            renderme.append( (mem, 1) )
+            renderme.append( (mem, "", 1) )
 
         # now we handle dates
         dates = dates.keys()
@@ -197,20 +205,31 @@ class PyBlosxom:
         print "rendering %d date indexes." % len(dates)
 
         for mem in dates:
-            renderme.append( (mem, 1) )
+            renderme.append( (mem, "", 1) )
             
         # now we handle arbitrary urls
         additional_stuff = config.get("static_urls", [])
         print "rendering %d arbitrary urls." % len(additional_stuff)
 
         for mem in additional_stuff:
-            renderme.append( (mem, 0) )
+            if mem.find("?") != -1:
+                url = mem[:mem.find("?")]
+                query = mem[mem.find("?")+1:]
+            else:
+                url = mem
+                query = ""
+
+            renderme.append( (url, query, 0) )
 
         print "building %s files." % len(renderme)
 
-        for url, i in renderme:
+        for url, q, i in renderme:
             print "rendering '%s' ..." % url
-            tools.render_entry(self._request, url, "", i)
+            req = Request()
+            req.addData(self._request.getData())
+            req.addConfiguration(self._request.getConfiguration())
+            req.addHttp(self._request.getHttp())
+            tools.render_entry(req, url, q, i)
 
 
 class Request:
