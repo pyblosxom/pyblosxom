@@ -75,7 +75,6 @@ elif platform == "nix":
     # we want to move the web script files as well, so we sneak them
     # in here.
     web_files = [os.path.normpath("web/pyblosxom.cgi"), 
-                 os.path.normpath("web/xmlrpc.cgi"), 
                  os.path.normpath("web/config.py")]
 
     pydf.append( ("/usr/share/" + PVER + "/web", web_files) )

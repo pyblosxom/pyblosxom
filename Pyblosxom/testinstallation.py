@@ -106,6 +106,12 @@ def test_installation(request):
         for mem in plugin_utils.plugins:
             if "verify_installation" in dir(mem):
                 print "=== plugin: '%s'" % mem.__name__
+
+                if "__version__" in dir(mem):
+                    print "    version: %s" % mem.__version__
+                else:
+                    print "    plugin has no version."
+
                 ret = mem.verify_installation(request)
                 if ret == 1:
                     print "    PASS"
