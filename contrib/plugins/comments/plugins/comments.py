@@ -33,7 +33,7 @@ def verify_installation(request):
     
     optional_keys = ['comment_dir', 'comment_ext']
     for i in optional_keys:
-        if config.has_key(i):
+        if not config.has_key(i):
             print("mission optional property: '%s'" % i)
 
     return retval
