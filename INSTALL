@@ -96,12 +96,13 @@ bove in the single-user installation for these steps.
 
 After all that works you'll want to customize your blog:
 
-   1. copy flavour templates from contrib/flavour_examples into your datadir 
-      and edit them to your liking
+   1. check out flavour templates at http://www.planetpyblosxom.org/ , copy
+      them to your datadir and edit them to your liking
    2. create a plugins directory to hold your PyBlosxom plugins
    3. add the new plugins directory to the plugin_dirs property in your 
       config.py file
-   4. copy plugins from contrib/plugins into your plugins directory
+   4. get plugins from http://www.planetpyblosxom.org/  and put them 
+      into your plugins directory
    5. for each plugin
          1. open up the plugin file in any text editor and read the top of 
             the file
@@ -125,8 +126,8 @@ It contains additional information on installing, configuring, and
 personalizing your weblog.
 
 Additionally, there's the PlanetPyblosxom website which also provides
-additional documentation and has a plugin registry.  PlanetPyblosxom is
-at:
+additional documentation and has a registry for contributed plugins and
+flavours.  PlanetPyblosxom is at:
 
    http://www.planetpyblosxom.org/
 
@@ -137,8 +138,6 @@ at:
 If you have problems, read through the documentation on the Pyblosxom
 website and if you can't find your answer feel free to ask questions 
 on the pyblosxom-users mailing list.
-
-Some of us hang out during the day on IRC at #pyblosxom on freenode.org.
 
 
 Good luck!  Happy blogging!
