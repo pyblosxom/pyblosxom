@@ -17,7 +17,7 @@ def cb_filestat(args):
     stattuple = args["mtime"]
     
     mtime = 0
-    mtch = DAYMATCH.match(os.path.basename(filename))
+    mtch = DAYMATCH.search(os.path.basename(filename))
     if mtch:
         try:
             timetuple = time.strptime("-".join(mtch.groups()), "%Y-%m-%d-%H-%M")
