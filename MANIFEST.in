@@ -1,5 +1,4 @@
 include setup.py
-include ChangeLog
 include INSTALL
 include LICENSE
 recursive-include Pyblosxom *.py
