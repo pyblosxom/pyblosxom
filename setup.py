@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
-import config
 
 setup(name="pyblosxom",
-      version=config.__version__,
+      version='CVS',
       description="pyblosxom weblog engine",
       author="Wari Wahab",
       author_email="wari@home.wari.org",
