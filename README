@@ -39,6 +39,10 @@ Pertinent to users:
     create logs in this directory so the directory has to have write
     access for whatever user the webserver uses to run the script.
 
+11. We removed the filestat callback.  This specifically affects the
+    pyarchives and pycategories plugins--you will need to use the ones
+    that come with this version of PyBlosxom.
+
 
 Pertinent to developers and plugin developers:
 ----------------------------------------------
