@@ -8,7 +8,7 @@ Dependencies:
     - for mod_python: mp_wsgi_handler.py (mod_python wsgi wrapper)
         from http://www.c-area.ch/code/
     - for twisted: twisted_wsgi.py (twisted wsgi wrapper)
-        from http://svn.colorstudy.com/trunk/WSGIKit/wsgikit/
+        from http://svn.webwareforpython.org/WSGIKit/trunk/wsgikit/
 
 
 Configuration:

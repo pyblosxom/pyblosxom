@@ -5,7 +5,7 @@ Dependencies:
     - Pyblosxom 1.2+
     - wsgiref library from http://cvs.eby-sarna.com/wsgiref/
     - twisted wsgi wrapper (twisted_wsgi.py)
-        from http://svn.colorstudy.com/trunk/WSGIKit/wsgikit/
+        from http://svn.webwareforpython.org/WSGIKit/trunk/wsgikit/
 
 Configuration:
     Fill in the desired username and port in the options dict below.
