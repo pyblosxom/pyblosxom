@@ -14,7 +14,7 @@ class EntryBase:
     whether it came from a file, or a database, or even somewhere off 
     the InterWeeb.
     """
-    def __init__(self, config):
+    def __init__(self, config={}):
         self._config = config
         self._data = None
         self._metadata = {}
