@@ -109,7 +109,7 @@ def cb_handle(args):
             # must be done after plugin initialization
             from comments import writeComment    
             # write the comment (in the dict)
-            writeComment(config, data, cdict)
+            writeComment(request, config, data, cdict, config['blog_encoding'])
 
             print "Content-Type: text/plain\n"
             print "OK"

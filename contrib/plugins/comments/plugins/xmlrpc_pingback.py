@@ -1,6 +1,5 @@
 from config import py
 from Pyblosxom.pyblosxom import PyBlosxom
-from Pyblosxom.Request import Request
 from Pyblosxom import tools
 from xmlrpclib import Fault
 
@@ -70,6 +69,7 @@ def fileFor(req, uri):
 
             
 def pingback(request, source, target):
+    tools.log("pingback started")
     source_file = urllib.urlopen(source.split('#')[0])
     if source_file.headers.get('error', '') == '404':
         raise Fault(0x0010, "Target %s not exists" % target)
@@ -113,7 +113,7 @@ def pingback(request, source, target):
         data['entry_list'] = [ target_entry ]
 
         # TODO: Check if comment from the URL exists
-        writeComment(config, data, cmt)
+        writeComment(request, config, data, cmt, config['blog_encoding'])
                
         return "success pinging %s from %s\n" % (source, target)
     else:
@@ -125,3 +125,12 @@ def cb_xmlrpc_register(args):
     """
     args['methods'].update({'pingback.ping': pingback })
     return args
+
+def cb_start(args):
+    request = args["request"]
+    config = request.getConfiguration()
+    logdir = config.get("logdir", "/tmp")
+    logfile = os.path.normpath(logdir + os.sep + "pingback.log")
+
+    tools.make_logger(logfile)
+    tools.log("finished config")

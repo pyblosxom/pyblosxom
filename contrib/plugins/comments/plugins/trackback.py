@@ -85,7 +85,7 @@ def cb_handle(args):
                 entry = FileEntry(request, '%s.%s' % (path, ext), datadir )
                 data = {}
                 data['entry_list'] = [ entry ]
-                writeComment(config, data, cdict)
+                writeComment(request, config, data, cdict, config['blog_encoding'])
                 print tb_good_response
             except OSError:
                 message = 'URI '+path_info+" doesn't exist"
