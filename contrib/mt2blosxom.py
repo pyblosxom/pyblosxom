@@ -5,13 +5,16 @@ import time
 import os
 import re
 import random
+
+entryDelim = re.compile( r"^--------$", re.MULTILINE )
+sectionDelim = re.compile( r"^-----$", re.MULTILINE )
     
 def convert(inputfile, outputdir):    
     input = open(inputfile).read()
-    entries = input.split("--------")
+    entries = entryDelim.split(input)
     for entry in entries:
         if entry.strip():
-            sections = entry.split("----")
+            sections = sectionDelim.split(entry)
             body = sections[1].split(":",1)[1]
             extendedbody = sections[2].split(":",1)[1]
             fields = sections[0].strip().split("\n")
