@@ -13,8 +13,12 @@ month2num = { 'nil' : '00',
               'Oct' : '10',
               'Nov' : '11',
               'Dec' : '12'}
-num2month = dict(zip(month2num.itervalues(), month2num))
-
+# This is not python 2.1 compatible (Nifty though)
+# num2month = dict(zip(month2num.itervalues(), month2num))
+num2month = {}
+for k,v in month2num.items():
+    num2month[v] = k
+    num2month[int(v)] = k
 
 class Stripper(sgmllib.SGMLParser):
     """Strips HTML"""
