@@ -1,3 +1,8 @@
+2003-03-28 Wari Wahab <wari at home dot wari dot org>
+	* Moved preformatters to be plugins. This is a much cleaner approach
+	  then what have been done previously. Callbacks added - preformat and
+	  postformat
+	
 2003-03-26 Will Guaraldi <willg at bluesock dot org>
 	* Re-wrote the callback chain mechanisms so it's a passive
 	  registration chain like blosxom and it's more magical and
