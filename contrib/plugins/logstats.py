@@ -98,11 +98,9 @@ class PyblStats:
         return self._referrersText
 
 def processRequest(args):
-    if args == None or args[0] == '':
-        return
     import os
-    filename = args[0]+'.dat'
-    returnCode = args[1]
+    filename = args["filename"] + '.dat'
+    returnCode = args["return_code"]
 
     try:
         f = file(filename)
@@ -119,7 +117,7 @@ def processRequest(args):
     cPickle.dump(stats, f)
 
 def prepare(args):
-    request = args[0]
+    request = args["request"]
     config = request.getConfiguration()
     data = request.getData()
 

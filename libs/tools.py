@@ -71,35 +71,37 @@ def parseitem(entry_dict, text_string):
     parseitem CallbackChain, allowing plugins to expand variables they 
     know about.
 
-    This calls the chain with (entry_dict, text_string) and returns
-    the final string.
+    This calls the chain with the data dict and then returns the final
+    text string.
     """
-    return api.parseitem.executeTransform((entry_dict, text_string))[1]
+    args = { "entry_dict": entry_dict, "text": text_string }
+    return api.parseitem.executeTransform(args)["text"]
 
 def filestat(filename):
     """
     Calls the api's filestat callback chain to figure out what the
     stats on a given file are.  
 
-    This calls the chain with (filename, os.stat(filename)) and returns
-    just the os.stats-type tuple.
+    This calls the filestat chain and returns the final mtime.
     """
-    return api.filestat.executeTransform((filename, os.stat(filename)))[1]
+    args = { "filename": filename, "mtime": os.stat(filename) }
+    return api.filestat.executeTransform(args)["mtime"]
 
-def logRequest(filename = '', returnCode = '200'):
+def logRequest(filename = '', return_code = '200'):
     """
     Calls the api's logRequest callback chain to do some statistical analysis
     based on the current request.
 
     This calls the chain with (filename, returnCode) and returns None
     """
-    api.logRequest.executeHandler((filename, returnCode))
+    args = {"filename": filename, "return_code": return_code }
+    api.logRequest.executeHandler(args)
 
 def fileList(request):
     """
     Takes an entry dict and returns a file list
     """
-    return api.fileListHandler.executeListHandler(request)
+    return api.fileListHandler.executeListHandler({"request": request})
 
 def Walk(root = '.', 
          recurse = 0, 

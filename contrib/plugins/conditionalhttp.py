@@ -13,7 +13,7 @@ __version__ = "$Id$"
 from libs import api
 
 def prepare(args):
-    request = args[0]
+    request = args["request"]
     data = request.getData()
     config = request.getConfiguration()
     entryList = data["entry_list"]

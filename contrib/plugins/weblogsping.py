@@ -92,7 +92,7 @@ class WeblogsPing:
             return 0
 
 def prepare(args):
-    request = args[0]
+    request = args["request"]
     WeblogsPing(request).ping()
 
 def initialize():

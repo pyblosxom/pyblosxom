@@ -43,7 +43,7 @@ class PyBlosxom:
             data['url'] = '%s%s' % (config['base_url'], data['pi_bl'])
 
 
-    def defaultFileListHandler(self, request):
+    def defaultFileListHandler(self, args):
         """
         This is the default handler for getting entries.  It takes the
         request object in and figures out which entries based on the
@@ -56,6 +56,8 @@ class PyBlosxom:
         @returns: the content we want to render
         @rtype: list of EntryBase objects
         """
+        request = args["request"]
+
         data = request.getData()
         config = request.getConfiguration()
         pyhttp = request.getHttp()
@@ -189,7 +191,7 @@ class PyBlosxom:
         # plugins giving them a chance to transform the data.
         # plugins modify the request in-place--no need to return
         # things.
-        api.prepareChain.executeHandler((self._request,))
+        api.prepareChain.executeHandler({"request": self._request})
         
 
         # now we pass the entry_list through the renderer

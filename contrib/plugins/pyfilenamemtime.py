@@ -5,8 +5,8 @@ import os, re, time
 DAYMATCH = re.compile('([0-9]{4})-([0-1][0-9])-([0-3][0-9])-([0-2][0-9])-([0-5][0-9]).txt')
 
 def filestat(args):
-    filename = args[0]
-    stattuple = args[1]
+    filename = args["filename"]
+    stattuple = args["mtime"]
     
     mtime = 0
     mtch = DAYMATCH.match(os.path.basename(filename))
@@ -14,15 +14,13 @@ def filestat(args):
         try:
             timetuple = time.strptime("-".join(mtch.groups()), "%Y-%m-%d-%H-%M")
             mtime = time.mktime(timetuple)
-            # mtime = time.mktime(map(int, mtch.groups()) + [0,0,0,0])
         except:
             pass
 
-    if not mtime: 
-        return args
+    if mtime: 
+        args["mtime"] = tuple(list(stattuple[:8]) + [mtime] + list(stattuple[9:]))
 
-    stattuple = tuple(list(stattuple[:8]) + [mtime] + list(stattuple[9:]))
-    return (filename, stattuple)
+    return args
 
 def initialize():
     api.filestat.register(filestat, api.LAST)

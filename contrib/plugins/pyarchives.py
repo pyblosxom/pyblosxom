@@ -65,7 +65,7 @@ class PyblArchives:
         self._archives = '\n'.join(result)
 
 def prepare(args):
-    request = args[0]
+    request = args["request"]
     data = request.getData()
     data["archivelinks"] = PyblArchives(request)
 

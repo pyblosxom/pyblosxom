@@ -232,7 +232,7 @@ class PyblCalendar:
         return "\n".join(cal2)
 
 def prepare(args):
-    request = args[0]
+    request = args["request"]
     data = request.getData()
     if data.has_key("entry_list") and data["entry_list"]:
         data["calendar"] = PyblCalendar(request)

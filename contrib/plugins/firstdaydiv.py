@@ -65,7 +65,7 @@ def prepare(args):
     Populate the L{global py dictionary<py>} with an instance of the
     L{PyFirstDate} class in the "dayDivClass" key.
     """
-    request = args[0]
+    request = args["request"]
     data = request.getData()
     data["dayDivClass"] = PyFirstDate(request)
 

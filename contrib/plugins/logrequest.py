@@ -20,11 +20,9 @@ If the filename is relative, then it will be written to where pyblosxom runs.
 from libs import api
 
 def logRequest(args):
-    if args[0] == '':
-        return
     import os, time
-    filename = args[0] + '.txt'
-    returnCode = args[1]
+    filename = args["filename"] + '.txt'
+    returnCode = args["return_code"]
 
     file(filename, 'a').write('%s - - [%s] "%s %s" %s - "%s" "%s"\n' %
         (os.environ.get('REMOTE_ADDR', '-'),

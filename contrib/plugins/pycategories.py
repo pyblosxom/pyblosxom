@@ -78,7 +78,7 @@ class PyblCategories:
 
 
 def prepare(args):
-    request = args[0]
+    request = args["request"]
     data = request.getData()
     data["categorylinks"] = PyblCategories(request)
 

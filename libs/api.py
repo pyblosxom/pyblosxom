@@ -71,8 +71,8 @@ class CallbackChain:
 
     def executeHandler(self, data):
         """
-        Executes a callback chain on a given piece of data.  This
-        data could be a string or an object.  Consult the documentation
+        Executes a callback chain passing a dict with a series of name/value
+        pairs in it to the registered functions.  Consult the documentation
         for the specific callback chain you're executing.
 
         Each function tries to see if it can handle the data being
@@ -86,9 +86,10 @@ class CallbackChain:
         than None.  It is not guaranteed that every link in the chain
         will be called.
 
-        @param data: data is a tuple--refer to the callback chain 
-            documentation for what it might hold
-        @type  data: tuple of stuff
+        @param data: data is a dict filled with name/value pairs--refer
+            to the callback chain documentation for what's in the data 
+            dict.
+        @type  data: dict
 
         @return: returns whatever is returned by the handler or None
             if nothing handled the thing
@@ -98,23 +99,31 @@ class CallbackChain:
         ret = None
         for mem in chain:
             ret = mem(data)
-            if ret:
+            if ret == None:
                 break
                 
         return ret
 
     def executeListHandler(self, data):
         """
-        Executes a callback chain on a given piece of data.  This
-        data could be a string or an object.  Consult the documentation
+        Executes a callback chain on a given piece of data.  The data
+        passed in is a dict of name/value pairs.  Consult the documentation
         for the specific callback chain you're executing.
 
         Each function tries to see if it can handle the data being
         passed in as input.  If it can handle the data, then it does
-        so and returns a list of data, otherwise it returns None.
+        so and returns a list of things, otherwise it returns None.
         We continue through the list of registered functions until
         we hit the end (none of them handled it) or one of the
         functions has handled the data and we don't need to proceed further.
+
+        @param data: data is a dict filled with name/value pairs--refer
+            to the callback chain documentation for what's in the data 
+            dict.
+        @type  data: dict
+
+        @returns: a list of data or an empty list
+        @rtype: list
         """
         chain = self.__getchain__()
         for mem in chain:
@@ -125,11 +134,10 @@ class CallbackChain:
             return []
         return result
             
-
     def executeTransform(self, data):
         """
         Executes a callback chain on a given piece of data.  This
-        data could be a string or an object.  Consult the documentation
+        passed in is a dict of name/value pairs.  Consult the documentation
         for the specific callback chain you're executing.
 
         Each function of the chain takes the input, applies some
@@ -141,12 +149,13 @@ class CallbackChain:
 
         This is guaranteed to be adjusted by every link in the chain.
 
-        @param data: data is a tuple--refer to the callback chain 
-            documentation for what it might hold
-        @type  data: tuple of stuff
+        @param data: data is a dict filled with name/value pairs--refer
+            to the callback chain documentation for what's in the data 
+            dict.
+        @type  data: dict
 
-        @returns: the transformed tuple
-        @rtype: varies
+        @returns: the transformed dict
+        @rtype: dict
         """
         chain = self.__getchain__()
         for mem in chain:
@@ -160,44 +169,37 @@ import os
 # call filestat.executeTransform(filename) and get back a os.stat like
 # tuple with all the pieces worked out.
 #
-# Input:
-#    filename (string)
-#    tuple (from os.stat)
-#
-# Output:
-#    filename
-#    adjusted tuple
+# Data dict:
+#    "filename": filename (string)
+#    "mtime": tuple (from os.stat)
+# 
 filestat = CallbackChain()
 
 # CallbackChain to parse a given story item (head, foot, or story)
 # and expand variables.
 #
-# Input:
-#    entry_dict (dict)
-#    text_string (string) - the story item
-#
-# Output:
-#    entry_dict (dict)
-#    adjusted text_string (string)
+# Data dict:
+#    "entry_dict": entry_dict (dict)
+#    "text": the story item (string)
+# 
 parseitem = CallbackChain()
 
 # CallbackChain to do a final logging based on a log plugin
 #
-# Input:
-#    filename (string) - Filename to log to
-#    returnCode (string) - Error code to log
+# Data dict:
+#    "filename": filename to log to (string)
+#    "return_code": error code to log (string)
 #
-# Output: None
 logRequest = CallbackChain()
 
 
 # CallbackChain to generate file list based on a plugin
 #  
-# Input:
-#   entry dict 
+# Data dict:
+#   "request": the request object
 #
 # Output:
-#   list of files
+#   the list of entries
 fileListHandler = CallbackChain()
 
 # CallbackChain to notify all the plugins of the completed
@@ -205,9 +207,7 @@ fileListHandler = CallbackChain()
 # modify the entry list and add variables to the runtime
 # data dict prior to rendering.
 #
-# Input: 
-#   Request
+# Data dict:
+#   "request": Request
 #
-# Output:
-#   none
 prepareChain = CallbackChain()
