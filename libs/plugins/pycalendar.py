@@ -25,7 +25,7 @@ with default for pre.  In css mode, it has the following CSS things:
 (Should we add more?)
 """
 __author__ = "Will Guaraldi - willg@bluesock.org"
-__version__ = "$id$"
+__version__ = "$Id$"
 
 from libs import tools
 import time, os, calendar, sys, string
