@@ -73,5 +73,5 @@ class PyblCategories:
 		clist = map(self.genitem, clist)
 		self._categories = "<br>".join(clist)
 
-def load(py, entryList):
+def load(py, entryList, renderer):
 	py["categorylinks"] = PyblCategories(py)

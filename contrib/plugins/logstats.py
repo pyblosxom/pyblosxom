@@ -121,7 +121,7 @@ def processRequest(args):
 def initialize():
     api.logRequest.register(processRequest)
 
-def load(py, entryList):
+def load(py, entryList, renderer):
     """
     part of the pyblosxom framework
     """

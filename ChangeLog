@@ -1,3 +1,14 @@
+2003-02-16 Wari Wahab <pyblosxom@wari.per.sg>
+	* Pyblosxom core rendering code can now use seperate renderers
+	  defined by the user. This means that if a user wants to use other
+	  templating system, it possible now. Possibilities includes renderers
+	  using Cheetah, Albatross, empy templating system, or even
+	  HTML Template that most perl users have known and love. Right now,
+	  included renderers are the blosxom templating system and a debug
+	  renderer
+	* Updated most plugins to include renderers in their load mechanism so
+	  that they can use it if needed.
+
 2003-02-11 Wari Wahab <pyblosxom@wari.per.sg>
 	* Config.py no longer used an INI file, this will load faster than
 	  having an INI file to parse

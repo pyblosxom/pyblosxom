@@ -3,7 +3,7 @@ import os, glob
 
 plugins = []
 
-def load_plugins(py, valid_list):
+def load_plugins(py, valid_list, renderer):
 	"""
 	Allows the plugin to register itself with the py_dict.
 	"""
@@ -11,7 +11,7 @@ def load_plugins(py, valid_list):
 
 	for mem in plugins:
 		if mem.__dict__.has_key("load"):
-			mem.load(py, valid_list)
+			mem.load(py, valid_list, renderer)
 
 def initialize_plugins():
 	"""

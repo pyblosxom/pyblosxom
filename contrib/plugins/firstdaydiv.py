@@ -55,7 +55,7 @@ class PyFirstDate:
             self._dayDiv = "blosxomDayDiv"
         return self._dayDiv
 
-def load(py, entryList):
+def load(py, entryList, renderer):
     """
     Populate the L{global py dictionary<py>} with an instance of the
     L{PyFirstDate} class in the "dayDivClass" key.

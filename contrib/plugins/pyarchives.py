@@ -61,7 +61,7 @@ class PyblArchives:
 			result.append(archives[key])
 		self._archives = '\n'.join(result)
 
-def load(py, entryList):
+def load(py, entryList, renderer):
 	py["archivelinks"] = PyblArchives(py)
 
 if __name__ == '__main__':

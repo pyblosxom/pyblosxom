@@ -227,6 +227,6 @@ class PyblCalendar:
 		return "\n".join(cal2)
 
 
-def load(py, entryList):
+def load(py, entryList, renderer):
 	if entryList:
 		py["calendar"] = PyblCalendar(py, entryList)

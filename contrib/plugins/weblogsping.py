@@ -81,5 +81,5 @@ class weblogsPing:
             # Something wrong with the file, abort.
             return 0
 
-def load(py, entryList):
+def load(py, entryList, renderer):
     weblogsPing(py, entryList).ping()

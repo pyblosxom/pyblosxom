@@ -10,7 +10,7 @@ entryList.
 __author__ = "Wari Wahab pyblosxom@wari.per.sg"
 __version__ = "$Id$"
 
-def load(py, entryList):
+def load(py, entryList, renderer):
     if entryList:
         import os, time
         # Get our first file timestamp for ETag and Last Modified
@@ -20,10 +20,13 @@ def load(py, entryList):
         if ((os.environ.get('HTTP_IF_NONE_MATCH','') == '"%s"' % entryList[0]['mtime']) or
             (os.environ.get('HTTP_IF_NONE_MATCH','') == '%s' % entryList[0]['mtime']) or
             (os.environ.get('HTTP_IF_MODIFIED_SINCE','') == lastModed)):
-            print 'Status: 304 Not Modified\nETag: "%s"\nLast-Modified: %s' % (
-                    entryList[0]['mtime'], lastModed)
-            # Enable if you want logging
-            #tools.logRequest(returnCode = '304')
-            raise SystemExit
-        print 'ETag: "%s"' % entryList[0]['mtime']
-        print 'Last-Modified: %s' % lastModed
+            renderer.addHeader(['Status: 304 Not Modified',
+                    'ETag: "%s"' % entryList[0]['mtime'],
+                    'Last-Modified: %s' % lastModed])
+            renderer.needsContentType(None)
+            renderer.render()
+
+            from libs import tools
+            tools.logRequest(py.get('logfile',''), '304')
+        renderer.addHeader(['ETag: "%s"' % entryList[0]['mtime'],
+                'Last-Modified: %s' % lastModed])
