@@ -49,7 +49,7 @@ class PyBlosxom:
         else:
             config['base_url'] = config.get('base_url', '')
 
-        if config["datadir"].endswith("\\") or config["datadir"].endswith("/"):
+        if config["datadir"].endswith(os.sep):
             config['datadir'] = config['datadir'][:-1]
 
         # import and initialize plugins
