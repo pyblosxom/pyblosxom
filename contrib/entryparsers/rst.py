@@ -26,6 +26,7 @@ __version__ = '$Id$'
 __author__ = 'Sean Bowman <sean dot bowman at acm dot org>'
 
 from docutils.core import publish_string
+from libs import tools
 
 def cb_entryparser(args):
     args[FILE_EXT] = readfile
