@@ -245,11 +245,14 @@ def cb_prepare(args):
         body = form['body'].value
         
         body = sanitize(body)
+
+	# Chech if the form has a URL
+	url = (form.has_key('url') and [form['url'].value] or [''])[0]
         
         cdict = {'title': form['title'].value, \
                  'author' : form['author'].value, \
                  'pubDate' : str(time.time()), \
-                 'link' : form['url'].value, \
+                 'link' : url, \
                  'source' : '', \
                  'description' : body }
         
