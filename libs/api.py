@@ -17,6 +17,43 @@ to reduce the build cost as well as the run-time cost required.
 
 This module defines a series of callbacks and callbackchains and
 what they're used for.
+
+@var filestat: CallbackChain to generate a os.stat tuple about a given
+	file.  call filestat.executeTransform(filename) and get back a
+	os.stat like tuple with all the pieces worked out.
+
+	Data dict:
+	   - "filename": filename (string)
+	   - "mtime": tuple (from os.stat)
+
+@var logRequest:  CallbackChain to do a final logging based on a log
+	plugin
+
+	Data dict:
+		- "filename": filename to log to (string)
+		- "return_code": error code to log (string)
+
+@var fileListHandler:  CallbackChain to generate file list based on a
+	plugin
+ 
+	Data dict:
+		- "request": the request object
+
+	Output:
+		- the list of entries
+
+@var prepareChain: CallbackChain to notify all the plugins of the
+	completed request and the entry list.  This allows plugins to modify
+	the entry list and add variables to the runtime data dict prior to
+	rendering.
+
+	Data dict:
+		- "request": Request
+
+@var FIRST: Constant to signify the start of the chain
+@var MIDDLE: Constant to signify the middle of the chain
+@var LAST: Constant to signify the last part of the chain
+@var HANDLED: Constant to signify that a Callback is in fact handled
 """
 
 FIRST = 0
