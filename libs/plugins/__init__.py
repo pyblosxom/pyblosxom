@@ -3,17 +3,6 @@ import os, glob
 
 plugins = []
 
-def load_plugins(request, renderer):
-    """
-    FIXME - this is going away and should get replaced by an initialize
-    callback chain
-    """
-    global plugins
-
-    for mem in plugins:
-        if mem.__dict__.has_key("load"):
-            mem.load(request, renderer)
-
 def initialize_plugins():
     """
     Imports and initializes plugins from this directory so they can register
