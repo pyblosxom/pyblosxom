@@ -20,7 +20,7 @@ HTML = {'content_type' : 'text/html',
         'foot' : """<p><a href="http://roughingit.subtlehints.net/pyblosxom"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" alt="Made with PyBlosxom" border="0" /></a></p></body></html>"""}
 
 RSS = {'content_type' : 'text/xml',
-       'head' : """<?xml version="1.0"?>\n<!-- name="generator" content="$pyblosxom_name/$pyblosxom_version" -->\n<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n<rss version="0.91">\n  <channel>\n    <title>$blog_title $pi_da $pi_mo $pi_yr</title>\n    <link>$url</link>\n    <description>$blog_description</description>\n    <language>$blog_language</language>\n""",
+       'head' : """<?xml version="1.0" encoding="$blog_encoding"?>\n<!-- name="generator" content="$pyblosxom_name/$pyblosxom_version" -->\n<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n<rss version="0.91">\n<channel>\n<title>$blog_title $pi_da $pi_mo $pi_yr</title>\n<link>$url</link>\n<description>$blog_description</description>\n<language>$blog_language</language>\n""",
        'story' : """<item>\n    <title>$title</title>\n    <link>$base_url/$file_path.html</link>\n    <description>$body</description>\n  </item>\n""",
        'foot' : '   </channel>\n</rss>'}
 
