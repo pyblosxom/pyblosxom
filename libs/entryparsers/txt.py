@@ -45,6 +45,6 @@ def parse(filename, request, cache):
     else:
         entryData['body'] = ''.join(story)
     
-    cache.saveEntry(entryData)
+    cache[filename] = entryData
 
     return entryData

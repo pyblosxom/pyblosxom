@@ -106,11 +106,12 @@ class Parser:
         self.out.write('</font>')
 
 
-def parse(filename, py, cache):
+def parse(filename, request, cache):
     import os, sys
     from StringIO import StringIO
 
     # open own source
+    config = request.getConfiguration()
     source = open(filename).read()
     out = StringIO()
 
@@ -118,8 +119,8 @@ def parse(filename, py, cache):
     Parser(source, out).format(None, None)
 
     entryData = {'body' : out.getvalue(),
-                 'title' : filename.replace(py['datadir'], '')}
+                 'title' : filename.replace(config['datadir'], '')}
 
-    cache.saveEntry(entryData)
+    cache[filename] = entryData
 
     return entryData

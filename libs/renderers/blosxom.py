@@ -80,10 +80,9 @@ class BlosxomRenderer(RendererBase):
                 self._out.write(tools.parseitem(text, tools.parse(text, template)).replace(r'\$', '$'))
 
         entryData = {}
-        cache.load(filename)
         # Look for cached documents
-        if cache.isCached():
-            entryData = cache.getEntry()
+        if cache.has_key(filename):
+            entryData = cache[filename]
         
         # Cached? Try our entryparsers then.
         if not entryData:
