@@ -2,6 +2,7 @@
 from libs import tools
 from libs.renderers.base import RendererBase
 import re, os, sys, cgi, codecs
+from xml.sax.saxutils import escape
 
 """
 BlosxomRenderer can use the following keys from config.py:
@@ -122,8 +123,9 @@ class BlosxomRenderer(RendererBase):
         output = []
 
         if re.search(r'\Wxml', data['content-type']):
-            entry['title'] = cgi.escape(entry['title'])
-            entry.setData(cgi.escape(entry.getData()))
+            quotes = {"'":"&apos;", '"':"&quot;"}
+            entry['title'] = escape(entry['title'],quotes)
+            entry.setData(escape(entry.getData(),quotes))
 
         elif data['content-type'] == 'text/plain':
             s = tools.Stripper()
