@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/python
 """Ping all traceback-eligable or pingback-elibable servers associated with 
 hrefs found in a given blog entry - Most code is by Sam Ruby
 
@@ -17,7 +17,8 @@ the site.
 """
 
 # Please change this value to where you pyblosxom is installed.
-BASEURL = 'http://roughingit.subtlehints.net/pyblosxom/'
+#BASEURL = 'http://roughingit.subtlehints.net/pyblosxom/'
+BASEURL = 'http://192.168.0.12/blog/'
 
 import re, sgmllib, sys, urllib, xmlrpclib
 from xml.sax import parseString, SAXParseException
@@ -25,12 +26,17 @@ from xml.sax.handler import ContentHandler
 import cPickle, os
 
 # Modify this to where your pyblosxom is installed
-sys.path.append('/home/subtle/www/roughingit')
-sys.path.append('/home/subtle/src/pyblosxom')
+#sys.path.append('/home/subtle/www/roughingit')
+#sys.path.append('/home/subtle/src/pyblosxom')
+sys.path.append('/home/twl/pyblog/blosxom')
+sys.path.append('/home/twl/pyblog/pyblosxom')
 # Get our pyblosxom specifics here
 from libs import tools
+from libs.pyblosxom import PyBlosxom
+from libs.Request import Request
 import config
-    
+
+import wingdbstub
 
 def excerpt(filename, title, body, blogname):
     """ filename,title,body => url,args
@@ -49,7 +55,8 @@ def excerpt(filename, title, body, blogname):
     body = body[:252]
 
     url = BASEURL + filename
-    url = re.sub('\.[a-zA-Z]+$','.html', url)
+    url = re.sub('.txt$','',url)
+#    url = re.sub('\.[a-zA-Z]+$','.html', url)
 
     arg = {}
     arg['url'] = url
@@ -179,30 +186,35 @@ def pingback(parser):
         except:
             pass
 
-
-if __name__ == '__main__':
+def autoping(name):
     # Load up the cache (You can just import the base cache here)
     cache_driver = tools.importName('libs.cache', config.py.get('cacheDriver', 'base'))
     cache = cache_driver.BlosxomCache(config.py.get('cacheConfig', ''))
+    try:
+        filename = os.path.join(config.py['datadir'], name)
+        entryData = {}
+        cache.load(filename)
+        # Look for cached documents
+        if cache.isCached():
+            entryData = cache.getEntry()
+            
+        # Cached? Try our entryparsers then.
+        if not entryData:
+            fileExt = re.search(r'\.([\w]+)$', filename)
+            try:
+                req = Request()
+                p = PyBlosxom(req)
+                entryData = p.defaultEntryParser(filename,req)
+            except IOError:
+                pass
+            
+        parser = link(name, entryData['title'].strip(), entryData['body'].strip(), config.py['blog_title'])
+        trackback(parser)
+        pingback(parser)
+    except:
+        pass
+    
+
+if __name__ == '__main__':
     for name in sys.argv[1:]:
-        try:
-            filename = os.path.join(config.py['datadir'], name)
-            entryData = {}
-            cache.load(filename)
-            # Look for cached documents
-            if cache.isCached():
-                entryData = cache.getEntry()
-            
-            # Cached? Try our entryparsers then.
-            if not entryData:
-                fileExt = re.search(r'\.([\w]+)$', filename)
-                try:
-                    entryData = config.py['extensions'][fileExt.groups()[0]].parse(filename, config.py, cache)
-                except IOError:
-                    break
-            
-            parser = link(name, entryData['title'].strip(), entryData['body'].strip(), config.py['blog_title'])
-            trackback(parser)
-            pingback(parser)
-        except:
-            pass
+        autoping(name)
