@@ -1,3 +1,6 @@
+2003-04-20  Theodore W. Leung  <twl@dev>
+	* Update autoping to use new pyblosxom internals
+
 2003-04-20 Wari Wahab <wari at home dot wari dot org>
 	* Added blog_encoding configuration, default set to iso-8859-1
 	* Templates read are converted to unicode
