@@ -282,7 +282,7 @@ the permissions of your datadir accordingly.
 PyBlosxom allows you to change the default behavior by installing plugins.  
 There are plugins at http://pyblosxom.sourceforge.net/ in the Plugin 
 Registry.  Additionally, anyone can create plugins; they're written in 
-Python and don't require any special editors or licesnes to
+Python and don't require any special editors or licenses to
 create.
 </para>
 <para>
@@ -325,7 +325,7 @@ First Post
 ]]></programlisting>
 <para>
 The first line "First Post" becomes the title of the blog entry.  The date 
-of teh blog entry is the mtime on the file.  The body of the blog entry 
+of the blog entry is the mtime on the file.  The body of the blog entry 
 starts with the HTML paragraph tag in the second line and extends to the 
 end paragraph tag in the last line.  Your blog entries can be as long as 
 you want.  The first line is plain text--everything after that is HTML.  
@@ -709,7 +709,7 @@ in your datadir:
 <para>
 You can have as many flavours as you want in your datadir.  The one thing 
 to be aware of is creating a flavour where the name is the same extension 
-as the file extention of your blog entries.  The default extension for 
+as the file extension of your blog entries.  The default extension for 
 blog entries is .txt--don't create a "txt" flavour.
 </para>
 <para>
@@ -889,7 +889,7 @@ These template variables are only available in your story template.
 </row>
 <row>
 <entry>filename</entry>
-<entry>templete file name and path of the entry</entry>
+<entry>template file name and path of the entry</entry>
 <entry>/home/subtle/blosxom/weblogs/tools/pyblosxom/index.txt</entry>
 </row>
 <row>
@@ -1138,7 +1138,7 @@ in the query string.
 The order in which we figure out which flavour to use is this:
 </para>
 <orderedlist numeration="arabic">
-<listitem><para>look at the URI extenstion: if the URI has one, then we use that.</para></listitem>
+<listitem><para>look at the URI extension: if the URI has one, then we use that.</para></listitem>
 <listitem><para>look at the flav= querystring variable: if there is one, then we use that.</para></listitem>
 <listitem><para>look at the default_flavour property in the config.py file: if there is one, then we use that.</para></listitem>
 <listitem><para>use the "html" flavour</para></listitem>
@@ -1323,7 +1323,7 @@ any additional things you should know about.
 Most plugins should have a pretty easy installation method. You should be 
 able to copy the plugin into the directory defined in your config.py file 
 in the plugin_dirs property. Then there might be some additional properties 
-you'll ahve to set in your config.py file to define the plugin's behavior. 
+you'll have to set in your config.py file to define the plugin's behavior. 
 That should be about it.  On some occasions, you may have to change the code 
 in the plugin itself to meet your specific needs.
 </para>
@@ -1504,7 +1504,7 @@ The rain in Spain....
 </p>
 ]]></programlisting>
 <para>
-The metadata variables here would be avilable in your story template.  So for the
+The metadata variables here would be available in your story template.  So for the
 above example, the template variable $mood would be filled in with "bored" and
 $music would be filled in with "The Doors".
 </para>
@@ -1811,7 +1811,7 @@ be rendered and then renders them all one by one.
 <para>
 We have incremental rendering which will go find all the entries that have 
 changed since we rendered them and then re-render them. It does this by 
-comparing the mtime on the entry file with the mtime on the rendererd file.
+comparing the mtime on the entry file with the mtime on the rendered file.
 </para>
 <para>
 It works like this:
@@ -2033,7 +2033,7 @@ behavior functions. It also defines the Request class and the PyBlosxom class.
 <listitem>
 <para>
 Pyblosxom.pyblosxom.Request - The Request object holds the state of the 
-PyBlosxom request at any given time throughout the lifecycle fo the request. 
+PyBlosxom request at any given time throughout the lifecycle of the request. 
 The Request is passed to most callbacks in the args dict as "request".
 </para>
 </listitem>
@@ -2059,7 +2059,7 @@ pyblosxom.cgi.
       1. PyBlosxom instance, run method: calls initialize
             1. PyBlosxom instance, initialize method: imports the plugins
             2. PyBlosxom instance, initialize method: calls the entryparser callback to get a map of all the entry types we can handle 
-      2. PyBlosxom instance, run method: calls the start callback to allow plugins to do any intialization they need to do
+      2. PyBlosxom instance, run method: calls the start callback to allow plugins to do any initialization they need to do
       3. PyBlosxom instance, run method: calls the handle callback allowing plugins to fully handle the request.
          If a plugin handles the request, the plugin should return a 1 signifying it has done so. At that point, PyBlosxom will stop trying to find a plugin to handle the request.
          If no plugin handles the request, then PyBlosxom will handle the request using the blosxom_handler PyBlosxom will handle the request using the blosxom_handler.
