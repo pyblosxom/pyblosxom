@@ -6,8 +6,8 @@ from distutils.core import setup
 # this affects the names of all the directories we do stuff with
 sys.path.insert(0, "./")
 from Pyblosxom import pyblosxom
-# VER = "cvs"
-VER = pyblosxom.VERSION
+
+VER = pyblosxom.VERSION + "RC1"
 PVER = "pyblosxom-" + VER
 
 def Walk(root='.'):
@@ -36,11 +36,7 @@ def Walk(root='.'):
                 
     return result
 
-# we grab all the files in the contrib directory
-contrib_folders = Walk("contrib")
-
 doc_files = ["INSTALL", "LICENSE", 
-             os.path.normpath("docs/README.contrib"), 
              os.path.normpath("docs/README.plugins"), 
              os.path.normpath("docs/ReadMeForPlugins.py")]
 
@@ -63,18 +59,8 @@ if platform == "win32":
     pydf = []
     root = "c:\\Program Files\\" + PVER + "\\"
 
-    for mem in contrib_folders:
-        f = os.listdir(mem)
-        f = [mem + os.sep + m for m in f if os.path.isfile(mem + os.sep + m)]
-        pydf.append( (root + mem, f) )
-
 elif platform == "nix":
     pydf = []
-
-    for mem in contrib_folders:
-        f = os.listdir(mem)
-        f = [os.path.join(mem, m) for m in f if os.path.isfile(os.path.join(mem, m))]
-        pydf.append( (os.path.join('share', PVER, mem), f) )
 
     # we want to move the web script files as well, so we sneak them
     # in here.
@@ -89,11 +75,10 @@ else:
     # (wbg 7/31/2003)
     pydf = []
     print """
-NOTE: We want to install documentation, contributed plugins, and
-the web scripts to some central location where you can access them.
-However, we don't know where to put it for your platform.  If you could
-send an email to <pyblosxom-users@lists.sourceforge.net> with the following
-information:
+NOTE: We want to install documentation and the web scripts to some 
+central location where you can access them.  However, we don't know 
+where to put it for your platform.  If you could send an email to 
+<pyblosxom-users@lists.sourceforge.net> with the following information:
 
   Dear Pyblosxom Users,
   I have platform '""" + sys.platform + """' and you told me to send you
@@ -103,9 +88,9 @@ information:
 
 Thanks!
 
-In the meantime, you'll have to put the docs, contributed plugins, and
-web scripts where you want them on your own.  They're in subdirectories
-of this one: web/, contrib/ and docs/ .  Sorry for the inconvenience.
+In the meantime, you'll have to put the docs and web scripts where you 
+want them on your own.  They're in subdirectories of this one: web/ 
+and docs/ .  Sorry for the inconvenience.
 """
 
 
@@ -118,7 +103,7 @@ setup(name="pyblosxom",
     version=VER,
     description="pyblosxom weblog engine",
     author="Wari Wahab",
-    author_email="wari@home.wari.org",
+    author_email="pyblosxom-devel@lists.sourceforge.net",
     url="http://roughingit.subtlehints.net/pyblosxom",
     packages=['Pyblosxom', 'Pyblosxom.cache', 'Pyblosxom.entries', 'Pyblosxom.renderers'],
     license = 'MIT',
@@ -137,4 +122,3 @@ your entries.
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content"
         ],
     )
-
