@@ -74,4 +74,26 @@ class Request:
         """
         self.__populateDict(self._configuration, d)
 
+    def __getattr__(self, name, default):
+        """
+        Sort of simulates the dict except we only have three
+        valid attributes: config, data, and http.
+
+        @param name: the name of the attribute to get
+        @type  name: string
+
+        @param default: varies
+        @type  default: varies
+        """
+        if name in ["config", "configuration", "conf"]:
+            return self._configuration
+
+        if name == "data":
+            return self._data
+
+        if name == "http":
+            return self._http
+
+        return default
+
 # vim: shiftwidth=4 tabstop=4 expandtab
