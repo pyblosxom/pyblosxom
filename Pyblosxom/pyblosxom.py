@@ -136,37 +136,84 @@ class PyBlosxom:
             if not ext in data["extensions"].keys():
                 continue
 
+            # grab the mtime of the entry file
+            mtime = time.mktime(tools.filestat(self._request, mem))
+
             # remove the datadir from the front and the bit at the end
             mem = mem[len(datadir):mem.rfind(".")]
 
-            # grab all possible categories from this
-            temp = os.path.dirname(mem).split(os.sep)
-            for i in range(len(temp)+1):
-                p = os.sep.join(temp[0:i])
-                categories[p] = 0
-
             # this is the static filename
             fn = os.path.normpath(staticdir + mem)
-            renderme.append( (mem + "." + flavours[0], fn + "." + flavours[0]) )
 
+            # grab the mtime of the statically rendered file
+            try:
+                smtime = os.stat(fn + "." + flavours[0])[8]
+            except:
+                smtime = 0
 
+            # if the entry is more recent than the static, we want to re-render
+            if smtime < mtime:
+                # grab the categories
+                temp = os.path.dirname(mem).split(os.sep)
+                for i in range(len(temp)+1):
+                    p = os.sep.join(temp[0:i])
+                    categories[p] = 0
+
+                # grab the date
+                mtime = time.localtime(mtime)
+                year = time.strftime("%Y", mtime)
+                month = time.strftime("%m", mtime)
+                # monthname = tools.num2month[month]
+                day = time.strftime("%d", mtime)
+
+                dates[year] = 1
+                dates[year + "/" + month] = 1
+                # dates[year + "/" + monthname] = 1
+                dates[year + "/" + month + "/" + day] = 1
+                # dates[year + "/" + monthname + "/" + day] = 1
+
+                # toss in the render queue
+                ext = "." + flavours[0]
+                renderme.append( (mem + ext, fn + ext) )
+
+        print "rendering %d entries." % len(renderme)
+
+        # handle categories
         categories = categories.keys()
         categories.sort()
 
+        print "rendering %d category indexes." % len(categories)
+
         for mem in categories:
-            print "category: %s" % mem
             for f in flavours:
                 fn = os.path.normpath(staticdir + mem + os.sep + "index")
                 renderme.append( (mem + "?flav=" + f, fn + "." + f) )
 
         # now we handle dates
+        dates = dates.keys()
+        dates.sort()
 
+        print "rendering %d date indexes." % len(dates)
+
+        for mem in dates:
+            for f in flavours:
+                fn = os.path.normpath(staticdir + mem + os.sep + "index")
+                renderme.append( (mem + "?flav=" + f, fn + "." + f) )
+            
         # now we handle arbitrary urls
+        additional_stuff = config.get("static_urls", [])
+        print "rendering %d arbitrary urls." % len(additional_stuff)
+
+        for mem in additional_stuff:
+            fn = os.path.normpath(staticdir + mem)
+            renderme.append( (mem, fn) )
+
+        print "building %s files." % len(renderme)
         
         # now we render everything...
         oldstdout = sys.stdout
         for path, fn in renderme:
-            # print "generating: %s -> %s ..." % (path, fn)
+            print "rendering: %s -> %s ..." % (path, fn)
 
             if path.find("?") != -1:
                 querystring = path[path.find("?")+1:]
