@@ -278,7 +278,7 @@ def sanitize(body):
         
         
 def cb_prepare(args):
-    """
+    """cvs
     Handle comment related HTTP POST's
     
     @param request: pyblosxom request object
@@ -330,7 +330,7 @@ def cb_story(dict):
             for comment in entry['comments']:
                 renderer.outputTemplate(output, comment, 'comment')
             renderer.outputTemplate(output, entry, 'comment-form')
-        return template +u"".join(output)
+        dict['template'] = template +u"".join(output)
     else:
         return template
     
@@ -338,7 +338,7 @@ def cb_start(dict):
     request = dict['request']
     config = request.getConfiguration()
     if not config.has_key('blosxom_custom_flavours'):
-        config['blosxom_custom_flavours'] = '|comment-head|comment-story|comment|comment-form'
+        config['blosxom_custom_flavours'] = ['comment-head', 'comment-story', 'comment', 'comment-form']
     if not config.has_key('comment_dir'):
         config['comment_dir'] = 'comments'
     if not config.has_key('comment_ext'):
