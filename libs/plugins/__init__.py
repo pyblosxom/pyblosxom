@@ -35,6 +35,8 @@ def load_plugins(py, entryList):
 
 			if _module.__dict__.has_key("load"):
 				_module.load(py, entryList)
+		except SystemExit:
+			raise SystemExit
 		except Exception, e:
 			# FIXME - we kicked up an exception--where to we spit 
 			# it out to?

@@ -201,4 +201,5 @@ class PyblCalendar:
 
 
 def load(py, entryList):
-	py["calendar"] = PyblCalendar(py, entryList)
+	if entryList:
+		py["calendar"] = PyblCalendar(py, entryList)
