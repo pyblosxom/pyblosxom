@@ -293,6 +293,7 @@ class PyBlosxom:
 
         # process the path info to determine what kind of blog entry(ies) 
         # this is
+        path_info = [x for x in path_info if x != '']
         self.processPathInfo(path_info)
 
         # call the filelist callback to generate a list of entries
