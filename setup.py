@@ -59,7 +59,6 @@ elif sys.platform in ["linux1", "linux2"]:
         f = os.listdir(mem)
         f = [mem + os.sep + m for m in f if os.path.isfile(mem + os.sep + m)]
         pydf.append( (root + mem, f) )
-        print repr((root + mem, f))
 
     # we want to move the web script files as well, so we sneak them
     # in here.
@@ -100,10 +99,6 @@ if sys.version < '2.2.3':
     from distutils.dist import DistributionMetadata
     DistributionMetadata.classifiers = None
     DistributionMetadata.download_url = None
-
-print "## Pyblosxom debug"
-print "## version: " + VERSION
-print "## datafiles: " + repr(pydf)
 
 setup(name="pyblosxom",
     version=VERSION,
