@@ -31,7 +31,7 @@ if __name__ == '__main__':
     if os.environ.get("HTTPS") in ('yes','on','1'):
         env['wsgi.url_scheme'] = "https"
     # setup url_scheme for static rendering
-    if not env.get("REQUEST_METHOD", ""):
+    if not os.environ.get("REQUEST_METHOD", ""):
         if 'base_url' in cfg:
             env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
 
