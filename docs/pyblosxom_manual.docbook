@@ -4,7 +4,6 @@
 <book>
 <bookinfo>
 <title>PyBlosxom Manual</title>
-<subtitle>for PyBlosxom 1.1</subtitle>
 
 <!--
   If you do any editing on this document, add your name to the below
@@ -14,9 +13,11 @@
 <author><firstname>Will</firstname><surname>Guaraldi</surname></author>
 </authorgroup>
 
+<edition>PyBlosxom Manual for PyBlosxom 1.2</edition>
+
 <copyright>
-<holder>Will Guaraldi</holder>
-<year>2005</year>
+  <year>2005</year>
+  <holder>Will Guaraldi</holder>
 </copyright>
 
 <legalnotice>
@@ -40,7 +41,7 @@ License".
 <preface id="introduction">
 <title>Introduction</title>
 <sect1>
-<title>Mission and Helping Out</title>
+<title>Mission, What's Missing, and Helping Out</title>
 <para>
 The mission of this manual is to cover all aspects of using and developing for
 PyBlosxom.  It is very much a work in progress and this manual is by no means
@@ -48,60 +49,45 @@ comprehensive at this point.  However, we do promise that the manual will get
 better over time.
 </para>
 <para>
-The manual gets better by one of several ways:
-</para>
-<itemizedlist>
-<listitem><para>people write new content that needs to be covered</para></listitem>
-<listitem><para>people fix existing content that is erroneous</para></listitem>
-<listitem><para>people fix existing content to make it clearer</para></listitem>
-</itemizedlist>
-<para>
-For all those who are reading this, you should notice that the active component--the
-piece that makes this happen--is people.  The group of people includes you, me,
-and everyone else that has anything to do with PyBlosxom.  If we make just one
-person write, edit, and maintain the entire manual, then we'll end up with a lot
-of work for one person and it'll take a really long time for things to happen.
+There's no list of what's missing, however, there are a series of FIXMEs
+placed around the document with some details as to what needs to be provided
+and/or fixed.  I'm sure there are things missing that have been completely
+overlooked as well.
 </para>
 <para>
 If you want to help out with documentation, let us know on the pyblosxom-devel
-mailing list.  Details on the mailing list are on the web-site at
-http://pyblosxom.sourceforge.net/ .
+mailing list.  If you notice errors, missing pieces, sections that are unclear, 
+examples that are erroneous, or anything else, let us know on the pyblosxom-devel 
+mailing list.
+</para>
+<para>
+Details on the mailing list are on the web-site at http://pyblosxom.sourceforge.net/ .
 </para>
 </sect1>
 
 <sect1>
-<title>VersionLog</title>
+<title>Revision History</title>
 <para>
-The following is a version log of this document:
+The following is a revision history of this document:
 </para>
-<table>
-<title>Version Log</title>
-<tgroup cols="3">
-<thead>
-<row>
-<entry>version</entry>
-<entry>date</entry>
-<entry>changes</entry>
-<entry>authors</entry>
-</row>
-</thead>
-<tbody>
 
-<row>
-<entry>version 0.5</entry>
-<entry>3/21/2005</entry>
-<entry>
-  Took the manual that was on the PyBlosxom web-site, moved it to docbook,
-  and re-wrote the chapters on installation and flavours.
-</entry>
-<entry>
-  Will Guaraldi
-</entry>
-</row>
+<revhistory>
 
-</tbody>
-</tgroup>
-</table>
+<revision>
+  <revnumber>0.5</revnumber>
+  <date>21 March 2005</date>
+  <authorinitials>wbg</authorinitials>
+  <revremark>
+    Converted from html to docbook; rewrote chapters on installation and flavours;
+    removed chapter on configuration (folded into installation); added a chapter
+    on writing entries (not sure how I missed an obvious subject like that the
+    first few times around); and tidied some things up.  This version of the 
+    manual goes with PyBlosxom 1.2.
+  </revremark>
+</revision>
+
+</revhistory>
+
 </sect1>
 </preface>
 
@@ -338,7 +324,20 @@ something like this: http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi .
 This can be done (and has been done). FIXME Need instructions for it. 
 </para>
 </sect1>
+
+<sect1>
+<title>Using mod_python, Twisted or WSGI</title>
+<para>
+PyBlosxom 1.2 has preliminary support for other frameworks than CGI.  While
+we think it works fine, it could use some more testing.
+</para>
+<para>
+FIXME - need instructions for setting up with mod_python, Twisted, and WSGI.
+</para>
+</sect1>
+
 </chapter>
+
 
 
 
@@ -950,11 +949,11 @@ $body
 <chapter id="plugins">
 <title>Plugins</title>
 <para>
-PyBlosxom allows you to extend its base functionality using drop-in plugins. 
-These plugins can extend functionality by providing addition template 
-variables for things like archive lists, calendars, and such.  PyBlosxom 
-uses CallbackChains to call functions in the plugins so that they can do 
-their thing.
+PyBlosxom allows you to extend and augment its base functionality using 
+PyBlosxom plugins.  Plugins allow you to create additional variables; provide
+additional entry parsers, renderers, post-formatters, and pre-formatters;
+create new output data types; pull information from other non-blog sources;
+create images; and a variety of other things.
 </para>
 
 <sect1>
@@ -1068,10 +1067,24 @@ pyblosxom-devel mailing lists.
 <chapter id="entryparsers">
 <title>Entry Parsers</title>
 <para>
-PyBlosxom supports only one format for entry files by default.  The first 
-line of the file is in plain text and forms the title of the entry.  The 
-second line through the end of the file is in HTML and is the body of the 
-entry.  Some people really detest writing in HTML which is valid.  Other 
+PyBlosxom supports only one format for entry files by default.  This format
+is the same format that blosxom uses.  The extension for this format is 
+".txt".  The first line of the file is in plain text and forms the title
+of the entry.  The second line through the end of the file is in HTML and 
+is the body of the entry.
+</para>
+<para>
+A sample blog entry could look like this:
+</para>
+<programlisting role="text"><![CDATA[
+First post
+<p>
+  Here's the body of my first post.
+</p>
+]]></programlisting>
+
+<para>
+Some people really detest writing in HTML which is valid.  Other 
 people use their entries in other places, so they need a markup format 
 that's less web-oriented.  Some folks write a lot of material in a non-HTML 
 markup format and would like to use that same format for blog entries.  
@@ -1090,6 +1103,10 @@ represented, try looking at the code for other entry parsers and implement
 it yourself.  If you need help, talk to us on the pyblosxom-users or 
 pyblosxom-devel mailing lists.
 </para>
+<para>
+Details on the various entry parsers should be at the top of the entry
+parser plugin itself in the Python doc-string.
+</para>
 </chapter>
 
 
@@ -1103,9 +1120,248 @@ pyblosxom-devel mailing lists.
 -->
 <chapter id="writingentries">
 <title>Writing Entries</title>
+<sect1>
+<title>Categories</title>
 <para>
-
+Writing entries in PyBlosxom is fairly straightforward.  Each entry
+is a single text file located somewhere in the directory tree of your
+datadir.  The directory that the entry is in is the category the entry
+is "filed under".  For example, if my datadir was "/home/joe/datadir"
+and I stored an entry named "firstpost.txt" in /home/joe/datadir/content"
+then the category for my entry would be "/content".
 </para>
+<para>
+Be careful when you create your categories--be sure to use characters
+that are appropriate in directory names in the file system.
+</para>
+<para>
+Don't worry about making sure you have all the categories you need up
+front--you can add them as you need them.
+</para>
+</sect1>
+
+<sect1>
+<title>The Format of an Entry</title>
+<para>
+PyBlosxom entries consist of three parts: the title, the metadata, and
+then the body of the entry.  The first line is title of the entry.  Then
+comes the metadata of the entry (if any).  After the metadata comes the
+body of the entry.
+</para>
+<para>
+The title consists of a single line of plain text.  You can have whatever
+characters you like in the title of your entry.  The title doesn't have
+to be the same as the entry file name.
+</para>
+<para>
+The metadata section is between the title line and the body of the entry.
+It consists of a series of lines that start with the hash mark (#), then
+a metadata variable name, then the metadata variable value.
+</para>
+<para>
+Metadata is useful for some situations.  Unfortunately, you cannot store
+the mtime of your blog entry in the metadata of the entry itself.  The
+problem here is that we don't open up every entry file when figuring out
+what to display and we'll only be able to see the metadata if we've opened
+the file and parsed it.
+</para>
+<para>
+The body of the entry is written in HTML and comprises the rest of the
+entry file.
+</para>
+<para>
+Here's an example first post entry:
+</para>
+<programlisting role="html"><![CDATA[
+This is my first post!
+<p>
+  This is the body of the first post to my blog.
+</p>
+]]></programlisting>
+<para>
+Here's a more complex example:
+</para>
+<programlisting role="html"><![CDATA[
+The rain in Spain....
+<p>
+  The rain
+</p>
+<p align="center">
+  in Spain
+</p>
+<p align="right">
+  is <font color="ff0000">mainly</font> on the plain.
+</p>
+]]></programlisting>
+<para>
+Here's an example of a post with metadata:
+</para>
+<programlisting role="html"><![CDATA[
+The rain in Spain....
+#mood bored
+#music The Doors
+<p>
+  The rain
+</p>
+<p align="center">
+  in Spain
+</p>
+<p align="right">
+  is <font color="ff0000">mainly</font> on the plain.
+</p>
+]]></programlisting>
+<para>
+The metadata variables here would be avilable in your story template.  So for the
+above example, the template variable $mood would be filled in with "bored" and
+$music would be filled in with "The Doors".
+</para>
+</sect1>
+
+<sect1>
+<title>Posting Date</title>
+<para>
+The posting date of the entry file is the modification time (also known as
+mtime) on the file itself as stored by your file system.  Every time you 
+go to edit an entry, it changes the modification time.  You can see this
+in the following example of output:
+</para>
+<programlisting role="shell"><![CDATA[
+willg ~/blogdata/blosxom/site: vi testpost.txt                            [1]
+willg ~/blogdata/blosxom/site: ls -l
+total 16
+-rw-r--r--  1 willg willg 764 Jul 20  2003 minoradjustments.txt
+-rw-r--r--  1 willg willg 524 Jul 24  2003 moreminoradjustments.txt
+-rw-r--r--  1 willg willg 284 Aug 15  2004 nomorecalendar.txt
+-rw-r--r--  1 willg willg  59 Mar 21 16:30 testpost.txt                   [2]
+willg ~/blogdata/blosxom/site: vi testpost.txt                            [3]
+willg ~/blogdata/blosxom/site: ls -l
+total 16
+-rw-r--r--  1 willg willg 764 Jul 20  2003 minoradjustments.txt
+-rw-r--r--  1 willg willg 524 Jul 24  2003 moreminoradjustments.txt
+-rw-r--r--  1 willg willg 284 Aug 15  2004 nomorecalendar.txt
+-rw-r--r--  1 willg willg  59 Mar 21 16:34 testpost.txt                   [4]
+]]></programlisting>
+<para>
+[1] I create the blog entry "testpost.txt" using vi (a text editor).  The
+mtime of the file will be the time I last save the file and exit out of
+vi.
+</para>
+<para>
+[2] See the mtime on the file is Mar 21 16:30.  That's when I last saved
+the blog entry and exited out of vi.
+</para>
+<para>
+[3] I discover that I made a spelling mistake in my entry...  So I edit
+it again in vi and fix the mistake.  The mtime of the entry has now changed...
+</para>
+<para>
+[4] Now the mtime of the file is Mar 21 16:34.  This is the time that
+will show up in my blog as the posting date.
+</para>
+<para>
+There are some issues with this method for storing the posting date.  First,
+if you ever change the blog entry, the mtime will change as well.  That
+makes updating blog entries very difficult down the line.  There's a utility
+that comes with the contributed plugins pack called "editfile.py".  This
+will note the mtime of the file, open up your favorite editor to edit the
+file, and when you're done, it'll reset the mtime of the file back to what
+it was.
+</para>
+</sect1>
+
+<sect1>
+<title>Beyond Editors</title>
+<para>
+There's no reason that all your entries have to come from editing blog entry
+text files in your datadir.  You could rig up procmail to look for emails
+that meet a certain description and convert those emails into blog entries.
+</para>
+
+<sect2>
+<title>Using w.bloggar</title>
+<para>
+PyBlosxom works with w.bloggar (http://www.wbloggar.com/).  In order to use w.bloggar
+you have to do the following:
+</para>
+
+<orderedlist numeration="arabic">
+<listitem>
+<para>
+  install the xmlrpc plugin found at http://pyblosxom.sourceforge.net/ in the
+  plugin registry
+</para>
+</listitem>
+<listitem>
+<para>
+  install the xmlrpc_bloggar plugin found at http://pyblosxom.sourceforge.net/ in the
+  plugin registry
+</para>
+</listitem>
+<listitem>
+<para>
+  in the Content Management System section of the w.bloggar account settings 
+  dialog, set:
+</para>
+<itemizedlist>
+  <listitem><para>"Blog Tool" to "Custom"</para></listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<para>
+  in the API Server tab section of the w.bloggar account settings dialog, set:
+</para>
+<itemizedlist>
+  <listitem><para>"Host" to the name of your server</para></listitem>
+  <listitem>
+    <para>"Page" to the url of your blog with /RPC at the end--
+    For example, mine might be "/~joe/cgi-bin/pyblosxom.cgi/RPC"</para>
+  </listitem>
+</itemizedlist> 
+</listitem>
+<listitem>
+<para>
+  in the Custom tab section of the w.bloggar account settings dialog, set:
+</para>
+<itemizedlist>
+  <listitem><para>"Posts" to "Blogger API"</para></listitem>
+  <listitem><para>"Categories" to "Not supported"</para></listitem>
+  <listitem><para>"Templates" to "Not supported"</para></listitem>
+  <listitem><para>"Title Tags" should be blank</para></listitem>
+  <listitem><para>"Category Tags" should be blank</para></listitem>
+</itemizedlist>
+</listitem>
+</orderedlist>
+<para>
+When you go to write a new entry, leave the title field blank and do your entire 
+post in the data section with the first line being the title (just like blosxom 
+entries).
+</para>
+<para>
+One thing you should note is that pyblosxom will take the first line and use that 
+to generate the file name of the entry. So if the title of the entry is "How to 
+use w.bloggar with pyblosxom", the file name ends up being 
+"How_to_use_w_bloggar_with_pyblosxom.txt" which is a little annoying but whatever.
+</para>
+<para>
+FIXME - Does this still work?
+</para>
+</sect2>
+
+<sect2>
+<title>Using Ecto</title>
+<para>
+FIXME - I need instructions for this
+</para>
+</sect2>
+
+<sect2>
+<title>Other blog tools?</title>
+<para>
+Does PyBlosxom work with other blog tools?
+</para>
+</sect2>
+
+</sect1>
 </chapter>
 
 
@@ -1143,7 +1399,7 @@ Beyond that, it's not particularly sophisticated.
 These are the instructions for configuring static rendering in PyBlosxom.
 </para>
 
-<orderedlist>
+<orderedlist numeration="arabic">
 <listitem>
 <para>
 Install PyBlosxom. When you're copying the pyblosxom.cgi and config.py 
