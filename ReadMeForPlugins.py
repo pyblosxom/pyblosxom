@@ -43,6 +43,7 @@ import libs, os
 from libs.Request import Request
 from libs.renderers.blosxom import BlosxomRenderer
 from libs.entries.base import EntryBase
+from libs.pyblosxom import PyBlosxom
 
 def cb_prepare(args):
     """
