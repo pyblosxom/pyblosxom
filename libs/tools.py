@@ -207,10 +207,10 @@ def get_cache():
         config = request.getConfiguration()
 
         cacheDriverConfig = config.get('cacheDriver', 'base')
-        cacheConfigConfig = config.get('cacheConfigConfig', '')
+        cacheConfig = config.get('cacheConfig', '')
 
         cache_driver = importName('libs.cache', cacheDriverConfig)
-        mycache = cache_driver.BlosxomCache(cacheConfigConfig)
+        mycache = cache_driver.BlosxomCache(cacheConfig)
 
         registry["cache"] = mycache
 

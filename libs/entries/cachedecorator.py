@@ -45,7 +45,7 @@ class CacheDecorator(base.EntryBase):
                 entry[mem] = self._child[mem]
 
             # now we toss it in the cache
-            mycache[filename] = entry
+            mycache[self._child.getId()] = entry
 
         self._triedcache = 1
 
