@@ -7,8 +7,8 @@ import os, time, re, sys, StringIO
 import tools
 from entries.fileentry import FileEntry
 
-VERSION = "1.0.0"
-VERSION_DATE = VERSION + " (May 24, 2004)"
+VERSION = "1.0.1"
+VERSION_DATE = VERSION + " not yet released"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
 class PyBlosxom:
@@ -49,8 +49,10 @@ class PyBlosxom:
         else:
             config['base_url'] = config.get('base_url', '')
 
-        if config["datadir"].endswith(os.sep):
-            config['datadir'] = config['datadir'][:-1]
+        datadir = config["datadir"]
+        if datadir.endswith("/") or datadir.endswith("\\"):
+            datadir = datadir[:-1]
+            config['datadir'] = datadir
 
         # import and initialize plugins
         import plugin_utils
@@ -659,6 +661,7 @@ def blosxom_process_path_info(args):
             fileext = tools.what_ext(data["extensions"].keys(), filename)
             dirname = os.path.dirname(filename)
 
+
             if fileext:
                 data['flavour'] = ext[1:]
                 data['root_datadir'] = filename + '.' + fileext
@@ -668,7 +671,8 @@ def blosxom_process_path_info(args):
             elif (os.path.basename(filename) == 'index' and os.path.isdir(dirname)):
                 # blanket flavours?
                 data['flavour'] = ext[1:]
-                if data['pi_bl'] != '':
+                if os.path.dirname(data['pi_bl']) != '':
+
                     config['blog_title'] += ' : %s' % os.path.dirname(data['pi_bl'])
                 data['root_datadir'] = dirname
                 data['bl_type'] = 'dir'
