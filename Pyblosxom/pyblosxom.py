@@ -146,6 +146,9 @@ class PyBlosxom:
 
         renderme = []
 
+        monthnames = config.get("static_monthnames", 1)
+        monthnumbers = config.get("static_monthnumbers", 0)
+
         dates = {}
         categories = {}
 
@@ -190,10 +193,14 @@ class PyBlosxom:
                 day = time.strftime("%d", mtime)
 
                 dates[year] = 1
-                dates[year + "/" + month] = 1
-                # dates[year + "/" + monthname] = 1
-                dates[year + "/" + month + "/" + day] = 1
-                # dates[year + "/" + monthname + "/" + day] = 1
+
+                if monthnumbers:
+                    dates[year + "/" + month] = 1
+                    dates[year + "/" + month + "/" + day] = 1
+
+                if monthnames:
+                    dates[year + "/" + monthname] = 1
+                    dates[year + "/" + monthname + "/" + day] = 1
 
                 # toss in the render queue
                 for f in flavours:

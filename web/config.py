@@ -98,6 +98,12 @@ py['num_entries'] = 40
 # ex: py["static_urls"] = ["/booklist.rss", "/booklist.html"]
 #py["static_urls"] = ["/path/to/url1", "/path/to/url2"]
 
+# Whether (1) or not (0) you want to create date indexes using month
+# names?  (ex. /2004/Apr/01)  Defaults to 1 (yes).
+#py["static_monthnames"] = 1
+# Whether (1) or not (0) you want to create date indexes using month
+# numbers?  (ex. /2004/04/01)  Defaults to 0 (no).
+#py["static_monthnumbers"] = 0
 
 ###########################
 # Nothing to modify below #
