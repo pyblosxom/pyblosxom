@@ -112,77 +112,106 @@ class PyBlosxom:
 
         api.fileListHandler.register(self.defaultFileListHandler, api.LAST)
         
-        # If we use XML-RPC, we don't need favours and GET/POST fields
-        if not self.xmlRpcCall:
-            form = self._request.getHttp()["form"]
-            data['flavour'] = (form.has_key('flav') and form['flav'].value or 'html')
+        form = self._request.getHttp()["form"]
+        data['flavour'] = (form.has_key('flav') and 
+                form['flav'].value or 
+                config.get('defaultFlavour', 'html'))
 
-            path_info = []
+        path_info = []
+        
+        # Get the blog name if possible
+        data['pi_yr'] = ''
+        data['pi_mo'] = ''
+        data['pi_da'] = ''
+        
+        if pyhttp.get('PATH_INFO', ''):
+            path_info = pyhttp['PATH_INFO'].split('/')
 
-            # Get the blog name if possible
-            data['pi_yr'] = ''
-            data['pi_mo'] = ''
-            data['pi_da'] = ''
-            if pyhttp.get('PATH_INFO', ''):
-                path_info = pyhttp['PATH_INFO'].split('/')
-                if path_info[0] == '':
-                    path_info.pop(0)
+        data['path_info'] = list(path_info)
+        data['root_datadir'] = config['datadir']
 
-                def isMonth(s):
-                    if re.match("0[1-9]|1[0-2]",s):
-                        return 1
-                    elif re.match("Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec",s):
-                        return 1
-                    else:
-                        return 0
-
-                # try to see if its a yyyy/mm/dd style url first
-                if len(path_info) > 0 and len(path_info[0]) == 4 and path_info[0].isdigit():
-                    data['pi_yr'] = path_info.pop(0)
-
-                    if len(path_info) > 0 and path_info[0] in tools.MONTHS:
-                        data['pi_mo'] = path_info.pop(0)
-
-                        if len(path_info) > 0 and re.match("^[0-3][0-9]$", path_info[0]):
-                            data['pi_da'] = path_info[0]
-                            match = re.search("(?P<frag>\#.+)",path_info[0])
-
-                            if match != None and match.lastgroup == 'frag':
-                                data['pi_frag'] = match.group('frag')
-
-                else: # see if it is a category style url
-                    while re.match(r'^[_a-zA-Z0-9]\w*', path_info[0]):
-                        data['pi_bl'] += '/%s' % path_info.pop(0)
-                        if len(path_info) == 0:
-                            break
-                        
-            data['path_info'] = list(path_info)
-            data['root_datadir'] = config['datadir']
-
-            if os.path.isdir(config['datadir'] + data['pi_bl']):
-                if data['pi_bl'] != '':
-                    config['blog_title'] += ' : %s' % data['pi_bl']
-                data['root_datadir'] = config['datadir'] + data['pi_bl']
-                data['bl_type'] = 'dir'
-
-            elif os.path.isfile(config['datadir'] + data['pi_bl'] + '.txt'):
-                config['blog_title'] += ' : %s' % re.sub(r'/[^/]+$','',data['pi_bl'])
-                data['bl_type'] = 'file'
-                data['root_datadir'] = "%s%s.txt" % (config['datadir'], data['pi_bl'])
-
+        # Process path_info
+        # The paths specification looks like this:
+        # /cat - category
+        # /2002 - year
+        # /2002/Feb (or 02) - Year and Month
+        # /cat/2002/Feb/31 - year and month day in category.
+        # /foo.html and /cat/foo.html - file foo.* in / and /cat
+        # To simplify checking, four digits directory name is not allowed.
+        got_date = 0
+        for path_data in path_info:
+            if not path_data:
+                continue
+            elif len(path_data) == 4 and path_data.isdigit():
+                # We got a hot date here guys :)
+                got_date = 1
+                break
             else:
-                filename, ext = os.path.splitext(data['pi_bl'])
-                probableFile = config['datadir'] + filename + '.txt'
+                data['pi_bl'] = os.path.join(data['pi_bl'], path_data)
 
-                if ext and os.path.isfile(probableFile):
+        if got_date:
+            # Get messy with dates
+            while not (len(path_info[0]) == 4 and path_info[0].isdigit()):
+                path_info.pop(0)
+            # Year
+            data['pi_yr'] = path_info.pop(0)
+            # Month
+            if path_info and path_info[0] in tools.MONTHS:
+                data['pi_mo'] = path_info.pop(0)
+                # Day
+                if path_info and re.match("^([0-2][0-9]|3[0-1])$", path_info[0]):
+                    # Potential day here, no more processing from here
+                    data['pi_da'] = path_info[0]
+
+        blog_result = os.path.join(config['datadir'], data['pi_bl'])
+        
+        data['bl_type'] = ''
+
+        # If all we've got is a directory, things are simple
+        if os.path.isdir(blog_result):
+            if data['pi_bl'] != '':
+                config['blog_title'] += ' : %s' % data['pi_bl']
+            data['root_datadir'] = blog_result
+            data['bl_type'] = 'dir'
+
+        # Else we may have a file
+        if not data['bl_type']:
+            # Try for file
+            def what_ext(path):
+                for ext in data['extensions'].keys():
+                    if os.path.isfile(path + '.' + ext):
+                        return ext
+                return None
+
+            ext = what_ext(blog_result)
+            if ext:
+                config['blog_title'] += ' : %s' % data['pi_bl']
+                data['bl_type'] = 'file'
+                data['root_datadir'] = blog_result + '.' + ext
+            else:
+                # We may have flavour embedded here
+                filename, ext = os.path.splitext(blog_result)
+                fileext = what_ext(filename)
+                dirname = os.path.dirname(filename)
+
+                if fileext:
                     data['flavour'] = ext[1:]
-                    data['root_datadir'] = probableFile
-                    config['blog_title'] += ' : %s' % filename
+                    data['root_datadir'] = filename + '.' + fileext
+                    config['blog_title'] += ' : %s' % data['pi_bl']
                     data['bl_type'] = 'file'
+                elif (os.path.basename(filename) == 'index' and 
+                        os.path.isdir(dirname)):
+                    # blanket flavours?
+                    if data['pi_bl'] != '':
+                        config['blog_title'] += ' : %s' % os.path.dirname(data['pi_bl'])
+                    data['root_datadir'] = dirname
+                    data['bl_type'] = 'dir'
                 else:
+                    # Give up? Assume that no categories are given (This
+                    # behaviour may change)
                     data['pi_bl'] = ''
                     data['bl_type'] = 'dir'
-
+            
         # calling fileList will generate a list of entries from the
         # api.fileListHandler
         data["entry_list"] = tools.fileList(self._request)
