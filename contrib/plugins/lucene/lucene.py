@@ -43,19 +43,23 @@ __version__ = "$Id$"
 import glob, os, urllib
 from Pyblosxom.entries import fileentry
 
-def makeEntry(filename,config):
+def makeEntry(filename, request):
     """
     @param filename: filename of matching entry
     @type  filename: string
         
-    @param config: a pyblosxom config dict
-    @type  config: a dict
+    @param request: the Request object
+    @type  request: Request
     """
-    return fileentry.FileEntry(config, filename, config['datadir'])                                              
-def search(config, term):
+    config = request.getConfiguration()
+    return fileentry.FileEntry(request, filename, config['datadir'])                                              
+def search(request, config, term):
     """
     Search for the specified search term
     
+    @param request: the Request object
+    @type request:  Request
+
     @param config: a pyblosxom config dict
     @type config:  a dict
         
@@ -71,7 +75,7 @@ def search(config, term):
     results = pipe.readlines()
     status = pipe.close()
     results = [ os.path.join(config['datadir'], x[2:-1]) for x in results ]
-    entries = [ makeEntry(x, config) for x in results]
+    entries = [ makeEntry(x, request) for x in results]
     entries = [ ( x._mtime, x ) for x in entries ]
     entries.sort()
     entries.reverse()
@@ -114,5 +118,5 @@ def cb_filelist(args):
     config = request.getConfiguration()
     data = request.getData()
     
-    data['luceneResults'] = search(config, form["search"].value)
+    data['luceneResults'] = search(request, config, form["search"].value)
     return data['luceneResults']
