@@ -41,10 +41,9 @@ def cb_prepare(args):
         if ((os.environ.get('HTTP_IF_NONE_MATCH','') == '"%s"' % mtime) or
             (os.environ.get('HTTP_IF_NONE_MATCH','') == '%s' % mtime) or
             (os.environ.get('HTTP_IF_MODIFIED_SINCE','') == lastModed)):
-            renderer.addHeader(['Status: 304 Not Modified',
-                    'ETag: "%s"' % mtime,
-                    'Last-Modified: %s' % lastModed])
-#            renderer.needsContentType(None)
+            renderer.addHeader('Status', '304 Not Modified',
+                               'ETag', '"%s"' % mtime,
+                               'Last-Modified', '%s' % lastModed)
             renderer.render()
 
         from libs import tools
@@ -54,5 +53,5 @@ def cb_prepare(args):
                 'return_code': '304',
                 'request': request})
                                                                                                   
-        renderer.addHeader(['ETag: "%s"' % mtime,
-            'Last-Modified: %s' % lastModed])
+        renderer.addHeader('ETag', '"%s"' % mtime,
+                           'Last-Modified', '%s' % lastModed)
