@@ -1,13 +1,6 @@
 """
-BlosxomRenderer can use the following keys from config.py:
-
-py['blosxom_custom_flavours'] is a list of strings containing additional
-flavour templates to be recognized by PyBlosxom.
-
-examples::
-
-    py["blosxom_custom_flavours"] = ["registry", "magictemplate"]
-
+This is the default renderer.  It tries to match the behavior of the
+blosxom renderer.
 """
 
 from Pyblosxom import tools
@@ -18,6 +11,41 @@ try:
 except ImportError:
     from cgi import escape
 
+# Ugly default templates, have to though :(
+HTML = {'content_type' : 'text/html',
+        'head' : """<html><head><link rel="alternate" type="application/rss+xml" title="RSS" href="$url/?flav=rss" /><title>$blog_title $pi_da $pi_mo $pi_yr</title></head><body><center><font size="+3">$blog_title</font><br />$pi_da $pi_mo $pi_yr</center><p />""",
+        'date_head' : '<div class="blosxomDayDiv">\n<span class="blosxomDate">$date</span>',
+        'story' : """<p><a name="$fn"><b>$title</b></a><br />$body<br /><br />posted at: $ti | path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></p>\n""",
+        'date_foot' : '</div>',
+        'foot' : """<p /><center><a href="http://roughingit.subtlehints.net/pyblosxom"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" border="0" /></body></html>"""}
+
+
+RSS = {'content_type' : 'text/xml',
+       'head' : """<?xml version="1.0"?>\n<!-- name="generator" content="$pyblosxom_name/$pyblosxom_version" -->\n<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n<rss version="0.91">\n  <channel>\n    <title>$blog_title $pi_da $pi_mo $pi_yr</title>\n    <link>$url</link>\n    <description>$blog_description</description>\n    <language>$blog_language</language>\n""",
+       'story' : """<item>\n    <title>$title</title>\n    <link>$base_url/$file_path.html</link>\n    <description>$body</description>\n  </item>\n""",
+       'foot' : '   </channel>\n</rss>'}
+
+
+RSS3 = {'content_type' : 'text/plain',
+        'head' : """title: $blog_title\ndescription: $blog_description\nlink: $url\ncreator: $blog_author\nerrorsTo: $blog_author\nlang: $blog_language\n\n\n""",
+        'story' :  """title: $title\nlink: $base_url/$file_path.html\ncreated: $w3cdate\nsubject: $path\nguid: $file_path\n\n""",
+        'foot' : ''}
+
+
+ESF = {'content_type' : 'text/plain',
+        'head' : """title: $blog_title\ncontact: contact@example.com (The Contact Person)\nlink: $url\n\n\n""",
+        'story' :  """$mtime\t$title\t$base_url/$file_path\n""",
+        'foot' : ''}
+
+
+ERROR = {'content_type' : 'text/plain',
+         'head' : """ Error: I'm afraid this is the first I've heard of a "$flavour" flavoured pyblosxom.\n Try dropping the "?flav=$flavour" bit from the end of the URL.\n\n"""}
+
+DEFAULT_FLAVOURS = {'html' : HTML, 
+                    'rss' : RSS, 
+                    'error' : ERROR, 
+                    'rss3' : RSS3, 
+                    'esf' : ESF}
 
 class BlosxomRenderer(RendererBase):
     def __init__(self, request, stdoutput = sys.stdout):
@@ -30,65 +58,42 @@ class BlosxomRenderer(RendererBase):
         self._request = request
         self._encoding = config.get("blog_encoding", "iso-8859-1")
 
-    def _getFlavour(self, taste = 'html'):
+    def _getFlavour(self, taste='html'):
         """
         Flavours, or views, or templates, as some may call it, defaults are
         given, but can be overidden with files on the datadir. Don't like the
         default html templates, add your own, head.html, story.html etc.
         """
-        # Ugly default templates, have to though :(
-        html = {'content_type' : 'text/html',
-                'head' : """<html><head><link rel="alternate" type="application/rss+xml" title="RSS" href="$url/?flav=rss" /><title>$blog_title $pi_da $pi_mo $pi_yr</title></head><body><center><font size="+3">$blog_title</font><br />$pi_da $pi_mo $pi_yr</center><p />""",
-                'date_head' : '<div class="blosxomDayDiv">\n<span class="blosxomDate">$date</span>',
-                'story' : """<p><a name="$fn"><b>$title</b></a><br />$body<br /><br />posted at: $ti | path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></p>\n""",
-                'date_foot' : '</div>',
-                'foot' : """<p /><center><a href="http://roughingit.subtlehints.net/pyblosxom"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" border="0" /></body></html>"""}
-        rss = {'content_type' : 'text/xml',
-               'head' : """<?xml version="1.0"?>\n<!-- name="generator" content="$pyblosxom_name/$pyblosxom_version" -->\n<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n<rss version="0.91">\n  <channel>\n    <title>$blog_title $pi_da $pi_mo $pi_yr</title>\n    <link>$url</link>\n    <description>$blog_description</description>\n    <language>$blog_language</language>\n""",
-               'story' : """<item>\n    <title>$title</title>\n    <link>$base_url/$file_path.html</link>\n    <description>$body</description>\n  </item>\n""",
-               'foot' : '   </channel>\n</rss>'}
-        rss3 = {'content_type' : 'text/plain',
-                'head' : """title: $blog_title\ndescription: $blog_description\nlink: $url\ncreator: $blog_author\nerrorsTo: $blog_author\nlang: $blog_language\n\n\n""",
-                'story' :  """title: $title\nlink: $base_url/$file_path.html\ncreated: $w3cdate\nsubject: $path\nguid: $file_path\n\n""",
-                'foot' : ''}
-        esf = {'content_type' : 'text/plain',
-                'head' : """title: $blog_title\ncontact: contact@example.com (The Contact Person)\nlink: $url\n\n\n""",
-                'story' :  """$mtime\t$title\t$base_url/$file_path\n""",
-                'foot' : ''}
-        error = {'content_type' : 'text/plain',
-                 'head' : """ Error: I'm afraid this is the first I've heard of a "$flavour" flavoured pyblosxom.\n Try dropping the "?flav=$flavour" bit from the end of the URL.\n\n"""}
-        flavours = {'html' : html, 'rss' : rss, 'error' : error, 'rss3' : rss3, 'esf' : esf}
-        # End of ugly portion! Yucks :)
-        # Look for flavours in datadir
-
         data = self._request.getData()
         config = self._request.getConfiguration()
 
-        custom_flavours = config.get('blosxom_custom_flavours', [])
-        if custom_flavours:
-            custom_flavours = "|" + "|".join(custom_flavours)
-        else:
-            custom_flavours = ""
-        
-        pattern = re.compile(r'(content_type|head|date_head|date_foot|foot|story'+custom_flavours+')\.' 
-                             + taste)
-        flavourlist = tools.Walk(self._request, data['root_datadir'], 1, pattern)
-        if not flavourlist:
-            flavourlist = tools.Walk(self._request, config['datadir'], 1, pattern)
+        pattern = re.compile(r'.+?\.' + taste + '$')
 
-        for filename in flavourlist:
+        # try the root_datadir verbatim (this could be a dir or a file)
+        dirname = data["root_datadir"]
+        if os.path.isfile(dirname):
+            dirname = os.path.dirname(dirname)
+
+        template_files = tools.Walk(self._request, dirname, 1, pattern)
+        if not template_files:
+            template_files = tools.Walk(self._request, config['datadir'], 1, pattern)
+
+        # we grab a copy of the templates for the taste we want
+        flavour = {}
+        flavour.update(DEFAULT_FLAVOURS.get(taste, {}))
+
+        # we update the flavours dict with what we found
+        for filename in template_files:
             flavouring = os.path.basename(filename).split('.')
             flav_template = unicode(open(filename).read(), 
                     config.get('blog_encoding', 'iso-8859-1'))
-            if flavours.has_key(flavouring[1]):
-                flavours[flavouring[1]][flavouring[0]] = flav_template
-            else:
-                flavours[flavouring[1]] = {flavouring[0]: flav_template}
 
-        if not flavours.has_key(taste):
-            taste = 'error'
+            flavour[flavouring[0]] = flav_template
 
-        return flavours[taste]
+        if not flavour:
+            return DEFAULT_FLAVOURS["error"]
+
+        return flavour
 
     def _printTemplate(self, entry, template):
         """
