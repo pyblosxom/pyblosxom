@@ -1,3 +1,9 @@
+2003-03-01 Will Guaraldi <willg@bluesock.org>
+	* Changes initialize_plugins(...) to load plugins listed in
+	  the "load_plugins" key in the config file.  If no "load_plugins"
+	  key is set, then we don't load any plugins.  We load plugins
+	  in the order of the "load_plugins" list.
+
 2003-02-16 Wari Wahab <pyblosxom@wari.per.sg>
 	* Pyblosxom core rendering code can now use seperate renderers
 	  defined by the user. This means that if a user wants to use other

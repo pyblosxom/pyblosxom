@@ -3,44 +3,22 @@ import os, glob
 
 plugins = []
 
-def initialize_plugins():
+def initialize_plugins(configdict):
     """
     Imports and initializes plugins from this directory so they can register
-    with the api callbacks.
+    with the api callbacks.  The import list is based on the "load_plugins"
+    entry in the config dict.
     """
-    index = __file__.rfind(os.sep)
-    if index == -1:
-        path = "." + os.sep
-    else:
-        path = __file__[:index]
+    plugin_list = configdict.get("load_plugins", ())
 
-    _module_list = glob.glob( os.path.join(path, "*.py"))
+    for mem in plugin_list:
 
-    for mem in _module_list:
-        mem2 = mem[mem.rfind(os.sep)+1:mem.rfind(".")]
+        name = "libs.plugins." + mem
+        _module = __import__(name)
+        for comp in name.split(".")[1:]:
+            _module = getattr(_module, comp)
 
-        # we skip modules whose names start with an _ .  this
-        # allows people to test stuff without having to move
-        # it in and out of a directory.
-        if mem2[0] == "_":
-            continue
+        if _module.__dict__.has_key("initialize"):
+            _module.initialize()
 
-        try:
-            name = "libs.plugins." + mem2
-            _module = __import__(name)
-            for comp in name.split(".")[1:]:
-                _module = getattr(_module, comp)
-
-            # if the module has a load function, we call it
-            # with our py dict so it can bind itself to variable
-            # names of its own accord
-
-            if _module.__dict__.has_key("initialize"):
-                _module.initialize()
-
-            plugins.append(_module)
-
-        except Exception, e:
-            # FIXME - we kicked up an exception--where to we spit 
-            # it out to?
-            print e
+        plugins.append(_module)

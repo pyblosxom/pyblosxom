@@ -143,7 +143,7 @@ class PyBlosxom:
         
         # import plugins and allow them to register with the api
         import libs.plugins.__init__
-        libs.plugins.__init__.initialize_plugins()
+        libs.plugins.__init__.initialize_plugins(config)
 
         api.fileListHandler.register(self.defaultFileListHandler, api.LAST)
         

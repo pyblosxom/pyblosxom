@@ -37,6 +37,12 @@ py['num_entries'] = 40
 #py['cacheDriver'] = 'xxxx'
 #py['cacheConfig'] = ''
 
+# Using plugins?  Every plugin needs to be listed here.  The order you
+# put the plugins is the order in which they will be loaded.  All 
+# plugins must be in libs/plugins (the python package is libs.plugins)
+# in order to be imported.
+# ex: py['load_plugins'] = ["pycalendar", "pyfortune", "pyarchives"]
+py['load_plugins'] = []
 
 # XML-RPC data
 xmlrpc = {}
