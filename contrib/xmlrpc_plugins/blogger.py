@@ -109,6 +109,7 @@ def blogger_getUsersBlogs(request, appkey, username, password):
     result = [{'url':url + '/', 'blogid':'/', 'blogName':'/'}]
     for directory in tools.Walk(config['datadir'], 0, re.compile(r'.*'), 1):
         blogpath = directory.replace(config['datadir'],'') + '/'
+        blogpath = blogpath.replace(os.sep, '/')
         result.append({'url' : url + blogpath, 
                        'blogid' : blogpath, 
                        'blogName':blogpath})
