@@ -25,7 +25,10 @@ import cPickle as pickle
 class weblogsPing:
     def __init__(self, py, entryList):
         self.pingData = {}
-        self._latest = entryList[0]['mtime']
+        if entryList:
+            self._latest = entryList[0]['mtime']
+        else:
+            self._latest = 0
         self._file = os.path.join(py['datadir'], 'LATEST')
         self._title = py['blog_title']
         self._site = 'http://%s%s' % (os.environ['HTTP_HOST'], 

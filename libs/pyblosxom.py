@@ -145,8 +145,19 @@ class PyBlosxom:
         libs.plugins.__init__.load_plugins(self.py, valid_list, renderer)
         
         if renderer and not renderer.rendered:
-            renderer.setContent(valid_list)
+            if valid_list:
+                renderer.setContent(valid_list)
+                tools.logRequest(self.py.get('logfile',''), '200')
+            else:
+                renderer.addHeader(['Status: 404 Not Found', 
+                        'Content-Type: text/html'])
+                renderer.setContent(
+                    {'title': 'The page you are looking for is not available',
+                     'body': 'Somehow I cannot find the page you want. ' + 
+                     'Go Back to <a href="%(base_url)s">%(blog_title)s</a>?' 
+                     % self.py})
+                tools.logRequest(self.py.get('logfile',''), '404')
             renderer.render()
-            tools.logRequest(self.py.get('logfile',''), '200')
+
         elif not renderer:
             print "Content-Type: text/plain\n\nThere is something wrong with your setup"
