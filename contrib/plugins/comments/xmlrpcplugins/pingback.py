@@ -35,8 +35,8 @@ def fileFor(req, uri):
     data = req.getData()
 
     # import plugins
-    import Pyblosxom.plugins.__init__
-    Pyblosxom.plugins.__init__.initialize_plugins(config)
+    import Pyblosxom.plugin_utils
+    Pyblosxom.plugin_utils.initialize_plugins(config)
 
     # do start callback
     tools.run_callback("start", {'request': req}, mappingfunc=lambda x,y:y)
@@ -103,7 +103,7 @@ def pingback(request, source, target):
                'source' : '',
                'description' : body}
         
-        from Pyblosxom.plugins.comments import writeComment
+        from comments import writeComment
         config = request.getConfiguration()
         data = request.getData()
         from Pyblosxom.entries.fileentry import FileEntry

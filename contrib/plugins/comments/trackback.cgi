@@ -45,7 +45,6 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
               'description' : form['excerpt'].value }
     from Pyblosxom import tools
     from Pyblosxom.entries.fileentry import FileEntry
-    from Pyblosxom.plugins.comments import writeComment
     from Pyblosxom.Request import Request
 
     request = Request()
@@ -54,9 +53,12 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
     data = request.getData()
 
     # import plugins
-    import Pyblosxom.plugins.__init__
-    Pyblosxom.plugins.__init__.initialize_plugins(config)
+    import Pyblosxom.plugin_utils
+    Pyblosxom.plugin_utils.initialize_plugins(config)
     
+    # must be done after plugin initialization
+    from comments import writeComment
+
     # do start callback
     tools.run_callback("start", {'request': request}, mappingfunc=lambda x,y:y)
 
