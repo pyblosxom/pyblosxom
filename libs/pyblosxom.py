@@ -149,8 +149,7 @@ class PyBlosxom:
                 renderer.setContent(valid_list)
                 tools.logRequest(self.py.get('logfile',''), '200')
             else:
-                renderer.addHeader(['Status: 404 Not Found', 
-                        'Content-Type: text/html'])
+                renderer.addHeader(['Status: 404 Not Found'])
                 renderer.setContent(
                     {'title': 'The page you are looking for is not available',
                      'body': 'Somehow I cannot find the page you want. ' + 
