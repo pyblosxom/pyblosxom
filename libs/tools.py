@@ -36,7 +36,7 @@ for k,v in month2num.items():
 MONTHS = num2month.keys() + month2num.keys()
 
 # regular expression for detection and substituion of variables.
-VAR_REGEXP = re.compile(ur'(?<!\\)\$((?:\w|\-|::)+(?:\(.*?(?<!\\)\))?)')
+VAR_REGEXP = re.compile(ur'(?<!\\)\$((?:\w|\-|::\w)+(?:\(.*?(?<!\\)\))?)')
 
 class Stripper(sgmllib.SGMLParser):
     """
