@@ -16,8 +16,7 @@ class PreFormatter(PreFormatterBase):
         wikinamepattern = r'\b(([A-Z]+[a-z]+){2,})\b' # original
         mailurlpattern = r'mailto\:[\"\-\_\.\w]+\@[\-\_\.\w]+\w'
         newsurlpattern = r'news\:(?:\w+\.){1,}\w+'
-        fileurlpattern = r'(?:http|https|file|ftp)\:' +
-                '[\/\-\_\.\w]+[\/\w][\?\&\+\=\%\w\/\-\_\.]*'
+        fileurlpattern = r'(?:http|https|file|ftp)\:[\/\-\_\.\w]+[\/\w][\?\&\+\=\%\w\/\-\_\.]*'
         result = ''
         for line in self.text:
             result += line
