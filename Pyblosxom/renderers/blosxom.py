@@ -17,7 +17,7 @@ HTML = {'content_type' : 'text/html',
         'date_head' : '<h2>$date</h2>',
         'story' : """<h3><a name="$fn">$title</a></h3><div class="blosxomStory">$body<p>posted at: $ti | path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></p></div>\n""",
         'date_foot' : '',
-        'foot' : """<p><a href="http://roughingit.subtlehints.net/pyblosxom"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" alt="Made with PyBlosxom" border="0" /></a></p></body></html>"""}
+        'foot' : """<p><a href="http://pyblosxom.sourceforge.net/"><img src="http://pyblosxom.sourceforge.net/images/pb_pyblosxom.gif" alt="Made with PyBlosxom" border="0" /></a></p></body></html>"""}
 
 RSS = {'content_type' : 'text/xml',
        'head' : """<?xml version="1.0" encoding="$blog_encoding"?>\n<!-- name="generator" content="$pyblosxom_name/$pyblosxom_version" -->\n<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n<rss version="0.91">\n<channel>\n<title>$blog_title $pi_da $pi_mo $pi_yr</title>\n<link>$url</link>\n<description>$blog_description</description>\n<language>$blog_language</language>\n""",
