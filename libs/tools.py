@@ -71,7 +71,7 @@ def parseitem(entry_dict, text_string):
     This calls the chain with (entry_dict, text_string) and returns
     the final string.
     """
-    return api.parseitem.executeChain((entry_dict, text_string))[1]
+    return api.parseitem.executeTransform((entry_dict, text_string))[1]
 
 def filestat(filename):
     """
@@ -81,7 +81,7 @@ def filestat(filename):
     This calls the chain with (filename, os.stat(filename)) and returns
     just the os.stats-type tuple.
     """
-    return api.filestat.executeChain((filename, os.stat(filename)))[1]
+    return api.filestat.executeTransform((filename, os.stat(filename)))[1]
 
 def logRequest(filename = '', returnCode = '200'):
     """
@@ -90,7 +90,7 @@ def logRequest(filename = '', returnCode = '200'):
 
     This calls the chain with (filename, returnCode) and returns None
     """
-    api.logRequest.executeChain((filename, returnCode))
+    api.logRequest.executeTransform((filename, returnCode))
 
 def Walk(root = '.', 
          recurse = 0, 

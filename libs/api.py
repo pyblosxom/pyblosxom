@@ -72,7 +72,7 @@ class CallbackChain:
 				break
 		return
 
-	def executeChain(self, data):
+	def executeTransform(self, data):
 		"""
 		Executes a callback chain on a given piece of data.  This
 		data could be a string or an object.  Consult the documentation
@@ -93,7 +93,7 @@ class CallbackChain:
 import os
 
 # CallbackChain to generate a os.stat tuple about a given file.
-# call filestat.executeChain(filename) and get back a os.stat like
+# call filestat.executeTransform(filename) and get back a os.stat like
 # tuple with all the pieces worked out.
 #
 # Input:
