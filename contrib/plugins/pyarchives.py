@@ -56,10 +56,12 @@ class PyblArchives:
                     '<a href="%(base_url)s/%(Y)s/%(b)s">%(Y)s-%(b)s</a><br />')
         for mem in archiveList:
             timetuple = tools.filestat(self._request, mem)
-            timedict = dict([(x, time.strftime('%' + x, timetuple)) 
-                            for x in list('bmYy')])
+            timedict = {}
+            for x in ["b", "m", "Y", "y"]:
+                timedict[x] = time.strftime("%" + x, timetuple)
+
             fulldict.update(timedict)
-            if (timedict['Y'] + timedict['m']) not in archives:
+            if not archives.has_key(timedict['Y'] + timedict['m']):
                 archives[timedict['Y'] + timedict['m']] = (template % fulldict)
 
         arcKeys = archives.keys()
