@@ -140,7 +140,7 @@ class BlosxomRenderer(RendererBase):
         entry.update(data)
         entry.update(config)
 
-        if entry['date'] != current_date:
+        if entry["date"] and entry['date'] != current_date:
             current_date = entry['date']
             if not self.dayFlag:
                 self.outputTemplate(output, entry, 'date_foot')
