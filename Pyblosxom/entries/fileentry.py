@@ -96,6 +96,7 @@ class FileEntry(base.EntryBase):
         path = path[:-1]
 
         absolute_path = self._filename.replace(self._datadir, '')
+        absolute_path = self._filename.replace(self._datadir, '', 1)
         absolute_path = absolute_path.replace(file_basename, '')
         absolute_path = absolute_path[1:][:-1]
 
