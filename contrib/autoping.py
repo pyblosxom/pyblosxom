@@ -207,7 +207,8 @@ def autoping(name):
                 entryData = p.defaultEntryParser(filename,req)
             except IOError:
                 pass
-            
+        
+        name = re.sub(config.py['datadir'],'',name)
         parser = link(name, entryData['title'].strip(), entryData['body'].strip(), config.py['blog_title'])
         trackback(parser)
         pingback(parser)
