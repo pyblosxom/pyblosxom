@@ -11,16 +11,104 @@
   author list.
 -->
 <authorgroup>
-<author>
-<firstname>Will</firstname>
-<surname>Guaraldi</surname>
-</author>
+<author><firstname>Will</firstname><surname>Guaraldi</surname></author>
 </authorgroup>
 
+<copyright>
+<holder>Will Guaraldi</holder>
+<year>2005</year>
+</copyright>
+
+<legalnotice>
+<para>
+Copyright (c) 2005 Will Guaraldi.  Permission is granted to copy, distribute 
+and/or modify this document under the terms of the GNU Free Documentation License, 
+Version 1.1 or any later version published by the Free Software Foundation; with 
+the Invariant Sections being no Invariant Sections, with the Front-Cover Texts being 
+no Front-Cover Texts, and with the Back-Cover Texts being no Back-Cover Texts.  A 
+copy of the license is included in the appendix entitled "GNU Free Documentation 
+License".
+</para>
+</legalnotice>
 </bookinfo>
 
 <toc></toc>
 
+<!--
+  INTRODUCTION
+-->
+<preface id="introduction">
+<title>Introduction</title>
+<sect1>
+<title>Mission and Helping Out</title>
+<para>
+The mission of this manual is to cover all aspects of using and developing for
+PyBlosxom.  It is very much a work in progress and this manual is by no means
+comprehensive at this point.  However, we do promise that the manual will get
+better over time.
+</para>
+<para>
+The manual gets better by one of several ways:
+</para>
+<itemizedlist>
+<listitem><para>people write new content that needs to be covered</para></listitem>
+<listitem><para>people fix existing content that is erroneous</para></listitem>
+<listitem><para>people fix existing content to make it clearer</para></listitem>
+</itemizedlist>
+<para>
+For all those who are reading this, you should notice that the active component--the
+piece that makes this happen--is people.  The group of people includes you, me,
+and everyone else that has anything to do with PyBlosxom.  If we make just one
+person write, edit, and maintain the entire manual, then we'll end up with a lot
+of work for one person and it'll take a really long time for things to happen.
+</para>
+<para>
+If you want to help out with documentation, let us know on the pyblosxom-devel
+mailing list.  Details on the mailing list are on the web-site at
+http://pyblosxom.sourceforge.net/ .
+</para>
+</sect1>
+
+<sect1>
+<title>VersionLog</title>
+<para>
+The following is a version log of this document:
+</para>
+<table>
+<title>Version Log</title>
+<tgroup cols="3">
+<thead>
+<row>
+<entry>version</entry>
+<entry>date</entry>
+<entry>changes</entry>
+<entry>authors</entry>
+</row>
+</thead>
+<tbody>
+
+<row>
+<entry>version 0.5</entry>
+<entry>3/21/2005</entry>
+<entry>
+  Took the manual that was on the PyBlosxom web-site, moved it to docbook,
+  and re-wrote the chapters on installation and flavours.
+</entry>
+<entry>
+  Will Guaraldi
+</entry>
+</row>
+
+</tbody>
+</tgroup>
+</table>
+</sect1>
+</preface>
+
+
+<!--
+  CHAPTER INSTALLATION
+-->
 <chapter id="installation">
 <title>Installing PyBlosxom</title>
 <para>
@@ -40,8 +128,8 @@ for help on the pyblosxom-users mailing list.
 </para>
 <para>
 If you are upgrading your version of PyBlosxom, follow the instructions 
-here and also read the README for differences between this version and 
-the previous versions.
+here and also read the README that comes with your PyBlosxom tarball for 
+differences between this version and the previous versions.
 </para>
 
 <sect1>
@@ -52,14 +140,12 @@ You will need:
 <itemizedlist>
 <listitem>
 <para>
-a web-server - preferably Apache (if only because that's what most of the 
-developers use), but PyBlosxom can probably be made to run on any web s
-erver with CGI abilities.
+a web-server that runs CGI
 </para>
 </listitem>
 <listitem>
 <para>
-Python version 2.1 or later
+Python version 2.2 or later
 </para>
 </listitem>
 <listitem>
@@ -71,107 +157,54 @@ a text editor (notepad, vi, emacs, nano, ...)
 </sect1>
 
 <sect1>
-<title>Setting up PyBlosxom as a Single-User Local Installation with CGI</title>
+<title>Installing PyBlosxom</title>
 <para>
-These are the steps for setting up PyBlosxom as a single-user local 
-installation:
+First you should download the PyBlosxom tar ball from 
+http://pyblosxom.sourceforge.net/ .  Then untar it.
+</para>
+
+<sect2>
+<title>Single-user Installation</title>
+<para>
+If you don't have administrative/root access, you just want to install 
+PyBlosxom for your user account, or you merely want to try PyBlosxom out, 
+do the following:
 </para>
 
 <orderedlist numeration="arabic">
 <listitem>
 <para>
-untar the PyBlosxom tar ball
+copy pyblosxom.cgi and config.py from the web/ directory into your 
+cgi-bin directory
 </para>
 </listitem>
 <listitem>
 <para>
-copy web/pyblosxom.cgi and web/config.py to your cgi-bin directory
+using any text editor, edit your config.py file and set the codebase 
+property to the directory that PyBlosxom is in
 </para>
-</listitem>
-<listitem>
 <para>
-create a directory to hold your flavour templates and entries--this is 
-your datadir
+For example, if you untarred PyBlosxom into /home/joe/pyblosxom, then set the codebase
+property like this:
 </para>
-</listitem>
-<listitem>
-<para>
-using any text editor, edit your config.py file--there are comments as to what all the properties affect
-</para>
-<itemizedlist>
-  <listitem>
-  <para>
-  make sure to set the datadir property to the full path of the directory you just created to store your data in [1]
-  </para>
-  </listitem>
-  <listitem>
-  <para>
-  make sure to set the codebase property to the directory you untarred PyBlosxom into [2] 
-  </para>
-  </listitem>
-</itemizedlist>
-</listitem>
-<listitem>
-<para>
-run ./pyblosxom.cgi--this will verify your configuration and installation and help you with any issues
-</para>
-</listitem>
-<listitem>
-<para>
-using any text editor, open up a file called firstpost.txt in your datadir and write: 
-</para>
-<programlisting role="html">
-<![CDATA[
-First Post
-<p>
-   This is the first post in my blog.
-</p>
-]]>
-</programlisting>
-</listitem>
-<listitem>
-<para>
-test it in a web-browser 
-</para>
-</listitem>
-</orderedlist>
-
-<para>
-[1] - You should always use / as the directory separater character 
-regardless of what OS you're on. For example, this should work in Linux, 
-Unix, or Windows:
-</para>
-
 <programlisting role="python">
-py["datadir"] = "/pyblosxom/datadir/blog/"
+py["codebase"] = "/home/joe/pyblosxom/"
 </programlisting>
-
 <para>
-FIXME - If you're using Windows and the pyblosxom.cgi file is on a 
-different drive than your blog datadir, what should they do?
+If you're using Windows, use an explicit path like this:
 </para>
-
-<para>
-[2] - For the codebase, you should use an explicit path and use appropriate 
-directory separators. For example, this works on Windows:
-</para>
-
 <programlisting role="python">
 py["codebase"] = "c:\\pyblosxom\\"
 </programlisting>
+</listitem>
+</orderedlist>
+</sect2>
 
+<sect2>
+<title>Multi-user Installation</title>
 <para>
-And this would work fine on Linux and Unix:
-</para>
-
-<programlisting role="python">
-py["codebase"] = "/home/willg/pyblosxom/"
-</programlisting>
-</sect1>
-<sect1>
-<title>Setting up PyBlosxom as a Site-Wide Multi-User Installation</title>
-<para>
-For a site-wide simple installation:
+If you have administrative/root access and you want to install PyBlosxom so that all
+your users can use it from a centralized installation, do the following:
 </para>
 
 <orderedlist numeration="arabic">
@@ -187,15 +220,117 @@ switch over to a superuser such as root
 </listitem>
 <listitem>
 <para>
-run the command "python setup.py install" to install the Pyblosxom libraries in your python installation 
+run the command "python setup.py install" to install the Pyblosxom libraries 
+in your python installation 
+</para>
+<para>
+when users go to setup PyBlosxom, they'll need the config.py and 
+pyblosxom.cgi files that will get copied to a directory in /usr/share 
+on Unix/Linux systems
+</para>
+<para>
+FIXME - where do these files go on Windows and OSX?
 </para>
 </listitem>
 </orderedlist>
-
-<para>
-That installs the PyBlosxom libraries site-wide. Each user needs to copy the config.py and pyblosxom.cgi files into their cgi-bin directory, set up a datadir, set up a plugins dir (though you could have a central one for all users on the server), and edit their config.py file. Follow the steps a bove in the single-user installation for these steps.
-</para>
+</sect2>
 </sect1>
+
+<sect1>
+<title>Setting up PyBlosxom</title>
+<para>
+After you've performed one of the installations in the previous section, 
+you're ready to set up PyBlosxom.  These steps set up PyBlosxom for a 
+single person.  For multiple, just do them again
+and again and again.
+</para>
+
+<sect2>
+<title>Create a datadir Directory</title>
+<para>
+PyBlosxom stores its entries in text files in your datadir.  The datadir 
+can contain directories each of which will be a category for PyBlosxom.  
+In general, it's good to use one-word names for directories that don't have 
+spaces or punctuation in them.
+</para>
+<para>
+Create a datadir somewhere on your machine.  For example, if you're a 
+single user on a Linux/Unix machine, you might create a subdirectory in 
+your home directory called datadir and use that.
+</para>
+<para>
+Your web-server needs read access to your datadir.  You may have to change 
+the permissions of your datadir accordingly.
+</para>
+</sect2>
+
+<sect2>
+<title>Create a plugin Directory</title>
+<para>
+PyBlosxom allows you to change the default behavior by installing plugins.  
+There are plugins at http://pyblosxom.sourceforge.net/ in the Plugin 
+Registry.  Additionally, anyone can create plugins; they're written in 
+Python and don't require any special editors or licesnes to
+create.
+</para>
+<para>
+Your web-server needs read access to your plugin directory.  You may have 
+to change the permissions of your plugin directory accordingly.
+</para>
+</sect2>
+
+<sect2>
+<title>Configure PyBlosxom by Editing config.py</title>
+<para>
+The config.py file is a text file written in Python.  You can use any text editor to edit it.
+It has a series of comments in it that will help guide you through setting the various properties
+you need to set.
+</para>
+<para>
+Plugins will require you to add new variables to your config.py file in order
+to direct the plugin's behavior.  Additionally, you can add variables
+to your config.py and these variables will be available to you in your
+flavour templates.
+</para>
+</sect2>
+
+<sect2>
+<title>Verify Your Installation</title>
+<para>
+When you're done editing your config.py file, run "./pyblosxom.cgi".  This will 
+verify that pyblosxom.cgi is pointing to a valid Python instance, your 
+configuration is correct, and that you're datadir is there.
+</para>
+<para>
+Then, using any text editor, create a file called firstpost.txt in your 
+datadir and in that file write: 
+</para>
+<programlisting role="html"><![CDATA[
+First Post
+<p>
+   This is the first post in my blog.
+</p>
+]]></programlisting>
+<para>
+The first line "First Post" becomes the title of the blog entry.  The date 
+of teh blog entry is the mtime on the file.  The body of the blog entry 
+starts with the HTML paragraph tag in the second line and extends to the 
+end paragraph tag in the last line.  Your blog entries can be as long as 
+you want.  The first line is plain text--everything after that is HTML.  
+If you want to use a different markup like reST or Textile or Moinmoin or
+something like that, see the chapter on entry parsers for how to set it up.
+</para>
+<para>
+Now it's time to test your installation in a web-browser.
+</para>
+<para>
+Assume that you're a user on a Linux machine running Apache with user 
+folders set up.  Then the url for your pyblosxom instance might be 
+something like this: http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi .
+</para>
+</sect2>
+</sect1>
+
 
 <sect1>
 <title>Setting up PyBlosxom as an ISP-like Installation</title>
@@ -210,283 +345,104 @@ This can be done (and has been done). FIXME Need instructions for it.
 
 
 
-
-
-<chapter id="configuration">
-<title>Configuring PyBlosxom</title>
-<para>
-PyBlosxom and PyBlosxom plugins expose many behavioral switches and configuration properties through the config.py file.
-</para>
-<sect1>
-<title>Configuration Variables</title>
-<para>
-PyBlosxom requires you to create a configuration file to set the various variables that will guide PyBlosxom's behavior. This configuration file is a text file of Python code. If you can't read Python code, don't worry too much--you should be able to change the values of the file without actually knowing the ins and outs of Python syntax.
-</para>
-<para>
-Here's a list of configuration variables:
-</para>
-
-<table>
-<title>Configuration Variables</title>
-<tgroup cols="4">
-<thead>
-<row>
-<entry>variable</entry>
-<entry>required</entry>
-<entry>data type</entry>
-<entry>description</entry>
-</row>
-</thead>
-<tbody>
-<row>
-<entry>blog_title</entry>
-<entry>yes</entry>
-<entry>string</entry>
-<entry>
-  <para>
-  the title of your blog
-  </para>
-  <programlisting role="python">
-py["blog_title"] = "Will's Blog of Awesome Stuff"
-  </programlisting>
-</entry>
-</row>
-<row>
-<entry>blog_description</entry>
-<entry>no</entry>
-<entry>string</entry>
-<entry>
-  <para>
-  the description of your blog
-  </para>
-  <programlisting role="python">
-py["blog_description"] = "Blog of thoughts, comments, code examples, and such."
-  </programlisting>
-</entry>
-</row>
-<row>
-<entry>blog_author</entry>
-<entry>no</entry>
-<entry>string</entry>
-<entry>
-  <para>
-  this is you--your name.
-  </para>
-  <programlisting role="python">
-<![CDATA[
-py["blog_author"] = "Will <will at blah dot org>"
-]]>
-  </programlisting>
-</entry>
-</row>
-<row>
-<entry>blog_language</entry>
-<entry>yes</entry>
-<entry>string</entry>
-<entry>
-  <para>
-  this is the primary language code of your blog.
-  </para>
-  <programlisting role="python">
-py["blog_language"] = "en"
-  </programlisting>
-</entry>
-</row>
-<row>
-<entry>blog_encoding</entry>
-<entry>yes</entry>
-<entry>string</entry>
-<entry>
-  <para>
-  this is the encoding of your blog. iso-8859-1, utf-8, ...
-  </para>
-  <programlisting role="python">
-py["blog_encoding"] = "iso-8859-1"
-  </programlisting>
-</entry>
-</row>
-<row>
-<entry>datadir</entry>
-<entry>yes</entry>
-<entry>string</entry>
-<entry>
-  <para>
-  this is the full path to where your PyBlosxom entries are kept.
-  </para>
-  <programlisting role="python">
-py["datadir"] = "/home/will/blog/datadir/"
-  </programlisting>
-</entry>
-</row>
-<row>
-<entry>logdir</entry>
-<entry>yes</entry>
-<entry>string</entry>
-<entry>
-  <para>
-  this is the full path to the directory for logs.
-  </para>
-  <programlisting role="python">
-py["logdir"] = "/home/will/blog/logs/"
-  </programlisting>
-</entry>
-</row>
-<row>
-<entry>num_entries</entry>
-<entry>no</entry>
-<entry>int</entry>
-<entry>
-  <para>
-  how many entries should show up on a given page? This defaults to 0 which will show all entries.
-  </para>
-  <programlisting role="python">
-py["num_entries"] = 20
-  </programlisting>
-</entry>
-</row>
-<row>
-<entry>plugin_dirs</entry>
-<entry>no</entry>
-<entry>list of strings</entry>
-<entry>
-  <para>
-  the list of directories your plugins are stored in.
-  </para>
-  <programlisting role="python">
-py["plugin_dirs"] = ["/home/will/pyblosxom/plugins/"]
-  </programlisting>
-</entry>
-</row>
-<row>
-<entry>load_plugins</entry>
-<entry>no</entry>
-<entry>list of strings</entry>
-<entry>
-  <para>
-  if this is not set, then PyBlosxom will load all the plugins in the plugin dirs you specified in alphabetical order. If this is set, then PyBlosxom will only load the plugins specified.
-  </para>
-  <programlisting role="python">
-py["load_plugins"] = ["pycalendar", "rss2renderer"]
-  </programlisting>
-</entry>
-</row>
-</tbody>
-</tgroup>
-</table>
-
-<para>
-Additionally, any variables you set in your config.py file are available in your flavour templates.
-</para>
-</sect1>
-
-<sect1>
-<title>Interesting things you can do with config.py files</title>
-<para>
-The config.py file is a Python code file. This allows you to use Python in the file itself to set properties. For example, say you wanted num_entries not to be set unless the user requests a page with flav=rss in the query string. You could do the following in your config.py file:
-</para>
-
-<programlisting role="python">
-import os
-query_string = os.environ.get("QUERY_STRING", "")
-if "flav=rss" in query_string:
-   py['num_entries'] = 20
-</programlisting>
-<para>
-This will check to see if "flav=rss" is in the query string and if so, it'll set the num_entries property to 20.
-</para>
-<para>
-FIXME - talk about how someone could do a site-wide config file 
-</para>
-</sect1>
-</chapter>
-
-
-
-
-
-
+<!--
+  CHAPTER FLAVOURS
+-->
 <chapter>
 <title>Flavours</title>
 <para>
 PyBlosxom uses renderers to take the data provided in the entries and 
 transform it into the output.  Output can be html, xhtml, xml, or anything 
-else.  The default renderer can be set in your config file like this:
+else--anything that you could get back from a CGI script or web application.  
+The default renderer can be set in your config file like this:
 </para>
 <programlisting role="python">
 py["renderer"] = "blosxom"
 </programlisting>
 <para>
-Renderers can be plugins.  The rss2renderer is implemented this way.
+PyBlosxom comes with two renderers: blosxom and debug.  The debug renderer
+displays all the data in the various parts of the PyBlosxom Request
+object.  This is really helpful to see what variables are at your disposal
+and also to debug problems you might be having with plugins you've installed.
 </para>
 <para>
-PyBlosxom comes with two renderers: debug and blosxom.  It is possible 
-and not too difficult to build other renderers for PyBlosxom. 
-These other renderers can use other template engines like Cheetah or 
-htmltmpl.  
+The blosxom renderer renders entries just like Blosxom does.
 </para>
 <para>
-The debug renderer displays all the data in the various parts of the 
-PyBlosxom Request object.  This is a really great way of seeing what 
-variables you have at your disposal for your flavour templates.  It also 
-helps you to track down problems you might be having.
+If you want your blog rendered using a different template system--say
+Cheetah or htmltmpl--implement a renderer that does so as a PyBlosxom
+plugin.  There's more on this in the chapter on writing plugins.
 </para>
 <para>
-This chapter talks specifically about using the Blosxom renderer.
+The rest of this chapter walks through the blosxom renderer which comes
+with PyBlosxom.
 </para>
 
 <sect1>
-<title>flavours and templates</title>
+<title>Flavours and Templates</title>
 <para>
 The blosxom renderer uses the same template style that Blosxom uses.  As
 such, you can use most Blosxom flavour templates without too many 
 modifications.
 </para>
 <para>
-When you install PyBlosxom, it comes with a default html flavour. It's 
-built into the renderer itself and doesn't require you to create or copy 
-over any template files. It's incredibly bland. Most people will either 
-create a flavour or download one from our flavour registry.
+A flavour can be thought of as a theme or an output format.  For example,
+you could have an HTML flavour that renders the blog data in HTML format.
+You could have an XHTML flavour that renders the blog in a strict XHTML
+format.  You could have a happy-sunshine flavour that renders the blog
+in HTML format using a happy sunshiney look and feel.  So on and so forth.
 </para>
 <para>
-The Blosxom renderer uses the following templates:
+A flavour consists of a series of templates each of which is a part of 
+the page that finally gets rendered:
 </para>
 <itemizedlist>
 <listitem><para>content_type - holds the content type of the flavour</para></listitem>
-<listitem><para>head - holds everything before all the entries</para></listitem><listitem><para>story - holds a single entry</para></listitem>
+<listitem><para>head - holds everything before all the entries</para></listitem>
+<listitem><para>story - holds a single entry</para></listitem>
 <listitem><para>foot - holds everything after all the entries</para></listitem>
 <listitem><para>date_head - shows at the start of a date (this only exists in PyBlosxom)</para></listitem>
 <listitem><para>date_foot - shows at the end of a date (this only exists in PyBlosxom)</para></listitem>
 </itemizedlist>
 <para>
-FIXME - this is a terrible description
+Flavour templates are stored in your datadir alongside all your entries.
 </para>
 <para>
-The Blosxom renderer allows you to have different "styles" to your site. 
-We call a style a "flavour". A flavour consists of one of each kind of 
-template above (though I tend to skip the date_head and date_foot templates 
-and use the default ones) where all of them have the same look and feel. 
-To create the flavour, all of these template files will have the same 
-extension.
+Say you had an html flavour of your site.  You would have the following 
+files in your datadir:
 </para>
+<itemizedlist>
+<listitem><para>content_type.html</para></listitem>
+<listitem><para>head.html</para></listitem>
+<listitem><para>story.html</para></listitem>
+<listitem><para>foot.html</para></listitem>
+<listitem><para>date_head.html</para></listitem>
+<listitem><para>date_foot.html</para></listitem>
+</itemizedlist>
 <para>
-For example, if you want to create a "joy" flavour, you would create the 
-following files:
+If you want to create a "joy" flavour, you would have the following files 
+in your datadir:
 </para>
-
 <itemizedlist>
 <listitem><para>content_type.joy</para></listitem>
 <listitem><para>head.joy</para></listitem>
 <listitem><para>story.joy</para></listitem>
 <listitem><para>foot.joy</para></listitem>
-<listitem><para>date_head.joy (optional)</para></listitem>
-<listitem><para>date_foot.joy (optional)</para></listitem>
+<listitem><para>date_head.joy</para></listitem>
+<listitem><para>date_foot.joy</para></listitem>
 </itemizedlist>
-
 <para>
-You can have as many flavours as you like. Most PyBlosxom sites have an 
-html flavour and that's it. Then RSS rendering is done either with an rss 
-flavour (for RSS 0.9.1) or an rss plugin which has its own renderer (for 
-RSS 2.0, ATOM, and other more complicated feed formats).
+You can have as many flavours as you want in your datadir.  The one thing 
+to be aware of is creating a flavour where the name is the same extension 
+as the file extention of your blog entries.  The default extension for 
+blog entries is .txt--don't create a "txt" flavour.
+</para>
+<para>
+PyBlosxom comes with a default html flavour.  The template code is built 
+into the blosxom renderer file itself and doesn't require you to create 
+or copy over any files.  However, since it's incredibly bland, most people 
+either create their own flavour or use one from the flavour registry on 
+http://pyblosxom.sourceforge.net/ .
 </para>
 </sect1>
 
@@ -507,14 +463,14 @@ in the request.
 </para>
 
 <sect2>
-<title>Variables from config.py</title>
+<title>Variables From config.py</title>
 <para>
 These template variables are available to all templates. They come directly 
 from your config.py file.
 </para>
 
 <table>
-<title>template variables from config.py</title>
+<title>Template variables from config.py</title>
 <tgroup cols="3">
 <thead>
 <row>
@@ -544,31 +500,38 @@ from your config.py file.
 <entry>the encoding of the blog</entry>
 <entry>iso8859-1</entry>
 </row>
+<row>
+<entry>blog_author</entry>
+<entry>the author of the blog (hopefully you)</entry>
+<entry>Joe Dirt</entry>
+</row>
+<row>
+<entry>blog_email</entry>
+<entry>the email address of the author of the blog (feel free to obfuscate it)</entry>
+<entry>joe at joe dot com</entry>
+</row>
 </tbody>
 </tgroup>
 </table>
 
 <para>
-Additionally, any other properties you set in config.py are available in your templates. If you wanted to create an blog_email variable, you could add:
+Additionally, any other properties you set in config.py are available 
+in your templates. If you wanted to create a blog_images variable holding
+the base url of the directory with all your images:
 </para>
 <programlisting role="python">
-py["blog_email"] = "joe@example.com"
+py["blog_images"] = "http://www.joe.com/~joe/images/"
 </programlisting>
 <para>
 to your config.py file and it would be available in all your templates.
-</para>
-<para>
-Note: because the config.py file is written Python code and properties are available in all your templates, this allows you do some sophisticated things.
-</para>
-<para>
-FIXME - examples?
 </para>
 </sect2>
 
 <sect2>
 <title>Calculated Template Variables</title>
 <para>
-These template variables are available to all templates as well. They are calculated based on the request.
+These template variables are available to all templates as well.  They are 
+calculated based on the request.
 </para>
 
 <table>
@@ -634,7 +597,7 @@ These template variables are available to all templates as well. They are calcul
 These template variables are only available in your story template.
 </para>
 <table>
-<title>variables in the story template</title>
+<title>Variables in the story template</title>
 <tgroup cols="3">
 <thead>
 <row>
@@ -745,9 +708,11 @@ These template variables are only available in your story template.
 </sect2>
 
 <sect2>
-<title>Template Variables from Plugins</title>
+<title>Template Variables From Plugins</title>
 <para>
-Additionally, many plugins will create additional variables. Refer to the plugin's documentation for what variables it creates, where the variables are available, and what the variables do.
+Additionally, many plugins will create additional variables. Refer to the 
+plugin's documentation for what variables it creates, where the variables 
+are available, and what the variables do.
 </para>
 </sect2>
 </sect1>
@@ -755,11 +720,12 @@ Additionally, many plugins will create additional variables. Refer to the plugin
 <sect1>
 <title>Invoking a Flavour</title>
 <para>
-The flavour for a given page is specified in the extension of the file being requested. For example:
+The flavour for a given page is specified in the extension of the file 
+being requested. For example:
 </para>
 
 <table>
-<title>Examples of url requests</title>
+<title>Examples of request URIs</title>
 <tgroup cols="2">
 <thead>
 <row>
@@ -796,7 +762,7 @@ Additionally, you can specify the flavour using the flav QueryString variable. E
 <tgroup cols="2">
 <thead>
 <row>
-<entry>url</entry>
+<entry>uri</entry>
 <entry>what happens</entry>
 </row>
 </thead>
@@ -817,23 +783,50 @@ Additionally, you can specify the flavour using the flav QueryString variable. E
 </tgroup>
 </table>
 <para>
-You can change the default flavour from "html" to some other flavour in your config.py file with the default_flavour property:
+You can change the default flavour from "html" to some other flavour in 
+your config.py file with the default_flavour property:
 </para>
 <programlisting role="python">
 py["default_flavour"] = "joy"
 </programlisting>
+<para>
+Doing this will set the default flavour to use when the URI the user has
+used doesn't specify which flavour to use.  For example, if you do the
+above, then the following URIs will use the default flavour:
+</para>
+<table>
+<title>Default flavour used</title>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>uri</entry>
+<entry>what happens</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>http://www.joe.com/cgi-bin/pyblosxom.cgi/2005/03</entry>
+<entry>uses the default flavour which is set to "joy"</entry>
+</row>
+<row>
+<entry>http://www.joe.com/cgi-bin/pyblosxom.cgi/2005/03/?flav=html</entry>
+<entry>uses the html flavour as specified by flav=</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
 </sect1>
 
 <sect1>
 <title>Overriding Flavour Templates by Category</title>
 <para>
-If you want to override the flavour for a particular category, just place the override template files within the directory corresponding with the category.
-</para>
-<para>
-For example, your directory tree may look something like this:
+Some folks like having certain categories of their blog have a different 
+look and feel.  You can do this by placing flavour template files in that 
+category directory.  For example, your directory tree may look something 
+like this:
 </para>
 <programlisting role="filelisting">
-my_blog/
+datadir/
    |- content/
       |- content_type.html         <- 1
       |- head.html                 <- 1
@@ -850,12 +843,35 @@ my_blog/
          |- C/
 </programlisting>
 <para>
-The default flavour for all your directories would be "html" and would be taken from the flavour marked "1". However, if they user is looking at the Coding category or any categories under Coding, they'll see the "html" flavour templates marked by "2".
+The default flavour for all your directories would be "html" and would be 
+taken from the flavour marked "1".  However, if the user is looking at 
+entries in the Coding category or any category under Coding, they'll see 
+the "html" flavour templates marked by "2".
 </para>
 </sect1>
 
 <sect1>
-<title>Basic set of templates</title>
+<title>Order of Operations to Figure Out Which Flavour to Use</title>
+<para>
+We know that you can specify the default flavour to use in the config.py
+file with the default_flavour property.  We know that the user can specify
+which flavour to use by the file extension of the URI.  We also know that
+the user can specify which flavour to use by using the flav= name/value pair
+in the query string.
+</para>
+<para>
+The order in which we figure out which flavour to use is this:
+</para>
+<orderedlist numeration="arabic">
+<listitem><para>look at the URI extenstion: if the URI has one, then we use that.</para></listitem>
+<listitem><para>look at the flav= querystring variable: if there is one, then we use that.</para></listitem>
+<listitem><para>look at the default_flavour property in the config.py file: if there is one, then we use that.</para></listitem>
+<listitem><para>use the "html" flavour</para></listitem>
+</orderedlist>
+</sect1>
+
+<sect1>
+<title>Basic Set of Templates</title>
 <para>
 Here's a really basic set of templates for an html flavour.
 </para>
@@ -877,8 +893,7 @@ Here's a really basic set of templates for an html flavour.
 <row>
 <entry>head.html</entry>
 <entry>
-<programlisting role="html">
-<![CDATA[
+<programlisting role="html"><![CDATA[
 <html>
 <head>
   <title>$blog_title $pi_da $pi_mo $pi_yr</title>
@@ -886,15 +901,13 @@ Here's a really basic set of templates for an html flavour.
 <body>
 <h1>$blog_title</h1>
 <p>$pi_da $pi_mo $pi_yr</p>
-]]>
-</programlisting>
+]]></programlisting>
 </entry>
 </row>
 <row>
 <entry>story.html</entry>
 <entry>
-<programlisting role="html">
-<![CDATA[
+<programlisting role="html"><![CDATA[
 <h3><a name="$fn">$title</a></h3>
 <div class="blosxomStory">
 $body
@@ -904,22 +917,19 @@ $body
   <a href="$base_url/$file_path.$flavour">permalink</a>
 </p>
 </div>
-]]>
-</programlisting>
+]]></programlisting>
 </entry>
 </row>
 <row>
 <entry>foot.html</entry>
 <entry>
-<programlisting role="html">
-<![CDATA[
+<programlisting role="html"><![CDATA[
 <p>
   Made with PyBlosxom
 </p>
 </body>
 </html>
-]]>
-</programlisting>
+]]></programlisting>
 </entry>
 </row>
 </tbody>
@@ -932,19 +942,30 @@ $body
 
 
 
+
+<!--
+  CHAPTER PLUGINS
+-->
+
 <chapter id="plugins">
 <title>Plugins</title>
 <para>
-PyBlosxom allows you to extend its base functionality using drop-in plugins. These plugins can extend functionality by providing addition template variables for things like archive lists, calendars, and such. PyBlosxom uses CallbackChains to call functions in the plugins so that they can do their thing.
+PyBlosxom allows you to extend its base functionality using drop-in plugins. 
+These plugins can extend functionality by providing addition template 
+variables for things like archive lists, calendars, and such.  PyBlosxom 
+uses CallbackChains to call functions in the plugins so that they can do 
+their thing.
 </para>
 
 <sect1>
 <title>Setting PyBloxsom up to Use Plugins</title>
 <para>
-There are two properties in your config.py file that affect the behavior for loading plugins.
+There are two properties in your config.py file that affect the behavior 
+for loading plugins.
 </para>
 <para>
-The first one is the plugin_dirs property which is a list of strings specifying all the directories you might have plugins. For example:
+The first one is the plugin_dirs property which is a list of strings 
+specifying all the directories you might have plugins. For example:
 </para>
 <programlisting role="python">
 py["plugin_dirs"] = ["/home/will/pybloxsom/plugins"]
@@ -955,11 +976,19 @@ This will cause PyBlosxom to look in this specific directory for plugins.
 </para>
 
 <para>
-The other property is the load_plugins property. If you don't have this set at all, PyBlosxom will load all plugins it finds in the plugin directories you've specified and load them. It will look in each directory in order as you've specified. It will load the plugins in each directory in alphabetical order by filename.
+The other property is the load_plugins property. If you don't have this set 
+at all (i.e. it's either not in the config.py file or the line is commented
+out), PyBlosxom will load all plugins it finds in the plugin directories 
+you've specified and load them. It will look in each directory in order as 
+you've specified. It will load the plugins in each directory in alphabetical 
+order by filename.
 </para>
 
 <para>
-The other way to load plugins is by specifying the plugins explicitly by setting the load_plugins property. PyBlosxom will load only the plugins you've specified and will load them in the order you've specified. The load_plugins property takes a list of strings. For example:
+The other way to load plugins is by specifying the plugins explicitly by 
+setting the load_plugins property.  PyBlosxom will load only the plugins 
+you've specified and will load them in the order you've specified.  The 
+load_plugins property takes a list of strings. For example:
 </para>
 
 <programlisting role="python">
@@ -967,40 +996,64 @@ py["load_plugins"] = ["calendar", "category", "booklist"]
 </programlisting>
 
 <para>
-This will load the plugins whose filenames are "calendar.py", "category.py", and "booklist.py". It will load them in that order and will only load those plugins even if you have other plugins in your plugin directories.
+This will load the plugins whose filenames are "calendar.py", "category.py", 
+and "booklist.py". It will only load those plugins even if other plugins are 
+in the directory and it will load them in that order.
 </para>
 </sect1>
 
 <sect1>
 <title>Finding Plugins</title>
 <para>
-You can find plugins in the plugin registry at http://pyblosxom.sourceforge.net/ .
+You can find plugins in the plugin registry at 
+http://pyblosxom.sourceforge.net/ .
 </para>
 <para>
-Additionally, some people write plugins, but never register with the plugin registry. Sometimes this is because the author doesn't feel the plugin is finished for public consumption. Even so, it might meet your needs. The best way to find these plugins is to ask on the pyblosxom-users mailing list for a plugin that has the functionality you desire.
+Additionally, some people write plugins, but never register with the plugin 
+registry. Sometimes this is because the author doesn't feel the plugin is 
+finished for public consumption. Even so, it might meet your needs. The best 
+way to find these plugins is to ask on the pyblosxom-users mailing list for 
+a plugin that has the functionality you desire.
 </para>
 </sect1>
 
 <sect1>
 <title>Installing Plugins</title>
 <para>
-When you're installing a plugin, refer to its documentation. The documentation could be in a README file, but more likely it's in the plugin code itself at the top of the file. This documentation should tell you how to install the plugin, what template variables the plugin exposes, how to invoke the plugin, how to get in touch with the author should you find bugs or need help, and any additional things you should know about.
+When you're installing a plugin, refer to its documentation. The documentation 
+could be in a README file, but more likely it's in the plugin code itself at 
+the top of the file. This documentation should tell you how to install the 
+plugin, what template variables the plugin exposes, how to invoke the plugin, 
+how to get in touch with the author should you find bugs or need help, and 
+any additional things you should know about.
 </para>
 <para>
-Most plugins should have a pretty easy installation method. You should be able to copy the plugin into the directory defined in your config.py file in the plugin_dirs property. Then there might be some additional properties you'll ahve to set in your config.py file to define the plugin's behavior. That should be about it. On some occasions, you may have to change the code in the plugin itself to meet your specific needs.
+Most plugins should have a pretty easy installation method. You should be 
+able to copy the plugin into the directory defined in your config.py file 
+in the plugin_dirs property. Then there might be some additional properties 
+you'll ahve to set in your config.py file to define the plugin's behavior. 
+That should be about it.  On some occasions, you may have to change the code 
+in the plugin itself to meet your specific needs.
 </para>
 </sect1>
 
 <sect1>
 <title>Writing Your Own Plugins</title>
 <para>
-You may find that you desire functionality and there is no plugin that anyone knows about that performs that functionality. It's probably best at this point for you to either pay someone to write the plugin you need or write it yourself.
+You may find that you desire functionality and there is no plugin that anyone 
+knows about that performs that functionality. It's probably best at this 
+point for you to either pay someone to write the plugin you need or write 
+it yourself.
 </para>
 <para>
-Plugins are pretty easy to write and can cover a lot of really different functionality. The best way to learn how to write PyBlosxom plugins is to read through the plugins in the plugin registry. Many of them are well written and may provide insight as to how to solve your specific problem.
+Plugins are pretty easy to write and can cover a lot of really different 
+functionality. The best way to learn how to write PyBlosxom plugins is to 
+read through the plugins in the plugin registry. Many of them are well 
+written and may provide insight as to how to solve your specific problem.
 </para>
 <para>
-Additionally, feel free to ask for help on the pyblosxom-users and pyblosxom-devel mailing lists. 
+Additionally, feel free to ask for help on the pyblosxom-users and 
+pyblosxom-devel mailing lists. 
 </para>
 </sect1>
 </chapter>
@@ -1009,21 +1062,83 @@ Additionally, feel free to ask for help on the pyblosxom-users and pyblosxom-dev
 
 
 
+<!--
+  ENTRY PARSERS
+-->
+<chapter id="entryparsers">
+<title>Entry Parsers</title>
+<para>
+PyBlosxom supports only one format for entry files by default.  The first 
+line of the file is in plain text and forms the title of the entry.  The 
+second line through the end of the file is in HTML and is the body of the 
+entry.  Some people really detest writing in HTML which is valid.  Other 
+people use their entries in other places, so they need a markup format 
+that's less web-oriented.  Some folks write a lot of material in a non-HTML 
+markup format and would like to use that same format for blog entries.  
+These are all very valid reasons to want to use other markup formats.
+</para>
+<para>
+PyBlosxom allows you to install entry parser plugins which are PyBlosxom 
+plugins that implement an entry parser.  These entry parser plugins allow 
+you to use other markup formats.  Check the Plugin Registry at 
+http://pyblosxom.sourceforge.net/ for which entry parsers are available.
+</para>
+<para>
+In general, we only have entry parsers written by people who really 
+wanted that markup format.  If you don't see your favorite markup format 
+represented, try looking at the code for other entry parsers and implement 
+it yourself.  If you need help, talk to us on the pyblosxom-users or 
+pyblosxom-devel mailing lists.
+</para>
+</chapter>
+
+
+
+
+
+
+
+<!--
+  WRITING ENTRIES
+-->
+<chapter id="writingentries">
+<title>Writing Entries</title>
+<para>
+
+</para>
+</chapter>
+
+
+
+
+
+
+<!--
+  CHAPTER STATIC RENDERING
+-->
 
 <chapter id="staticrendering">
 <title>Static Rendering</title>
 <para>
-Static rendering made its first appearance in PyBlosxom 1.0. It fills the functionality gap for people who want to use PyBlosxom, but don't have a web-server with CGI installed, don't have CGI access, or can't run PyBlosxom for one of a myriad of other reasons. Static rendering allows these people to run PyBlosxom on their local machine, write blog entries, render their entire site into HTML, and then use ftp or some other file copy method to move the pages up to their static web-site.
+Static rendering made its first appearance in PyBlosxom 1.0. It fills the 
+functionality gap for people who want to use PyBlosxom, but don't have a 
+web-server with CGI installed, don't have CGI access, or can't run PyBlosxom 
+for one of a myriad of other reasons. Static rendering allows these people 
+to run PyBlosxom on their local machine, write blog entries, render their 
+entire site into HTML, and then use ftp or some other file copy method to 
+move the pages up to their static web-site.
 </para>
 <para>
-PyBlosxom's static rendering allows for incremental building. It can scan your entries, figure out what's changed, and render only the pages that need re-rendering.
+PyBlosxom's static rendering allows for incremental building.  It can scan 
+your entries, figure out what's changed, and render only the pages that 
+need re-rendering.
 </para>
 <para>
 Beyond that, it's not particularly sophisticated.
 </para>
 
 <sect1>
-<title>Configuring static rendering</title>
+<title>Configuring Static Rendering</title>
 <para>
 These are the instructions for configuring static rendering in PyBlosxom.
 </para>
@@ -1031,42 +1146,57 @@ These are the instructions for configuring static rendering in PyBlosxom.
 <orderedlist>
 <listitem>
 <para>
-Install PyBlosxom. When you're copying the pyblosxom.cgi and config.py files, you don't have to put them in a CGI directory--you can put them in any directory you have permissions in. For example, I created a directory /home/willg/pyblosxom/ and put both files in there.
+Install PyBlosxom. When you're copying the pyblosxom.cgi and config.py 
+files, you don't have to put them in a CGI directory--you can put them 
+in any directory you have permissions in. For example, I created a directory 
+/home/joe/pyblosxom/ and put both files in there.
 </para>
 </listitem>
 <listitem>
 <para>
-Add static_dir to your config.py file. This is the directory we will save all the static output. The value of static_dir should be a string representing the absolute path of the output directory for static rendering.
+Add static_dir to your config.py file. This is the directory we will save 
+all the static output. The value of static_dir should be a string representing 
+the absolute path of the output directory for static rendering.
 </para>
 </listitem>
 <listitem>
 <para>
-Add static_flavours to your config.py file. The value of static_flavours should be a list of strings representing all the flavours that should be rendered. This defaults to [ "html" ].
+Add static_flavours to your config.py file. The value of static_flavours 
+should be a list of strings representing all the flavours that should be 
+rendered. This defaults to [ "html" ].
 </para>
 </listitem>
 <listitem>
 <para>
-Add static_monthnames to your config.py file. The value (either 1 or 0) will determine if you want month names (such as April) in the static pages. On some versions of Pyblosxom, month names are not supported, and you will need to use month numbers.
+Add static_monthnames to your config.py file. The value (either 1 or 0) 
+will determine if you want month names (such as April) in the static pages. 
+On some versions of Pyblosxom, month names are not supported, and you will 
+need to use month numbers.
 </para>
 </listitem>
 <listitem>
 <para>
-Add static_monthnumbers to your config.py file. The value (either 1 or 0) will determine if you want month numbers (such as 04 for April) in the static pages.
+Add static_monthnumbers to your config.py file. The value (either 1 or 0) 
+will determine if you want month numbers (such as 04 for April) in the 
+static pages.
 </para>
 </listitem>
 <listitem>
 <para>
-Set base_url in your config.py file to the base url your blog will have. For example, if your static_dir were set to /home/willg/public_html and the url for that directory were http://www.bluesock.org/~willg/, then you probably want your base_url to be http://www.bluesock.org/~willg/. 
+Set base_url in your config.py file to the base url your blog will have. 
+For example, if your static_dir were set to /home/joe/public_html and the 
+url for that directory were http://www.joe.com/~joe/ , then you probably 
+want your base_url to be http://www.joe.com/~joe/ . 
 </para>
 </listitem>
 </orderedlist>
 </sect1>
 
 <sect1>
-<title>Running static rendering</title>
+<title>Running Static Rendering</title>
 
 <sect2>
-<title>Render everything</title>
+<title>Render Everything</title>
 <para>
 Now you can run static rendering:
 </para>
@@ -1075,14 +1205,17 @@ Now you can run static rendering:
 % ./pyblosxom.cgi --static 
 </programlisting>
 <para>
-Lots of output will appear as it figures out all the urls that need to be rendered and then renders them all one by one.
+Lots of output will appear as it figures out all the urls that need to 
+be rendered and then renders them all one by one.
 </para>
 </sect2>
 
 <sect2>
-<title>Incremental rendering</title>
+<title>Incremental Rendering</title>
 <para>
-We have incremental rendering which will go find all the entries that have changed since we rendered them and then re-render them. It does this by comparing the mtime on the entry file with the mtime on the rendererd file.
+We have incremental rendering which will go find all the entries that have 
+changed since we rendered them and then re-render them. It does this by 
+comparing the mtime on the entry file with the mtime on the rendererd file.
 </para>
 <para>
 It works like this:
@@ -1095,9 +1228,14 @@ It works like this:
 </sect1>
 
 <sect1>
-<title>Rendering other urls</title>
+<title>Rendering Other URIs</title>
 <para>
-Some plugins provide other urls that are part of your site, but not really part of your blog since they're not related to entries. Examples of this include the plugininfo plugin which provides information about the plugins that you're running. You can set the static_urls property in config.py to a list of all the urls that need to be rendered every time. This list could include:
+Some plugins provide other URIs that are part of your site, but not 
+really part of your blog since they're not related to entries. Examples 
+of this include the plugininfo plugin which provides information about 
+the plugins that you're running. You can set the static_urls property 
+in config.py to a list of all the urls that need to be rendered every time. 
+This list could include:
 </para>
 
 <itemizedlist>
@@ -1106,7 +1244,9 @@ Some plugins provide other urls that are part of your site, but not really part 
 </itemizedlist>
 
 <para>
-static_urls takes a list of strings where each string is a url to be rendered. For example if I wanted to render the booklist page and the RSS feed for my main page, I would set it like this:
+static_urls takes a list of strings where each string is a url to be 
+rendered. For example if I wanted to render the booklist page and the 
+RSS feed for my main page, I would set it like this:
 </para>
 
 <programlisting role="python">
@@ -1115,12 +1255,16 @@ py["static_urls"] = ["/booklist/index.html", "/index.xml"]
 </sect1>
 
 <sect1>
-<title>Additional thoughts</title>
+<title>Additional Thoughts</title>
 <para>
-Static rendering is pretty simplistic. We use the tools.render_url function to render each url. Plugins that need to re-render the entry pages because something has changed (e.g. comments, pingbacks, ...), should call this function.
+Static rendering is pretty simplistic. We use the tools.render_url function 
+to render each url. Plugins that need to re-render the entry pages because 
+something has changed (e.g. comments, pingbacks, ...), should call this 
+function.
 </para>
 <para>
-If you want to statically render your blog every night, you could write a shell script like this:
+If you want to statically render your blog every night, you could write 
+a shell script like this:
 </para>
 <programlisting role="shell">
 #!/bin/bash 
@@ -1130,7 +1274,14 @@ cd directory-with-pyblosxom.cgi
 find static_dir-directory -mmin +30 -exec 'rm' '{}' ';' 
 </programlisting>
 <para>
-That'll re-render everything, then delete any files in your static dir that are older than 30 minutes (in case you moved entries from one category to another or deleted an entry or whatever). 
+That'll re-render everything, then delete any files in your static 
+dir that are older than 30 minutes (in case you moved entries from 
+one category to another or deleted an entry or whatever). 
+</para>
+<para>
+If your web-site requires more files than just the ones that are rendered by 
+PyBlosxom (images, CSS, ...), then you should copy those over with your 
+shell script as well.
 </para>
 </sect1>
 </chapter>
@@ -1139,9 +1290,11 @@ That'll re-render everything, then delete any files in your static dir that are 
 
 
 
+<!--
+  CHAPTER SYNDICATION
+-->
 
-
-<chapter>
+<chapter id="syndication">
 <title>Syndication</title>
 
 <sect1>
@@ -1153,7 +1306,8 @@ PyBlosxom comes with an rss flavour that produces RSS 0.9.1 output.
 FIXME - Talk about setting up the RSS 0.9.1 flavour
 </para>
 <para>
-There is an rss2renderer plugin in the plugin registry that produces RSS 2.0 output.
+There is an rss2renderer plugin in the plugin registry that produces 
+RSS 2.0 output.
 </para>
 </sect1>
 
@@ -1165,7 +1319,7 @@ FIXME - talk about setting up the rss2renderer
 </sect1>
 
 <sect1>
-<title>Other formats</title>
+<title>Other Formats</title>
 <para>
 FIXME - Other formats? 
 </para>
@@ -1177,12 +1331,18 @@ FIXME - Other formats?
 
 
 
-
+<!--
+  CHAPTER ARCHITECTURE
+-->
 
 <chapter>
 <title>PyBlosxom Architecture</title>
 <para>
-The architecture for PyBlosxom has evolved over time. The mission is to build an easily augmented blog server that uses the file system for data storage. Using the file system allows PyBlosxom to fit in with other applications rather than forcing PyBlosxom to solve all problems all by itself.
+The architecture for PyBlosxom has evolved over time. The mission is to 
+build an easily augmented blog server that uses the file system for data 
+storage. Using the file system allows PyBlosxom to fit in with other 
+applications rather than forcing PyBlosxom to solve all problems all by 
+itself.
 </para>
 
 <sect1>
@@ -1193,12 +1353,15 @@ PyBlosxom is composed of a few different parts:
 <itemizedlist>
 <listitem>
 <para>
-pyblosxom.cgi - This is the CGI script that is executed by your web-server, pulls in configuration variables from config.py and then instantiates PyBlosxom objects to handle the request.
+pyblosxom.cgi - This is the CGI script that is executed by your web-server, 
+pulls in configuration variables from config.py and then instantiates 
+PyBlosxom objects to handle the request.
 </para>
 </listitem>
 <listitem>
 <para>
-the Pyblosxom package - This is the Python package that holds the PyBlosxom objects and utility functions that handle the request.
+the Pyblosxom package - This is the Python package that holds the PyBlosxom 
+objects and utility functions that handle the request.
 </para>
 <itemizedlist>
    <listitem>
@@ -1247,9 +1410,10 @@ of your blog. These you can get from the flavour registry or write yourself.
 </sect1>
 
 <sect1>
-<title>Lifecycle of a PyBlosxom request</title>
+<title>Lifecycle of a PyBlosxom Request</title>
 <para>
-This is the life cycle of a single PyBlosxom request. It involves the following "entities":
+This is the life cycle of a single PyBlosxom request. It involves the 
+following "entities":
 </para>
 <itemizedlist>
 <listitem>
@@ -1310,13 +1474,15 @@ pyblosxom.cgi.
 <sect1>
 <title>Lifecycle of the blosxom_handler</title>
 <para>
-This describes what the blosxom_handler does. This is the default handler for PyBlosxom. It's called by the PyBlosxom instance in the run method if none of the plugins have handled the request already.
+This describes what the blosxom_handler does. This is the default handler 
+for PyBlosxom. It's called by the PyBlosxom instance in the run method if 
+none of the plugins have handled the request already.
 </para>
 <programlisting role="lifecycle">
 1. calls the renderer callback to get a renderer instance
    If none of the plugins return a renderer instance, then we go check to see if config.py has the renderer property set and use that.
    If there is no renderer property set, we use the blosxom renderer which is found in the pyblosxom.PyBlosxom.renderer package.
-2. calls the pathinfo callback which allows all the plugins to help figure out what to do with the HTTP URL/QUERYSTRING we've been given
+2. calls the pathinfo callback which allows all the plugins to help figure out what to do with the HTTP URI/QUERYSTRING we've been given
 3. calls the filelist callback which returns a list of entries to render based on what the path info is
 4. calls the prepare callback which allows plugins to transform the entries and any other data in the Request object prior to rendering
 5. renders the entries 
@@ -1324,9 +1490,12 @@ This describes what the blosxom_handler does. This is the default handler for Py
 </sect1>
 
 <sect1>
-<title>Lifecycle of the blosxom renderer</title>
+<title>Lifecycle of the blosxom Renderer</title>
 <para>
-The blosxom renderer renders the entries in a similar fashion to what Blosxom does. The blosxom renderer uses flavour templates and template variables. It also has a series of callbacks allowing plugins to modify templates and entry data at the time of rendering that specific piece.
+The blosxom renderer renders the entries in a similar fashion to what 
+Blosxom does. The blosxom renderer uses flavour templates and template 
+variables. It also has a series of callbacks allowing plugins to modify 
+templates and entry data at the time of rendering that specific piece.
 </para>
 <programlisting role="lifecycle">
 1. renders the content_type template
@@ -1348,14 +1517,14 @@ FIXME
 </sect1>
 
 <sect1>
-<title>Entry parsers</title>
+<title>Entry Parsers</title>
 <para>
 FIXME
 </para>
 </sect1>
 
 <sect1>
-<title>Pre-formatters and post-formatters</title>
+<title>Pre-formatters and Post-formatters</title>
 <para>
 FIXME
 </para>
@@ -1368,4 +1537,529 @@ FIXME
 </para>
 </sect1>
 </chapter>
+
+<appendix>
+<title>config.py variables</title>
+<para>
+Here is a non-comprehensive list of configuration variables:
+</para>
+
+<table>
+<title>Configuration variables</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>variable</entry>
+<entry>required</entry>
+<entry>data type</entry>
+<entry>description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>blog_title</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  the title of your blog
+  </para>
+  <programlisting role="python">
+py["blog_title"] = "Will's Blog of Awesome Stuff"
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>blog_description</entry>
+<entry>no</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  the description of your blog
+  </para>
+  <programlisting role="python">
+py["blog_description"] = "Blog of thoughts, comments, code examples, and such."
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>blog_author</entry>
+<entry>no</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is you--your name.
+  </para>
+  <programlisting role="python"><![CDATA[
+py["blog_author"] = "Will <will at blah dot org>"
+]]></programlisting>
+</entry>
+</row>
+<row>
+<entry>blog_language</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is the primary language code of your blog.
+  </para>
+  <programlisting role="python">
+py["blog_language"] = "en"
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>blog_encoding</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is the encoding of your blog. iso-8859-1, utf-8, ...
+  </para>
+  <programlisting role="python">
+py["blog_encoding"] = "iso-8859-1"
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>datadir</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is the full path to where your PyBlosxom entries are kept.
+  </para>
+  <programlisting role="python">
+py["datadir"] = "/home/will/blog/datadir/"
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>logdir</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is the full path to the directory for logs.
+  </para>
+  <programlisting role="python">
+py["logdir"] = "/home/will/blog/logs/"
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>num_entries</entry>
+<entry>no</entry>
+<entry>int</entry>
+<entry>
+  <para>
+  how many entries should show up on a given page? This defaults to 0 which will show all entries.
+  </para>
+  <programlisting role="python">
+py["num_entries"] = 20
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>plugin_dirs</entry>
+<entry>no</entry>
+<entry>list of strings</entry>
+<entry>
+  <para>
+  the list of directories your plugins are stored in.
+  </para>
+  <programlisting role="python">
+py["plugin_dirs"] = ["/home/will/pyblosxom/plugins/"]
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>load_plugins</entry>
+<entry>no</entry>
+<entry>list of strings</entry>
+<entry>
+  <para>
+  if this is not set, then PyBlosxom will load all the plugins in the plugin dirs you specified in alphabetical order. If this is set, then PyBlosxom will only load the plugins specified.
+  </para>
+  <programlisting role="python">
+py["load_plugins"] = ["pycalendar", "rss2renderer"]
+  </programlisting>
+</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</appendix>
+
+
+
+
+
+<appendix>
+<title>GNU Free Documentation License</title>
+<programlisting role="gnufdl"><![CDATA[
+GNU Free Documentation License
+
+$Revision$
+
+$Date$
+
+Version 1.1, March 2000
+
+    Copyright (C) 2000 Free Software Foundation, Inc. 59 Temple Place, Suite 330, 
+Boston, MA 02111-1307 USA Everyone is permitted to copy and distribute verbatim 
+copies of this license document, but changing it is not allowed.
+
+PREAMBLE
+
+The purpose of this License is to make a manual, textbook, or other written 
+document "free" in the sense of freedom: to assure everyone the effective freedom 
+to copy and redistribute it, with or without modifying it, either commercially or 
+noncommercially. Secondarily, this License preserves for the author and publisher 
+a way to get credit for their work, while not being considered responsible for 
+modifications made by others.
+
+This License is a kind of "copyleft", which means that derivative works of the 
+document must themselves be free in the same sense. It complements the GNU General 
+Public License, which is a copyleft license designed for free software.
+
+We have designed this License in order to use it for manuals for free software, 
+because free software needs free documentation: a free program should come with 
+manuals providing the same freedoms that the software does. But this License is 
+not limited to software manuals; it can be used for any textual work, regardless 
+of subject matter or whether it is published as a printed book. We recommend this 
+License principally for works whose purpose is instruction or reference.
+
+APPLICABILITY AND DEFINITIONS
+
+This License applies to any manual or other work that contains a notice placed by 
+the copyright holder saying it can be distributed under the terms of this License. 
+The "Document", below, refers to any such manual or work. Any member of the public 
+is a licensee, and is addressed as "you".
+
+A "Modified Version" of the Document means any work containing the Document or
+a portion of it, either copied verbatim, or with modifications and/or
+translated into another language.
+
+A "Secondary Section" is a named appendix or a front-matter section of the
+Document that deals exclusively with the relationship of the publishers or
+authors of the Document to the Document's overall subject (or to related
+matters) and contains nothing that could fall directly within that overall
+subject. (For example, if the Document is in part a textbook of mathematics, a
+Secondary Section may not explain any mathematics.) The relationship could be a
+matter of historical connection with the subject or with related matters, or of
+legal, commercial, philosophical, ethical or political position regarding them.
+
+The "Invariant Sections" are certain Secondary Sections whose titles are
+designated, as being those of Invariant Sections, in the notice that says that
+the Document is released under this License.
+
+The "Cover Texts" are certain short passages of text that are listed, as
+Front-Cover Texts or Back-Cover Texts, in the notice that says that the
+Document is released under this License.
+
+A "Transparent" copy of the Document means a machine-readable copy, represented
+in a format whose specification is available to the general public, whose
+contents can be viewed and edited directly and straightforwardly with generic
+text editors or (for images composed of pixels) generic paint programs or (for
+drawings) some widely available drawing editor, and that is suitable for input
+to text formatters or for automatic translation to a variety of formats
+suitable for input to text formatters. A copy made in an otherwise Transparent
+file format whose markup has been designed to thwart or discourage subsequent
+modification by readers is not Transparent. A copy that is not "Transparent" is
+called "Opaque".
+
+Examples of suitable formats for Transparent copies include plain ASCII without
+markup, Texinfo input format, LaTeX input format, SGML or XML using a publicly
+available DTD, and standard-conforming simple HTML designed for human
+modification.  Opaque formats include PostScript, PDF, proprietary formats that
+can be read and edited only by proprietary word processors, SGML or XML for
+which the DTD and/or processing tools are not generally available, and the
+machine-generated HTML produced by some word processors for output purposes
+only.
+
+The "Title Page" means, for a printed book, the title page itself, plus such
+following pages as are needed to hold, legibly, the material this License
+requires to appear in the title page. For works in formats which do not have
+any title page as such, "Title Page" means the text near the most prominent
+appearance of the work's title, preceding the beginning of the body of the
+text.
+
+VERBATIM COPYING
+
+You may copy and distribute the Document in any medium, either commercially or
+noncommercially, provided that this License, the copyright notices, and the
+license notice saying this License applies to the Document are reproduced in
+all copies, and that you add no other conditions whatsoever to those of this
+License. You may not use technical measures to obstruct or control the reading
+or further copying of the copies you make or distribute. However, you may
+accept compensation in exchange for copies. If you distribute a large enough
+number of copies you must also follow the conditions in section 3.
+
+You may also lend copies, under the same conditions stated above, and you may
+publicly display copies.
+
+COPYING IN QUANTITY
+
+If you publish printed copies of the Document numbering more than 100, and the
+Document's license notice requires Cover Texts, you must enclose the copies in
+covers that carry, clearly and legibly, all these Cover Texts: Front-Cover
+Texts on the front cover, and Back-Cover Texts on the back cover. Both covers
+must also clearly and legibly identify you as the publisher of these copies.
+The front cover must present the full title with all words of the title equally
+prominent and visible. You may add other material on the covers in addition.
+Copying with changes limited to the covers, as long as they preserve the title
+of the Document and satisfy these conditions, can be treated as verbatim
+copying in other respects.
+
+If the required texts for either cover are too voluminous to fit legibly, you
+should put the first ones listed (as many as fit reasonably) on the actual
+cover, and continue the rest onto adjacent pages.
+
+If you publish or distribute Opaque copies of the Document numbering more than
+100, you must either include a machine-readable Transparent copy along with
+each Opaque copy, or state in or with each Opaque copy a publicly-accessible
+computer-network location containing a complete Transparent copy of the
+Document, free of added material, which the general network-using public has
+access to download anonymously at no charge using public-standard network
+protocols. If you use the latter option, you must take reasonably prudent
+steps, when you begin distribution of Opaque copies in quantity, to ensure that
+this Transparent copy will remain thus accessible at the stated location until
+at least one year after the last time you distribute an Opaque copy (directly
+or through your agents or retailers) of that edition to the public.
+
+It is requested, but not required, that you contact the authors of the Document
+well before redistributing any large number of copies, to give them a chance to
+provide you with an updated version of the Document.
+
+MODIFICATIONS
+
+You may copy and distribute a Modified Version of the Document under the
+conditions of sections 2 and 3 above, provided that you release the Modified
+Version under precisely this License, with the Modified Version filling the
+role of the Document, thus licensing distribution and modification of the
+Modified Version to whoever possesses a copy of it. In addition, you must do
+these things in the Modified Version:
+
+   1.
+
+      Use in the Title Page (and on the covers, if any) a title distinct from
+that of the Document, and from those of previous versions (which should, if
+there were any, be listed in the History section of the Document). You may use
+the same title as a previous version if the original publisher of that version
+gives permission.
+
+   2.
+
+      List on the Title Page, as authors, one or more persons or entities
+responsible for authorship of the modifications in the Modified Version,
+together with at least five of the principal authors of the Document (all of
+its principal authors, if it has less than five).
+
+   3.
+
+      State on the Title page the name of the publisher of the Modified
+Version, as the publisher.
+
+   4.
+
+      Preserve all the copyright notices of the Document.
+
+   5.
+
+      Add an appropriate copyright notice for your modifications adjacent to
+the other copyright notices.
+
+   6.
+
+      Include, immediately after the copyright notices, a license notice giving
+the public permission to use the Modified Version under the terms of this
+License, in the form shown in the Addendum below.
+
+   7.
+
+      Preserve in that license notice the full lists of Invariant Sections and
+required Cover Texts given in the Document's license notice.
+
+   8.
+
+Include an unaltered copy of this License.
+
+   9.
+
+      Preserve the section entitled "History", and its title, and add to it an
+item stating at least the title, year, new authors, and publisher of the
+Modified Version as given on the Title Page. If there is no section entitled
+"History" in the Document, create one stating the title, year, authors, and
+publisher of the Document as given on its Title Page, then add an item
+describing the Modified Version as stated in the previous sentence.
+
+  10.
+
+      Preserve the network location, if any, given in the Document for public
+access to a Transparent copy of the Document, and likewise the network
+locations given in the Document for previous versions it was based on. These
+may be placed in the "History" section. You may omit a network location for a
+work that was published at least four years before the Document itself, or if
+the original publisher of the version it refers to gives permission.
+
+  11.
+
+      In any section entitled "Acknowledgements" or "Dedications", preserve the
+section's title, and preserve in the section all the substance and tone of each
+of the contributor acknowledgements and/or dedications given therein.
+
+  12.
+
+      Preserve all the Invariant Sections of the Document, unaltered in their
+text and in their titles. Section numbers or the equivalent are not considered
+part of the section titles.
+
+  13.
+
+      Delete any section entitled "Endorsements". Such a section may not be
+included in the Modified Version.
+
+  14.
+
+      Do not retitle any existing section as "Endorsements" or to conflict in
+title with any Invariant Section.
+
+If the Modified Version includes new front-matter sections or appendices that
+qualify as Secondary Sections and contain no material copied from the Document,
+you may at your option designate some or all of these sections as invariant. To
+do this, add their titles to the list of Invariant Sections in the Modified
+Version's license notice. These titles must be distinct from any other section
+titles.
+
+You may add a section entitled "Endorsements", provided it contains nothing but
+endorsements of your Modified Version by various parties--for example,
+statements of peer review or that the text has been approved by an organization
+as the authoritative definition of a standard.
+
+You may add a passage of up to five words as a Front-Cover Text, and a passage
+of up to 25 words as a Back-Cover Text, to the end of the list of Cover Texts
+in the Modified Version. Only one passage of Front-Cover Text and one of
+Back-Cover Text may be added by (or through arrangements made by) any one
+entity. If the Document already includes a cover text for the same cover,
+previously added by you or by arrangement made by the same entity you are
+acting on behalf of, you may not add another; but you may replace the old one,
+on explicit permission from the previous publisher that added the old one.
+
+The author(s) and publisher(s) of the Document do not by this License give
+permission to use their names for publicity for or to assert or imply
+endorsement of any Modified Version.
+
+COMBINING DOCUMENTS
+
+You may combine the Document with other documents released under this License,
+under the terms defined in section 4 above for modified versions, provided that
+you include in the combination all of the Invariant Sections of all of the
+original documents, unmodified, and list them all as Invariant Sections of your
+combined work in its license notice.
+
+The combined work need only contain one copy of this License, and multiple
+identical Invariant Sections may be replaced with a single copy. If there are
+multiple Invariant Sections with the same name but different contents, make the
+title of each such section unique by adding at the end of it, in parentheses,
+the name of the original author or publisher of that section if known, or else
+a unique number. Make the same adjustment to the section titles in the list of
+Invariant Sections in the license notice of the combined work.
+
+In the combination, you must combine any sections entitled "History" in the 
+various original documents, forming one section entitled "History"; likewise 
+combine any sections entitled "Acknowledgements", and any sections entitled 
+"Dedications". You must delete all sections entitled "Endorsements."
+
+COLLECTIONS OF DOCUMENTS
+
+You may make a collection consisting of the Document and other documents released 
+under this License, and replace the individual copies of this License in the 
+various documents with a single copy that is included in the collection, provided 
+that you follow the rules of this License for verbatim copying of each of the 
+documents in all other respects.
+
+You may extract a single document from such a collection, and distribute it
+individually under this License, provided you insert a copy of this License
+into the extracted document, and follow this License in all other respects
+regarding verbatim copying of that document.
+
+AGGREGATION WITH INDEPENDENT WORKS
+
+A compilation of the Document or its derivatives with other separate and
+independent documents or works, in or on a volume of a storage or distribution
+medium, does not as a whole count as a Modified Version of the Document,
+provided no compilation copyright is claimed for the compilation. Such a
+compilation is called an "aggregate", and this License does not apply to the
+other self-contained works thus compiled with the Document, on account of their
+being thus compiled, if they are not themselves derivative works of the
+Document.
+
+If the Cover Text requirement of section 3 is applicable to these copies of the
+Document, then if the Document is less than one quarter of the entire
+aggregate, the Document's Cover Texts may be placed on covers that surround
+only the Document within the aggregate. Otherwise they must appear on covers
+around the whole aggregate.
+
+TRANSLATION
+
+Translation is considered a kind of modification, so you may distribute
+translations of the Document under the terms of section 4. Replacing Invariant
+Sections with translations requires special permission from their copyright
+holders, but you may include translations of some or all Invariant Sections in
+addition to the original versions of these Invariant Sections. You may include
+a translation of this License provided that you also include the original
+English version of this License. In case of a disagreement between the
+translation and the original English version of this License, the original
+English version will prevail.
+
+TERMINATION
+
+You may not copy, modify, sublicense, or distribute the Document except as
+expressly provided for under this License. Any other attempt to copy, modify,
+sublicense or distribute the Document is void, and will automatically terminate
+your rights under this License. However, parties who have received copies, or
+rights, from you under this License will not have their licenses terminated so
+long as such parties remain in full compliance.
+
+FUTURE REVISIONS OF THIS LICENSE
+
+The Free Software Foundation may publish new, revised versions of the GNU Free
+Documentation License from time to time. Such new versions will be similar in
+spirit to the present version, but may differ in detail to address new problems
+or concerns. See http://www.gnu.org/copyleft/.
+
+Each version of the License is given a distinguishing version number. If the
+Document specifies that a particular numbered version of this License "or any
+later version" applies to it, you have the option of following the terms and
+conditions either of that specified version or of any later version that has
+been published (not as a draft) by the Free Software Foundation. If the
+Document does not specify a version number of this License, you may choose any
+version ever published (not as a draft) by the Free Software Foundation.
+
+How to use this License for your documents
+
+To use this License in a document you have written, include a copy of the
+License in the document and put the following copyright and license notices
+just after the title page:
+
+    Copyright (c) YEAR YOUR NAME. Permission is granted to copy, distribute
+and/or modify this document under the terms of the GNU Free Documentation
+License, Version 1.1 or any later version published by the Free Software
+Foundation; with the Invariant Sections being LIST THEIR TITLES, with the
+Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST. A copy
+of the license is included in the section entitled "GNU Free Documentation
+License". 
+
+If you have no Invariant Sections, write "with no Invariant Sections" instead
+of saying which ones are invariant. If you have no Front-Cover Texts, write "no
+Front-Cover Texts" instead of "Front-Cover Texts being LIST"; likewise for
+Back-Cover Texts.
+
+If your document contains nontrivial examples of program code, we recommend 
+releasing these examples in parallel under your choice of free software license, 
+such as the GNU General Public License, to permit their use in free software.
+]]></programlisting>
+</appendix>
+
 </book>
