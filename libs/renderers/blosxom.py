@@ -1,12 +1,60 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
 from libs import tools
 from libs.renderers.base import RendererBase
-import re, os, sys, cgi
+import re, os, sys, cgi, codecs
+
+#
+# BlosxomRenderer can use two keys from config.py:
+#
+# py['blosxom_custom_flavours'] is a string containing additional flavour templates to be recognized
+# by PyBlosxom.  If you supply this string, it must begin with '|' and each template name needs to be
+# separated by '|'.  The string cannot end with '|'
+#
+# py['blosxom_plugins'] is a list of plugin names (files in libs/renderers/blosxomplugins, without the
+# .py suffix), in the order in which you wish them to be called.
+#
+# BlosxomRenderer plugins support a set of callback functions based on the blosxom 2.0 callback names. 
+# The arguments are different, but the BlosxomRenderer callbacks are called at the same points that the
+# blosxom 2.0 callbacks are called.
+#
+# All of the BlosxomRenderer callbacks take the same three arguments
+# 
+# @param: renderer - the renderer that called the callback
+# @type: BlosxomRenderer
+#
+# @param: entry - the entry being processed
+# @type: BaseEntry
+#
+# @param: template -- the template being processed.
+# @type: string
+#
+# The available blosxom renderer callbacks are:
+#  
+# start
+# head
+# date_head (corresponds to blosxom 2.0 date)
+# story
+# foot
+#
+# There is no callback corresponding to the blosxom 2.0 end callback.
+# 
+# In PyBlosxom, the functionality some of the blosxom 2.0 callbacks are 
+# taken care of by callback chains.
+#
+# The blosxom 2.0 entries callback is handled by the fileListHandler callback chain
+# The blosxom 2.0 filter callback is handled by the prepareChain callback chain
+# The blosxom 2.0 sort callback is handled by the prepareChain callback chain
+#
 
 class BlosxomRenderer(RendererBase):
     def __init__(self, request, out = sys.stdout):
         RendererBase.__init__(self, request, out)
+        (e, d, sr, sw) = codecs.lookup('iso-8859-1')
+        self._out = sw(self._out)
         self.dayFlag = 1
+        # import plugins and allow them to register with the api
+        import libs.renderers.blosxomplugins.__init__
+        libs.renderers.blosxomplugins.__init__.initialize_plugins(self._request.getConfiguration())       
 
     def __getFlavour(self, taste = 'html'):
         """
@@ -42,8 +90,10 @@ class BlosxomRenderer(RendererBase):
         data = self._request.getData()
         config = self._request.getConfiguration()
 
-        pattern = re.compile(r'(config|content_type|head|date_head|date_foot|foot|story)\.' 
-                + taste)
+        custom_flavours = config.get('blosxom_custom_flavours','')
+        
+        pattern = re.compile(r'(config|content_type|head|date_head|date_foot|foot|story'+custom_flavours+')\.' 
+                             + taste)
         flavourlist = tools.Walk(data['root_datadir'], 1, pattern)
         if not flavourlist:
             flavourlist = tools.Walk(config['datadir'], 1, pattern)
@@ -80,7 +130,9 @@ class BlosxomRenderer(RendererBase):
         @rtype: string
         """
         if template:
-            return tools.parse(entry, template).replace(r'\$', '$')
+            template = unicode(template)
+            finaltext = tools.parse(entry, template)
+            return finaltext.replace(r'\$', '$')
         return ""
 
     def __processEntry(self, entry, current_date):
@@ -113,12 +165,12 @@ class BlosxomRenderer(RendererBase):
         if entry['date'] != current_date:
             current_date = entry['date']
             if not self.dayFlag:
-                output.append(self.__printTemplate(entry, self.flavour.get('date_foot' ,'')))
+                self.outputTemplate(output, entry,'date_foot')
             self.dayFlag = 0
-            output.append(self.__printTemplate(entry, self.flavour.get('date_head' ,'')))
-        output.append(self.__printTemplate(entry, self.flavour.get('story' ,'')))
-        return "".join(output), current_date
-
+            self.outputTemplate(output, entry, 'date_head')
+        self.outputTemplate(output, entry, 'story')
+            
+        return u"".join(output), current_date    
 
     def __processContent(self):
         """
@@ -162,7 +214,7 @@ class BlosxomRenderer(RendererBase):
                 # if entry['pi_yr'] == '':
                 #     break
 
-        return "".join(outputbuffer)
+        return u"".join(outputbuffer)
 
     def render(self, header = 1):
         """
@@ -193,14 +245,14 @@ class BlosxomRenderer(RendererBase):
             self._out.write('\n')
         
         if self._content:
-            if self.flavour.has_key('head'): 
-                self._out.write(tools.parse(parsevars, self.flavour['head']))
+            if self.flavour.has_key('head'):
+                self.__outputFlavour(parsevars,'head')
             if self.flavour.has_key('story'):
                 self._out.write(self.__processContent())
             if self.flavour.has_key('date_foot'): 
-                self._out.write(tools.parse(parsevars, self.flavour['date_foot']))
+                self.__outputFlavour(parsevars,'date_foot')                
             if self.flavour.has_key('foot'): 
-                self._out.write(tools.parse(parsevars, self.flavour['foot']))
+                self.__outputFlavour(parsevars,'foot')                
         
         self.rendered = 1
 
@@ -209,6 +261,73 @@ class BlosxomRenderer(RendererBase):
         if cache:
             cache.close()
                 
+    def __outputFlavour(self, vars, template_name):
+        """
+        Find the flavour template for template_name, run any blosxom callbacks, 
+        substitute vars into it and write the template to the output
+        
+        @param: vars
+        @type: BaseEntry
 
+        @param: template_name - name of the flavour template 
+        @type: string
+        """
+        template = self.flavour[template_name]
+        template = self.runCallbacks(self, template_name, vars, template)
+        self._out.write(tools.parse(vars, template))
+            
+    def outputTemplate(self, output, entry, flavour_name):
+        """
+        Find the flavour template for template_name, run any blosxom callbacks,
+        substitute entry into it and append the template to the output
+        
+        @param: output
+        @type: list
+
+        @param: entry
+        @type: BaseEntry
+
+        @param: template_name - name of the flavour template
+        @type: string
+        """
+        template = self.flavour.get(flavour_name,'')
+        template = self.runCallbacks(self, flavour_name, entry, template)
+        output.append(self.__printTemplate(entry, template))
+
+    def getContent(self):
+        """
+        Return the content field
+        
+        This is exposed for blosxom callbacks.
+        
+        @returns: content
+        """
+        return self._content
+
+    def runCallbacks(self, renderer, name, entry, template):
+        """
+        Run the plugin callbacks for a particular blosxom plugin
+        
+        @param: renderer
+        @type: BlosxomRenderer instance
+            
+        @param: name of Blosxom callback to run
+        @type: string
+            
+        @param: entry - entry to substitute
+        @type: BaseEntry
+            
+        @param: template - flavour template
+        @type: string
+            
+        """
+        import libs.renderers.blosxomplugins.__init__
+        plugins = libs.renderers.blosxomplugins.__init__.plugins
+        for p in plugins:
+            fn = getattr(p, name, None)
+            if fn is not None:
+                template = fn(renderer, entry,template)
+        return template
+        
 class Renderer(BlosxomRenderer):
     pass

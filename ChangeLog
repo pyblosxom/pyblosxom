@@ -1,3 +1,7 @@
+2003-03-21  Theodore W. Leung  <twl@sauria.com>
+	* Added support for plugins in the BlosxomRenderer.  These plugins
+	  are based on the Perl blosxom 2.0 callbacks. 
+
 2003-03-11 Blake Winston (with some followup from Will Guaraldi)
         * Introduced the EntryBase API and adjusted the code base so that
 	  content can be dynamically created from whatever is handling
