@@ -160,9 +160,17 @@ class PyBlosxom:
             if path_info and path_info[0] in tools.MONTHS:
                 data['pi_mo'] = path_info.pop(0)
                 # Day
-                if path_info and re.match("^([0-2][0-9]|3[0-1])$", path_info[0]):
-                    # Potential day here, no more processing from here
-                    data['pi_da'] = path_info.pop(0)
+                if path_info and re.match("^([0-2][0-9]|3[0-1])", path_info[0]):
+                    # Potential day here
+                    data['pi_da'] = path_info[0][0:2] # grab date - must be 2 digits
+                    # if there is a fragment identifier #entryname, place that in "pi_frag"
+                    # the fragment identifier won't appear when this code is call via CGI, but
+                    # will appear when called to processing string URI's for pingback
+                    match = re.search("(?P<frag>\#.+)",path_info[0])
+                    if match != None and match.lastgroup == 'frag':
+                        data['pi_frag'] = match.group('frag')
+                    path_info.pop(0)
+
             if path_info and path_info[0]:
                 # Potential flavour after date
                 filename, ext = os.path.splitext(path_info[0])
