@@ -56,8 +56,7 @@ class PyblStats:
         Generate the list of referring files
         """
         # initialize blacklist
-        if self._py.has_key('refer_blacklist'):
-            bad_list = string.split(self._py['refer_blacklist'],',')
+        bad_list = string.split(self._py.get('refer_blacklist',''),',')
 
         def url(tuple):
             """
