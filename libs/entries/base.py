@@ -27,6 +27,16 @@ class EntryBase:
         self._id = ""
         self._mtime = BIGNUM
 
+    def __repr__(self):
+        """
+        Returns a friendly debuggable representation of self. Useful to know on
+        what entry pyblosxom fails on you (though unlikely)
+
+        returns: Identifiable representation of object
+        rtype: string
+        """
+        return "<Entry instance: %s>\n" % self.getId()
+
     def getId(self):
         """
         This should return an id that's unique enough for caching 
