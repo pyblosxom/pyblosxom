@@ -1,4 +1,9 @@
 """
+options for config.py:
+
+if py['xmlrpc_metaweblog_ping'] == 'True' then autoping will be invoked to
+generate trackbacks and pingbacks
+
 Implements the metaWeblog XML-RPC interface.
 See spec here: http://www.xmlrpc.com/metaWeblogApi
 
