@@ -1,7 +1,7 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
 from libs import tools
 from libs.renderers.base import RendererBase
-import re, os, sys
+import re, os, sys, cgi
 
 class BlosxomRenderer(RendererBase):
     def __init__(self, py, out = sys.stdout):
