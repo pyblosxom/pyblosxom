@@ -8,7 +8,7 @@ import tools
 from entries.fileentry import FileEntry
 
 VERSION = "1.1"
-VERSION_DATE = VERSION + " RC1"
+VERSION_DATE = VERSION + " 01/05/2005"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
 class PyBlosxom:
@@ -415,7 +415,9 @@ def blosxom_handler(request):
 
     data['renderer'] = r
 
-    request.addHttp( {"form": cgi.FieldStorage() } )
+    if not request.getHttp().has_key("form"):
+        request.addHttp( {"form": cgi.FieldStorage() } )
+
     # process the path info to determine what kind of blog entry(ies) 
     # this is
     tools.run_callback("pathinfo",
