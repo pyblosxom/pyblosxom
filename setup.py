@@ -106,7 +106,7 @@ setup(name="pyblosxom",
     packages=['Pyblosxom', 'Pyblosxom.cache', 'Pyblosxom.entries', 'Pyblosxom.renderers'],
     licence = 'MIT',
     long_description =
-"""Pyblosxom is a weblog engine that user the filesystem as the database of
+"""Pyblosxom is a weblog engine that uses the filesystem as the database of
 your entries.
 """,
     scripts=['web/pyblosxom.cgi', 'web/xmlrpc.cgi'],
