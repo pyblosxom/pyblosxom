@@ -885,7 +885,7 @@ def blosxom_process_path_info(args):
 
     form = request.getForm()
     data['flavour'] = (form.has_key('flav') and form['flav'].value or 
-            config.get('defaultFlavour', 'html'))
+            config.get('default_flavour', 'html'))
 
     path_info = []
     data['pi_yr'] = ''
