@@ -7,6 +7,10 @@ in order for this plugin to work
 Place this plugin early in your load_plugins list, so that the w3cdate will
 be available to subsequent plugins
 """
+__author__ = "Ted Leung <twl@sauria.com>"
+__version__ = "$Id:"
+__copyright__ = "Copyright (c) 2003 Ted Leung"
+__license__ = "Python"
 
 import xml.utils.iso8601
 import time
