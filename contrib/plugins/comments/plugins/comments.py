@@ -208,7 +208,11 @@ def writeComment(config, data, comment):
     def makeXMLField(name, field):
         return "<"+name+">"+cgi.escape(field[name])+"</"+name+">\n";
     try:
-        cfile.write('<?xml version="1.0" encoding="iso-8859-1"?>\n')
+        try:
+            comment[description].decode(utf-8)
+            cfile.write('<?xml version=1.0 encoding=utf-8?>\n')
+        except:
+            cfile.write('<?xml version="1.0" encoding="iso-8859-1"?>\n')
         cfile.write("<item>\n")
         cfile.write(makeXMLField('title',comment))
         cfile.write(makeXMLField('author',comment))
