@@ -14,9 +14,9 @@ except ImportError:
 # Ugly default templates, have to though :(
 HTML = {'content_type' : 'text/html',
         'head' : """<html><head><title>$blog_title $pi_da $pi_mo $pi_yr</title></head><body><h1>$blog_title</h1><p>$pi_da $pi_mo $pi_yr</p>""",
-        'date_head' : '<div class="blosxomDayDiv">\n<span class="blosxomDate">$date</span>',
-        'story' : """<div class="blosxomStory"><a name="$fn"><b>$title</b></a><br />$body<br /><br />posted at: $ti | path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></div>\n""",
-        'date_foot' : '</div>',
+        'date_head' : '<h2>$date</h2>',
+        'story' : """<h3><a name="$fn">$title</a></h3><div class="blosxomStory">$body<p>posted at: $ti | path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></p></div>\n""",
+        'date_foot' : '',
         'foot' : """<p><a href="http://roughingit.subtlehints.net/pyblosxom"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" alt="Made with PyBlosxom" border="0" /></a></p></body></html>"""}
 
 RSS = {'content_type' : 'text/xml',
