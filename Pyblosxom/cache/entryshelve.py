@@ -16,8 +16,8 @@ import shelve
 import os
 
 class BlosxomCache(BlosxomCacheBase):
-    def __init__(self, config):
-        BlosxomCacheBase.__init__(self, config)
+    def __init__(self, req, config):
+        BlosxomCacheBase.__init__(self, req, config)
         self._db = shelve.open(self._config)
 
     def load(self, entryid):

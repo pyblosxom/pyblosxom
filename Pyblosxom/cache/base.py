@@ -20,14 +20,17 @@ class BlosxomCacheBase:
         The Value of config is derived from C{py['cacheConfig']} in L{config}.
     @type _config: string
     """
-    def __init__(self, request, config):
+    def __init__(self, req, config):
         """
         Constructor - setup and load up the cache
+
+        @param req: the request object
+        @type req: Request
 
         @param config: String containing config on where to store the cache
         @type config: string
         """
-        self._request = request
+        self._request = req
         self._config = config
 
 
