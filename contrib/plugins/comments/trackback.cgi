@@ -64,7 +64,7 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
     # register what file extensions can be used
     from libs.pyblosxom import PyBlosxom
 
-    p = PyBlosxom(req)
+    p = PyBlosxom(request)
     p.startup()
 
     data['extensions'] = tools.run_callback("entryparser",
