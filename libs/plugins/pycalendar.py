@@ -120,7 +120,7 @@ class PyblCalendar:
 		if todaysdate[0:2] == today[0:2]:
 			day = str(todaysdate[DAY]).rjust(2)
 			if highlight.has_key(day):
-				highlight[day] = tuple([1] + highlight[day][1:])
+				highlight[day] = tuple([1] + list(highlight[day])[1:])
 			else:
 				highlight[day] = (1, "", day)
 
