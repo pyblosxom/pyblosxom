@@ -10,7 +10,7 @@ setup(name="pyblosxom",
       url="http://roughingit.subtlehints.net/pyblosxom",
       packages=['Pyblosxom', 'Pyblosxom.cache', 'Pyblosxom.entries',
       		'Pyblosxom.renderers'],
-      licence = 'Python',
+      licence = 'MIT',
       long_description =
 """Pyblosxom is a weblog engine that users the filesystem as the database of
 your entries.
