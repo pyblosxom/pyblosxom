@@ -248,7 +248,7 @@ class PyBlosxom:
             print 'Back to <a href="%(base_url)s">%(blog_title)s</a>' % self.py
             sys.exit()
     
-        if self.py['conditionalHTTP'] = 'yes':
+        if self.py['conditionalHTTP'] == 'yes':
             # Get our first file timestamp for ETag and Last Modified
             # Last-Modified: Wed, 20 Nov 2002 10:08:12 GMT
             # ETag: "2bdc4-7b5-3ddb5f0c"
