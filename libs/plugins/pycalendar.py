@@ -188,7 +188,7 @@ class PyblCalendar:
 				if key[0] == 1:
 					out = ["<td class=\"blosxomCalendarToday\">"]
 				else:
-					out = ["<td class=\"blosxomCalendarCell\">"]
+					out = ["<td class=\"blosxomCalendarBlogged\">"]
 
 				if key[1]:
 					out.append("<a href=\"%s\">%s</a>" % (key[1], key[2]))
