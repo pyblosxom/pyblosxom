@@ -62,7 +62,7 @@ validation, add the following to your config file:
 It's also a good thing to set your encoding and the desired output:
 
     py['txtl_encoding'] = 'latin-1'
-    py['txtl_output'    = 'ascii'
+    py['txtl_output']   = 'ascii'
 
 You can configure this as your default preformatter for .txt files by
 configuring it in your config file as follows::

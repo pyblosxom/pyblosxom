@@ -86,7 +86,7 @@ py['num_entries'] = 40
 # What directory do you want your static html pages to go into?
 #py["static_dir"] = "/path/to/static/dir"
 
-# What flavours shout get generated?
+# What flavours should get generated?
 #py["static_flavours"] = ["html", "rss"]
 
 # What other paths should we statically render?
