@@ -418,9 +418,7 @@ class Request(object):
     def __getForm(self):
         """
         Parses and returns the form data submitted by the client.
-        The input stream self._in is consumed/empty after a call
-        to cgi.FieldStorage. If the created FieldStorage instance
-        has a 'file' member this is set as the new input stream.
+        Rewinds the input buffer after calling cgi.FieldStorage.
 
         @returns: L{cgi.FieldStorage}
         """        
