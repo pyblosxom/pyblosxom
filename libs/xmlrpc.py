@@ -1,4 +1,7 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
+"""
+XMLRPC services dispatcher.
+"""
 import xmlrpclib, sys
 
 def debug(dbg):
@@ -8,7 +11,13 @@ def debug(dbg):
     file('xmlrpc.debug','a').write('DEBUG: %s\n' % str(dbg))
 
 class xmlrpcHandler:
+    """
+    XMLRPC services dispatcher and handler.
 
+    Responsible for handling XMLRPC services request. XMLRPC methods and
+    services are available from C{libs.xmlrpcplugins}.
+    """
+    
     def __init__(self, request, data):
         import libs.xmlrpcplugins.__init__
         self._request = request
