@@ -279,10 +279,12 @@ def cb_story(dict):
 def cb_start(dict):
     request = dict['request']
     config = request.getConfiguration()
+    custom_flavours = ['comment-head', 'comment-story', 'comment', 'comment-form']
     if not config.has_key('blosxom_custom_flavours'):
-        config['blosxom_custom_flavours'] = ['comment-head', 'comment-story', 'comment', 'comment-form']
+        config['blosxom_custom_flavours'] = custom_flavours
     else:
-        config['blosxom_custom_flavours'].append('comment-head', 'comment-story', 'comment', 'comment-form')
+        for mem in custom_flavours:
+            config['blosxom_custom_flavours'].append(mem)
     if not config.has_key('comment_dir'):
         config['comment_dir'] = 'comments'
     if not config.has_key('comment_ext'):
