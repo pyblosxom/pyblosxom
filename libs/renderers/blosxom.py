@@ -270,7 +270,7 @@ class BlosxomRenderer(RendererBase):
         @type: string
         """
         template = self.flavour[template_name]
-        template = tools.run_blosxom_callback(template_name, { "renderer": self, "entry": vars, "template": template })
+        template = self._run_callback(template_name, { "entry": vars, "template": template }) 
         self._out.write(tools.parse(vars, template))
             
     def outputTemplate(self, output, entry, flavour_name):
@@ -288,9 +288,26 @@ class BlosxomRenderer(RendererBase):
         @type: string
         """
         template = self.flavour.get(flavour_name,'')
-        template = tools.run_blosxom_callback(flavour_name, { "renderer": self, "entry": entry, "template": template })
+        template = self._run_callback(flavour_name, { "entry": entry, "template": template })
         output.append(self.__printTemplate(entry, template))
 
+    def _run_callback(self, chain, input):
+        """
+        Makes calling blosxom callbacks a bit easier since they all have the
+        same mechanics.  This function merely calls run_callback with
+        the arguments given and a mappingfunc.
+        
+        The mappingfunc copies the "template" value from the output to the 
+        input for the next function.
+        
+        Refer to run_callback for more details.
+        """
+        input.update({"renderer":self})
+        return tools.run_callback(chain, input, 
+                            lambda x,y: x.update({"template": y["template"]}),
+                            lambda x:x != None,
+                            lambda x: x["template"])         
+        
     def getContent(self):
         """
         Return the content field

@@ -248,24 +248,6 @@ def generateRandStr(minlen=5, maxlen=10):
         randStr += whrandom.choice(chars)
     return randStr
 
-
-def run_blosxom_callback(chain, input):
-    """
-    Makes calling blosxom callbacks a bit easier since they all have the
-    same mechanics.  This function merely calls run_callback with
-    the arguments given and a mappingfunc.
-
-    The mappingfunc copies the "template" value from the output to the 
-    input for the next function.
-
-    Refer to run_callback for more details.
-    """
-    return run_callback(chain, input, 
-            lambda x,y: x.update({"template": y["template"]}),
-            lambda x:x != None,
-            lambda x: x["template"]) 
-
-
 def run_callback(chain, input, 
         mappingfunc=lambda x,y:x, 
         donefunc=lambda x:0,
