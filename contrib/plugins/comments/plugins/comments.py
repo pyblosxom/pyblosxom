@@ -15,6 +15,8 @@ required):
     comment_smtp_server - the smtp server to send comments notifications
                           through.
     comment_smtp_from - the person comment notifications will be from.
+                        If you omit this, the from address will be the
+                        e-mail address as input in the comment form
     comment_smtp_to - the person to send comment notifications to.
 
 
@@ -224,24 +226,26 @@ def writeComment(config, data, comment):
         return
     
     # if the right config keys are set, notify by e-mail
-    if config.has_key('comment_smtp_server') \
-            and config.has_key('comment_smtp_from') \
-            and config.has_key('comment_smtp_to'):
+    if config.has_key('comment_smtp_server') and \
+       config.has_key('comment_smtp_to'):
         import smtplib
         author = escape_SMTP_commands(clean_author(comment['author']))
         description = escape_SMTP_commands(comment['description'])
+        email = comment['email']
+        if email is None:
+            email = config['comment_smtp_from']
         try:
             server = smtplib.SMTP(config['comment_smtp_server'])
             curl = config['base_url']+'/'+entry['file_path']
-        
+
             message = []
-            message.append("From: %s" % config["comment_smtp_from"])
+            message.append("From: %s" % email)
             message.append("To: %s" % config["comment_smtp_to"])
             message.append("Date: %s" % time.ctime(modTime))
             message.append("Subject: write back by %s" % author)
             message.append("")
             message.append("%s\n%s\n%s\n" % (description, cfn, curl))
-            server.sendmail(from_addr=config['comment_smtp_from'], 
+            server.sendmail(from_addr=email,
                             to_addrs=config['comment_smtp_to'], 
                             msg="\n".join(message))
             server.quit()
@@ -381,6 +385,7 @@ def cb_prepare(args):
         
         cdict = {'title': form['title'].value, \
                  'author' : form['author'].value, \
+                 'email' : form['email'].value, \
                  'pubDate' : str(time.time()), \
                  'link' : url, \
                  'source' : '', \
