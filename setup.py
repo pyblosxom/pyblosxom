@@ -51,7 +51,7 @@ if sys.platform == "win32":
         f = [mem + os.sep + m for m in f if os.path.isfile(mem + os.sep + m)]
         pydf.append( (root + mem, f) )
 
-elif sys.platform in ["linux1", "linux2", "cygwin", "openbsd3"]:
+elif sys.platform in ["linux1", "linux2", "cygwin", "openbsd3", "freebsd5"]:
     pydf = []
 
     root = "/usr/share/" + PVER + "/"
