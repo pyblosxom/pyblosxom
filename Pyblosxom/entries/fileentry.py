@@ -24,17 +24,19 @@ class FileEntry(base.EntryBase):
     This class gets it's data and metadata from the file specified
     by the filename argument.
 
-    @param config: the dict to grab configuration parameters from
-    @type  config: dict
-
-    @param filename: the complete filename for the file in question
-        including path
-    @type  filename: string
-
-    @param root: i have no clue what this is
-    @type  root: string
     """
     def __init__(self, request, filename, root):
+        """
+        @param request: the Request object
+        @type  request: Request
+
+        @param filename: the complete filename for the file in question
+            including path
+        @type  filename: string
+
+        @param root: i have no clue what this is
+        @type  root: string
+        """
         base.EntryBase.__init__(self, request)
         self._config = request.getConfiguration()
         self._filename = filename

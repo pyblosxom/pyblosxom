@@ -412,7 +412,7 @@ def get_lock(request, lockname):
         could be the name of the file you're trying to synchronize
         on if you like.  we add a ".lock" to the end of the lock
         name to create the filename we use as the lock.
-    @type  string:
+    @type  lockname: string
 
     @returns: 0 if not successful, 1 if we are successful
     @rtype:   boolean
@@ -478,7 +478,7 @@ def return_lock(request, lockname):
         could be the name of the file you're trying to synchronize
         on if you like.  we add a ".lock" to the end of the lock
         name to create the filename we use as the lock.
-    @type  string:
+    @type  lockname: string
     """
     global LOCKS
     datadir = request.getConfiguration()["datadir"]

@@ -131,14 +131,14 @@ class BlosxomIndexer {
   /* documents, to be indexed.
    */
 
-  private static void indexDocs(File file, String index, boolean create)
+  private static void indexDocs(File f, String index, boolean create)
        throws Exception {
     if (!create) {				  // incrementally update
       
       reader = IndexReader.open(index);		  // open existing index
       uidIter = reader.terms(new Term("uid", "")); // init uid iterator
     
-      indexDocs(file);
+      indexDocs(f);
 
       if (deleting) {				  // delete rest of stale docs
 	while (uidIter.term() != null && uidIter.term().field() == "uid") {
@@ -154,22 +154,22 @@ class BlosxomIndexer {
       reader.close();				  // close existing index
 
     } else					  // don't have exisiting
-      indexDocs(file);
+      indexDocs(f);
   }
 
-  private static void indexDocs(File file) throws Exception {
-    if (file.isDirectory()) {			  // if a directory
-      String[] files = file.list();		  // list its files
+  private static void indexDocs(File f) throws Exception {
+    if (f.isDirectory()) {			  // if a directory
+      String[] files = f.list();		  // list its files
       Arrays.sort(files);			  // sort the files
       for (int i = 0; i < files.length; i++)	  // recursively index them
-	indexDocs(new File(file, files[i]));
+	indexDocs(new File(f, files[i]));
 
-    } else if (// file.getPath().endsWith(".html") || // index .html files
-	       //file.getPath().endsWith(".htm") || // index .htm files
-	       file.getPath().endsWith(".txt")) { // index .txt files
+    } else if (// f.getPath().endsWith(".html") || // index .html files
+	       //f.getPath().endsWith(".htm") || // index .htm files
+	       f.getPath().endsWith(".txt")) { // index .txt files
       
       if (uidIter != null) {
-	String uid = HTMLDocument.uid(file);	  // construct uid for doc
+	String uid = HTMLDocument.uid(f);	  // construct uid for doc
 
 	while (uidIter.term() != null && uidIter.term().field() == "uid" &&
 	       uidIter.term().text().compareTo(uid) < 0) {
@@ -184,12 +184,12 @@ class BlosxomIndexer {
 	    uidIter.term().text().compareTo(uid) == 0) {
 	  uidIter.next();			  // keep matching docs
 	} else if (!deleting) {			  // add new docs
-	  Document doc = HTMLDocument.Document(file);
+	  Document doc = HTMLDocument.Document(f);
 	  System.out.println("adding " + doc.get("url"));
 	writer.addDocument(doc);
 	}
       } else {					  // creating a new index
-	Document doc = HTMLDocument.Document(file);
+	Document doc = HTMLDocument.Document(f);
 	System.out.println("adding " + doc.get("url"));
 	writer.addDocument(doc);		  // add docs unconditionally
       }

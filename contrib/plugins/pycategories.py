@@ -23,6 +23,7 @@ class PyblCategories:
     def __init__(self, request):
         self._request = request
         self._categories = None
+        self.genCategories()
 
     def __str__(self):
         if self._categories == None:
@@ -38,12 +39,18 @@ class PyblCategories:
                 num = num + self._elistmap[key]
         num = " (%d)" % num
 
-        return (((len(itemlist)-1) * "&nbsp;&nbsp;") + 
-                "<a href=\"%s/%s%s\">%s</a>%s" % (self._baseurl, item, self._flavour, itemlist[-1] +"/", num))
+        if not item:
+            tab = ""
+        else:
+            tab = len(itemlist) * "&nbsp;&nbsp;"
+
+        return (tab + "<a href=\"%s/%s%s\">%s</a>%s" % (self._baseurl, item, self._flavour, itemlist[-1] +"/", num))
 
     def genCategories(self):
         config = self._request.getConfiguration()
         root = config["datadir"]
+
+        data = self._request.getData()
 
         flav = config.get("category_flavour", "")
         if flav:
@@ -55,7 +62,9 @@ class PyblCategories:
 
         # build the list of entries
         elist = tools.Walk(self._request, root)
-        elist = [mem[len(root):] for mem in elist]
+        elist = [mem[len(root)+1:] for mem in elist]
+
+        total = len(elist)
 
         elistmap = {}
         for mem in elist:
@@ -69,6 +78,7 @@ class PyblCategories:
             for i in range(len(mem)+1):
                 p = os.sep.join(mem[0:i])
                 clistmap[p] = 0
+
         clist = clistmap.keys()
         clist.sort()
 

@@ -77,9 +77,9 @@ class PyblStats:
         Generate the list of referring files
         """
         # initialize blacklist
-        list = self._config.get('refer_blacklist','')
-        if list:
-            bad_list = string.split(list,',')
+        l = self._config.get('refer_blacklist','')
+        if l:
+            bad_list = string.split(l,',')
         else:
             bad_list = []
 
