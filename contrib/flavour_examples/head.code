@@ -154,14 +154,11 @@ a:active, a:hover {
     <dl>
     <dt>About</dt>
 
-    <dd>&middot; Wari Wahab</dd>
-    <dd>&middot; Senior R&amp;D Engineer</dd>
-    <dd>&middot; Celestix Networks</dd>
+    <dd>&middot; $blog_author</dd>
 
     <dt>Web Sites</dt>
-    <dd>&middot; <a href="http://osdir.com/modules.php?op=modload&name=Downloads&file=index&req=ratedownload&lid=52">Rate this App @ OSDir.com</a><br /><dd>
-    <dd>&middot; <a href="http://roughingit.subtlehints.net">RoughingIT</a></dd>
     <dd>&middot; <a href="http://wiki.subtlehints.net/moin/PyBlosxom">pyblosxom wiki page</a></dd>
+    <dd>&middot; <a href="http://www.planetpyblosxom.org/">Planet PyBlosxom</a></dd>
     </dl>
 </td>
 <!-- This is your main content window: -->

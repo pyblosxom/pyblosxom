@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <feed xmlns="http://purl.org/atom/ns#" xmlns:ent="http://www.purl.org/NET/ENT/1.0/" version="1.0">
- <title>$blog_title</title>
- <link rel="alternate" type="text/html" href="$url" />
-<!-- <modified>$w3cdate</modified> -->
- <!-- optional elements -->
- <tagline></tagline>
- <generator name="pyblosxom 0.8rc1">http://roughingit.subtlehints..net/pyblosxom</generator>
+  <title>$blog_title</title>
+  <link rel="alternate" type="text/html" href="$url" />
+  <modified>$w3cdate</modified>
+  <!-- optional elements -->
+  <tagline></tagline>
+  <generator>$base_url</generator>

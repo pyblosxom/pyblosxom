@@ -2,7 +2,7 @@
   <title>$title</title>
   <summary></summary>
   <author>
-   <name></name>
+   <name>$blog_author</name>
    <url>$base_url</url>
   </author>
   <link rel="alternate" type="text/html" href="$base_url/$yr/$mo_num/$da#$fn" />  <id>$base_url/$yr/$mo_num/$da#$fn</id>
