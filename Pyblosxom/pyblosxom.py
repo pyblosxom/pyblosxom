@@ -173,6 +173,18 @@ class PyBlosxom:
             output = config.get('stdoutput', sys.stdout)
             output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
 
+     def runCallback(self, callback="help"):
+         """
+         Generic method to run the engine for a specific callback
+         """
+         # treated as a non-rendering startup
+         config, data = self.common_start(render=0)
+
+         # invoke all callbacks for the 'callback'
+         handled = tools.run_callback(callback,
+                         {'request': self._request},
+                         mappingfunc=lambda x,y:x,
+                         donefunc=lambda x:x)
 
 def blosxom_entry_parser(filename, request):
     """
