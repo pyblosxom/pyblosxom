@@ -121,6 +121,57 @@ def cb_filelist(args = {'request' : Request()}):
     pass
 
 
+def cb_entryparser(args = {'txt': 'A blosxom text entryparser'}):
+    """
+    A callback that tranforms a dict, containing a list of keys - the extension
+    of files it can take, and a function reference, that accepts two arguments,
+    a filename, and the standard request object.
+
+    The function is supposed to return a dict, at least containing the key
+    C{'title'} and C{'story'}. Entryparsers can use other callback facilities
+    like L{cb_preformat} and the L{cb_postformat} callbacks. See
+    L{libs.pyblosxom.PyBlosxom.defaultEntryParser} on how to use such facilities.
+
+    All outputs of entryparsers (and together with preformatters and
+    postformatters) will be cached by the caching mechanisms.
+    
+    Plugins are supposed to add more keys as the extension of the file it can
+    handle. A plugin can also replace the standard txt entryparser if the need
+    be.  All plugins that registers C{cb_filestat} are given a chance to take a
+    peek at the args, append to it, or modify it (not advisable).
+
+    By default, typical contents of args::
+        {'txt': L{libs.pyblosxom.PyBlosxom.defaultEntryParser}}
+
+    Here's an example code that reads *.plain files::
+
+        import os
+        def cb_entryparser(args):
+            \"""
+            Register self as plain file handler
+            \"""
+            args['plain'] = parse
+            return args
+
+        def parse(filename, request):
+            \"""
+            We just read everything off the file here, using the filename as
+            title
+            \"""
+            entryData = {}
+            entryData['title'] = os.path.basename(filename)
+            entryData['story'] = file(filename).read()
+            return entryData
+
+    Upon a successful registration, pyblosxom will now read all *.plain and
+    *.txt files from the data directory
+
+    @param args: A dict that comtains function references to entryparsers
+    @type args: dict
+    """
+    pass
+
+
 def cb_preformat(args = 
         {'parser': 'somepreformatter', 
          'story': ['The\n','text\n'], 

@@ -1,3 +1,8 @@
+2003-04-01 Wari Wahab <wari at home dot wari dot org>
+	* Definitely not an all fools day joke. Moved entryparsers to the much
+	  cleaner and unified callback mechanisms. Callback added -
+	  entryparser
+
 2003-03-28 Wari Wahab <wari at home dot wari dot org>
 	* Moved preformatters to be plugins. This is a much cleaner approach
 	  then what have been done previously. Callbacks added - preformat and

@@ -151,9 +151,9 @@ def Walk(root = '.', recurse = 0, pattern = '', return_folders = 0 ):
 
     # expand pattern
     if not pattern:
-        import libs.entryparsers.__init__
-        libs.entryparsers.__init__.initialize_extensions()
-        pattern = re.compile(r'.*\.(' + '|'.join(libs.entryparsers.__init__.ext) + r')$')
+        registry = get_registry()
+        ext = registry["request"].getData()['extensions']
+        pattern = re.compile(r'.*\.(' + '|'.join(ext) + r')$')
 
     #pattern = pattern or re.compile('.*\.txt$')
     pat_list = string.splitfields( pattern , ';' )

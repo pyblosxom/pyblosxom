@@ -48,6 +48,55 @@ class PyBlosxom:
             data['url'] = '%s%s' % (config['base_url'], data['pi_bl'])
 
 
+    def defaultEntryParser(self, filename, request):
+        """
+        Open up a *.txt file and read its contents
+
+        @param filename: A filename to extra data and meta data from
+        @type filename: string
+        @param request: A standard request object
+        @type request: L{libs.Request.Request} object
+        @returns: A dict containing parsed data and meta data with the particular
+                file (and plugin)
+        @rtype: dict
+        """
+        config = request.getConfiguration()
+
+        entryData = {}
+
+        try:
+            story = file(filename).readlines()
+        except IOError:
+            raise IOError
+
+        if len(story) > 0:
+            entryData['title'] = story.pop(0).strip()
+
+        while len(story) > 0:
+            match = re.match(r'^#(\w+)\s+(.*)', story[0])
+            if match:
+                story.pop(0)
+                entryData[match.groups()[0]] = match.groups()[1].strip()
+            else:
+                break
+
+        # Call the preformat function
+        entryData['body'] = tools.run_callback('preformat',
+                {'parser': (entryData.get('parser', '') 
+                        or config.get('parser', 'plain')),
+                 'story': story,
+                 'request': request},
+                donefunc = lambda x:x != None,
+                defaultfunc = lambda x: ''.join(x['story']))
+
+        # Call the postformat callbacks
+        tools.run_callback('postformat',
+                {'request': request,
+                 'entry_data': entryData})
+                
+        return entryData
+
+
     def defaultFileListHandler(self, args):
         """
         This is the default handler for getting entries.  It takes the
@@ -215,15 +264,16 @@ class PyBlosxom:
                 config.get('renderer', 'blosxom')).Renderer(self._request)
         data["renderer"] = renderer
 
-        # import entryparsers here to allow other plugins register what file
-        # extensions can be used
-        import libs.entryparsers.__init__
-        libs.entryparsers.__init__.initialize_extensions()
-        data['extensions'] = libs.entryparsers.__init__.ext
-        
         # import plugins
         import libs.plugins.__init__
         libs.plugins.__init__.initialize_plugins(config)
+
+        # entryparser callback is runned first here to allow other plugins
+        # register what file extensions can be used
+        data['extensions'] = tools.run_callback("entryparser",
+                                        {'txt': self.defaultEntryParser},
+                                        mappingfunc=lambda x,y:y,
+                                        defaultfunc=lambda x:x)
 
         form = self._request.getHttp()["form"]
         data['flavour'] = (form.has_key('flav') and 

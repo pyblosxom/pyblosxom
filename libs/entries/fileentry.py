@@ -149,7 +149,7 @@ class FileEntry(base.EntryBase):
             fileExt = re.search(r'\.([\w]+)$', self._filename)
             try:
                 eparser = data['extensions'][fileExt.groups()[0]]
-                entrydict = eparser.parse(self._filename, request)
+                entrydict = eparser(self._filename, request)
                 self.addToCache(self._filename, entrydict)
             except IOError:
                 return None
