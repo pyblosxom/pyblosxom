@@ -46,10 +46,8 @@ py['load_plugins'] = []
 
 # XML-RPC data
 xmlrpc = {}
-# Username to access this server
-xmlrpc['username'] = 'someusername'
-# Password to access this server
-xmlrpc['password'] = 'somepassword'
+# Username and password to access this server, you can define one or more
+#xmlrpc['usernames'] = {'someuser': 'somepassword'}
 
 __author__ = 'Wari Wahab <wari@wari.per.sg>'
 __version__ = "CVS"
