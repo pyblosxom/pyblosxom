@@ -5,6 +5,8 @@ import sys, time, os, re, random
 entryDelim = re.compile( r"^--------$", re.MULTILINE )
 sectionDelim = re.compile( r"^-----$", re.MULTILINE )
 
+DEFAULTBREAKS = 1
+
 print "start"
 def convert(inputfile, output_dir_root):    
     input = open(inputfile).read()
@@ -35,6 +37,7 @@ def convert(inputfile, output_dir_root):
             category = ""
             author = ""
             publish = 1
+	    breaks = DEFAULTBREAKS
             for field in fields:
                 if field.strip():
                     tag, value = field.split(": ", 1)
@@ -46,9 +49,11 @@ def convert(inputfile, output_dir_root):
                         category = value.strip()
                     elif tag == "AUTHOR":
                         author = value.strip()
+                    elif tag == "CONVERT BREAKS":
+                        breaks = value.strip()
                     elif tag == "STATUS":
                         publish = 0
-                        if value.strip() == "publish":
+                        if value.strip().lower() == "publish":
                             publish = 1
             #lee.list@joramo.com
             #2003-02-12
@@ -85,9 +90,11 @@ def convert(inputfile, output_dir_root):
 
             output = open(outputfile, "w")
             output.write(title+"\n")
-            output.write("<!--timestamp:%s:-->\n"%timestamp)
-            output.write("<!--category:%s:-->\n"%category)
-            output.write("<!--author:%s:-->\n"%author)
+	    if breaks:
+                output.write('#parser linebreaks\n')
+            output.write("<!--timestamp:%s:-->"%timestamp)
+            output.write("<!--category:%s:-->"%category)
+            output.write("<!--author:%s:-->"%author)
             output.write(body)
             output.write(extendedbody)
             output.close()
