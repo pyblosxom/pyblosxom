@@ -27,58 +27,13 @@ class PyBlosxom:
         config = self._request.getConfiguration()
 
         data['pi_bl'] = ''
-        path_info = []
 
-        # If we use XML-RPC, we don't need favours and GET/POST fields
-        if not self.xmlRpcCall:
-            form = self._request.getHttp()["form"]
-            data['flavour'] = (form.has_key('flav') and form['flav'].value or 'html')
-
-            # Get the blog name if possible
-            if pyhttp.get('PATH_INFO', ''):
-                path_info = pyhttp['PATH_INFO'].split('/')
-                if path_info[0] == '':
-                    path_info.pop(0)
-                while re.match(r'^[a-zA-Z]\w*', path_info[0]):
-                    data['pi_bl'] += '/%s' % path_info.pop(0)
-                    if len(path_info) == 0:
-                        break
-
-            data['root_datadir'] = config['datadir']
-            if os.path.isdir(config['datadir'] + data['pi_bl']):
-                if data['pi_bl'] != '':
-                    config['blog_title'] += ' : %s' % data['pi_bl']
-                data['root_datadir'] = config['datadir'] + data['pi_bl']
-                data['bl_type'] = 'dir'
-
-            elif os.path.isfile(config['datadir'] + data['pi_bl'] + '.txt'):
-                config['blog_title'] += ' : %s' % re.sub(r'/[^/]+$','',data['pi_bl'])
-                data['bl_type'] = 'file'
-                data['root_datadir'] = config['datadir'] + data['pi_bl'] + '.txt'
-
-            else:
-                match = re.search(r'\.(\w+)$',data['pi_bl'])
-                probableFile = config['datadir'] + re.sub(r'\.\w+$','',data['pi_bl']) + '.txt'
-                if match and os.path.isfile(probableFile):
-                    data['flavour'] = match.groups()[0]
-                    data['root_datadir'] = probableFile
-                    config['blog_title'] += ' : %s' % re.sub(r'/[^/]+\.\w+$','',data['pi_bl'])
-                    data['bl_type'] = 'file'
-                else:
-                    data['pi_bl'] = ''
-                    data['bl_type'] = 'dir'
-
-        # Get our URL
+        # Get our URL and configure the base_url param
         if pyhttp.has_key('SCRIPT_NAME'):
             if not config.has_key('base_url'):
                 config['base_url'] = 'http://%s%s' % (pyhttp['HTTP_HOST'], pyhttp['SCRIPT_NAME'])
 
             data['url'] = '%s%s' % (config['base_url'], data['pi_bl'])
-
-        # Python is unforgiving as perl in this case
-        data['pi_yr'] = (len(path_info) > 0 and path_info.pop(0) or '')
-        data['pi_mo'] = (len(path_info) > 0 and path_info.pop(0) or '')
-        data['pi_da'] = (len(path_info) > 0 and path_info.pop(0) or '')
 
 
     def defaultFileListHandler(self, request):
@@ -96,6 +51,55 @@ class PyBlosxom:
         """
         data = request.getData()
         config = request.getConfiguration()
+        pyhttp = request.getHttp()
+
+        path_info = []
+
+        # If we use XML-RPC, we don't need favours and GET/POST fields
+        if not self.xmlRpcCall:
+            form = self._request.getHttp()["form"]
+            data['flavour'] = (form.has_key('flav') and form['flav'].value or 'html')
+
+            # Get the blog name if possible
+            if pyhttp.get('PATH_INFO', ''):
+                path_info = pyhttp['PATH_INFO'].split('/')
+                if path_info[0] == '':
+                    path_info.pop(0)
+
+                while re.match(r'^[a-zA-Z]\w*', path_info[0]):
+                    data['pi_bl'] += '/%s' % path_info.pop(0)
+                    if len(path_info) == 0:
+                        break
+
+            data['root_datadir'] = config['datadir']
+            if os.path.isdir(config['datadir'] + data['pi_bl']):
+                if data['pi_bl'] != '':
+                    config['blog_title'] += ' : %s' % data['pi_bl']
+                data['root_datadir'] = config['datadir'] + data['pi_bl']
+                data['bl_type'] = 'dir'
+
+            elif os.path.isfile(config['datadir'] + data['pi_bl'] + '.txt'):
+                config['blog_title'] += ' : %s' % re.sub(r'/[^/]+$','',data['pi_bl'])
+                data['bl_type'] = 'file'
+                data['root_datadir'] = "%s%s.txt" % (config['datadir'], data['pi_bl'])
+
+            else:
+                match = re.search(r'\.(\w+)$',data['pi_bl'])
+                probableFile = config['datadir'] + re.sub(r'\.\w+$','',data['pi_bl']) + '.txt'
+                if match and os.path.isfile(probableFile):
+                    data['flavour'] = match.groups()[0]
+                    data['root_datadir'] = probableFile
+                    config['blog_title'] += ' : %s' % re.sub(r'/[^/]+\.\w+$','',data['pi_bl'])
+                    data['bl_type'] = 'file'
+                else:
+                    data['pi_bl'] = ''
+                    data['bl_type'] = 'dir'
+
+        # Python is unforgiving as perl in this case
+        data['pi_yr'] = (len(path_info) > 0 and path_info.pop(0) or '')
+        data['pi_mo'] = (len(path_info) > 0 and path_info.pop(0) or '')
+        data['pi_da'] = (len(path_info) > 0 and path_info.pop(0) or '')
+
 
         filelist = (data['bl_type'] == 'dir' and 
                 tools.Walk(data['root_datadir'], int(config['depth'])) or 
