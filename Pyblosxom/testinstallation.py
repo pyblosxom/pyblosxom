@@ -32,6 +32,7 @@ def test_installation(request):
     new plugins and verify that their configuration is correct.
     """
     import sys, os, os.path
+    from Pyblosxom import pyblosxom
 
     config = request.getConfiguration()
 
@@ -39,6 +40,7 @@ def test_installation(request):
     print "Welcome to PyBlosxom's installation verification system."
     print "------"
     print "]] printing diagnostics [["
+    print "pyblosxom:   %s" % pyblosxom.VERSION_DATE
     print "sys.version: %s" % sys.version.replace("\n", " ")
     print "os.name:     %s" % os.name
     print "codebase:    %s" % config.get("codebase", "--default--")

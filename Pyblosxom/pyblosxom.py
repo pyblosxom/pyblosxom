@@ -8,6 +8,7 @@ import tools
 from entries.fileentry import FileEntry
 
 VERSION = "0.9.1"
+VERSION_DATE = VERSION + " April 05, 2004"
 VERSION_SPLIT = (0, 9, 1)
 
 class PyBlosxom:
