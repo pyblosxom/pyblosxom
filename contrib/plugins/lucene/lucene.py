@@ -9,7 +9,7 @@ You'll need to edit JAVA_HOME, lucene, bindir, classpath and index
 __author__ = "Ted Leung - twl@sauria.com"
 __version__ = "$Id$"
 
-import glob, os, urllib, cgi
+import glob, os, urllib
 from libs import api
 
 # location of Java
@@ -38,7 +38,7 @@ def searchHandler(request):
     config = request.getConfiguration()
     data = request.getData()
     
-    form = cgi.FieldStorage()
+    form = request.getHttp()['form']
     if not form.has_key("q"):
         return None
     data['luceneResults'] = search(data, form["q"].value)
