@@ -10,7 +10,7 @@ The swiss army knife for all things pyblosxom
 @var VAR_REGEXP: Regular expression for detection and substituion of variables
 """
 import plugin_utils
-import sgmllib, re, os, string, types, time
+import sgmllib, re, os, string, types, time, os.path, StringIO, sys
 
 month2num = { 'nil' : '00',
               'Jan' : '01',
@@ -496,6 +496,79 @@ def make_logger(filename):
             logger.info(str)
 
 
+def render_entry(req, pathinfo, querystring="", index=0):
+    """
+    @param req: the Request object
+    @type  req: Request
+
+    @param pathinfo: the path_info string.  ex: "/dev/pyblosxom/firstpost"
+    @type  pathinfo: string
+
+    @param querystring: the querystring (if any).  ex: "flav=rss"
+    @type  querystring: string
+
+    @param index: 1 if this is an index page, 0 if this is not an index page
+    @type  index: boolean
+    """
+    config = req.getConfiguration()
+    data = req.getData()
+    staticdir = config.get("static_dir", "")
+
+    flavours = config.get("static_flavours", ["html", "rss"])
+
+    if not staticdir:
+        raise Exception("You must set static_dir in your config file.")
+
+    renderme = []
+
+    if index == 1:
+        for f in flavours:
+            url = pathinfo
+            query = "flav=" + f 
+            if querystring:
+                query = query + "&" + querystring
+            fn = os.path.normpath(staticdir + pathinfo + os.sep + "index." + f)
+            renderme.append( ( url, query, fn ) )
+
+    else:
+        f = flavours[0]
+        url = pathinfo + "." + f
+        fn = os.path.normpath(staticdir + pathinfo + "." + f)
+        renderme.append( ( url, querystring, fn ) )
+
+    from Pyblosxom import pyblosxom
+       
+    oldstdout = sys.stdout
+    for url, query, fn in renderme:
+        req = pyblosxom.Request()
+        req.addHttp( {
+            "HTTP_USER_AGENT": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7b) Gecko/20040421",
+            "REQUEST_METHOD": "GET",
+            "HTTP_HOST": "localhost",
+            "PATH_INFO": url,
+            "QUERY_STRING": query,
+            "REQUEST_URI": url + "?" + query })
+        req.addConfiguration(config)
+
+        buffer = StringIO.StringIO()
+        sys.stdout = buffer
+        p = pyblosxom.PyBlosxom(req)
+        p.run()
+        sys.stdout = oldstdout
+
+        if not os.path.isdir(os.path.dirname(fn)):
+            os.makedirs(os.path.dirname(fn))
+
+        output = buffer.getvalue().splitlines()
+        while 1:
+            if len(output[0].strip()) == 0:
+                break
+            output.pop(0)
+        output.pop(0)
+        f = open(fn, "w")
+        f.write("\n".join(output))
+        f.close()
+ 
 # %<-------------------------
 # BEGIN portalocking block from Python Cookbook.
 # LICENSE is located in docs/LICENSE.portalocker.

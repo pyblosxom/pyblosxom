@@ -173,8 +173,7 @@ class PyBlosxom:
                 # dates[year + "/" + monthname + "/" + day] = 1
 
                 # toss in the render queue
-                ext = "." + flavours[0]
-                renderme.append( (mem + ext, fn + ext) )
+                renderme.append( (mem, 0) )  # url, index
 
         print "rendering %d entries." % len(renderme)
 
@@ -185,9 +184,7 @@ class PyBlosxom:
         print "rendering %d category indexes." % len(categories)
 
         for mem in categories:
-            for f in flavours:
-                fn = os.path.normpath(staticdir + mem + os.sep + "index")
-                renderme.append( (mem + "?flav=" + f, fn + "." + f) )
+            renderme.append( (mem, 1) )
 
         # now we handle dates
         dates = dates.keys()
@@ -196,20 +193,22 @@ class PyBlosxom:
         print "rendering %d date indexes." % len(dates)
 
         for mem in dates:
-            for f in flavours:
-                fn = os.path.normpath(staticdir + mem + os.sep + "index")
-                renderme.append( (mem + "?flav=" + f, fn + "." + f) )
+            renderme.append( (mem, 1) )
             
         # now we handle arbitrary urls
         additional_stuff = config.get("static_urls", [])
         print "rendering %d arbitrary urls." % len(additional_stuff)
 
         for mem in additional_stuff:
-            fn = os.path.normpath(staticdir + mem)
-            renderme.append( (mem, fn) )
+            renderme.append( (mem, 0) )
 
         print "building %s files." % len(renderme)
-        
+
+        for url, i in renderme:
+            print "rendering '%s' ..." % url
+            tools.render_entry(self._request, url, "", i)
+
+        """
         # now we render everything...
         oldstdout = sys.stdout
         for path, fn in renderme:
@@ -251,6 +250,7 @@ class PyBlosxom:
             f = open(fn, "w")
             f.write("\n".join(output))
             f.close()
+        """
  
 class Request:
     """
@@ -463,9 +463,11 @@ def blosxom_handler(request):
 
 def blosxom_entry_parser(filename, request):
     """
-    Open up a *.txt file and read its contents
+    Open up a *.txt file and read its contents.  The first line
+    becomes the title of the entry.  The other lines are the
+    body of the entry.
 
-    @param filename: A filename to extra data and meta data from
+    @param filename: A filename to extract data and metadata from
     @type filename: string
 
     @param request: A standard request object
@@ -487,6 +489,8 @@ def blosxom_entry_parser(filename, request):
     if len(story) > 0:
         entryData['title'] = story.pop(0).strip()
 
+    # this handles properties of the entry that are between
+    # the title and the body and start with a #
     while len(story) > 0:
         match = re.match(r'^#(\w+)\s+(.*)', story[0])
         if match:
@@ -580,8 +584,7 @@ def blosxom_process_path_info(args):
     pyhttp = request.getHttp()
 
     form = pyhttp["form"]
-    data['flavour'] = (form.has_key('flav') and 
-            form['flav'].value or 
+    data['flavour'] = (form.has_key('flav') and form['flav'].value or 
             config.get('defaultFlavour', 'html'))
 
     path_info = []
@@ -647,6 +650,7 @@ def blosxom_process_path_info(args):
             config['blog_title'] += ' : %s' % data['pi_bl']
             data['bl_type'] = 'file'
             data['root_datadir'] = blog_result + '.' + ext
+
         else:
             # We may have flavour embedded here
             filename, ext = os.path.splitext(blog_result)
@@ -658,8 +662,8 @@ def blosxom_process_path_info(args):
                 data['root_datadir'] = filename + '.' + fileext
                 config['blog_title'] += ' : %s' % data['pi_bl']
                 data['bl_type'] = 'file'
-            elif (os.path.basename(filename) == 'index' and 
-                    os.path.isdir(dirname)):
+
+            elif (os.path.basename(filename) == 'index' and os.path.isdir(dirname)):
                 # blanket flavours?
                 data['flavour'] = ext[1:]
                 if data['pi_bl'] != '':
@@ -716,9 +720,9 @@ def test_installation(request):
 
     nice_to_have_config = ["blog_title", "blog_author", "blog_description",
                            "blog_language", "blog_encoding", 
-                           "blosxom_custom_flavours", "base_url", "depth",
-                           "num_entries", "renderer", "cacheDriver", 
-                           "cacheConfig", "plugin_dirs", "load_plugins"]
+                           "base_url", "depth", "num_entries", "renderer", 
+                           "cacheDriver", "cacheConfig", "plugin_dirs", 
+                           "load_plugins"]
     missing_properties = 0
     for mem in required_config:
         if not config.has_key(mem):
