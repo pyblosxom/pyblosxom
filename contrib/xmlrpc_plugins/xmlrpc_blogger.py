@@ -114,7 +114,8 @@ def blogger_newPost(request, appkey, blogid, username, password, content,
                     tools.generateRandStr() + '.txt' + tempMarker
                 )
             )
-        open(blogID, 'w').write(content)
+        open(blogID, 'w').write(content.encode(config['blog_encoding']))
+
         # Generate BlogID
         return blogID.replace(config['datadir'], '')
     else: 
