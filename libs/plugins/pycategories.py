@@ -1,8 +1,21 @@
 # vim: tabstop=4 shiftwidth=4
 """
-Quickly walks your blog entries and figures out the hierarchy of directories
-and generates a list of categories much like the archives which you
-can retrieve with $categorylinks.
+Walks through your blog root figuring out all the categories you have
+and how many entries are in each category.  It generates html with
+this information and stores it in the $categorylinks variable which
+you can use in your head or foot templates.
+
+Additionally, you can specify the flavour for the link by creating an 
+entry in the config.py file or the ini file with the name 
+"category_flavour" and the value of the flavour you want to use.
+
+ini-file example (in the pyblosxom section):
+
+   category_flavour = index
+
+config.py example:
+
+   py["category_flavour"] = "index"
 """
 __author__ = "Will Guaraldi - willg@bluesock.org"
 __version__ = "$Id$"
@@ -30,10 +43,15 @@ class PyblCategories:
 		num = " (%d)" % num
 
 		return (((len(itemlist)-1) * "&nbsp;&nbsp;") + 
-				"<a href=\"%s/%s\">%s</a>%s" % (self._baseurl, item, itemlist[-1] +"/", num))
+				"<a href=\"%s/%s%s\">%s</a>%s" % (self._baseurl, item, self._flavour, itemlist[-1] +"/", num))
 
 	def genCategories(self):
 		root = self._py["datadir"]
+		if self._py.get("category_flavour", "") == "":
+			self._flavour = ""
+		else:
+			self._flavour = "?flav=" + self._py["category_flavour"]
+
 		self._baseurl = self._py.get("base_url", "")
 
 		# build the list of directories (categories)
