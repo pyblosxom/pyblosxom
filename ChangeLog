@@ -1,4 +1,6 @@
-2003-01-05 Wari Wahab <pyblosxom@wari.per.sg>
+2003-01-07 Wari Wahab <pyblosxom@wari.per.sg>
+	* Removed two files from the plugins directory because they are not
+	  relevant to the new drop-in plugins architecture
 	* Thanks to Will of http://www.bluesock.org/~willg/ I now have usable
 	  drop-in plugin implementation. TODO: Some form of documentation for
 	  plugins in the Wiki
