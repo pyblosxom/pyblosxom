@@ -19,6 +19,11 @@ if __name__ == '__main__':
         contentLength = int(os.environ["CONTENT_LENGTH"])
         if contentLength > MAXREQUEST_LENGTH:
             raise ValueError, 'Request too large - %s bytes' % contentLength
+    except KeyError:
+        print 'Status: 400'
+        print 'Content-Type: text/plain'
+        print
+        print 'Invalid Request'
     except:
         response = xmlrpclib.dumps(xmlrpclib.Fault(1, "%s: %s" % sys.exc_info()[:2]))
         print 'Content-type: text/xml'
