@@ -168,37 +168,19 @@ class PyBlosxom:
             if template != '':
                 print tools.parseitem(text, tools.parse(text, template)).replace(r'\$', '$')
 
-        cache.load(filename)
-
         entryData = {}
+        cache.load(filename)
+        # Look for cached documents
         if cache.isCached():
             entryData = cache.getEntry()
         
+        # Cached? Try our entryparsers then.
         if not entryData:
+            fileExt = re.search(r'\.([\w]+)$', filename)
             try:
-                story = file(filename).readlines()
-            except:
+                entryData = self.py['extensions'][fileExt.groups()[0]].parse(filename, self.py, cache)
+            except IOError:
                 return current_date
-
-            if len(story) > 0:
-                entryData['title'] = story.pop(0).strip()
-
-            while len(story) > 0:
-                match = re.match(r'^#(\w+)\s+(.*)', story[0])
-                if match:
-                    story.pop(0)
-                    entryData[match.groups()[0]] = match.groups()[1].strip()
-                else:
-                    break
-                    
-            preformatter = tools.importName('libs.preformatters', 
-                    entryData.get('parser', self.py.get('parser', 'plain')))
-            if preformatter:
-                entryData['body'] = preformatter.PreFormatter(story).parse()
-            else:
-                entryData['body'] = ''.join(story)
-            
-            cache.saveEntry(entryData)
 
         if re.search(r'\Wxml', self.py['content-type']):
             entryData['title'] = cgi.escape(entryData['title'])
@@ -223,6 +205,12 @@ class PyBlosxom:
 
     def run(self):
         """Main loop for pyblosxom"""
+        # import entryparsers here to allow other plugins register what file
+        # extensions can be used
+        import libs.entryparsers.__init__
+        libs.entryparsers.__init__.initialize_extensions()
+        self.py['extensions'] = libs.entryparsers.__init__.ext
+        
         # import plugins and allow them to register with the api
         import libs.plugins.__init__
         libs.plugins.__init__.initialize_plugins()

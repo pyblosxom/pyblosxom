@@ -1,3 +1,17 @@
+2003-02-10 Wari Wahab <pyblosxom@wari.per.sg>
+	* Added ability for pyblosxom to read entries of different extensions,
+	  given a proper extension driver, this means that if you associate
+	  .doc files as word documents, and you have libs.entryparsers.doc.py
+	  that handles word documents and fill up entryData with the
+	  respective data that a template needs, then dropping in such
+	  document is easy as creating an entry.
+	  Other extensions planned would be XHTML and what nots. These
+	  entryparsers do not need to use preformatters, the txt.py '.txt'
+	  handler shows how you can use the cache and preformatters if you
+	  need it (cache is necesary for slow entryparsers)
+	* External utiliies can now use this mechanism to get the data they
+	  need to get values from entries other than .txt
+
 2003-02-08 Wari Wahab <pyblosxom@wari.per.sg>
 	* Totally restructured the way caching works now. Two types of cache
 	  drivers now available, a file pickle (works like pyblosxom 0.6 but

@@ -106,7 +106,7 @@ def fileList(py):
 
 def Walk(root = '.', 
          recurse = 0, 
-         pattern = re.compile(r'.*\.txt$'), 
+         pattern = '', 
          return_folders = 0 ):
     """
     This function walks a directory tree starting at a specified root folder,
@@ -124,7 +124,12 @@ def Walk(root = '.',
         return result
 
     # expand pattern
-    pattern = pattern or re.compile('.*\.txt$')
+    if not pattern:
+        import libs.entryparsers.__init__
+        libs.entryparsers.__init__.initialize_extensions()
+        pattern = re.compile(r'.*\.(' + '|'.join(libs.entryparsers.__init__.ext) + r')$')
+
+    #pattern = pattern or re.compile('.*\.txt$')
     pat_list = string.splitfields( pattern , ';' )
     
     # check each file
