@@ -25,10 +25,6 @@ Wiki site is. This is configured with a new variable in your config.py file,
 
 The above example would expand 'WikiWord' to
 http://www.google.com/search?q=WikiWord
-
-@var __author__: Who's to blame for this
-@var __version__: Revision of this module
-@var PREFORMATTER_ID: This preformatter will activate on this ID
 """
 __author__ = 'John Abbe <johnca at ourpla dot net>'
 __version__ = "$Id$"
