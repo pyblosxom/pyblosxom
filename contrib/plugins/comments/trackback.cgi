@@ -63,8 +63,12 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
     # entryparser callback is runned first here to allow other plugins
     # register what file extensions can be used
     from libs.pyblosxom import PyBlosxom
+
+    p = PyBlosxom(req)
+    p.startup()
+
     data['extensions'] = tools.run_callback("entryparser",
-                                            {'txt': PyBlosxom.defaultEntryParser},
+                                            {'txt': p.defaultEntryParser},
                                             mappingfunc=lambda x,y:y,
                                             defaultfunc=lambda x:x)
    
