@@ -76,12 +76,12 @@ if __name__ == '__main__':
         commentString = sys.stdin.read()
         commentDOM = parseString(commentString)
     
-        def dictFromDOM(dom, dict, field):
+        def dictFromDOM(dom, data, field):
             value = dom.getElementsByTagName(field)
             if len(value) == 1:
-                dict[field] = value[0].firstChild.data
+                data[field] = value[0].firstChild.data
             else:
-                dict[field] = ''
+                data[field] = ''
 
         cdict = {}
         dictFromDOM(commentDOM, cdict, 'title')

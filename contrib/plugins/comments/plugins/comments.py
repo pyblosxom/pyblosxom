@@ -127,8 +127,8 @@ def writeComment(config, data, comment):
     try :
         cfile = file(cfn, "w")
     
-        def makeXMLField(name, dict):
-            return "<"+name+">"+cgi.escape(dict[name])+"</"+name+">\n";
+        def makeXMLField(name, field):
+            return "<"+name+">"+cgi.escape(field[name])+"</"+name+">\n";
     
         cfile.write('<?xml version="1.0" encoding="iso-8859-1"?>\n')
         cfile.write("<item>\n")
@@ -256,19 +256,19 @@ def cb_prepare(args):
         writeComment(config, data, cdict)
 
 
-def cb_head(dict):
-    renderer = dict['renderer']
-    template = dict['template']
+def cb_head(args):
+    renderer = args['renderer']
+    template = args['template']
 
     newtemplate = renderer.flavour.get('comment-head','')
     if not newtemplate == '' and len(renderer.getContent()) == 1:
         template = newtemplate
     return template
         
-def cb_story(dict):
-    renderer = dict['renderer']
-    entry = dict['entry']
-    template = dict['template']
+def cb_story(args):
+    renderer = args['renderer']
+    entry = args['entry']
+    template = args['template']
     request = tools.get_registry()["request"]
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 and renderer.flavour.has_key('comment-story'):
@@ -279,13 +279,13 @@ def cb_story(dict):
             for comment in entry['comments']:
                 renderer.outputTemplate(output, comment, 'comment')
             renderer.outputTemplate(output, entry, 'comment-form')
-        dict['template'] = template +u"".join(output)
+        args['template'] = template +u"".join(output)
     else:
         entry['num_comments'] = getCommentCount(entry,config)
         return template
     
-def cb_start(dict):
-    request = dict['request']
+def cb_start(args):
+    request = args['request']
     config = request.getConfiguration()
     custom_flavours = ['comment-head', 'comment-story', 'comment', 'comment-form']
     if not config.has_key('blosxom_custom_flavours'):
