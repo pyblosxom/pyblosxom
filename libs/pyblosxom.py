@@ -226,7 +226,10 @@ class PyBlosxom:
 
     def run(self):
         """Main loop for pyblosxom"""
-        filelist = (self.py['bl_type'] == 'dir' and tools.Walk(self.py['root_datadir'], int(self.py['depth'])) or [self.py['root_datadir']])
+        filelist = (self.py['bl_type'] == 'dir' and 
+            tools.Walk(self.py['root_datadir'], 
+            int(self.py['depth'])) or 
+            [self.py['root_datadir']])
         dataList = []
         for ourfile in filelist:
             dataList.append(self.getProperties(ourfile, self.py['root_datadir']))
@@ -268,6 +271,11 @@ class PyBlosxom:
         self.flavour = self.getFlavour(self.py['flavour'])
         self.py['content-type'] = self.flavour['content_type'].strip()
         print 'Content-type: %s\n' % self.flavour['content_type']
+        
+        # load the plugins that have load methods
+        import libs.plugins.__init__
+        libs.plugins.__init__.load_plugins(self.py, valid_list)
+        
         if self.flavour.has_key('head'): print tools.parse(self.py, self.flavour['head'])
         if self.flavour.has_key('story'):
             # Body stuff
@@ -281,9 +289,6 @@ class PyBlosxom:
                 count += 1
         
         if self.flavour.has_key('date_foot'): print tools.parse(self.py, self.flavour['date_foot'])
-        # Archive list plugin
-        from libs.plugins import pyarchives
-        self.py['archivelinks'] = pyarchives.genLinearArchive(self.py['datadir'], self.py.get('base_url',''))
         if self.flavour.has_key('foot'): print tools.parse(self.py, self.flavour['foot'])
         
         # Enable if you want logging

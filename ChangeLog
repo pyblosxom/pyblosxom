@@ -1,4 +1,9 @@
 2003-01-05 Wari Wahab <pyblosxom@wari.per.sg>
+	* Thanks to Will of http://www.bluesock.org/~willg/ I now have usable
+	  drop-in plugin implementation. TODO: Some form of documentation for
+	  plugins in the Wiki
+
+2003-01-05 Wari Wahab <pyblosxom@wari.per.sg>
 	* Fixed directory recursion when depth is more than one
 	* Made rendering of categories to work more like blosxom (Do not honor
 	  num_entries)
