@@ -75,9 +75,10 @@ else:
 NOTE: We want to install documentation, contributed plugins, and
 the web scripts to some central location where you can access them.
 However, we don't know where to put it for your platform.  If you could
-send an email to <wari@celestix.com> with the following information:
+send an email to <pyblosxom-users@lists.sourceforge.net> with the following
+information:
 
-  Dear Wari,
+  Dear Pyblosxom Users,
   I have platform '""" + sys.platform + """' and you told me to send you
   an email with this information!
   Sincerely,
@@ -105,7 +106,7 @@ setup(name="pyblosxom",
     packages=['Pyblosxom', 'Pyblosxom.cache', 'Pyblosxom.entries', 'Pyblosxom.renderers'],
     licence = 'MIT',
     long_description =
-"""Pyblosxom is a weblog engine that users the filesystem as the database of
+"""Pyblosxom is a weblog engine that user the filesystem as the database of
 your entries.
 """,
     scripts=['web/pyblosxom.cgi', 'web/xmlrpc.cgi'],
