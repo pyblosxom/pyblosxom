@@ -26,6 +26,9 @@ It uses the following CSS classes:
                                 (if we're looking at a specific day)
   blosxomCalendarToday        - for today's calendar day
 
+
+To use, place $calendar in your head/foot template.
+
 """
 __author__ = "Will Guaraldi - willg@bluesock.org"
 __version__ = "$Id$"
