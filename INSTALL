@@ -25,26 +25,31 @@
    this doesn't sound like you, maybe you should get a friend to help out
    or ask for help on the pyblosxom-users mailing list.
 
+   Check out the wiki on the Pyblosxom website for up-to-date installation
+   information:
+
+      http://roughingit.subtlehints.net/pyblosxom
+
 1.2 Prerequisites
 
    You need:
      * a web-server (preferably Apache, but PyBlosxom can probably be
        made to run on any web server with CGI abilities)
-     * [WWW] python version 2.1 or later
+     * python version 2.1 or later (http://wwww.python.org/)
      * a text editor (notepad, vi, emacs, nano, ...)
 
 1.3 Simple Installation
 
    For a site-wide simple installation,
-     * Run the comand python setup.py install as superuser (root on u*ix)
-       to install the Pyblosxom librarys in your python installation.
-     * Then copy the content of the web/ directory into your cgi-bin
-       directory.
-     * Create some content in the content directory you will be storing
-       blog entries and templates in.
-     * Edit config.py in your cgi-bin. It is well commented so it
-       shoulden't be to hard.
-     * Surf away to your new blog using a url (depending on how you did
+     1 Run the command 'python setup.py install' as superuser (root on u*ix)
+       to install the Pyblosxom libraries in your python installation.
+     2 Then copy the contents of the web/ directory into your cgi-bin
+       directory.  This should include pyblosxom.cgi and config.py.
+     3 Create a data directory that you'll store your flavour templates
+       and blog entries in.
+     4 Edit config.py in your cgi-bin. It is well commented so it
+       shouldn't be to hard.
+     5 Surf away to your new blog using a url (depending on how you did
        your installation) something like
        http://your-server-here/~username/cgi-bin/pyblosxom.cgi.
 
@@ -54,15 +59,7 @@
 
    If you don't have superuser access on your webserver you might need to
    install the Pyblosxom library in a non standard directory and either
-   change the PYTHONPATH enviroment variable accordingly or add the
-   lines:
-import sys
-sys.path.append("/path/to/pyblosxom/directory)
-
-   to the top of your pyblosxom.cgi file.
-
-   If you don't want to use the bloggerAPI and other (not planned yet)
-   xmlrpc capabilities, remove xmlrpc.cgi from your cgi-bin/ directory.
+   set the "codebase" config property in your config.py file.
 
 1.5 Changing the Looks of the blog
 
@@ -76,11 +73,13 @@ sys.path.append("/path/to/pyblosxom/directory)
 
    Using .htaccess allows you to customize your installation so that your
    URL will not look like this:
-http://www.example.com/cgi-bin/pyblosxom.cgi
+
+      http://www.example.com/cgi-bin/pyblosxom.cgi
 
    This does not make the site url easily accessible. You might want to
    access your site with URLs like:
-http://www.example.com/blog
+
+      http://www.example.com/blog
 
    Which looks nicer for people to type it. If you are allowed .htaccess
    modifications by your hosting provider, and they allow Options
@@ -90,12 +89,13 @@ http://www.example.com/blog
    your normal installation).
 
    Add these lines to your .htaccess file:
-Options ExecCGI
 
-<Files blog>
-ForceType application/cgi-script
-SetHandler cgi-script
-</Files>
+      Options ExecCGI
+
+      <Files blog>
+      ForceType application/cgi-script
+      SetHandler cgi-script
+      </Files>
 
    This will ensure that blog will be executed instead of viewed with
    text/plain.
@@ -103,11 +103,13 @@ SetHandler cgi-script
    If you want to access blosxom as your main page, without even
    accessing the /blog url, you can point blog to a directory index. This
    will allow you to access your blog as:
-http://www.example.com
+
+      http://www.example.com
 
    Your blog will work as per normal. For this type of installation to
    work, you need to add one more line in your .htaccess:
-DirectoryIndex blog
+
+      DirectoryIndex blog
 
    There you go :)
 
@@ -115,9 +117,10 @@ DirectoryIndex blog
 
    Other ways of installing pyblosxom and hiding the cgi-bin/ cruft can
    be found at
-   http://www.raelity.org/apps/blosxom/faq.shtml#general_hiding_blosxom_c
-   gi although the instructions are blosxom related, but it does apply to
-   pyblosxom in general.
+   http://www.raelity.org/apps/blosxom/faq.shtml#general_hiding_blosxom_cgi 
+
+   Though the instructions are blosxom related they apply to pyblosxom as
+   well.
 
 1.7 Denying access to config.py or the INI file
 
@@ -162,3 +165,6 @@ DirectoryIndex blog
 order deny, allow
 deny from all
 </Files>
+
+
+
