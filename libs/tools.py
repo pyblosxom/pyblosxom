@@ -36,7 +36,7 @@ for k,v in month2num.items():
 MONTHS = num2month.keys() + month2num.keys()
 
 # regular expression for detection and substituion of variables.
-VAR_REGEXP = re.compile(ur'(?<!\\)\$([A-Za-z0-9_\-]+)')
+VAR_REGEXP = re.compile(ur'(?<!\\)\$((?:\w|\-|::)+(?:\(.*?(?<!\\)\))?)')
 
 class Stripper(sgmllib.SGMLParser):
     """
@@ -87,8 +87,28 @@ class Replacer:
         @rtype: string
         """
         key = matchobj.group(1)
+
+        if key.find("(") != -1 and key.find(")"):
+            # FIXME - security issue here because we're using eval.
+            # course, the things it allows us to do can be done using
+            # plugins much more easily--so it's kind of a moot point.
+            try:
+                args = eval(key[key.find("("):])
+            except:
+                args = ()
+
+            key = key[:key.find("(")]
+
+        else:
+            args = ()
+
         if self.var_dict.has_key(key):
             r = self.var_dict[key]
+
+            # if the value turns out to be a function, then we call it
+            # with the args that we were passed.
+            if callable(r):
+                r = r(*args)
 
             if type(r) != types.StringType and type(r) != types.UnicodeType:
                 r = str(r)
