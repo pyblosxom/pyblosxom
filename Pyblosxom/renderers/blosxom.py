@@ -51,7 +51,7 @@ class BlosxomRenderer(RendererBase):
         data = self._request.getData()
         config = self._request.getConfiguration()
 
-        pattern = re.compile(r'.+?\.' + taste + '$')
+        pattern = re.compile(r'.+?\.(?<!config\.)' + taste + '$')
 
         template_files = {}
 
