@@ -194,6 +194,9 @@ class EntryBase:
             return self.getData()
         return self.getMetadata(key, default)
 
+    def get(self, key, default=None):
+        return self.__getitem__(key, default)
+
     def __setitem__(self, key, value):
         """
         Sets the metadata[key] to the given value.

@@ -35,6 +35,8 @@ for k,v in month2num.items():
 # all the valid month possibilities
 MONTHS = num2month.keys() + month2num.keys()
 
+# regular expression for detection and substituion of variables.
+VAR_REGEXP = re.compile(ur'(?<!\\)\$([A-Za-z0-9_\-]+)')
 
 class Stripper(sgmllib.SGMLParser):
     """
@@ -59,17 +61,17 @@ class Replacer:
     Class for replacing variables in a template
 
     This class is a utility class used to provide a bound method to the
-    C{re.sub()} function. Gotten from OPAGCGI
+    C{re.sub()} function.  Gotten from OPAGCGI.
     """
-    def __init__(self, dict):
+    def __init__(self, var_dict):
         """
         It's only duty is to populate itself with the replacement dictionary
         passed.
 
-        @param dict: The dict for variable substitution
-        @type dict: dict
+        @param var_dict: The dict for variable substitution
+        @type var_dict: dict
         """
-        self.dict = dict
+        self.var_dict = var_dict
 
     def replace(self, matchobj):
         """
@@ -80,39 +82,43 @@ class Replacer:
 
         @param matchobj: A C{re} object containing substitutions
         @type matchobj: C{re}
+
         @returns: Substitutions
         @rtype: string
         """
         key = matchobj.group(1)
-        if self.dict.has_key(key):
-            r = self.dict[key]
+        if self.var_dict.has_key(key):
+            r = self.var_dict[key]
+
             if type(r) != types.StringType and type(r) != types.UnicodeType:
                 r = str(r)
+
             if type(r) != types.UnicodeType: 
                 # convert strings to unicode, assumes strings in iso-8859-1
                 r = unicode(r, 'iso-8859-1', 'replace')
+
             return r
+
         else:
             return u''
 
-def parse(dict, template):
+def parse(var_dict, template):
     """
-    parse(dict) -> string
-    
     This method parses the open file object passed, replacing any keys
-    found using the replacement dictionary passed. Uses the L{Replacer} object.
-    From OPAGCGI library
+    found using the replacement dictionary passed.  Uses the L{Replacer} 
+    object.  From OPAGCGI library
 
-    @param dict: The name value pair list containing variable replacements
-    @type dict: dict
-    @param template: A template file with placeholders for variable replacements
-    @type template: string
+    @param var_dict: The name value pair list containing variable replacements
+    @type  var_dict: dict
+
+    @param template: A template file with placeholders for variable 
+        replacements
+    @type  template: string
+
     @returns: Substituted template
     @rtype: string
     """
-    replacer = Replacer(dict).replace
-    replaced = u'' + re.sub(ur'(?<!\\)\$([A-Za-z0-9_\-]+)', replacer, template)
-    return replaced
+    return u'' + VAR_REGEXP.sub(Replacer(var_dict).replace, template)
 
 
 def Walk(root = '.', recurse = 0, pattern = '', return_folders = 0 ):
@@ -202,27 +208,6 @@ def importName(modulename, name):
         return vars(module)[name]
     except:
         return None
-
-
-def sortDictBy(list, key):
-    """
-    Sort dict by a key
-
-    Sorts a list of dicts with a specific key in the dict
-
-    @param list: A list of dicts
-    @type list: list
-
-    @param key: The key in the list to sort with
-    @type key: string
-
-    @returns: A new list with sorted entries
-    @rtype: list
-    """
-    nlist = map(lambda x, key=key: (x[key], x), list)
-    nlist.sort()
-    nlist.reverse()
-    return map(lambda (key, x): x, nlist)
 
 
 def generateRandStr(minlen=5, maxlen=10):
