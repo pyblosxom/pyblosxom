@@ -1,51 +1,58 @@
 #!/usr/bin/env python
 
+#!/path/to/python -u
+# -u turns off character translation to allow transmission
+# of gzip compressed content on Windows and OS/2
+
 # Uncomment this if something goes wrong (for debugging)
 #import cgitb; cgitb.enable()
 
 # Settings are now in config.py, you should disable access to it by htaccess
 # (make it executable or deny access)
-import config
+from config import py as cfg
 
 # If the user defined a "codebase" property in their config file,
 # then we insert that into our sys.path because that's where the
 # PyBlosxom installation is.
-if config.py.has_key("codebase"):
+if cfg.has_key("codebase"):
     import sys
-    sys.path.insert(0, config.py["codebase"])
+    sys.path.insert(0, cfg["codebase"])
 
 if __name__ == '__main__':
-    import Pyblosxom.pyblosxom
-    from Pyblosxom.pyblosxom import Request, test_installation, PyBlosxom
+
     import os, sys
+    from Pyblosxom.pyblosxom import PyBlosxom
+    
+    env = {}
+    # names taken from wsgi instead of inventing something new
+    env['wsgi.input'] = sys.stdin
+    env['wsgi.errors'] = sys.stderr
+    env['wsgi.url_scheme'] = "http"
+    if os.environ.get("HTTPS") in ('yes','on','1'):
+        env['wsgi.url_scheme'] = "https"
 
-    config.py["pyblosxom_name"] = "pyblosxom"
-    config.py["pyblosxom_version"] = Pyblosxom.pyblosxom.VERSION_DATE
-
-    req = Request()
-    req.addConfiguration(config.py)
-
-    d = {}
     for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER", "PATH_INFO", 
             "QUERY_STRING", "REMOTE_ADDR", "REQUEST_METHOD", "REQUEST_URI", 
             "SCRIPT_NAME", "HTTP_IF_NONE_MATCH", "HTTP_IF_MODIFIED_SINCE",
-            "HTTP_COOKIE"]:
-        d[mem] = os.environ.get(mem, "")
-    req.addHttp(d)
+            "HTTP_COOKIE", "CONTENT_LENGTH", "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING"]:
+        env[mem] = os.environ.get(mem, "")
 
-    if not os.environ.get("REQUEST_METHOD", ""):
+    p = PyBlosxom(cfg, env)
+
+    if not env.get("REQUEST_METHOD", ""):
         if len(sys.argv) > 1 and sys.argv[1] == "--static":
             if "--incremental" in sys.argv:
                 incremental = 1
             else:
                 incremental = 0
-            p = PyBlosxom(req)
             p.runStaticRenderer(incremental)
         else:
-            test_installation(req)
+            p.testInstallation()
 
     else:
-        p = PyBlosxom(req)
         p.run()
+        response = p.getResponse()
+        response.sendHeaders(sys.stdout)
+        response.sendBody(sys.stdout)
 
 # vim: shiftwidth=4 tabstop=4 expandtab
