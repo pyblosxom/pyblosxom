@@ -90,7 +90,7 @@ def initialize_xmlrpc_plugins(configdict):
             return {'system.testing': test,
                     'system.helloWorld': helloWorld}
     """
-    if callbacks != {}:
+    if methods != {}:
         return
 
     # handle plugin_dirs here
@@ -101,7 +101,6 @@ def initialize_xmlrpc_plugins(configdict):
         sys.path.append(mem)
 
     plugin_list = configdict.get("load_xmlrpc_plugins", None)
-
     plugin_list = get_plugin_list(plugin_list, plugin_dirs)
 
     for mem in plugin_list:
@@ -113,6 +112,8 @@ def initialize_xmlrpc_plugins(configdict):
         # our py dict so it can bind itself to variable names of its own accord
         if _module.__dict__.has_key("register_xmlrpc_methods"):
             api = _module.register_xmlrpc_methods()
+        else:
+            api = {}
 
         methods.update(api)
 
