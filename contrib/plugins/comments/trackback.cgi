@@ -25,7 +25,7 @@ tb_bad_response = """<?xml version="1.0" encoding="iso-8859-1"?>
 </response>"""
 
 d = {}
-for mem in ["PATH_INFO", "SCRIPT_NAME", "REQUEST_METHOD", "HTTP_HOST", "QUERY_STRING", "REQUEST_URI", "HTTP_USER_AGENT", "REMOTE_ADDR","HTTP_ACCEPT"]:
+for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER", "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR", "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME"]:
     d[mem] = os.environ.get(mem, "")
 
 form = cgi.FieldStorage()
