@@ -22,6 +22,7 @@ class EntryBase:
     def __init__(self):
         self._data = None
         self._metadata = {}
+        self._id = ""
 
     def getId(self):
         """
@@ -33,7 +34,7 @@ class EntryBase:
         @returns: string id
         @rtype: string
         """
-        return ""
+        return self._id
 
     def getData(self):
         """
