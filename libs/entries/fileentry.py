@@ -17,10 +17,10 @@ class FileEntry(base.EntryBase):
         self._filename = filename
         self._root = root
 
-        self.__populateBasicMetadata()
         self._original_metadata_keys = []
-
         self._populated_data = 0
+        self.__populateBasicMetadata()
+
 
     def getId(self):
         """
