@@ -11,6 +11,9 @@ py['blog_language'] = "en"
 # Where are this blog's entries kept?
 py['datadir'] = "/path/to/blog"
 
+# What should this blog use as its base url?
+# py['base_url'] = "http://www.some.host/weblog"
+
 # Should I stick only to the datadir for items or travel down the directory
 # hierarchy looking for items?  If so, to what depth?
 # 0 = infinite depth (aka grab everything), 1 = datadir only, n = n levels down
