@@ -30,7 +30,7 @@ class PyblCategories:
         return self._categories
 
     def genitem(self, item):
-        itemlist = item.split("/")
+        itemlist = item.split(os.sep)
 
         num = 0
         for key in self._elistmap:
