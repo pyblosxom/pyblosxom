@@ -1,9 +1,32 @@
 """
-Get a list containing the file names returned by a lucene search for a set of terms
+Allow searching of the blog by using a Lucene search for a set of terms
 
-You need the LuceneSearch.java and BlosxomIndexer.java in order to make this all work.
+To install:
+1) Put lucene.py in pyblosxom/libs/plugins
+2) In config.py add lucene to py['load_plugins']
+3) Place the contents of pyblosxom/contrib/plugins/lucene/bin in a
+   directory readable by pybloxsom.  In config.py, set py['lucene_bin'] to
+   this path
+4) Download lucene from http://jakarta.apache.org/lucene and unzip/untar it.
+   In config.py, set py['lucene_home'] to the lucene directory (which contains
+   lucene-1.2.jar and lucene-demos-1.2.jar)
+5) In config.py set py['lucene_index'] to the name of the Lucene index file
+   (pybosxom must be able to read and write this file)
+6) In config.py set py['JAVA_HOME'] to point at the 'java' command
+7) Set up a cron job to run py['lucene_bin']/index.sh periodically to
+   reindex your blog
+8) Somewhere in your web page you need a lucene search form:
 
-You'll need to edit JAVA_HOME, lucene, bindir, classpath and index
+  <form id="searchform" method="get" action="/blog">
+   <table>
+    <tr>
+     <td><input type="text" id="q" name="q" size="18" maxlength="255" value="" /></td>
+     <td><input type="submit" value=Search /></td>
+    </tr>
+   </table>
+  </form>
+
+  The action of the form should be the top level URI of your blog
 """
 
 __author__ = "Ted Leung - twl@sauria.com"
@@ -12,19 +35,6 @@ __version__ = "$Id$"
 import glob, os, urllib
 from libs import api
 from libs.entries import fileentry
-
-# TODO - move these to config
-
-# location of Java
-JAVA_HOME = '/usr/bin/java'
-# location of lucene jar files
-lucene = '/home/twl/pyblog/lib/lucene-1.2/*.jar'
-# location of lucene scripts and Java .class files
-bindir = '/home/twl/pyblog/bin'
-# java Classpath
-classpath = ':'.join(glob.glob(lucene)+[bindir])
-# location of lucene index file
-index = '/home/twl/pyblog/index'
 
 def makeEntry(filename,config):
     """
@@ -46,15 +56,14 @@ def search(config, term):
     @type term: a string
     """
     urllib.quote(term)
+    JAVA_HOME=config['JAVA_HOME']
+    classpath = ':'.join(glob.glob(config['lucene_home']+'/*.jar')+[config['lucene_bin']])
+    index = config['lucene_index']
     results = os.popen(JAVA_HOME+' -cp '+classpath+' LuceneSearch '+index+' '+term,'r').readlines()
     results = [ os.path.join(config['datadir'], x[2:-1]) for x in results ]
-    f = file("/tmp/lucene","w")
-    for x in results:
-        f.write(x)
-    f.close()
     return [ makeEntry(x, config) for x in results]
 
-def searchHandler(request):
+def searchHandler(args):
     """
     Lucene search handling
     
@@ -62,6 +71,7 @@ def searchHandler(request):
     @type request: a Pyblosxom request object
     """
     # do nothing if the form is not a lucene form
+    request = args["request"]
     form = request.getHttp()['form']
     if not form.has_key("q"):
         return None
