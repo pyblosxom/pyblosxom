@@ -53,6 +53,19 @@ class Renderer(RendererBase):
                 printout("%s\n" % content.get('filename', 'No such file\n'))
 
         printout("------------------------------------------------------\n")
+        printout("Entries processed:\n")
+        printout("------------------------------------------------------\n")
+        for content in self._content:
+            if type(content) != types.StringType:
+                printout("------------------------------------------------------\n")
+                printout("Items for %s:\n" % content.get('filename', 'No such file\n'))
+                printout("------------------------------------------------------\n")
+                for item in content.keys():
+                    printout("%s -> %s\n" % (item, content[item]))
+
+                #printout("%s\n" % content.get('filename', 'No such file\n'))
+
+        printout("------------------------------------------------------\n")
         printout("Cached Titles:\n")
         printout("------------------------------------------------------\n")
         cache = tools.get_cache()
@@ -61,7 +74,7 @@ class Renderer(RendererBase):
                 filename = content['filename']
             
                 if cache.has_key(filename):
-                    printout("%s" % cache[filename]['title'])
+                    printout("%s\n" % cache[filename]['title'])
                 cache.close()
 
         printout("------------------------------------------------------\n")
