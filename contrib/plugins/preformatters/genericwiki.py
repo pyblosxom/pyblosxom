@@ -17,6 +17,15 @@ your blog::
     #parser genericwiki
     This is a text in '''wiki''' format
 
+This preformatter also supports WikiWirds, you need to point out where your
+Wiki site is. This is configured with a new variable in your config.py file,
+'genericwiki_baseurl'::
+
+    py['genericwiki_baseurl'] = 'http://www.google.com/search?q='
+
+The above example would expand 'WikiWord' to
+http://www.google.com/search?q=WikiWord
+
 @var __author__: Who's to blame for this
 @var __version__: Revision of this module
 @var PREFORMATTER_ID: This preformatter will activate on this ID
@@ -34,52 +43,61 @@ def cb_preformat(args):
     @type args: dict
     """
     if args['parser'] == PREFORMATTER_ID:
-        return parse(args['story'])
+        config = args['request'].getConfiguration()
+        baseurl = config.get('genericwiki_baseurl', None)
+        return parse(''.join(args['story']), baseurl)
 
 
-def parse(text):
+def parse(text, wikibaseurl):
     """
-    The main workhorse that convert normal text into rudimentary wiki format
+    The main workhorse that convert wiki text into html markup
 
-    @params text: A list of text for conversion
-    @type text: list
+    @params text: Text for conversion
+    @type text: string
     """
-    # url of your wiki up to page name
-    wikibaseurl = "http://ourpla.net/cgi/pikie?"
     # WikiName pattern used in your wiki
     wikinamepattern = r'\b(([A-Z]+[a-z]+){2,})\b' # original
     mailurlpattern = r'mailto\:[\"\-\_\.\w]+\@[\-\_\.\w]+\w'
     newsurlpattern = r'news\:(?:\w+\.){1,}\w+'
-    fileurlpattern = r'(mailto|http(s)?|ftp):(//)?[\w]+(\.[\w]+)([-\w.,@?^=%&;:/~+#]*)?'
-    result = ''
-    for line in text:
-        result += line
+    fileurlpattern = r'(?:http|https|file|ftp):[/-_.\w-]+[\/\w][?&+=%\w/-_.#]*'
 
     # Turn '[xxx:address label]' into labeled link
-    result = re.sub(r'\[(' +
-             fileurlpattern + '|' +
-             mailurlpattern + '|' +
-             newsurlpattern + ')\ (.+?)\]',
-             r'<a href="\1">\2</a>', result)
+    text = re.sub(r'\[(' +
+           fileurlpattern + '|' +
+           mailurlpattern + '|' +
+           newsurlpattern + ')\s+(.+?)\]',
+           r'<a href="\1">\2</a>', text)
 
     # Convert naked URLs into links -- skip ones with a " before
-    result = re.sub(r'(?<!")(' +
-             fileurlpattern + '|' +
-             mailurlpattern + '|' +
-             newsurlpattern + ')',
-             r'<a href="\1">\1</a>', result)
+    text = re.sub(r'(?<!")(' +
+           newsurlpattern + '|' +
+           fileurlpattern + '|' +
+           mailurlpattern + ')',
+           r'<a href="\1">\1</a>', text)
 
     # Convert WikiNames into links
-    result = re.sub(r'(?<![\?\/\=])' +
-             wikinamepattern, '<a href="' +
-             wikibaseurl + r'\1">\1</a>', result)
+    if wikibaseurl:
+        text = re.sub(r'(?<![\?\/\=])' +
+               wikinamepattern, '<a href="' +
+               wikibaseurl + r'\1">\1</a>', text)
 
     # '' for emphasis, ''' for strong, ---- for a horizontal rule
-    result = re.sub(r"'''(.*?)'''", r"<strong>\1</strong>", result)
-    result = re.sub(r"''(.*?)''", r"<em>\1</em>", result)
-    result = re.sub(r"\n(-{4,})\n", "<hr>", result)
+    text = re.sub(r"'''(.*?)'''", r"<strong>\1</strong>", text)
+    text = re.sub(r"''(.*?)''", r"<em>\1</em>", text)
+    text = re.sub(r"\n(-{4,})\n", "<hr>", text)
 
     # Convert two or more newlines into <p>
-    result = re.sub(r'\n{2,}', r'</p>\n<p>', result)
+    text = re.sub(r'\n{2,}', r'</p>\n<p>', text)
 
-    return "<p>" + result + "</p>"
+    return "<p>" + text + "</p>"
+
+if __name__ == '__main__':
+    text = """This is a test
+    To test the wiki
+
+    [http://roughingit.subtlehints.net/pyblosxom?blah=duh#spam A link]
+    news:roughingit.subtlehints.net/pyblosxom/ - no, ''I'' do '''not''' have a news
+    server.  mailto:wari@example should go link to an email.  WikiWiki is a wiki
+    Keyword
+    """
+    print parse(text, 'http://wiki.subtlehints.net/moin/')
