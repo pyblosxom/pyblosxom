@@ -25,7 +25,7 @@ __license__ = "Python"
 import cgitb; cgitb.enable()
 import cgi
 
-import wingdbstub
+#import wingdbstub
 
 import config, os, sys, time
 from xml.dom.minidom import parseString
