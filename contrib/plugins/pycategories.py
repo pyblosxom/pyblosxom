@@ -61,10 +61,16 @@ class PyblCategories:
         for mem in elist:
             mem = os.path.dirname(mem)
             elistmap[mem] = 1 + elistmap.get(mem, 0)
+            mem = mem.split(os.sep)
         self._elistmap = elistmap
 
-        clist = elistmap.keys()
-        clist.insert(0, "")
+        clistmap = {}
+        for mem in elistmap.keys():
+            mem = mem.split(os.sep)
+            for i in range(len(mem)+1):
+                p = os.sep.join(mem[0:i])
+                clistmap[p] = 0
+        clist = clistmap.keys()
         clist.sort()
 
         clist = map(self.genitem, clist)
