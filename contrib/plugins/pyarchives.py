@@ -4,19 +4,25 @@ Walks through your blog root figuring out all the available monthly archives in
 your blogs.  It generates html with this information and stores it in the
 $archivelinks variable which you can use in your head or foot templates.
 
-Additionally, you can specify the flavour for the link by creating an entry in
-the config.py file or the ini file with the name "archive_flavour" and the
-value of the flavour you want to use.
+You can format the output with the key "archive_template".
 
-config.py example::
+A config.py example:
 
-   py["archive_flavour"] = "index"
+    py['archive_template'] = '<li><a href="%(base_url)s/%(Y)s/%(b)s">%(m)s/%(y)s</a></li>'
+
+Displays the archives as list items, with a month number slash year number, like 06/78.
+
+The vars available with typical example values are:
+    b      'Jun'
+    m      '6'
+    Y      '1978'
+    y      '78'
 """
 __author__ = "Wari Wahab - wari at wari dot per dot sg"
 __version__ = "$Id$"
 
 from Pyblosxom import tools
-import time, os
+import time
 
 class PyblArchives:
     def __init__(self, request):
@@ -30,28 +36,24 @@ class PyblArchives:
 
     def genLinearArchive(self):
         config = self._request.getConfiguration()
-
+        data = self._request.getData()
         root = config["datadir"]
-        baseurl = config.get("base_url", "")
-        
-        flav = config.get("archive_flavour", None)
-        if flav:
-            self._flavour = "?flav=" + flav
-        else:
-            self._flavour = ""
-            
         archives = {}
         archiveList = tools.Walk(root)
-
+        fulldict = {}
+        fulldict.update(config)
+        fulldict.update(data)
+        
+        template = config.get('archive_template', 
+                    '<a href="%(base_url)s/%(Y)s/%(b)s">%(Y)s-%(b)s</a><br />')
         for mem in archiveList:
             timetuple = tools.filestat(mem)
-            mo = time.strftime('%b',timetuple)
-            mo_num = time.strftime('%m',timetuple)
-            da = time.strftime('%d',timetuple)
-            yr = time.strftime('%Y',timetuple)
-            if not archives.has_key(yr + mo_num):
-                archives[yr + mo_num] = ('<a href="%s/%s/%s%s">%s-%s</a><br />' % 
-                                        (baseurl, yr, mo, self._flavour, yr, mo))
+            timedict = dict([(x, time.strftime('%' + x, timetuple)) 
+                            for x in list('bmYy')])
+            fulldict.update(timedict)
+            if (timedict['Y'] + timedict['m']) not in archives:
+                archives[timedict['Y'] + timedict['m']] = (template % fulldict)
+
         arcKeys = archives.keys()
         arcKeys.sort()
         arcKeys.reverse()
