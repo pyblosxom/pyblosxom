@@ -69,6 +69,16 @@ class BlosxomRenderer(RendererBase):
         return flavours[taste]
 
     def __printTemplate(self, entry, template):
+        """
+        @param entry: either a dict or the Entry object
+        @type  entry: dict or Entry
+
+        @param template: the template string
+        @type  template: string
+
+        @returns: the content string
+        @rtype: string
+        """
         if template:
             finaltext = tools.parseitem(entry, tools.parse(entry, template))
             return finaltext.replace(r'\$', '$')
@@ -78,6 +88,9 @@ class BlosxomRenderer(RendererBase):
         """
         Main workhorse of pyblosxom stories, comments and other miscelany goes
         here
+
+        @param entry: either a dict or an Entry object
+        @type  entry: dict or Entry object
         """
         data = self._request.getData()
         config = self._request.getConfiguration()
@@ -86,14 +99,14 @@ class BlosxomRenderer(RendererBase):
 
         if re.search(r'\Wxml', data['content-type']):
             entry['title'] = cgi.escape(entry['title'])
-            entry['content'] = cgi.escape(entry['content'])
+            entry.setData(cgi.escape(entry['content']))
 
         elif data['content-type'] == 'text/plain':
             s = tools.Stripper()
-            s.feed(entrycontent['content'])
+            s.feed(entrycontent.getData())
             s.close()
             p = ['  ' + line for line in s.gettext().split('\n')]
-            entry['content'] = '\n'.join(p)
+            entry.setData('\n'.join(p))
             
         entry.update(data)
         entry.update(config)
@@ -146,10 +159,7 @@ class BlosxomRenderer(RendererBase):
                 output, current_date = self.__processEntry(entry, current_date)
                 outputbuffer.append(output)
 
-                # FIXME what's this supposed to do?
-                # i commented it out because otherwise it stops us from
-                # rendering more than one entry when we don't specify anything
-                # in the url.
+                # FIXME what's this do?
                 # if entry['pi_yr'] == '':
                 #     break
 

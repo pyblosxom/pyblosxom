@@ -4,7 +4,7 @@ This module contains the base class for all the Entry classes.
 """
 import time
 
-CONTENT_KEY = "content"
+CONTENT_KEY = "body"
 DOESNOTEXIST = "THISKEYDOESNOTEXIST"
 
 class EntryBase:

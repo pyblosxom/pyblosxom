@@ -81,13 +81,13 @@ class PyblCalendar:
 
         # this comes in as 2001, 2002, 2003, ...  so we can convert it
         # without an issue
-        temp = data["pi_yr"]
+        temp = data.get("pi_yr", time.strftime("%Y", self._today))
         if temp:
             view[0] = int(temp)
 
         # the month is a bit harder since it can come in as "08", "", or
         # "Aug" (in the example of August).
-        temp = data["pi_mo"]
+        temp = data.get("pi_mo", time.strftime("%m", self._today))
         if temp.isdigit():
             temp = int(temp)
         else:
@@ -101,14 +101,17 @@ class PyblCalendar:
         self._view = view
 
         # if we're looking at a specific day, we figure out what it is
-        if data["pi_yr"] and data["pi_mo"] and data["pi_da"]:
-            if data["pi_mo"].isdigit():
-                mon = data["pi_mo"]
-            else:
-                mon = tools.month2num[data["pi_mo"]]
+        try:
+            if data["pi_yr"] and data["pi_mo"] and data["pi_da"]:
+                if data["pi_mo"].isdigit():
+                    mon = data["pi_mo"]
+                else:
+                    mon = tools.month2num[data["pi_mo"]]
 
-            self._specificday = [data["pi_yr"], mon, data["pi_da"]]
-            self._specificday = tuple([int(mem) for mem in self._specificday])
+                self._specificday = [data["pi_yr"], mon, data["pi_da"]]
+                self._specificday = tuple([int(mem) for mem in self._specificday])
+        except:
+            pass
 
         archiveList = tools.Walk(root)
 

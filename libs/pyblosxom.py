@@ -61,6 +61,62 @@ class PyBlosxom:
 
         path_info = []
 
+        # Python is unforgiving as perl in this case
+        data['pi_yr'] = (len(path_info) > 0 and path_info.pop(0) or '')
+        data['pi_mo'] = (len(path_info) > 0 and path_info.pop(0) or '')
+        data['pi_da'] = (len(path_info) > 0 and path_info.pop(0) or '')
+
+
+        filelist = (data['bl_type'] == 'dir' and 
+                tools.Walk(data['root_datadir'], int(config['depth'])) or 
+                [data['root_datadir']])
+
+        entrylist = []
+        for ourfile in filelist:
+            entry = FileEntry(config, ourfile, data['root_datadir'])
+            entrylist.append(entry)
+        entrylist = tools.sortDictBy(entrylist, "mtime")
+        
+        # Match dates with files if applicable
+        if not data['pi_yr'] == '':
+            month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
+            matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
+            valid_list = [x for x in entrylist if re.match(matchstr, x['fulltime'])]
+        else:
+            valid_list = entrylist
+
+        return valid_list
+
+
+    def run(self):
+        """
+        Main loop for pyblosxom.
+        """
+        config = self._request.getConfiguration()
+        data = self._request.getData()
+        pyhttp = self._request.getHttp()
+
+        # instantiate the renderer with the current request and store it
+        # in the data dict
+        renderer = tools.importName('libs.renderers', 
+                config.get('renderer', 'blosxom')).Renderer(self._request)
+        data["renderer"] = renderer
+
+        # import entryparsers here to allow other plugins register what file
+        # extensions can be used
+        import libs.entryparsers.__init__
+        libs.entryparsers.__init__.initialize_extensions()
+        data['extensions'] = libs.entryparsers.__init__.ext
+        
+        # import plugins and allow them to register with the api
+        import libs.plugins.__init__
+        libs.plugins.__init__.initialize_plugins(config)
+
+        api.fileListHandler.register(self.defaultFileListHandler, api.LAST)
+        
+        # CGI command handling
+        tools.cgiRequest(self._request)
+
         # If we use XML-RPC, we don't need favours and GET/POST fields
         if not self.xmlRpcCall:
             form = self._request.getHttp()["form"]
@@ -100,61 +156,6 @@ class PyBlosxom:
                 else:
                     data['pi_bl'] = ''
                     data['bl_type'] = 'dir'
-
-        # Python is unforgiving as perl in this case
-        data['pi_yr'] = (len(path_info) > 0 and path_info.pop(0) or '')
-        data['pi_mo'] = (len(path_info) > 0 and path_info.pop(0) or '')
-        data['pi_da'] = (len(path_info) > 0 and path_info.pop(0) or '')
-
-
-        filelist = (data['bl_type'] == 'dir' and 
-                tools.Walk(data['root_datadir'], int(config['depth'])) or 
-                [data['root_datadir']])
-
-        entrylist = []
-        for ourfile in filelist:
-            entry = FileEntry(config, ourfile, data['root_datadir'])
-            entrylist.append(entry)
-        entrylist = tools.sortDictBy(entrylist, "mtime")
-        
-        # Match dates with files if applicable
-        if not data['pi_yr'] == '':
-            month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
-            matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
-            valid_list = [x for x in entrylist if re.match(matchstr, x['fulltime'])]
-        else:
-            valid_list = entrylist
-
-        return valid_list
-
-
-    def run(self):
-        """
-        Main loop for pyblosxom.
-        """
-        config = self._request.getConfiguration()
-        data = self._request.getData()
-
-        # instantiate the renderer with the current request and store it
-        # in the data dict
-        renderer = tools.importName('libs.renderers', 
-                config.get('renderer', 'blosxom')).Renderer(self._request)
-        data["renderer"] = renderer
-
-        # import entryparsers here to allow other plugins register what file
-        # extensions can be used
-        import libs.entryparsers.__init__
-        libs.entryparsers.__init__.initialize_extensions()
-        data['extensions'] = libs.entryparsers.__init__.ext
-        
-        # import plugins and allow them to register with the api
-        import libs.plugins.__init__
-        libs.plugins.__init__.initialize_plugins(config)
-
-        api.fileListHandler.register(self.defaultFileListHandler, api.LAST)
-        
-        # CGI command handling
-        tools.cgiRequest(self._request)
 
         # calling fileList will generate a list of entries from the
         # api.fileListHandler
