@@ -29,7 +29,6 @@ __license__ = "Python"
 py['pyblosxom_version'] = __version__
 py['pyblosxom_name'] = 'pyblosxom'
 
-x
 from StringIO import StringIO
 from libs.pyblosxom import PyBlosxom
 
