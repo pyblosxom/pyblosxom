@@ -345,8 +345,12 @@ def run_callback(chain, input,
     @type  mappingfunc: function
 
     @param donefunc: this function tests whether we're done doing
-        what we're doing.  If this function returns true (1) then
-        we'll drop out of the loop.
+        what we're doing.  This function takes as input the output
+        of the most recent iteration.  If this function returns 
+        true (1) then we'll drop out of the loop.  For example,
+        if you wanted a callback to stop running when one of the
+        registered functions returned a 1, then you would pass in
+        "donefunc=lambda x:x".
     @type  donefunc: function
 
     @param defaultfunc: if this is set and we finish going through all
