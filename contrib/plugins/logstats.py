@@ -18,8 +18,8 @@ import string, re, time, cPickle
 from libs import api
 
 class PyblStats:
-    def __init__(self, request):
-        self._request = request
+    def __init__(self, config):
+        self._config = config
         self._referrers ={}
         self._referrersText = ""
         self._requestors = {}
@@ -54,10 +54,8 @@ class PyblStats:
         """
         Generate the list of referring files
         """
-        config = self._request.getConfiguration()
-
         # initialize blacklist
-        bad_list = string.split(config.get('refer_blacklist',''),',')
+        bad_list = string.split(self._config.get('refer_blacklist',''),',')
 
         def url(tuple):
             """
@@ -128,7 +126,7 @@ def prepare(args):
         f.close()
 
     except IOError:
-        stats = PyblStats(data)
+        stats = PyblStats(config)
 
     data["referrers"] = stats.genReferrers()
 
