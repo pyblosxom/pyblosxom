@@ -443,9 +443,11 @@ def make_logger(filename):
     try:
         import logging
     except ImportError:    
-        def log(str):
+        def log(*args):
             f = open(filename, "a")
-            f.write(str + "\n")            
+            for i in args:
+                f.write("%s INFO %s" % (time.asctime(), repr(i)))
+            f.write("\n")
             f.close()
     else:
         logger = logging.getLogger('trackback')
