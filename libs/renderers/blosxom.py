@@ -74,6 +74,7 @@ class BlosxomRenderer(RendererBase):
         here
         """
         data = self._request.getData()
+        config = self._request.getConfiguration()
 
         def printTemplate(text, template):
             if template != '':
@@ -103,6 +104,7 @@ class BlosxomRenderer(RendererBase):
             entryData['body'] = '\n'.join(p)
             
         entryData.update(data)
+        entryData.update(config)
         if data['date'] != current_date:
             current_date = data['date']
             if not self.dayFlag:
