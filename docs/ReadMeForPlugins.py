@@ -148,6 +148,24 @@ def cb_filelist(args = {'request' : Request()}):
     pass
 
 
+def cb_pathinfo(args = {'request' : Request()}):
+    """
+    A callback to allow plugins to alter the way HTTP PATH_INFO is parsed.
+    The following keys must be set in args['request'].getData() in order to
+    prevent conflicts with the default renderer and entry parsers::
+
+      'bl_type'       (dir|file)
+      'pi_bl'         typically the same as PATH_INFO
+      'pi_yr'         yyyy
+      'pi_mo'         (mm|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
+      'pi_da'         dd
+      'pi_frag'       #someanchor  (everything following the #)
+      'root_datadir'  full path to the entry folder or entry file on filesystem
+      'flavour'       The flavour gathered from the URL
+    """
+    pass
+
+
 def cb_renderer(args = {'request' : Request()}):
     """
     A callback to returb a L{PyBlosxom.renderers.base.RendererBase} instance.

@@ -138,9 +138,9 @@ class PyBlosxom:
 
         return valid_list
 
-    def processPathInfo(self, path_info):
+    def processPathInfo(self, args):
         """ 
-        Process path_info for URI according to path specifications, fill in
+        Process HTTP PATH_INFO for URI according to path specifications, fill in
         data dict accordingly
         
         The paths specification looks like this:
@@ -151,12 +151,29 @@ class PyBlosxom:
             - C{/cat/2002/Feb/31} - year and month day in category.
             - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
         To simplify checking, four digits directory name is not allowed.
-        
-        @param path_info: array of components of uri, typically obtained by C{uri.split("/")}
-        @type path_info: list
+
+        @param args: dict containing the incoming Request object
+        @type args: L{Pyblosxom.Request.Request}
         """
-        config = self._request.getConfiguration()
-        data = self._request.getData()
+        request = args['request']
+        config = request.getConfiguration()
+        data = request.getData()
+        pyhttp = request.getHttp()
+
+        form = self._request.getHttp()["form"]
+        data['flavour'] = (form.has_key('flav') and 
+                form['flav'].value or 
+                config.get('defaultFlavour', 'html'))
+
+        path_info = []
+        data['pi_yr'] = ''
+        data['pi_mo'] = ''
+        data['pi_da'] = ''
+        data['pi_frag'] = ''
+        
+        if pyhttp.get('PATH_INFO', ''):
+            path_info = pyhttp['PATH_INFO'].split('/')
+        path_info = [x for x in path_info if x != '']
 
         data['path_info'] = list(path_info)
         data['root_datadir'] = config['datadir']
@@ -279,24 +296,12 @@ class PyBlosxom:
                                         mappingfunc=lambda x,y:y,
                                         defaultfunc=lambda x:x)
 
-        form = self._request.getHttp()["form"]
-        data['flavour'] = (form.has_key('flav') and 
-                form['flav'].value or 
-                config.get('defaultFlavour', 'html'))
-
-        path_info = []
-        data['pi_yr'] = ''
-        data['pi_mo'] = ''
-        data['pi_da'] = ''
-        data['pi_frag'] = ''
-        
-        if pyhttp.get('PATH_INFO', ''):
-            path_info = pyhttp['PATH_INFO'].split('/')
-
         # process the path info to determine what kind of blog entry(ies) 
         # this is
-        path_info = [x for x in path_info if x != '']
-        self.processPathInfo(path_info)
+        tools.run_callback("pathinfo",
+                           {"request": self._request},
+                           donefunc=lambda x:x != None,
+                           defaultfunc=self.processPathInfo)
 
         # call the filelist callback to generate a list of entries
         data["entry_list"] = tools.run_callback("filelist",
