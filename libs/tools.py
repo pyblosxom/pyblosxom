@@ -261,7 +261,9 @@ def run_blosxom_callback(chain, input):
     Refer to run_callback for more details.
     """
     return run_callback(chain, input, 
-            lambda x,y: x.update({"template": y["template"]}))
+            lambda x,y: x.update({"template": y["template"]}),
+            lambda x:x != None,
+            lambda x: x["template"]) 
 
 
 def run_callback(chain, input, 

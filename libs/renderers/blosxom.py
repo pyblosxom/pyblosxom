@@ -273,7 +273,7 @@ class BlosxomRenderer(RendererBase):
         @type: string
         """
         template = self.flavour[template_name]
-        template = self.runCallbacks(self, template_name, vars, template)
+        template = tools.run_blosxom_callback(template_name, { "renderer": self, "entry": vars, "template": template })
         self._out.write(tools.parse(vars, template))
             
     def outputTemplate(self, output, entry, flavour_name):
@@ -291,7 +291,7 @@ class BlosxomRenderer(RendererBase):
         @type: string
         """
         template = self.flavour.get(flavour_name,'')
-        template = self.runCallbacks(self, flavour_name, entry, template)
+        template = tools.run_blosxom_callback(flavour_name, { "renderer": self, "entry": entry, "template": template })
         output.append(self.__printTemplate(entry, template))
 
     def getContent(self):
@@ -303,31 +303,6 @@ class BlosxomRenderer(RendererBase):
         @returns: content
         """
         return self._content
-
-    def runCallbacks(self, renderer, name, entry, template):
-        """
-        Run the plugin callbacks for a particular blosxom plugin
-        
-        @param: renderer
-        @type: BlosxomRenderer instance
-            
-        @param: name of Blosxom callback to run
-        @type: string
-            
-        @param: entry - entry to substitute
-        @type: BaseEntry
-            
-        @param: template - flavour template
-        @type: string
-            
-        """
-        import libs.renderers.blosxomplugins.__init__
-        plugins = libs.renderers.blosxomplugins.__init__.plugins
-        for p in plugins:
-            fn = getattr(p, name, None)
-            if fn is not None:
-                template = fn(renderer, entry,template)
-        return template
         
 class Renderer(BlosxomRenderer):
     pass
