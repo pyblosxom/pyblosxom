@@ -512,14 +512,20 @@ def make_logger(filename):
             f.close()
     else:
         logger = logging.getLogger('trackback')
+        # if all loggers have the same name,
+        # everything is logged to all files.
+        logger_name = os.path.splitext(os.path.basename(filename))[0]
+        logger = logging.getLogger(logger_name)
         hdlr = logging.FileHandler(filename)
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr.setFormatter(formatter)
         logger.addHandler(hdlr) 
         logger.setLevel(logging.INFO)
 
-        def log(str):
-            logger.info(str)
+        def log(*args):
+            # adjusted to match the 'manual' log func
+            for i in args:
+                logger.info(repr(i))
 
 
 def update_static_entry(cdict, entry_filename):
