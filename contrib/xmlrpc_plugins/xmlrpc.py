@@ -95,7 +95,7 @@ def authenticate(request, username, password):
     the credentials against our configured user list.
 
     @param request: Request object for the current request
-    @type request: L{Pyblosxom.Request.Request} object
+    @type request: L{Pyblosxom.pyblosxom.Request} object
 
     @param username: Username for authentication
     @type username: string
@@ -105,11 +105,11 @@ def authenticate(request, username, password):
 
     @raises xmlrpclib.Fault: This happens when the username password combo is
         wrong
-    @warning: The L{Pyblosxom.Request.Request} must contain a configuration dict
+    @warning: The L{Pyblosxom.pyblosxom.Request} must contain a configuration dict
         with C{['xmlrpc_usernames']} in it. The username is derived from the
         key value pair dict there:
 
-        >>> req = Pyblosxom.Request.Request()
+        >>> req = Pyblosxom.pyblosxom.Request()
         >>> authenticate(req, 'foo', 'bar')
     """
     config = request.getConfiguration()

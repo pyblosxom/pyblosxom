@@ -15,8 +15,8 @@ class RendererBase:
         """
         Constructor: Initializes the Renderer
 
-        @param request: The L{Pyblosxom.Request.Request} object
-        @type request: L{Pyblosxom.Request.Request} object
+        @param request: The L{Pyblosxom.pyblosxom.Request} object
+        @type request: L{Pyblosxom.pyblosxom.Request} object
         @param stdoutput: File like object to print to.
         @type stdoutput: file
         """

@@ -25,7 +25,7 @@ __copyright__ = "Copyright (c) 2003-2004 Wari Wahab"
 __license__ = "Python"
 
 if __name__ == '__main__':
-    from Pyblosxom.Request import Request
+    from Pyblosxom.pyblosxom import Request, test_installation, PyBlosxom
     import os
 
     req = Request()
@@ -39,13 +39,11 @@ if __name__ == '__main__':
     req.addHttp(d)
 
     if not os.environ.get("REQUEST_METHOD", ""):
-        from Pyblosxom.testinstallation import test_installation
         test_installation(req)
 
     else:
-        from Pyblosxom.pyblosxom import PyBlosxom
         p = PyBlosxom(req)
-        p.startup()
+        p.initialize()
         p.run()
 
 # vim: shiftwidth=4 tabstop=4 expandtab

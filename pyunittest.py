@@ -28,6 +28,14 @@ class TestLocking(unittest.TestCase):
         # FIXME - this needs to be re-written
         
 
+# need test cases for Pyblosxom/tools.VAR_REGEXP
+
+# need test cases for Pyblosxom/tools.Stripper
+
+# need test cases for Pyblosxom/tools.Replacer
+
+# need test cases for Pyblosxom/tools.parse
+
 if __name__ == '__main__':
     unittest.main(testRunner=unittest.TextTestRunner(verbosity=2))
 

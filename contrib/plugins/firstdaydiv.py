@@ -37,8 +37,8 @@ class PyFirstDate:
         """
         Initialize the PyFirstDate class.
 
-        @type request: L{Pyblosxom.Request.Request} object
-        @param request: A reference to the L{Pyblosxom.Request.Request} object.
+        @type request: L{Pyblosxom.pyblosxom.Request} object
+        @param request: A reference to the L{Pyblosxom.pyblosxom.Request} object.
         """
         config = request.getConfiguration()
         self._dayDiv = config.get("firstDayDiv", "blosxomDayDiv")
@@ -61,7 +61,7 @@ class PyFirstDate:
 
 def cb_prepare(args):
     """
-    Populate the L{Pyblosxom.Request.Request} with an instance of the
+    Populate the L{Pyblosxom.pyblosxom.Request} with an instance of the
     L{PyFirstDate} class in the "dayDivClass" key.
     """
     request = args["request"]

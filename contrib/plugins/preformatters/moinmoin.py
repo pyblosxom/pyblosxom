@@ -79,7 +79,7 @@ def readfile(filename, request):
     @param filename: the file in question
     @param request: The request object
     @type filename: string
-    @type request: L{Pyblosxom.Request.Request} object
+    @type request: L{Pyblosxom.pyblosxom.Request} object
     @returns: Data of the entry
     @rtype: dict
     """
