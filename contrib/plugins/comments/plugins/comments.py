@@ -41,6 +41,11 @@ import cgi, glob, os.path, re, time, cPickle, os
 from xml.sax.saxutils import escape
 from Pyblosxom import tools
 from Pyblosxom.entries.base import EntryBase
+try:
+    from email.Utils import formatdate
+except ImportError:
+    from rfc822 import formatdate
+
 
 def cb_start(args):
     request = args["request"]
@@ -254,7 +259,7 @@ def writeComment(config, data, comment):
             message = []
             message.append("From: %s" % email)
             message.append("To: %s" % config["comment_smtp_to"])
-            message.append("Date: %s" % time.ctime(modTime))
+            message.append("Date: %s" % formatdate(modTime))
             message.append("Subject: write back by %s" % author)
             message.append("")
             message.append("%s\n%s\n%s\n" % (description, cfn, curl))
