@@ -99,11 +99,11 @@ class BlosxomRenderer(RendererBase):
 
         if re.search(r'\Wxml', data['content-type']):
             entry['title'] = cgi.escape(entry['title'])
-            entry.setData(cgi.escape(entry['content']))
+            entry.setData(cgi.escape(entry.getData()))
 
         elif data['content-type'] == 'text/plain':
             s = tools.Stripper()
-            s.feed(entrycontent.getData())
+            s.feed(entry.getData())
             s.close()
             p = ['  ' + line for line in s.gettext().split('\n')]
             entry.setData('\n'.join(p))
