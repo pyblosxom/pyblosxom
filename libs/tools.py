@@ -147,7 +147,7 @@ def parse(var_dict, template):
     config = request.getConfiguration()
     if type(template) != types.UnicodeType: 
         # convert strings to unicode, assumes strings in iso-8859-1
-        r = unicode(template, config.get('blog_encoding', 'iso-8859-1'), 'replace')
+        template = unicode(template, config.get('blog_encoding', 'iso-8859-1'), 'replace')
     return u'' + VAR_REGEXP.sub(Replacer(var_dict).replace, template)
 
 
@@ -192,18 +192,16 @@ def Walk(root = '.', recurse = 0, pattern = '', return_folders = 0 ):
         pattern = re.compile(r'.*\.(' + '|'.join(ext) + r')$')
 
     #pattern = pattern or re.compile('.*\.txt$')
-    pat_list = string.splitfields( pattern , ';' )
     
     # check each file
     for name in names:
         fullname = os.path.normpath(os.path.join(root, name))
 
         # grab if it matches our pattern and entry type
-        for pat in pat_list:
-            if pattern.match(name):
-                if (os.path.isfile(fullname) and not return_folders) or (return_folders and os.path.isdir(fullname)):
-                    result.append(fullname)
-                break
+        if pattern.match(name):
+            if (os.path.isfile(fullname) and not return_folders) or (return_folders and os.path.isdir(fullname)):
+                result.append(fullname)
+            break
                 
         # recursively scan other folders, appending results
         if (recurse == 0) or (recurse > 1):
@@ -255,12 +253,12 @@ def generateRandStr(minlen=5, maxlen=10):
     @returns: A string containing random characters
     @rtype: string
     """
-    import whrandom
+    import random
     chars = string.letters + string.digits
     randStr = ""
-    randStr_size = whrandom.randint(minlen, maxlen)
+    randStr_size = random.randint(minlen, maxlen)
     for x in range(randStr_size):
-        randStr += whrandom.choice(chars)
+        randStr += random.choice(chars)
     return randStr
 
 def run_callback(chain, input, 
