@@ -60,7 +60,11 @@ def search(config, term):
     index = config['lucene_index']
     results = os.popen(JAVA_HOME+' -cp '+classpath+' LuceneSearch '+index+' '+term,'r').readlines()
     results = [ os.path.join(config['datadir'], x[2:-1]) for x in results ]
-    return [ makeEntry(x, config) for x in results]
+    entries = [ makeEntry(x, config) for x in results]
+    entries = [ ( x._mtime, x ) for x in entries ]
+    entries.sort()
+    entries.reverse()
+    return [ x[1] for x in entries ]
 
 def cb_filelist(args):
     """
