@@ -250,7 +250,7 @@ class PyBlosxom:
 
         for url, q in renderme:
             print "rendering '%s' ..." % url
-            tools.render_entry(config, url, q)
+            tools.render_url(config, url, q)
 
 
 class Request:

@@ -529,7 +529,7 @@ def make_logger(filename):
             logger.info(str)
 
 
-def render_entry(cdict, pathinfo, querystring=""):
+def render_url(cdict, pathinfo, querystring=""):
     """
     @param cdict: the config.py dict
     @type  cdict: dict
