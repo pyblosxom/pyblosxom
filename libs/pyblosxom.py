@@ -128,11 +128,13 @@ class PyBlosxom:
         entrylist = []
         for ourfile in filelist:
             entry = FileEntry(config, ourfile, data['root_datadir'])
-            entrylist.append(entry)
+            entrylist.append((entry._mtime, entry))
 
         # this sorts entries by mtime in reverse order.  entries that have
         # no mtime get sorted to the top.
-        entrylist.sort(lambda x,y: cmp(y._mtime, x._mtime))
+        entrylist.sort()
+        entrylist.reverse()
+        entrylist = [x[1] for x in entrylist]
         
         # Match dates with files if applicable
         if data['pi_yr']:
