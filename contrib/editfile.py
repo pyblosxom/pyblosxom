@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # vim: shiftwidth=4 tabstop=4 expandtab
 """
 This utility can be used to update a file entry while keeping the
@@ -13,7 +13,7 @@ EDITOR='vim -c "set tabstop=4 shiftwidth=4 expandtab"'
 from os import environ
 EDITOR=environ.get('VISUAL')
 
-from os import stat, path, system, utime
+from os import stat, path, spawnl, utime, P_WAIT
 import sys, time
 
 if len(sys.argv) > 1:
@@ -34,7 +34,7 @@ except:
 
 atime, mtime = filestats[7:9]
 
-system('%s %s' % (EDITOR, filename))
+spawnl(P_WAIT, EDITOR, EDITOR, filename)
 
 print "Setting back the time"
 try:
