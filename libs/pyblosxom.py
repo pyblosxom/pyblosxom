@@ -203,6 +203,7 @@ class PyBlosxom:
                 elif (os.path.basename(filename) == 'index' and 
                         os.path.isdir(dirname)):
                     # blanket flavours?
+                    data['flavour'] = ext[1:]
                     if data['pi_bl'] != '':
                         config['blog_title'] += ' : %s' % os.path.dirname(data['pi_bl'])
                     data['root_datadir'] = dirname
