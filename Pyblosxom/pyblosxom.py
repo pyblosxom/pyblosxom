@@ -166,9 +166,6 @@ class PyBlosxom:
                          'request': self._request})
             renderer.render()
 
-            # do end callback
-            tools.run_callback("end", {'request':self._request})
-
         elif not renderer:
             output = config.get('stdoutput', sys.stdout)
             output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
