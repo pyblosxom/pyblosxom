@@ -1,3 +1,7 @@
+2003-03-21  Theodore W. Leung  <twl@dev>
+	* Updated the logstats.py plugin to take configuration parameters
+	  from config.py.  
+
 2003-03-21  Theodore W. Leung  <twl@sauria.com>
 	* Added support for plugins in the BlosxomRenderer.  These plugins
 	  are based on the Perl blosxom 2.0 callbacks. 
