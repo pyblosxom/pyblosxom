@@ -1,66 +1,80 @@
 from libs.renderers.base import RendererBase
 from libs import tools
+import types
 
 class Renderer(RendererBase):
     def render(self, header = 1):
         pyhttp = self._request.getHttp()
         config = self._request.getConfiguration()
         data = self._request.getData()
+        printout = self._out.write
 
-        print "Content-Type: text/plain"
-        print
-        print "Welcome to debug mode!"
-        print "You wanted the %(flavour)s flavour if I support flavours" % data
+        self.addHeader('Content-type', 'text/plain')
+        self.showHeaders()
+        printout("Welcome to debug mode!\n")
+        printout("You wanted the %(flavour)s flavour if I support flavours\n" % data)
 
-        print "------------------------------------------------------"
-        print "The OS environment contains:"
-        print "------------------------------------------------------"
+        printout("------------------------------------------------------\n")
+        printout("The HTTP Return codes are:\n")
+        printout("------------------------------------------------------\n")
+        for key in self._header.keys():
+            printout("%s -> %s\n" % (key, self._header[key]))
+
+        printout("------------------------------------------------------\n")
+        printout("The OS environment contains:\n")
+        printout("------------------------------------------------------\n")
         import os
         for key in os.environ.keys():
-            print "%s -> %s" % (key, os.environ[key])
+            printout("%s -> %s\n" % (key, os.environ[key]))
 
-        print "------------------------------------------------------"
-        print "Request.getHttp() dict contains:"
-        print "------------------------------------------------------"
+        printout("------------------------------------------------------\n")
+        printout("Request.getHttp() dict contains:\n")
+        printout("------------------------------------------------------\n")
         for key in pyhttp.keys():
-            print "%s -> %s" % (key, pyhttp[key])
+            printout("%s -> %s\n" % (key, pyhttp[key]))
 
-        print "------------------------------------------------------"
-        print "Request.getConfiguration() dict contains:"
-        print "------------------------------------------------------"
+        printout("------------------------------------------------------\n")
+        printout("Request.getConfiguration() dict contains:\n")
+        printout("------------------------------------------------------\n")
         for key in config.keys():
-            print "%s -> %s" % (key, config[key])
+            printout("%s -> %s\n" % (key, config[key]))
 
-        print "------------------------------------------------------"
-        print "Request.getData() dict contains:"
-        print "------------------------------------------------------"
+        printout("------------------------------------------------------\n")
+        printout("Request.getData() dict contains:\n")
+        printout("------------------------------------------------------\n")
         for key in data.keys():
-            print "%s -> %s" % (key, data[key])
+            printout("%s -> %s\n" % (key, data[key]))
 
-        print "------------------------------------------------------"
-        print "Entries to process:"
-        print "------------------------------------------------------"
+        printout("------------------------------------------------------\n")
+        printout("Entries to process:\n")
+        printout("------------------------------------------------------\n")
         for content in self._content:
-            print "%s" % content['filename']
+            if type(content) != types.StringType:
+                printout("%s\n" % content.get('filename', 'No such file\n'))
 
-        print "------------------------------------------------------"
-        print "Cached Titles:"
-        print "------------------------------------------------------"
-        cache = tools.get_registry()['cache']
+        printout("------------------------------------------------------\n")
+        printout("Cached Titles:\n")
+        printout("------------------------------------------------------\n")
+        cache = tools.get_cache()
         for content in self._content:
-            cache.load(content['filename'])
-            if cache.isCached():
-                print "%s" % cache.getEntry()['title']
-            cache.close()
+            if type(content) != types.StringType:
+                filename = content['filename']
+            
+                if cache.has_key(filename):
+                    printout("%s" % cache[filename]['title'])
+                cache.close()
 
-        print "------------------------------------------------------"
-        print "Cached Entry Bodies:"
-        print "------------------------------------------------------"
+        printout("------------------------------------------------------\n")
+        printout("Cached Entry Bodies:\n")
+        printout("------------------------------------------------------\n")
         for content in self._content:
-            cache.load(content['filename'])
-            if cache.isCached():
-                print "%s" % cache.getEntry()['title']
-                print "=================================================="
-                print "%s" % cache.getEntry()['body']
-            cache.close()
-            print "------------------------------------------------------"
+            if type(content) != types.StringType:
+                filename = content['filename']
+                if cache.has_key(filename):
+                    printout("%s\n" % cache[filename]['title'])
+                    printout("==================================================\n")
+                    printout("%s\n" % cache[filename]['body'])
+                else:
+                    printout("Contents of %s is not cached\n" % filename)
+                cache.close()
+                printout("------------------------------------------------------\n")

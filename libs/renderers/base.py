@@ -11,7 +11,7 @@ class RendererBase:
           interfaces for all Renderer onject.
     """
 
-    def __init__(self, request, out = sys.stdout):
+    def __init__(self, request, stdoutput = sys.stdout):
         """
         Constructor: Initializes the Renderer
 
@@ -21,21 +21,31 @@ class RendererBase:
         @type out: file
         """
         self._request = request
-        self._header = []
-        self._out = out
+        self._header = {}
+        self._out = stdoutput
         self._content = None
         self._needs_content_type = 1
         self.rendered = None
 
 
-    def addHeader(self, headers):
+    def addHeader(self, *args):
         """
         Populates the HTTP header with lines of text
 
-        @param headers: List of headers
-        @type headers: list
+        @param args: Paired list of headers
+        @type args: argument lists
+        @raises ValueError: This happens when the parameters are not correct
         """
-        self._header.extend(headers)
+        args = list(args)
+        if not len(args) % 2:
+            while args:
+                key = args.pop(0).strip()
+                if key.find(' ') != -1 or key.find(':') != -1:
+                    raise ValueError, 'There should be no spaces in header keys'
+                value = args.pop(0).strip()
+                self._header.update({key: value})
+        else:
+            raise ValueError, 'Headers recieved are not in the correct form'
 
 
     def setContent(self, content):
@@ -62,10 +72,10 @@ class RendererBase:
 
     def showHeaders(self):
         """
-        Show HTTP Headers. Override this is your renderer uses headers in a
+        Show HTTP Headers. Override this if your renderer uses headers in a
         different way
         """
-        self._out.write('\n'.join(self._header))
+        self._out.write('\n'.join(['%s: %s' % (x, self._header[x]) for x in self._header]))
         self._out.write('\n\n')
 
 
@@ -80,7 +90,7 @@ class RendererBase:
             if self._header:
                 self.showHeader()
             else:
-                self.addHeader('Content-Type: text/plain')
+                self.addHeader('Content-Type', 'text/plain')
                 self.showHeader()
 
         if self._content:

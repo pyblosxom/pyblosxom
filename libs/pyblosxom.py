@@ -1,5 +1,5 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
-import os, time, string, re, cgi
+import os, time, string, re, cgi, sys
 import tools
 from entries.fileentry import FileEntry
 import cPickle as pickle
@@ -266,7 +266,8 @@ class PyBlosxom:
         # instantiate the renderer with the current request and store it
         # in the data dict
         renderer = tools.importName('libs.renderers', 
-                config.get('renderer', 'blosxom')).Renderer(self._request)
+                config.get('renderer', 'blosxom')).Renderer(self._request, 
+                config.get('stdoutput', sys.stdout))
         data["renderer"] = renderer
 
         # import plugins
@@ -325,7 +326,7 @@ class PyBlosxom:
                          'return_code': '200', 
                          'request': self._request})
             else:
-                renderer.addHeader(['Status: 404 Not Found'])
+                renderer.addHeader('Status', '404 Not Found')
                 renderer.setContent(
                     {'title': 'The page you are looking for is not available',
                      'body': 'Somehow I cannot find the page you want. ' + 
@@ -341,4 +342,5 @@ class PyBlosxom:
             tools.run_callback("end", {'request':self._request}, mappingfunc=lambda x,y:y)
 
         elif not renderer:
-            print "Content-Type: text/plain\n\nThere is something wrong with your setup"
+            output = config.get('stdoutput', sys.stdout)
+            output.write("Content-Type: text/plain\n\nThere is something wrong with your setup")

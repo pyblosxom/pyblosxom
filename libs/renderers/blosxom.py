@@ -16,8 +16,8 @@ examples::
 """
 
 class BlosxomRenderer(RendererBase):
-    def __init__(self, request, out = sys.stdout):
-        RendererBase.__init__(self, request, out)
+    def __init__(self, request, stdoutput = sys.stdout):
+        RendererBase.__init__(self, request, stdoutput)
         config = request.getConfiguration()
         (e, d, sr, sw) = codecs.lookup(config.get('blog_encoding', 
                 'iso-8859-1'))
@@ -213,7 +213,7 @@ class BlosxomRenderer(RendererBase):
         data['content-type'] = self.flavour['content_type'].strip()
         if header:
             if self._needs_content_type:
-                self.addHeader(['Content-type: %(content-type)s' % data])
+                self.addHeader('Content-type', '%(content-type)s' % data)
 
             self.showHeaders()
         
