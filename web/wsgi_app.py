@@ -53,8 +53,6 @@ if cfg.has_key("codebase"):
 from Pyblosxom.pyblosxom import PyBlosxom
 from Pyblosxom import tools
 
-_debug = False
-
 def _getExcInfo():
     try: from cStringIO import StringIO
     except ImportError: from StringIO import StringIO
@@ -77,13 +75,6 @@ def application(env, start_response):
         p.run()
     
         response = p.getResponse()
-    
-        if _debug:
-            import os
-            logFile = os.path.join(cfg.get('logdir', '/tmp'), 'pyblosxom.log')
-            tools.make_logger(logFile)
-            tools.log("status: %s" % response.status)
-            tools.log("headers: %s" % response.headers)
 
         write = start_response(response.status, list(response.headers.items()))
         response.seek(0)
@@ -97,16 +88,15 @@ def application(env, start_response):
     except:
         # FIXME: it would be cool if we could catch a PyblosxomError or something here
         #  and let the server handle other exceptions.
+        tools.log_exception()
         status = "500 Oops"
-        response_headers = [("content-type", "text/plain")]
+        response_headers = [("content-type","text/plain")]
         start_response(status, response_headers)
         result = ["Pyblosxom WSGI application: A server error occurred.  Please contact the administrator."]
-        if _debug:
-            exc_string = _getExcInfo()
-            tools.log(exc_string)
+        if cfg.get('log_level', '') == "debug":
             result.append("\n")
-            result.append(exc_string)
+            result.append(_getExcInfo())
         return result
 
 
-# vim: tabstop=4 shiftwidth=4
+# vim: shiftwidth=4 tabstop=4 expandtab
