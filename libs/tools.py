@@ -62,6 +62,17 @@ def parse(dict, template):
     return replaced
 
 
+def parseitem(entry_dict, text_string):
+    """
+    Takes in an entry dict and a text string and passes it through the 
+    parseitem CallbackChain, allowing plugins to expand variables they 
+    know about.
+
+    This calls the chain with (entry_dict, text_string) and returns
+    the final string.
+    """
+    return api.parseitem.executeChain((entry_dict, text_string))[1]
+
 def filestat(filename):
     """
     Calls the api's filestat callback chain to figure out what the

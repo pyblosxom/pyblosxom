@@ -85,4 +85,28 @@ class CallbackChain:
 		return data
 
 import os
+# CallbackChain to generate a os.stat tuple about a given file.
+# call filestat.executeChain(filename) and get back a os.stat like
+# tuple with all the pieces worked out.
+#
+# Input:
+#    filename (string)
+#    tuple (from os.stat)
+#
+# Output:
+#    filename
+#    adjusted tuple
 filestat = CallbackChain()
+
+# CallbackChain to parse a given story item (head, foot, or story)
+# and expand variables.
+#
+# Input:
+#    entry_dict (dict)
+#    text_string (string) - the story item
+#
+# Output:
+#    entry_dict (dict)
+#    adjusted text_string (string)
+parseitem = CallbackChain()
+
