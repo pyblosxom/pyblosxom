@@ -42,14 +42,29 @@ Pertinent to developers and plugin developers:
    If you use os.environ directly, it's likely your plugin won't work
    with non-CGI installations of PyBlosxom.
 
-3. We added __iter__, next, read, readline, readlines, seek, and tell
-   to the Request objcet.  All of them access the input stream.
+3. We added __iter__, read, readline, readlines, seek, and tell
+   to the Request object.  All of them access the input stream.
+   You should not use sys.stdin directly.
+   
+   Usage:
+   data = request.read()
+   data_part = request.read(1024)
+   one_line = request.readline()
+   lines = request.readlines()
 
 4. The output stream should be accessed through the PyBlosxom Response
    object.  The following methods are implemented in the Response
-   object: __iter__, close, flush, next, read, readline, readlines,
-   seek, tell, write, writelines, setStatus, and addHeader.  See the
+   object: __iter__, close, flush, read, readline, readlines,
+   seek, tell, write, writelines, setStatus, and addHeader.
+   You should not use sys.stdout directly. See the
    API for more details.
+
+   Usage:
+   response = request.getResponse()
+   response.addHeader('Status', '200 Ok')
+   response.addHeader('Content-type', 'text/html')
+   response.write("Hello World")
+   response.writelines(["list", "of", "data"])
 
 5. Instead of doing:
 
