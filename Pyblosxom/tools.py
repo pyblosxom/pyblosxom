@@ -9,7 +9,7 @@ The swiss army knife for all things pyblosxom
 @var MONTHS: A list of valid literal and numeral months
 @var VAR_REGEXP: Regular expression for detection and substituion of variables
 """
-import plugins.__init__
+import plugin_utils
 import sgmllib, re, os, string,  types
 
 month2num = { 'nil' : '00',
@@ -304,7 +304,7 @@ def run_callback(chain, input,
     @returns: the transformed dict
     @rtype: dict
     """
-    chain = plugins.__init__.get_callback_chain(chain)
+    chain = plugin_utils.get_callback_chain(chain)
 
     output = None
 

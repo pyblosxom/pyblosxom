@@ -263,8 +263,8 @@ class PyBlosxom:
         data["renderer"] = renderer
 
         # import plugins
-        import Pyblosxom.plugins.__init__
-        Pyblosxom.plugins.__init__.initialize_plugins(config)
+        import plugin_utils
+        plugin_utils.initialize_plugins(config)
         
         # do start callback
         tools.run_callback("start", {'request': self._request}, mappingfunc=lambda x,y:y)
