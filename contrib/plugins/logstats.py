@@ -39,13 +39,6 @@ class PyblStats:
         if uri == '-':
             return
 
-        # process blacklist
-        if self._py.has_key('refer_blacklist'):
-            bad_list = string.split(self._py['refer_blacklist'],',')
-            for pat in bad_list:
-                if re.search(pat, url):
-                     return
-
         if self._referrers.has_key(uri):
             count = self._referrers[uri]
         else:
@@ -62,22 +55,24 @@ class PyblStats:
         """
         Generate the list of referring files
         """
+        # initialize blacklist
+        if self._py.has_key('refer_blacklist'):
+            bad_list = string.split(self._py['refer_blacklist'],',')
+
         def url(tuple):
             """
             Markup (and truncate) a referrer URL
             """
             uri = tuple[0]
             count = tuple[1]
-            size = 40
+            size = 32
             vis = uri
-            # process blacklist
-            if self._py.has_key('refer_blacklist'):
-                bad_list = string.split(self._py['refer_blacklist'],',')
+            if len(bad_list) > 0:
                 for pat in bad_list:
                     if re.search(pat, uri):
                         return ""
             if len(uri) > size: vis = vis[:size]+'...'
-            return '<a href="'+uri+'" title="'+uri+'">'+vis+' ('+str(count)+')'+'</a><br />'
+            return '<a href="'+uri+'" title="'+uri+'">'+vis+' ('+str(count)+')'+'</a><br />\n'
 
         def compareCounts(tuple1, tuple2):
             count1 = tuple1[1]
@@ -87,13 +82,16 @@ class PyblStats:
             if count1 < count2:
                 return 1
             return 0
-
         
         items = self._referrers.items()
+        # sort list by number of occurances
         items.sort(compareCounts)
-        refs = items[0:14]
+        # make a list of urls
+        refs = [ url(x) for x in items ]
+        # remove blanks
+        refs = [ x for x in refs if x != "" ]
 
-        self._referrersText = string.join([ url(x) for x in refs ])
+        self._referrersText = string.join(refs[0:24])
         return self._referrersText
 
 def processRequest(args):
