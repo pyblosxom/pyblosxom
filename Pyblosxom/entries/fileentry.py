@@ -34,8 +34,8 @@ class FileEntry(base.EntryBase):
         """
         base.EntryBase.__init__(self, request)
         self._config = request.getConfiguration()
-        self._filename = filename.replace('\\', '/')
-        self._root = root.replace('\\', '/')
+        self._filename = filename.replace(os.sep, '/')
+        self._root = root.replace(os.sep, '/')
 
         self._datadir = datadir or self._config["datadir"]
         if self._datadir.endswith(os.sep):
