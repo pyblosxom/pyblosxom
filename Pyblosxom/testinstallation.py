@@ -112,11 +112,14 @@ def test_installation(request):
                 else:
                     print "    plugin has no version."
 
-                ret = mem.verify_installation(request)
-                if ret == 1:
-                    print "    PASS"
-                else:
-                    print "    FAIL!!!"
+                try:
+                    if mem.verify_installation(request) == 1:
+                        print "    PASS"
+                    else:
+                        print "    FAIL!!!"
+                except AssertionError, error_message:
+                    print " FAIL!!! ", error_message
+
             else:
                 no_verification_support.append(mem.__name__)
 
