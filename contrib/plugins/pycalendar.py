@@ -16,7 +16,7 @@ It uses the following CSS classes:
 
   - blosxomCalendar
     - for the calendar table
-  - blosxomCalendarHeader
+  - blosxomCalendarHead
     - for the month year header (January 2003)
   - blosxomCalendarWeekHeader
     - for the week header (Su, Mo, Tu, ...)
