@@ -3,7 +3,7 @@ This is the main module for PyBlosxom functionality.  PyBlosxom's setup
 and default handlers are defined here.
 """
 from __future__ import nested_scopes
-import os, time, re, sys
+import os, time, re, sys, StringIO
 import tools
 from entries.fileentry import FileEntry
 
@@ -100,7 +100,111 @@ class PyBlosxom:
                         mappingfunc=lambda x,y:x,
                         donefunc=lambda x:x)
 
+    def runStaticRenderer(self):
+        """
+        This will go through all possible things in the blog
+        and statically render everything to the "static_dir"
+        specified in the config file.
 
+        This figures out all the possible path_info settings
+        and calls self.run() a bazillion times saving each file.
+        """
+        self.initialize()
+
+        config = self._request.getConfiguration()
+        data = self._request.getData()
+
+        staticdir = config.get("static_dir", "")
+        datadir = config["datadir"]
+
+        if not staticdir:
+            raise Exception("You must set static_dir in your config file.")
+
+        flavours = config.get("static_flavours", ["html", "rss"])
+
+        renderme = []
+
+        dates = {}
+        categories = {}
+
+        # first we handle entries and categories
+        listing = tools.Walk(self._request, datadir)
+
+        for mem in listing:
+            # skip the ones that have bad extensions
+            ext = mem[mem.rfind(".")+1:]
+            if not ext in data["extensions"].keys():
+                continue
+
+            # remove the datadir from the front and the bit at the end
+            mem = mem[len(datadir):mem.rfind(".")]
+
+            # grab all possible categories from this
+            temp = os.path.dirname(mem).split(os.sep)
+            for i in range(len(temp)+1):
+                p = os.sep.join(temp[0:i])
+                categories[p] = 0
+
+            # this is the static filename
+            fn = os.path.normpath(staticdir + mem)
+            renderme.append( (mem + "." + flavours[0], fn + "." + flavours[0]) )
+
+
+        categories = categories.keys()
+        categories.sort()
+
+        for mem in categories:
+            print "category: %s" % mem
+            for f in flavours:
+                fn = os.path.normpath(staticdir + mem + os.sep + "index")
+                renderme.append( (mem + "?flav=" + f, fn + "." + f) )
+
+        # now we handle dates
+
+        # now we handle arbitrary urls
+        
+        # now we render everything...
+        oldstdout = sys.stdout
+        for path, fn in renderme:
+            # print "generating: %s -> %s ..." % (path, fn)
+
+            if path.find("?") != -1:
+                querystring = path[path.find("?")+1:]
+                path = path[0:path.find("?")]
+            else:
+                querystring = ""
+
+            req = Request()
+            req.addHttp( {
+                "HTTP_USER_AGENT": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7b) Gecko/20040421",
+                "REQUEST_METHOD": "GET",
+                "HTTP_HOST": "localhost",
+                "PATH_INFO": path,
+                "QUERY_STRING": querystring,
+                "REQUEST_URI": path + "?" + querystring })
+            req.addConfiguration(config)
+
+            buffer = StringIO.StringIO()
+            sys.stdout = buffer
+            p = PyBlosxom(req)
+            p.run()
+            sys.stdout = oldstdout
+
+            if not os.path.isdir(os.path.dirname(fn)):
+                os.makedirs(os.path.dirname(fn))
+
+            output = buffer.getvalue().splitlines()
+            while 1:
+                if len(output[0].strip()) == 0:
+                    break
+                output.pop(0)
+
+            output.pop(0)
+
+            f = open(fn, "w")
+            f.write("\n".join(output))
+            f.close()
+ 
 class Request:
     """
     This class holds the PyBlosxom request.  It holds configuration

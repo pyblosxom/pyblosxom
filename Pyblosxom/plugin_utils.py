@@ -62,7 +62,11 @@ def initialize_plugins(plugin_dirs, plugin_list):
         load all the plugins we find in those dirs.
     @type  plugin_list: list of strings or None
     """
-    global plugins
+    global plugins, callbacks
+
+    if len(plugins) > 0:
+        plugins = []
+        callbacks = {}
 
     # handle plugin_dirs here
     for mem in plugin_dirs:
