@@ -41,6 +41,7 @@ class XMLRPCHandler:
         """
         Processes the xmlrpc request.
         """
+        response = self._request.getResponse()
         # XML-RPC starts here
         try:
             # Get parameters
@@ -51,32 +52,31 @@ class XMLRPCHandler:
 
             try:
                 # Call the method
-                response = self.xmlrpcCall(method, params)
-                if type(response) != type (()):
-                    response = (response,)
+                result = self.xmlrpcCall(method, params)
+                if type(result) != type (()):
+                    result = (result,)
             except xmlrpclib.Fault, faultobj:
                 # Throw an xmlrpc exception
-                response = xmlrpclib.dumps(faultobj)
+                result = xmlrpclib.dumps(faultobj)
             except:
                 # Format other exceptions into xmlrpc faults
-                response = xmlrpclib.dumps(xmlrpclib.Fault(1, '%s:%s' %
+                result = xmlrpclib.dumps(xmlrpclib.Fault(1, '%s:%s' %
                         (sys.exc_type, sys.exc_value)))
             else:
                 # Passed.
-                response = xmlrpclib.dumps(response, methodresponse=1)
+                result = xmlrpclib.dumps(result, methodresponse=1)
 
         except:
-            resp_str = 'Content-Type: text/plain\n\n' + \
-                       'XML-RPC call expected\n' + \
+            response.addHeader('Content-Type', 'text/plain')
+            result = 'XML-RPC call expected\n' + \
                        'Debug: %s:%s\n' % (str(sys.exc_type), str(sys.exc_value)) + \
                        "'" + self._data + "'"
         else:
-            resp_str = 'Content-Type: text/xml\n' + \
-                       'Content-Length: %d\n\n' % len(response) + \
-                       response
+            response.addHeader('Content-Type', 'text/xml')
+            response.addHeader('Content-Length', '%d' % len(result))
 
-        sys.stdout.write(resp_str)
-        sys.stdout.flush()
+        response.write(result)
+        response.flush()
 
 
     def xmlrpcCall(self, meth_name, args):
@@ -129,30 +129,30 @@ def cb_handle(args):
     request = args["request"]
     pyhttp = request.getHttp()
     config = request.getConfiguration()
+    response = request.getResponse()
+    
 
     urltrigger = config.get("xmlrpc_urltrigger", "/RPC")
 
-    if os.environ.get("PATH_INFO", "").startswith(urltrigger):
+    if pyhttp.get("PATH_INFO", "").startswith(urltrigger):
         try:
-            content_length = int(os.environ.get("CONTENT_LENGTH", "0"))
+            content_length = int(pyhttp.get("CONTENT_LENGTH", "0"))
             maxrequest_length = config.get("xmlrpc_maxrequest_length", 10000)
 
             if content_length > maxrequest_length:
                 raise ValueError, 'Request too large - %s bytes' % content_length
 
         except: 
-            response = xmlrpclib.dumps(xmlrpclib.Fault(1, "%s: %s" % sys.exc_info()[:2]))
-            resp_str = ('Content-Type: text/xml\n') + \
-                       ('Content-Length: %d\n\n' % len(response)) + \
-                       response
+            result = xmlrpclib.dumps(xmlrpclib.Fault(1, "%s: %s" % sys.exc_info()[:2]))
+            response.addHeader('Content-Type', 'text/xml')
+            response.addHeader('Content-Length', '%d' % len(result))
 
-            sys.stdout.write(resp_str)
-            sys.stdout.flush()
+            response.write(result)
+            response.flush()
             return 1
 
         # everything is cool--so we handle the xmlrpc request
-
-        data = sys.stdin.read(content_length)
+        data = request.read(content_length)
 
         # here we call the xmlrpc_init callback passing in a dict.
         # each function that registers with this callback adds their
