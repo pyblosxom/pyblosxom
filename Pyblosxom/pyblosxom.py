@@ -32,10 +32,13 @@ class PyBlosxom:
         The startup step further initializes the Request by setting
         additional information in the _data dict.
         """
+        global VERSION_DATE
+
         data = self._request.getData()
         pyhttp = self._request.getHttp()
         config = self._request.getConfiguration()
 
+        data["pyblosxom_version"] = VERSION_DATE
         data['pi_bl'] = ''
 
         # Get our URL and configure the base_url param
