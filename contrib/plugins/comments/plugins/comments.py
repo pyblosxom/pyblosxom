@@ -49,6 +49,11 @@ def cb_start(args):
 
     logfile = os.path.normpath(logdir + os.sep + "comments.log")
     tools.make_logger(logfile)
+
+    if not config.has_key('comment_dir'):
+        config['comment_dir'] = os.path.join(config['datadir'],'comments')
+    if not config.has_key('comment_ext'):
+        config['comment_ext'] = 'cmt'
     
 def verify_installation(request):
     config = request.getConfiguration()
@@ -93,7 +98,7 @@ def readComments(entry, config):
         return [ readComment(f) for f in filelist ]
     except:
         tools.log("Couldn't read comments for entry: ",entry)
-        return []
+    return []
     
 def getCommentCount(entry, config):
     """
@@ -454,12 +459,3 @@ def cb_story_end(args):
 
     entry['num_comments'] = getCommentCount(entry, config)
     return template
-    
-def cb_start(args):
-    request = args['request']
-    config = request.getConfiguration()
-
-    if not config.has_key('comment_dir'):
-        config['comment_dir'] = os.path.join(config['datadir'],'comments')
-    if not config.has_key('comment_ext'):
-        config['comment_ext'] = 'cmt'
