@@ -119,7 +119,7 @@ class Replacer:
 
             if type(r) != types.UnicodeType: 
                 # convert strings to unicode, assumes strings in iso-8859-1
-                r = unicode(r, config.get('blog_encoding', 'iso8859-1'), 'replace')
+                r = unicode(r, config.get('blog_encoding', 'iso-8859-1'), 'replace')
 
             return r
 

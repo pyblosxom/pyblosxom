@@ -23,7 +23,7 @@ class BlosxomRenderer(RendererBase):
         RendererBase.__init__(self, request, stdoutput)
         config = request.getConfiguration()
         (e, d, sr, sw) = codecs.lookup(config.get('blog_encoding', 
-                'iso8859-1'))
+                'iso-8859-1'))
         self._out = sw(self._out)
         self.dayFlag = 1
 
@@ -76,7 +76,7 @@ class BlosxomRenderer(RendererBase):
         for filename in flavourlist:
             flavouring = os.path.basename(filename).split('.')
             flav_template = unicode(open(filename).read(), 
-                    config.get('blog_encoding', 'iso8859-1'))
+                    config.get('blog_encoding', 'iso-8859-1'))
             if flavours.has_key(flavouring[1]):
                 flavours[flavouring[1]][flavouring[0]] = flav_template
             else:

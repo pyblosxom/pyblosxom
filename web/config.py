@@ -13,7 +13,7 @@ py['blog_description'] = "blosxom with a touch of python"
 py['blog_language'] = "en"
 
 # Encoding for output. Default is iso-8859-1.
-py['blog_encoding'] = "iso8859-1"
+py['blog_encoding'] = "iso-8859-1"
 
 # Where are this blog's entries kept?
 py['datadir'] = "/path/to/blog"
