@@ -97,8 +97,9 @@ def Walk(root = '.',
         # recursively scan other folders, appending results
         if (recurse == 0) or (recurse > 1):
             if os.path.isdir(fullname) and not os.path.islink(fullname):
-                recurse = ( recurse > 1 and recurse -  1 or 0)
-                result = result + Walk(fullname, (recurse > 1 and recurse -  1 or 0), pattern, return_folders)
+                result = result + Walk(fullname, 
+			(recurse > 1 and recurse -  1 or 0), 
+			pattern, return_folders)
             
     return result
 
