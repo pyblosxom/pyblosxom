@@ -18,8 +18,12 @@ to reduce the build cost as well as the run-time cost required.
 This module defines a series of callbacks and callbackchains and
 what they're used for.
 """
+
 FIRST = 0
 LAST = 99
+
+HANDLED = 1
+
 class CallbackChain:
 	"""
 	This is a callback chain.  It allows a series of functions to
@@ -56,16 +60,16 @@ class CallbackChain:
 		data could be a string or an object.  Consult the documentation
 		for the specific callback chain you're executing.
 
-		Each function tries to see if it can handle the data.  If it
-		can't, then it returns None.  If it can, then it handles the
-		data (possibly by converting it into something else) and then
-		returns that data at which point the CallbackChain ceases and
-		we return the result.
+		Each function tries to see if it can handle the data being
+		passed in as input.  If it can handle the data, then it does
+		so and returns api.HANDLED.  We continue through the list of 
+		registered functions until we hit the end (none of them 
+		handled it) or one of the functions has handled the data 
+		and we don't need to proceed further.
 		"""
 		for mem in self._chain:
-			data = mem(data)
-			if data != None:
-				return data
+			if mem(data) == HANDLED:
+				break
 		return
 
 	def executeChain(self, data):
@@ -74,14 +78,16 @@ class CallbackChain:
 		data could be a string or an object.  Consult the documentation
 		for the specific callback chain you're executing.
 
-		Changed data is returned by each function in the chain until
-		the last function returns data--then that data is returned
-		to the executor.
+		Each function of the chain takes the input, applies some
+		transformation to it, and then returns the newly changed
+		input as output.  This output is then passed to the next function
+		in the chain as input and we proceed until all registered
+		functions have had a chance to operate on the data.  We then
+		return the data to the caller.
 		"""
 		for mem in self._chain:
 			data = mem(data)
-			if data == None:
-				return
+
 		return data
 
 import os
