@@ -33,7 +33,6 @@ __author__ = "Ted Leung - twl@sauria.com"
 __version__ = "$Id$"
 
 import glob, os, urllib
-from libs import api
 from libs.entries import fileentry
 
 def makeEntry(filename,config):
@@ -63,7 +62,7 @@ def search(config, term):
     results = [ os.path.join(config['datadir'], x[2:-1]) for x in results ]
     return [ makeEntry(x, config) for x in results]
 
-def searchHandler(args):
+def cb_filelist(args):
     """
     Lucene search handling
     
@@ -82,8 +81,3 @@ def searchHandler(args):
     data['luceneResults'] = search(config, form["q"].value)
     return data['luceneResults']
 
-def initialize():
-    """
-    Call back chain initialization
-    """
-    api.fileListHandler.register(searchHandler,api.FIRST)
