@@ -1,5 +1,0 @@
-<p>
-<a name="$fn"><b>$title</b><br>
-$body<br>
-[$path] <a href="$base_url/$yr/$mo_num/$da#$fn">#</a>
-</p>
