@@ -535,7 +535,7 @@ class Request:
         return "Request"
 
 
-class Response(object):
+class Response:
     """
     Response class to handle all output related tasks in one place.
 
