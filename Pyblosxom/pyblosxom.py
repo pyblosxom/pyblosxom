@@ -7,8 +7,8 @@ import os, time, re, sys, StringIO
 import tools
 from entries.fileentry import FileEntry
 
-VERSION = "1.0.1"
-VERSION_DATE = VERSION + " not yet released"
+VERSION = "1.1"
+VERSION_DATE = VERSION + " RC1"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
 class PyBlosxom:
@@ -612,7 +612,7 @@ def blosxom_process_path_info(args):
     for path_data in path_info:
         if not path_data:
             continue
-        elif len(path_data) == 4 and path_data.isdigit():
+        elif tools.is_year(path_data):
             # We got a hot date here guys :)
             got_date = 1
             break
@@ -665,7 +665,6 @@ def blosxom_process_path_info(args):
             filename, ext = os.path.splitext(blog_result)
             fileext = tools.what_ext(data["extensions"].keys(), filename)
             dirname = os.path.dirname(filename)
-
 
             if fileext:
                 data['flavour'] = ext[1:]
