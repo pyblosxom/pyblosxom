@@ -53,12 +53,6 @@ class PyblCategories:
 
         self._baseurl = config.get("base_url", "")
 
-        # build the list of directories (categories)
-        clist = tools.Walk(root, pattern=re.compile('.*'), return_folders=1)
-        clist = [mem[len(root)+1:] for mem in clist]
-        clist.sort()
-        clist.insert(0, "")
-
         # build the list of entries
         elist = tools.Walk(root)
         elist = [mem[len(root)+1:] for mem in elist]
@@ -68,6 +62,10 @@ class PyblCategories:
             mem = os.path.dirname(mem)
             elistmap[mem] = 1 + elistmap.get(mem, 0)
         self._elistmap = elistmap
+
+        clist = elistmap.keys()
+        clist.insert(0, "")
+        clist.sort()
 
         clist = map(self.genitem, clist)
         self._categories = "<br />".join(clist)
