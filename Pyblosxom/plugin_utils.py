@@ -5,6 +5,7 @@ manipulating callback functions and chains.  Refer to the documentation
 for which callbacks are available and what their behavior is.
 """
 import os, glob, sys
+import os.path
 
 plugins = []
 
@@ -65,9 +66,10 @@ def initialize_plugins(plugin_dirs, plugin_list):
 
     # handle plugin_dirs here
     for mem in plugin_dirs:
-        # FIXME - do we want to check to see if the dir exists first
-        # or just not worry about it?
-        sys.path.append(mem)
+        if os.path.isdir(mem):
+            sys.path.append(mem)
+        else:
+            raise Exception("Plugin directory '%s' does not exist.  Please check your config file." % mem)
 
     plugin_list = get_plugin_list(plugin_list, plugin_dirs)
 
