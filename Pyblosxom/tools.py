@@ -39,6 +39,39 @@ MONTHS = num2month.keys() + month2num.keys()
 # regular expression for detection and substituion of variables.
 VAR_REGEXP = re.compile(ur'(?<!\\)\$((?:\w|\-|::\w)+(?:\(.*?(?<!\\)\))?)')
 
+
+# reference to the pyblosxom config dict
+_config = None
+
+def initialize(config):
+    """
+    Initialize the tools module. This gives the module a chance to use 
+    configuration from the pyblosxom config.py file.
+    This should be called from Pyblosxom.pyblosxom.PyBlosxom.initialize.
+    """
+    global _config
+    _config = config
+
+def cleanup():
+    """
+    Cleanup the tools module.
+    This should be called from Pyblosxom.pyblosxom.PyBlosxom.cleanup.
+    """
+    global _loghandler_registry
+    try:
+        import logging
+        if _use_custom_logger:
+            raise ImportError, "whatever"
+    except ImportError:
+        import _logging as logging
+    try:
+        logging.shutdown()
+        _loghandler_registry = {}
+    except ValueError:
+        pass
+
+
+
 class Stripper(sgmllib.SGMLParser):
     """
     Strips HTML
@@ -488,50 +521,6 @@ def get_cache(request):
 
     return mycache
 
-_logger_registry = {}
-def make_logger(filename):
-    """
-    Create a logging function called log, which logs to the supplied filename
-    usage is:
-
-    -->>> tools.make_logger('/tmp/pybloxom.log')
-    -->>> tools.log('log message')
-
-    @param filename: the name of a file to log to
-    @type filename: string
-    """
-    global log
-    try:
-        import logging
-    except ImportError:    
-        def log(*args):
-            f = open(filename, "a")
-            for i in args:
-                f.write("%s INFO %s" % (time.asctime(), repr(i)))
-            f.write("\n")
-            f.close()
-    else:
-        global _logger_registry
-        # if all loggers have the same name,
-        # everything is logged to all files.
-        logger_name = os.path.splitext(os.path.basename(filename))[0]
-        # only add one handler per logger
-        if not logger_name in _logger_registry:
-            _logger = logging.getLogger(logger_name)
-            hdlr = logging.FileHandler(filename)
-            formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-            hdlr.setFormatter(formatter)
-            _logger.addHandler(hdlr)
-            _logger.setLevel(logging.INFO)
-            _logger_registry[logger_name] = _logger
-
-        logger = _logger_registry[logger_name]
-
-        def log(*args):
-            # adjusted to match the 'manual' log func
-            for i in args:
-                logger.info(repr(i))
-
 
 def update_static_entry(cdict, entry_filename):
     """
@@ -620,7 +609,142 @@ def render_url(cdict, pathinfo, querystring=""):
     f.write(response.read())
     f.close()
 
- 
+
+
+
+#******************************
+# Logging
+#******************************
+
+# If you have Python >=2.3 and want to use/test the custom logging 
+# implementation set this flag to True.
+_use_custom_logger = False
+
+try:
+    import logging
+    if _use_custom_logger:
+        raise ImportError, "whatever"
+except ImportError:
+    import _logging as logging
+
+# A dict to keep track of created log handlers.
+# Used to prevent multiple handlers from beeing added to the same logger.
+_loghandler_registry = {}
+
+def getLogger(log_file=None):
+    """
+    Creates and retuns a log channel.
+    If no log_file is given the system-wide logfile as defined in config.py
+    is used. If a log_file is given that's where the created logger logs to.
+
+    @param log_file: optional, the file to log to.
+    @type log_file: C{str}
+    @return: a log channel (Logger instance)
+    @rtype: L{logging.Logger} for Python >=2.3, L{Pyblosxom._logging.Logger} for Python <2.3
+    """
+    if log_file == None:
+        log_file = _config.get('log_file', 'stderr')
+        f = sys._getframe(1)
+        filename = f.f_code.co_filename
+        module = f.f_globals["__name__"]
+        # by default use the root logger
+        log_name = ""
+        for path in _config['plugin_dirs']:
+            if filename.startswith(path):
+                # if it's a plugin use the module name as the log channels name
+                log_name = module
+                break
+        # default to log level WARNING if it's not defined in config.py
+        log_level = _config.get('log_level', 'warning')
+    else:
+        # handle custom log_file
+        # there's only a single log channel, so make that be the root logger
+        log_name = ""
+        # assume log_level debug (show everything)
+        log_level = "debug"
+
+    global _loghandler_registry
+
+    # get the logger for this channel
+    logger = logging.getLogger(log_name)
+    # don't propagate messages up the logger hierarchy
+    logger.propagate = 0
+
+    # setup the handler if it doesn't allready exist.
+    # only add one handler per log channel.
+    key = "%s|%s" % (log_file, log_name)
+    if not key in _loghandler_registry:
+
+        # create the handler
+        if log_file == "stderr":
+            hdlr = logging.StreamHandler(sys.stderr)
+        else:
+            if log_file == "NONE": # user disabled logging
+                if os.name == 'nt': # windoze
+                    log_file = "NUL"
+                else: # assume *nix
+                    log_file = "/dev/null"
+            try:
+                hdlr = logging.FileHandler(log_file)
+            except IOError:
+                # couldn't open logfile, fallback to stderr
+                hdlr = logging.StreamHandler(sys.stderr)
+
+        # create and set the formatter
+        if log_name: # plugin
+            hdlr.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s'))
+        else: # root logger
+            hdlr.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s'))
+
+        logger.addHandler(hdlr)
+        int_level = getattr(logging, log_level.upper())
+        logger.setLevel(int_level)
+
+        # remember that we've seen this handler
+        _loghandler_registry[key] = True
+
+    return logger
+
+
+def log_exception(log_file=None):
+    """
+    Logs an exception to the given file.
+    Uses the system-wide log_file as defined in config.py if none is given here.
+
+    @param log_file: optional, the file to log to
+    @type log_file: C{str}
+    """
+    log = getLogger(log_file)
+    log.exception("Exception occured:")
+
+
+def log_caller(frame_num=1, log_file=None):
+    """
+    Logs some info about the calling function/method.
+    Usefull for debugging.
+    Usage:
+        import tools
+        tools.log_caller() # logs frame 1
+        tools.log_caller(2)
+        tools.log_caller(3, log_file="/path/to/file")
+
+    @param frame_num: optional, index of the frame
+    @type frame_num: C{int}
+    @param log_file: optional, the file to log to
+    @type log_file: C{str}
+    """
+    f = sys._getframe(frame_num)
+    module = f.f_globals["__name__"]
+    filename = f.f_code.co_filename
+    line = f.f_lineno
+    subr = f.f_code.co_name
+
+    log = getLogger(log_file)
+    log.info("\n  module: %s\n  filename: %s\n  line: %s\n  subroutine: %s", 
+        module, filename, line, subr)
+
+
+
 # %<-------------------------
 # BEGIN portalocking block from Python Cookbook.
 # LICENSE is located in docs/LICENSE.portalocker.
