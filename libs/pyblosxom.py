@@ -1,6 +1,7 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
 import os, time, string, re, cgi
 import tools, api
+from entries.fileentry import FileEntry
 import cPickle as pickle
 
 class PyBlosxom:
@@ -69,47 +70,6 @@ class PyBlosxom:
         data['pi_mo'] = (len(path_info) > 0 and path_info.pop(0) or '')
         data['pi_da'] = (len(path_info) > 0 and path_info.pop(0) or '')
 
-    def getProperties(self, filename, root):
-        """Returns a dictionary of file related contents"""
-        config = self._request.getConfiguration()
-
-        mtime = tools.filestat(filename)[8]
-        timetuple = time.localtime(mtime)
-        path = string.replace(filename, root, '')
-        path = string.replace(path, os.path.basename(filename), '')
-        path = path[1:][:-1]
-        absolute_path = string.replace(filename, config['datadir'], '')
-        absolute_path = string.replace(absolute_path, os.path.basename(filename), '')
-        absolute_path = absolute_path[1:][:-1]
-        fn = re.sub(r'\.txt$', '', os.path.basename(filename))
-        if absolute_path == '':
-            file_path = fn
-        else:
-            file_path = absolute_path+'/'+fn
-        tb = '-'
-        tb_id = '%s/%s' % (absolute_path, fn)
-        tb_id = re.sub(r'[^A-Za-z0-9]', '_', tb_id)
-        if os.path.isfile('%s/%s.stor' % (config.get('tb_data', ''), tb_id)):
-            tb = '+'
-
-        return {'mtime' : mtime, 
-                'path' : path,
-                'tb' : tb,
-                'tb_id' : tb_id,
-                'absolute_path' : absolute_path,
-                'file_path' : file_path,
-                'fn' : fn,
-                'filename' : filename,
-                'ti' : time.strftime('%H:%M',timetuple),
-                'mo' : time.strftime('%b',timetuple),
-                'mo_num' : time.strftime('%m',timetuple),
-                'da' : time.strftime('%d',timetuple),
-                'yr' : time.strftime('%Y',timetuple),
-                'timetuple' : timetuple,
-                'fulltime' : time.strftime('%Y%m%d%H%M%S',timetuple),
-                'w3cdate' : time.strftime('%Y-%m-%dT%H:%M:%S%Z',timetuple), # YYYY-MM-DDThh:mm:ssTZD
-                'date' : time.strftime('%a, %d %b %Y',timetuple)}
-
     def defaultFileListHandler(self, request):
         data = request.getData()
         config = request.getConfiguration()
@@ -146,7 +106,8 @@ class PyBlosxom:
         
         dataList = []
         for ourfile in filelist:
-            dataList.append(self.getProperties(ourfile, data['root_datadir']))
+            entry = FileEntry(config, ourfile, data['root_datadir'])
+            dataList.append(entry)
         dataList = tools.sortDictBy(dataList,"mtime")
         
         # Match dates with files if applicable
