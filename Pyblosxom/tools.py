@@ -220,9 +220,9 @@ def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
     except os.error:
         return []
 
-    return _walk_internal(root, recurse, pattern, ignorere, return_folders)
+    return __walk_internal(root, recurse, pattern, ignorere, return_folders)
 
-def _walk_internal( root, recurse, pattern, ignorere, return_folders ):
+def __walk_internal( root, recurse, pattern, ignorere, return_folders ):
     # initialize
     result = []
 
@@ -248,7 +248,7 @@ def _walk_internal( root, recurse, pattern, ignorere, return_folders ):
                     not os.path.islink(fullname) and \
                     (not ignorere or not ignorere.match(fullname)):
                 result = result + \
-                         _walk_internal(fullname, 
+                         __walk_internal(fullname, 
                                         (recurse > 1 and recurse -  1 or 0), 
                                         pattern, ignorere, return_folders)
 
