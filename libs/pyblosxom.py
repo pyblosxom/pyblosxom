@@ -191,18 +191,12 @@ class PyBlosxom:
                 else:
                     break
                     
-            if entryData.has_key('parser'):
-                preformatter = tools.importName('libs.preformatters', entryData['parser'])
-                if preformatter:
-                    entryData['body'] = preformatter.PreFormatter(story).parse()
-                else:
-                    entryData['body'] = ''.join(story)
+            preformatter = tools.importName('libs.preformatters', 
+                    entryData.get('parser', self.py.get('parser', 'plain')))
+            if preformatter:
+                entryData['body'] = preformatter.PreFormatter(story).parse()
             else:
-                preformatter = tools.importName('libs.preformatters', self.py['parser'])
-                if preformatter:
-                    entryData['body'] = preformatter.PreFormatter(story).parse()
-                else:
-                    entryData['body'] = ''.join(story)
+                entryData['body'] = ''.join(story)
             
             cache.saveEntry(entryData)
 
