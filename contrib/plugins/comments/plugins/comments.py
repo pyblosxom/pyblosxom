@@ -284,7 +284,8 @@ def cb_start(dict):
         config['blosxom_custom_flavours'] = custom_flavours
     else:
         for mem in custom_flavours:
-            config['blosxom_custom_flavours'].append(mem)
+            if mem not in config['blosxom_custom_flavours']:
+                config['blosxom_custom_flavours'].append(mem)
     if not config.has_key('comment_dir'):
         config['comment_dir'] = 'comments'
     if not config.has_key('comment_ext'):
