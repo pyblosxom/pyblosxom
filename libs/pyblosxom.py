@@ -1,8 +1,7 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
-import os, time, string, re, cgi, sys
+import os, time, re, sys
 import tools
 from entries.fileentry import FileEntry
-import cPickle as pickle
 
 class PyBlosxom:
     """
@@ -18,10 +17,6 @@ class PyBlosxom:
         @param request: A L{libs.Request.Request} object
         @type request: L{libs.Request.Request} object
         """
-
-        global myrequest
-        myrequest = request
-
         self._request = request
         self.flavour = {}
         self.dayFlag = 1 # Used to print valid date footers
@@ -114,9 +109,6 @@ class PyBlosxom:
 
         data = request.getData()
         config = request.getConfiguration()
-        pyhttp = request.getHttp()
-
-        path_info = data['path_info']
 
         if data['bl_type'] == 'dir':
             filelist = tools.Walk(data['root_datadir'], int(config['depth']))
