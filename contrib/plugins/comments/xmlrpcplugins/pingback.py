@@ -39,20 +39,9 @@ def fileFor(req, uri):
     uri = "%s://%s%s" % (urldata[0], urldata[1], urldata[2])
     fragment = urldata[4]
 
-    # import plugins
-    import Pyblosxom.plugin_utils
-    Pyblosxom.plugin_utils.initialize_plugins(config)
-
-    # do start callback
-    tools.run_callback("start", {'request': req}, mappingfunc=lambda x,y:y)
-    
     p = PyBlosxom(req)
     p.startup()
-
-    data['extensions'] = tools.run_callback("entryparser",
-                                            {'txt': p.defaultEntryParser},
-                                            mappingfunc=lambda x,y:y,
-                                            defaultfunc=lambda x:x)
+    config, data = p.common_start(start_callbacks=0, render=0)
 
     # We get our path here
     path = uri.replace(config['base_url'], '')
@@ -60,7 +49,8 @@ def fileFor(req, uri):
     p.processPathInfo({'request': req})
     
     args = { 'request': req }
-    es =  p.defaultFileListHandler(args)
+    from Pyblosxom.pyblosxom import default_file_list_handler
+    es = default_file_list_handler(args)
 
     # We're almost there
     if len(es) == 1 and path.find(es[0]['file_path']) >= 0:

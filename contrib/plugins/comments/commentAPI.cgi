@@ -28,6 +28,8 @@ __license__ = "Python"
 import cgitb; cgitb.enable()
 import cgi
 
+#import wingdbstub
+
 import config, os, sys, time
 from xml.dom.minidom import parseString
 
@@ -36,9 +38,6 @@ if __name__ == '__main__':
     # we don' take command line arguments
     if len(sys.argv) > 1:
         sys.exit("commentAPI.cgi expects to receive an RSS item on standard input")
-    from Pyblosxom import tools
-    from Pyblosxom.entries.fileentry import FileEntry
-    from Pyblosxom.Request import Request
     
     # copy the webserver environment into d
     d = {}
@@ -46,36 +45,17 @@ if __name__ == '__main__':
         d[mem] = os.environ.get(mem, "")
     
     # setup the request, config and data for use
+    from Pyblosxom import tools
+    from Pyblosxom.entries.fileentry import FileEntry
+    from Pyblosxom.Request import Request
+    from Pyblosxom.pyblosxom import PyBlosxom
     request = Request()
     request.addConfiguration(config.py)
     request.addHttp(d)    
-    config = request.getConfiguration()
-    data = request.getData()
 
-    ###
-    ### Intialize pyblosxom so that we can initialize data['extensions']
-    ###
-    ### TODO: segments of this code appear in CommentAPI.cgi, trackback.cgi
-    ###       and pingback.py.  We probably need an entry point in pyblosxom.py
-    ###
-    
-    # import plugins
-    import Pyblosxom.plugin_utils
-    Pyblosxom.plugin_utils.initialize_plugins(config)
-    
-    # must be done after plugin initialization
-    from comments import writeComment
-    
-    # do start callback
-    tools.run_callback("start", {'request': request}, mappingfunc=lambda x,y:y)
-
-    # entryparser callback is runned first here to allow other plugins
-    # register what file extensions can be used
-    from Pyblosxom.pyblosxom import PyBlosxom
-    data['extensions'] = tools.run_callback("entryparser",
-                                            {'txt': PyBlosxom.defaultEntryParser},
-                                            mappingfunc=lambda x,y:y,
-                                            defaultfunc=lambda x:x)
+    p = PyBlosxom(request)
+    p.startup()
+    config, data = p.common_start(start_callbacks=0, render=0)
    
     # populate the registry with the reqeust
     registry = tools.get_registry()
@@ -85,7 +65,7 @@ if __name__ == '__main__':
     try:
         path = d['PATH_INFO']
         if path == '':
-            sys.exit("CommentAPI.cgi expect to receive an RSS item on standard input")
+            sys.exit("<html><body>CommentAPI.cgi expects to receive an RSS item on standard input</body></html>")
         # skip the first segment of the PATH
         # TODO: replace this with a $base_url type of rewrite.
         if len(path) > 0:
@@ -109,13 +89,12 @@ if __name__ == '__main__':
         # (it was POST'ed by the client)
         commentString = sys.stdin.read()
         if commentString == None:
-            sys.exit("CommentAPI expects to receive an RSS item on standard input")
+            sys.exit("<html><body>CommentAPI expects to receive an RSS item on standard input</body></html>")
         try:
             commentDOM = parseString(commentString)
         except ExpatError, ee:
-            sys.exit("The RSS Item you supplied could not be parsed.\nThe error occured at line "+ee.lineno+" column "+ee.offset)
+            sys.exit("<html><body>The RSS Item you supplied could not be parsed.\nThe error occured at line %d, column %d</body></html>" % (ee.lineno,ee.offset))
     
-
         def dictFromDOM(dom, data, field, default=''):
             """
             Fill in a field in dict with the content of a element in the dom
@@ -139,6 +118,8 @@ if __name__ == '__main__':
         cdict['pubDate'] = str(time.time())
         dictFromDOM(commentDOM, cdict, 'description')
             
+        # must be done after plugin initialization
+        from comments import writeComment    
         # write the comment (in the dict)
         writeComment(config, data, cdict)
 

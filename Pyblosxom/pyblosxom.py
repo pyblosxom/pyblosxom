@@ -162,9 +162,9 @@ class PyBlosxom:
         # Construct our final URL
         data['url'] = '%s/%s' % (config['base_url'], data['pi_bl'])
     
-    def run(self):
+    def common_start(self, start_callbacks=1, render=1):
         """
-        Main loop for pyblosxom.
+        Common pyblosxom initialization used by other CGI scripts
         """
         config = self._request.getConfiguration()
         data = self._request.getData()
@@ -174,25 +174,27 @@ class PyBlosxom:
         plugin_utils.initialize_plugins(config)
 
         # inject our own startup into the callback thing
-        plugin_utils.callbacks.setdefault("startup", []).append(self.startup)
+        if start_callbacks:
+            plugin_utils.callbacks.setdefault("startup", []).append(self.startup)
 
-        # get the renderer we want to use
-        r = config.get("renderer", "blosxom")
+        if render:
+            # get the renderer we want to use
+            r = config.get("renderer", "blosxom")
 
-        # import the renderer
-        r = tools.importName("Pyblosxom.renderers", r)
+            # import the renderer
+            r = tools.importName("Pyblosxom.renderers", r)
 
-        # get the renderer object
-        r = r.Renderer(self._request, config.get("stdoutput", sys.stdout))
+            # get the renderer object
+            r = r.Renderer(self._request, config.get("stdoutput", sys.stdout))
 
-        # go through the renderer callback to see if anyone else
-        # wants to render.  the default is the renderer object we
-        # figured out from above.  this renderer gets stored in
-        # the data dict for downstream processing.
-        data['renderer'] = tools.run_callback('renderer', 
-                                 {'request': self._request},
-                                 donefunc = lambda x: x != None, 
-                                 defaultfunc = lambda x: r)
+            # go through the renderer callback to see if anyone else
+            # wants to render.  the default is the renderer object we
+            # figured out from above.  this renderer gets stored in
+            # the data dict for downstream processing.
+            data['renderer'] = tools.run_callback('renderer', 
+                                                  {'request': self._request},
+                                                  donefunc = lambda x: x != None, 
+                                                  defaultfunc = lambda x: r)
         
         # do start callback
         tools.run_callback("start", {'request': self._request})
@@ -203,7 +205,14 @@ class PyBlosxom:
                                         {'txt': default_entry_parser},
                                         mappingfunc=lambda x,y:y,
                                         defaultfunc=lambda x:x)
-
+        return (config, data)
+        
+    def run(self):
+        """
+        Main loop for pyblosxom.
+        """
+        config, data = self.common_start()
+        
         # process the path info to determine what kind of blog entry(ies) 
         # this is
         tools.run_callback("pathinfo",

@@ -8,6 +8,22 @@ import cgi, glob, os.path, re, time, cPickle
 from xml.sax.saxutils import escape
 from Pyblosxom import tools
 from Pyblosxom.entries.base import EntryBase
+
+try:
+    import logging
+except ImportError:    
+    def log(str):
+        pass
+else:
+    logger = logging.getLogger('comments')
+    hdlr = logging.FileHandler('/tmp/comments.log')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr) 
+    logger.setLevel(logging.INFO)
+
+    def log(str):
+        logger.info(str)
     
 #
 # file system  implementation
@@ -28,7 +44,11 @@ def readComments(entry, config):
     filelist.sort()
     if not entry.has_key('num_comments'):
         entry['num_comments'] = len(filelist)
-    return [ readComment(f) for f in filelist ]
+    try:
+        return [ readComment(f) for f in filelist ]
+    except:
+        log("Couldn't read comments for entry: ",entry)
+        return []
     
 def getCommentCount(entry, config):
     """
@@ -39,7 +59,9 @@ def getCommentCount(entry, config):
     """
     if entry['absolute_path'] == None: return 0
     filelist = glob.glob(cmtExpr(entry,config))
-    return len(filelist)
+    if filelist is not None:
+        return len(filelist)
+    return 0
 
 def cmtExpr(entry, config):
     """
@@ -95,10 +117,10 @@ def readComment(filename):
         story.close()
         cmt['cmt_time'] = cmt['cmt_pubDate'] # timestamp as float for comment anchor
         cmt['cmt_pubDate'] = time.ctime(float(cmt['cmt_pubDate']))
-    except SAXException:
-        pass
-    except: 
-        pass
+        story.close()
+    except:
+        log("Couldn't read: ", filename)
+        story.close()
     return cmt
 
 def writeComment(config, data, comment):
@@ -122,12 +144,18 @@ def writeComment(config, data, comment):
     cfn = os.path.join(cdir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_ext'])
      
     # write comment
+    cfile = None
     try :
         cfile = open(cfn, "w")
+    except:
+        log("Couldn't open comment file %s for writing" % cfn)
+        return
+    else:
+        pass
     
-        def makeXMLField(name, field):
-            return "<"+name+">"+cgi.escape(field[name])+"</"+name+">\n";
-    
+    def makeXMLField(name, field):
+        return "<"+name+">"+cgi.escape(field[name])+"</"+name+">\n";
+    try:
         cfile.write('<?xml version="1.0" encoding="iso-8859-1"?>\n')
         cfile.write("<item>\n")
         cfile.write(makeXMLField('title',comment))
@@ -139,18 +167,28 @@ def writeComment(config, data, comment):
         cfile.write("</item>\n")
         cfile.close()
     except:
+        log("Error writing comment data for ", cfn)
         cfile.close()
         
     #write latest pickle
+    latest = None
+    latestFilename = os.path.join(config['comment_dir'],'LATEST.cmt')
     try:
-        latestFilename = os.path.join(config['comment_dir'],'LATEST.cmt')
         latest = open(latestFilename,"w")
+    except:
+        log("Couldn't open latest comment pickle for writing")
+        return
+    else:
         modTime = float(comment['pubDate'])
+
+    try:
         cPickle.dump(modTime,latest)
         latest.close()
-    except (EOFError, IOError):
-        pass
-    
+    except (IOError):
+        # should log or e-mail
+        if latest:
+            latest.close()
+        return
     
     # if the right config keys are set, notify by e-mail
     if config.has_key('comment_smtp_server') and \
@@ -165,6 +203,7 @@ def writeComment(config, data, comment):
             server.sendmail(config['comment_smtp_from'], config['comment_smtp_to'], message)
             server.quit()
         except:
+            log("Error sending mail: %s" % message)
             pass
 
 def sanitize(body):
@@ -245,7 +284,7 @@ def sanitize(body):
         
         
 def cb_prepare(args):
-    """cvs
+    """
     Handle comment related HTTP POST's
     
     @param request: pyblosxom request object

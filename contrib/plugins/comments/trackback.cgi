@@ -27,6 +27,22 @@ tb_bad_response = """<?xml version="1.0" encoding="iso-8859-1"?>
 d = {}
 for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER", "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR", "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME"]:
     d[mem] = os.environ.get(mem, "")
+    
+try:
+    import logging
+except ImportError:    
+    def log(str):
+        pass
+else:
+    logger = logging.getLogger('trackback')
+    hdlr = logging.FileHandler('/tmp/trackback.log')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr) 
+    logger.setLevel(logging.INFO)
+
+    def log(str):
+        logger.info(str)
 
 form = cgi.FieldStorage()
        
@@ -46,39 +62,21 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
     from Pyblosxom import tools
     from Pyblosxom.entries.fileentry import FileEntry
     from Pyblosxom.Request import Request
+    from Pyblosxom.pyblosxom import PyBlosxom
 
     request = Request()
     request.addConfiguration(config.py)
-    config = request.getConfiguration()
-    data = request.getData()
-
-    # import plugins
-    import Pyblosxom.plugin_utils
-    Pyblosxom.plugin_utils.initialize_plugins(config)
-    
-    # must be done after plugin initialization
-    from comments import writeComment
-
-    # do start callback
-    tools.run_callback("start", {'request': request}, mappingfunc=lambda x,y:y)
-
-    # entryparser callback is runned first here to allow other plugins
-    # register what file extensions can be used
-    from Pyblosxom.pyblosxom import PyBlosxom
-
     p = PyBlosxom(request)
     p.startup()
-
-    data['extensions'] = tools.run_callback("entryparser",
-                                            {'txt': p.defaultEntryParser},
-                                            mappingfunc=lambda x,y:y,
-                                            defaultfunc=lambda x:x)
+    config, data = p.common_start(start_callbacks=0, render=0)
    
     registry = tools.get_registry()
     registry["request"] = request
     
     datadir = config['datadir']
     
+    # must be done after plugin initialization
+    from comments import writeComment    
     try:
         path = os.path.join(datadir, d['PATH_INFO'][1:])
         ext = tools.what_ext(data['extensions'].keys(), path)
@@ -89,7 +87,9 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
         print tb_good_response
     except OSError:
         message = 'URI '+d['PATH_INFO']+" doesn't exist"
+        log(message)
         print tb_bad_response % message
     
 else:
+    log(message)
     print tb_bad_response % message
