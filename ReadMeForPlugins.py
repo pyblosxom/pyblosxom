@@ -15,6 +15,29 @@ to do before installing it.
 Below is a basic documentation for plugin developers and it exposes them
 of what callbacks are available to them and documents on how to use them
 if possible.
+
+B{The BlosxomRenderer plugin callbacks}
+
+The L{BlosxomRenderer} plugins supports set of callback functions based on the
+blosxom 2.0 callbacks.  The names arguments are different, but the
+L{BlosxomRenderer} callbacks are called at the same points that the blosxom 2.0
+callbacks are called.
+
+All of the BlosxomRenderer callbacks take the same three arguments
+
+The available blosxom renderer callbacks are:
+ 
+    - L{cb_head} (corresponds to blosxom 2.0 head)
+    - L{cb_date_head} (corresponds to blosxom 2.0 date)
+    - L{cb_story} (corresponds to blosxom 2.0 story)
+    - L{cb_foot} (corresponds to blosoxm 2.0 foot)
+
+In PyBlosxom, the functionality some of the blosxom 2.0 callbacks are taken
+care of by callback chains.
+
+The blosxom 2.0 entries callback is handled by L{cb_filelist}
+The blosxom 2.0 filter callback is handled by L{cb_prepare}
+The blosxom 2.0 sort callback is handled by L{cb_prepare}
 """
 import libs, os
 from libs.Request import Request
@@ -274,28 +297,6 @@ def cb_end(args = {'request' : Request()}):
     """
     pass
 
-"""
-The BlosxomRenderer plugins supports set of callback functions based on the 
-blosxom 2.0 callbacks.  The names arguments are different, but the 
-BlosxomRenderer callbacks are called at the same points that the
-blosxom 2.0 callbacks are called.
-
-All of the BlosxomRenderer callbacks take the same three arguments
-
-The available blosxom renderer callbacks are:
- 
-cb_head (corresponds to blosxom 2.0 head)
-cb_date_head (corresponds to blosxom 2.0 date)
-cb_story (corresponds to blosxom 2.0 story)
-cb_foot (corresponds to blosoxm 2.0 foot)
-
-In PyBlosxom, the functionality some of the blosxom 2.0 callbacks are 
-taken care of by callback chains.
-
-The blosxom 2.0 entries callback is handled by cb_filelist
-The blosxom 2.0 filter callback is handled by cb_prepare
-The blosxom 2.0 sort callback is handled by cp_prepare
-"""
 
 def cb_head(args = {'renderer':'The Blosxom renderer', 
                     'entry':'The entry to render',
