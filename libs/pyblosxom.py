@@ -162,7 +162,12 @@ class PyBlosxom:
                 # Day
                 if path_info and re.match("^([0-2][0-9]|3[0-1])$", path_info[0]):
                     # Potential day here, no more processing from here
-                    data['pi_da'] = path_info[0]
+                    data['pi_da'] = path_info.pop(0)
+            if path_info[0]:
+                # Potential flavour after date
+                filename, ext = os.path.splitext(path_info[0])
+                if filename == 'index':
+                    data['flavour'] = ext[1:]
 
         blog_result = os.path.join(config['datadir'], data['pi_bl'])
         
