@@ -23,23 +23,26 @@ classpath = ':'.join(glob.glob(lucene)+[bindir])
 # location of lucene index file
 index = '/home/twl/pyblog/index'
 
-def search(py, term):
+def search(config, term):
     urllib.quote(term)
     results = os.popen(JAVA_HOME+' -cp '+classpath+' LuceneSearch '+index+' '+term,'r').readlines()
-    results = [ os.path.join(py['datadir'], x[2:-1]) for x in results ]
+    results = [ os.path.join(config['root_datadir'], x[2:-1]) for x in results ]
     f = file("/tmp/lucene","w")
     for x in results:
         f.write(x)
     f.close()
     return results
 
-def searchHandler(py):
+def searchHandler(request):
     # Lucene search handling
+    config = request.getConfiguration()
+    data = request.getData()
+    
     form = cgi.FieldStorage()
     if not form.has_key("q"):
         return None
-    py['luceneResults'] = search(py, form["q"].value)
-    return py['luceneResults']
+    data['luceneResults'] = search(data, form["q"].value)
+    return data['luceneResults']
 
 def initialize():
     api.fileListHandler.register(searchHandler,api.FIRST)
