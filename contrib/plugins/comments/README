@@ -1,6 +1,6 @@
 To install comments:
 
-1. Install plugins/commentdecorator.py in your lib/plugins directory
+1. Install plugins/comments.py in your lib/plugins directory
 
 2. If you want trackbacks, install trackback.cgi in your pyblosxom 
    directory and make it executable as a CGI.  The CGI must be callable
@@ -10,7 +10,7 @@ To install comments:
    lib/xmlrpcplugins directory
 
 4  In config.py, 
-   add 'commentdecorator' to py['load_plugins']
+   add 'comments' to py['load_plugins']
 
    Comments are stored in a directory which will parallel the data
    directory.  The comments themselves are stored as XML files named
