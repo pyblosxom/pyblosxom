@@ -132,11 +132,7 @@ class PyBlosxom:
 
         # this sorts entries by mtime in reverse order.  entries that have
         # no mtime get sorted to the top.
-        BIGNUM = 2000000000
-        for e in entrylist:
-            e.__dict__["sortmtime"] = e.get("mtime", BIGNUM)
-
-        entrylist.sort(lambda x,y: cmp(y.__dict__["sortmtime"], x.__dict__["sortmtime"]))
+        entrylist.sort(lambda x,y: cmp(y._mtime, x._mtime))
         
         # Match dates with files if applicable
         if data['pi_yr']:

@@ -8,6 +8,7 @@ own EntryBase derivatives.
 import time
 from libs import tools
 
+BIGNUM = 2000000000
 CONTENT_KEY = "body"
 DOESNOTEXIST = "THISKEYDOESNOTEXIST"
 DOESNOTEXIST2 = "THISKEYDOESNOTEXIST2"
@@ -20,9 +21,11 @@ class EntryBase:
     the InterWeeb.
     """
     def __init__(self):
+        global BIGNUM
         self._data = None
         self._metadata = {}
         self._id = ""
+        self._mtime = BIGNUM
 
     def getId(self):
         """
@@ -163,9 +166,9 @@ class EntryBase:
         @type  timeTuple: tuple of ints
         """
         self['timetuple'] = timeTuple
-        mtime = time.mktime(timeTuple)
-        gmTimeTuple = time.gmtime(mtime)
-        self['mtime'] = mtime
+        self._mtime = time.mktime(timeTuple)
+        gmTimeTuple = time.gmtime(self._mtime)
+        self['mtime'] = self._mtime
         self['ti'] = time.strftime('%H:%M', timeTuple)
         self['mo'] = time.strftime('%b', timeTuple)
         self['mo_num'] = time.strftime('%m', timeTuple)
