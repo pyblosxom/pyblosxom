@@ -43,7 +43,7 @@ class PyblCategories:
 
         num = 0
         for key in self._elistmap.keys():
-            if key.find(item) == 0:
+            if key.endswith(item) or key.endswith(item + os.sep):
                 num = num + self._elistmap[key]
         num = " (%d)" % num
 
