@@ -13,6 +13,13 @@ class PyBlosxom:
     we're complete.
     """
     def __init__(self, request):
+        """
+        Initializes the PyBlosxom class
+
+        @param request: A C{Request} object
+        @type request: C{libs.Request} object
+        """
+
         global myrequest
         myrequest = request
 
@@ -49,8 +56,8 @@ class PyBlosxom:
         default behavior that we want to show and generates a list of
         EntryBase subclass objects which it returns.
 
-        @param request: the incoming Request object
-        @type request: libs.Request.Request
+        @param args: dict containing the incoming Request object
+        @type args: C{libs.Request.Request}
 
         @returns: the content we want to render
         @rtype: list of EntryBase objects
@@ -87,20 +94,21 @@ class PyBlosxom:
         return valid_list
 
     def processPathInfo(self, path_info):
-        """
-        Process path_info for URI according to path specifications, fill in data dict accordingly
-
-        @param: path_info
-        @type: array of components of uri, typically obtained by uri.split("/")
+        """ 
+        Process path_info for URI according to path specifications, fill in
+        data dict accordingly
         
         The paths specification looks like this:
-        /cat - category
-        /2002 - year
-        /2002/Feb (or 02) - Year and Month
-        /2002/Feb/03#entry - Year, Month, Date, fragment id = entry name
-        /cat/2002/Feb/31 - year and month day in category.
-        /foo.html and /cat/foo.html - file foo.* in / and /cat
+            - C{/cat} - category
+            - C{/2002} - year
+            - C{/2002/Feb} (or 02) - Year and Month
+            - C{/2002/Feb/03#entry} - Year, Month, Date, fragment id = entry name
+            - C{/cat/2002/Feb/31} - year and month day in category.
+            - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
         To simplify checking, four digits directory name is not allowed.
+        
+        @param path_info: array of components of uri, typically obtained by C{uri.split("/")}
+        @type path_info: list
         """
         config = self._request.getConfiguration()
         data = self._request.getData()
