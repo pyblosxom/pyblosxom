@@ -60,8 +60,8 @@ class PyBlosxom:
         # register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
                                         {'txt': blosxom_entry_parser},
-                                        mappingfunc=lambda x,y:y,
-                                        defaultfunc=lambda x:x)
+                                        mappingfunc=tools.chain_mapper,
+                                        defaultfunc=tools.original_default)
 
     def run(self):
         """
