@@ -3,8 +3,6 @@
 import os.path, sys, os
 from distutils.core import setup
 
-fixf = os.path.normpath
-
 def Walk(root='.'):
     """
     A really really scaled down version of what we have in tools.py.
@@ -20,6 +18,8 @@ def Walk(root='.'):
 
     # check each file
     for name in names:
+        if name == "CVS":
+            continue
         fullname = os.path.normpath(os.path.join(root, name))
 
         # recursively scan other folders, appending results
@@ -37,13 +37,9 @@ PVER = "pyblosxom-" + VERSION
 contrib_folders = Walk("contrib")
 
 doc_files = ["INSTALL", "LICENSE", 
-             fixf("docs/README.contrib"), fixf("docs/README.plugins"), 
-             fixf("docs/ReadMeForPlugins.py")]
-
-def is_goodfile(path, f):
-    if f in ["CVS"] or os.path.isdir(path + os.sep + f):
-        return 0
-    return 1
+             os.path.normpath("docs/README.contrib"), 
+             os.path.normpath("docs/README.plugins"), 
+             os.path.normpath("docs/ReadMeForPlugins.py")]
 
 # FIXME - this doesn't account for a variety of platforms
 if sys.platform == "win32":
@@ -52,22 +48,26 @@ if sys.platform == "win32":
 
     for mem in contrib_folders:
         f = os.listdir(mem)
-        f = [mem + os.sep + m for m in f if is_goodfile(mem, m)]
+        f = [mem + os.sep + m for m in f if os.path.isfile(mem + os.sep + m)]
         pydf.append( (root + mem, f) )
 
 elif sys.platform in ["linux1", "linux2"]:
-    # we want to move the web script files as well, so we sneak them
-    # in here.
-    pydf=[ ("/usr/share/" + PVER + "/web", ["web/pyblosxom.cgi", 
-                                            "web/xmlrpc.cgi", 
-                                            "web/config.py"]),
-           ("/usr/share/doc/" + PVER, doc_files) ]
+    pydf = []
 
     root = "/usr/share/" + PVER + "/"
     for mem in contrib_folders:
         f = os.listdir(mem)
-        f = [mem + os.sep + m for m in f if is_goodfile(mem, m)]
+        f = [mem + os.sep + m for m in f if os.path.isfile(mem + os.sep + m)]
         pydf.append( (root + mem, f) )
+        print repr((root + mem, f))
+
+    # we want to move the web script files as well, so we sneak them
+    # in here.
+    pydf.append( ("/usr/share/doc/" + PVER, doc_files) )
+    pydf.append( ("/usr/share/" + PVER + "/web", ["web/pyblosxom.cgi", 
+                                                  "web/xmlrpc.cgi", 
+                                                  "web/config.py"]) )
+
 
 else:
     # we don't know what platform they have, so we print out
@@ -101,6 +101,10 @@ if sys.version < '2.2.3':
     DistributionMetadata.classifiers = None
     DistributionMetadata.download_url = None
 
+print "## Pyblosxom debug"
+print "## version: " + VERSION
+print "## datafiles: " + repr(pydf)
+
 setup(name="pyblosxom",
     version=VERSION,
     description="pyblosxom weblog engine",
@@ -124,3 +128,4 @@ your entries.
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content"
         ],
     )
+
