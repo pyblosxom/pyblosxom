@@ -37,12 +37,16 @@ py['num_entries'] = 40
 #py['cacheDriver'] = 'xxxx'
 #py['cacheConfig'] = ''
 
-# Using plugins?  Every plugin needs to be listed here.  The order you
-# put the plugins is the order in which they will be loaded.  All 
-# plugins must be in libs/plugins (the python package is libs.plugins)
-# in order to be imported.
+# There are two ways for PyBlosxom to load plugins.  The first is the
+# default way which involves loading all the plugins in the lib/plugins
+# directory in alphanumeric order.  The second is by specifying a
+# "load_plugins" key here.  Doing so will cause us to load only the
+# plugins you name and we will load them in the order you name them.
+# The "load_plugins" key is a list of strings where each string is
+# the name of a plugin module (i.e. the filename without the .py at
+# the end).
 # ex: py['load_plugins'] = ["pycalendar", "pyfortune", "pyarchives"]
-py['load_plugins'] = []
+# py['load_plugins'] = []
 
 # XML-RPC data
 xmlrpc = {}

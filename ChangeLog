@@ -1,3 +1,9 @@
+2003-03-24 Will Guaraldi <willg at bluesock dot org>
+	* Adjusted initialize_plugins to load plugins in the plugins
+	  directory in alphanumeric order if the "load_plugins" key
+	  is not set in the config file.  Otherwise we load the plugins
+	  in the "load_plugins" list in the order they're listed.
+
 2003-03-21  Theodore W. Leung  <twl@dev>
 	* Updated the lucene.py plugin to take configuration parameters 
           from config.py.  Added documentation
@@ -11,7 +17,7 @@
 	  content can be dynamically created from whatever is handling
 	  the URL.
 
-2003-03-01 Will Guaraldi <willg@bluesock.org>
+2003-03-01 Will Guaraldi <willg at bluesock dot org>
 	* Changes initialize_plugins(...) to load plugins listed in
 	  the "load_plugins" key in the config file.  If no "load_plugins"
 	  key is set, then we don't load any plugins.  We load plugins
