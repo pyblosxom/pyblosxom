@@ -72,6 +72,28 @@ class CallbackChain:
 				break
 		return
 
+	def executeListHandler(self, data):
+		"""
+		Executes a callback chain on a given piece of data.  This
+		data could be a string or an object.  Consult the documentation
+		for the specific callback chain you're executing.
+
+		Each function tries to see if it can handle the data being
+		passed in as input.  If it can handle the data, then it does
+		so and returns a list of data, otherwise it returns None.
+		We continue through the list of registered functions until
+		we hit the end (none of them handled it) or one of the
+		functions has handled the data and we don't need to proceed further.
+		"""
+		for mem in self._chain:
+			result = mem(data)
+			if result != None:
+				break
+		if result == None:
+			return []
+		return result
+			
+
 	def executeTransform(self, data):
 		"""
 		Executes a callback chain on a given piece of data.  This
@@ -126,3 +148,18 @@ parseitem = CallbackChain()
 # Output: None
 logRequest = CallbackChain()
 
+# CallbackChain to handle cgi requests based on a plugin
+#  
+# Input: entry dict contain a "cgiForm" entry
+#
+# Output:
+#   updated entry dict
+cgiHandler = CallbackChain()
+
+# CallbackChain to generate file list based on a plugin
+#  
+# Input: entry dict 
+#
+# Output:
+#   list of files
+fileListHandler = CallbackChain()
