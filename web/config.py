@@ -1,4 +1,8 @@
 py = {}
+xmlrpc = {}
+###############
+# Start Below #
+###############
 # What's this blog's title?
 py['blog_title'] = "Another pyblosxom blog"
 
@@ -14,9 +18,6 @@ py['blog_encoding'] = "iso-8859-1"
 # Where are this blog's entries kept?
 py['datadir'] = "/path/to/blog"
 
-# What should this blog use as its base url?
-# py['base_url'] = "http://www.some.host/weblog"
-
 # Should I stick only to the datadir for items or travel down the directory
 # hierarchy looking for items?  If so, to what depth?
 # 0 = infinite depth (aka grab everything), 1 = datadir only, n = n levels down
@@ -24,6 +25,13 @@ py['depth'] = 0
 
 # How many entries should I show on the home page?
 py['num_entries'] = 40
+
+###########################
+# Optional Configurations #
+###########################
+
+# What should this blog use as its base url?
+# py['base_url'] = "http://www.some.host/weblog"
 
 # Default parser/preformatter. Defaults to plain (does nothing)
 #py['parser'] = 'plain'
@@ -37,6 +45,14 @@ py['num_entries'] = 40
 #py['cacheDriver'] = 'xxxx'
 #py['cacheConfig'] = ''
 
+# Plugin directories:
+# You can now specify where you plugins all lives, there are two types
+# of plugindirectories, the standard pyblosxom plugins, and the xmlrpc
+# plugins.  You can list out as many directories you want, but they
+# should only contain the related plugins.
+# Example: py['load_plugins'] = ['/opt', '/usr/bin']
+#py['plugin_dirs'] = ['/path/to/my/plugins']
+
 # There are two ways for PyBlosxom to load plugins.  The first is the
 # default way which involves loading all the plugins in the lib/plugins
 # directory in alphanumeric order.  The second is by specifying a
@@ -46,23 +62,33 @@ py['num_entries'] = 40
 # the name of a plugin module (i.e. the filename without the .py at
 # the end).
 # ex: py['load_plugins'] = ["pycalendar", "pyfortune", "pyarchives"]
-# py['load_plugins'] = []
+#py['load_plugins'] = []
 
-# XML-RPC data
-xmlrpc = {}
+###################################
+# XMLRPC Configuration parameters #
+###################################
+# XML-RPC data, if you use XMLRPC, then the information below needs to
+# be set up
 # Username and password to access this server, you can define one or more
 #xmlrpc['usernames'] = {'someuser': 'somepassword'}
 
-# maxrequest_length - How much data do you expect to send via XMLRPC? Default
-# is 10KB, which should actually be enough for quite a large posting. This is
-# added to avoid attacks
+# See the infomation above for setting up the plugins for xmlrpc
+#py['xmlrpc_plugin_dirs'] = ['/path/to/my/xmlrpc/plugins']
+#py['load_xmlrpc_plugins'] = []
+
+# maxrequest_length - How much data do you expect to send via XMLRPC?
+# Default is 10KB, which should actually be enough for quite a large
+# posting. This is added to avoid attacks
 #xmlrpc['maxrequest_length'] = 10000
 
-__author__ = 'Wari Wahab <wari@wari.per.sg>'
+###########################
+# Nothing to modify below #
+###########################
+__author__ = 'Wari Wahab <wari at wari dot per dot sg>'
 __version__ = "CVS"
 __date__ = "$Date$"
 __revision__ = "$Revision$"
 __copyright__ = "Copyright (c) 2003 Wari Wahab"
-__license__ = "Python"
+__license__ = "MIT License"
 py['pyblosxom_version'] = __version__
 py['pyblosxom_name'] = 'pyblosxom'
