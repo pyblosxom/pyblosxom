@@ -121,7 +121,8 @@ class PyblCalendar:
             argdict = {"filename": mem, "mtime": os.stat(mem)}
             argdict = tools.run_callback("filestat", 
                                          argdict,
-                                         mappingfunc=lambda x,y:y)
+                                         mappingfunc=lambda x,y:y,
+                                         defaultfunc=lambda x:x)
             timetuple = time.localtime(argdict["mtime"][8])
 
             # if we already have an entry for this date, we skip to the

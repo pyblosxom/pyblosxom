@@ -119,7 +119,8 @@ class FileEntry(base.EntryBase):
         argdict = {"filename": self._filename, "mtime": os.stat(self._filename)}
         argdict = tools.run_callback("filestat", 
                                      argdict,
-                                     mappingfunc=lambda x,y:y)
+                                     mappingfunc=lambda x,y:y,
+                                     defaultfunc=lamda x:x)
         mtime = argdict["mtime"][8]
         
         timeTuple = time.localtime(mtime)

@@ -50,7 +50,8 @@ class PyblArchives:
             argdict = {"filename": mem, "mtime": os.stat(mem)}
             argdict = tools.run_callback("filestat", 
                                          argdict,
-                                         mappingfunc=lambda x,y:y)
+                                         mappingfunc=lambda x,y:y,
+                                         defaultfunc=lambda x:x)
             mtime = argdict["mtime"][8]
             timetuple = time.localtime(mtime)
             mo = time.strftime('%b',timetuple)
