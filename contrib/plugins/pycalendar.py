@@ -163,20 +163,23 @@ class PyblCalendar:
         keys.sort()
         thismonth = time.strftime("%Y%m", view)
 
-        # FIXME: What happens when keys contains ['200307'] and
-        # thismonth == '200308'? I set index to 0 to fix this
-        # immediately, problem page:
-        # http://roughingit.wari.org/plugin_info?flav=plugininfo
-        try:
+        # do some quick adjustment to make sure we didn't pick
+        # a yearmonth that's outside the yearmonths of the entries we
+        # know about.
+        if thismonth in keys:
             index = keys.index(thismonth)
-        except ValueError:
+        elif len(keys) == 0 or keys[0] > thismonth:
             index = 0
+        else:
+            index = len(keys) - 1
 
+        # build the prev link
         if index == 0:
             prev = None
         else:
             prev = ("%s/%s/%s" % (baseurl, keys[index-1][:4], yearmonth[keys[index-1]]), "&lt;")
 
+        # build the next link
         if index == len(yearmonth)-1:
             next = None
         else:
