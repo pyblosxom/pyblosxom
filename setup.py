@@ -7,7 +7,7 @@ from distutils.core import setup
 sys.path.insert(0, "./")
 from Pyblosxom import pyblosxom
 
-VER = pyblosxom.VERSION + "RC1"
+VER = pyblosxom.VERSION
 PVER = "pyblosxom-" + VER
 
 def Walk(root='.'):
