@@ -25,11 +25,10 @@ def initialize_plugins(configdict):
             path = __file__[:index]
 
         plugin_list = glob.glob(os.path.join(path, "*.py"))
-        
-        plugin_list = map(lambda p: p[p.rfind(os.sep)+1:p.rfind(".")], plugin_list)
-
+        # get basename - py extension
+        plugin_list = [p[p.rfind(os.sep)+1:p.rfind(".")] for p in plugin_list]
         # remove plugins that start with a _
-        plugin_list = filter(lambda p: not p.startswith('_'), plugin_list)
+        plugin_list = [p for p in plugin_list if not p.startswith('_')]
 
         plugin_list.sort()
 
