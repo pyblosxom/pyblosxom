@@ -1,3 +1,7 @@
+2003-02-07 Wari Wahab <pyblosxom@wari.per.sg>
+	* Fixed PATH_INFO data that was actually set when using cgiwrap even
+	  if it's empty
+
 2003-02-02 Wari Wahab <pyblosxom@wari.per.sg> pyblosxom 0.6
 	* Released as version 0.6
 

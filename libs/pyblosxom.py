@@ -21,7 +21,7 @@ class PyBlosxom:
             self.py['flavour'] = (form.has_key('flav') and form['flav'].value or 'html')
 
             # Get the blog name if possible
-            if os.environ.has_key('PATH_INFO'):
+            if os.environ.get('PATH_INFO', ''):
                 path_info = os.environ['PATH_INFO'].split('/')
                 if path_info[0] == '':
                     path_info.pop(0)

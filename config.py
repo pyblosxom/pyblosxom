@@ -46,7 +46,7 @@ xmlrpc['password'] = 'somepassword'
 xmlrpc['path'] = '/RPC2'
 
 __author__ = 'Wari Wahab <wari@wari.per.sg>'
-__version__ = "0.6"
+__version__ = "CVS"
 __date__ = "$Date$"
 __revision__ = "$Revision$"
 __copyright__ = "Copyright (c) 2003 Wari Wahab"
