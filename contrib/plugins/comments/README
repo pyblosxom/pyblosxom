@@ -1,5 +1,8 @@
 To install comments:
 
+IMPORTANT:  You must have the pyXML module installed in order to use 
+the comment system.
+
 1. Install plugins/comments.py in your lib/plugins directory
 
 2. If you want trackbacks, install trackback.cgi in your pyblosxom 

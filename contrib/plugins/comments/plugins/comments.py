@@ -1,6 +1,9 @@
 #
 # Comment poster
 #
+# IMPORTANT: This plugin requires the pyXML module
+#
+#
 
 import cgi, glob, os.path, re, time, cPickle
 from xml.sax.saxutils import escape
