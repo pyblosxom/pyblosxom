@@ -1,8 +1,8 @@
 # vim: tabstop=4 shiftwidth=4 expandtab
 """
-XMLRPC service that does math
+XMLRPC service that does math.
 
-Use this as an example of how to implement xmlrpc services
+Use this as an example of how to implement xmlrpc services.
 """
 
 def add(request, a, b):
@@ -21,11 +21,14 @@ def test(request):
 def sureFireFault(request):
     raise IOError, 'This is why you should give up programming'
 
-def register_xmlrpc_methods():
-    return {'math.add': add,
+def cb_xmlrpc_register(args):
+    args["methods"].update(
+           {'math.add': add,
             'math.sub': sub,
             'system.test': test,
-            'system.fault': sureFireFault}
+            'system.fault': sureFireFault})
+
+    return args
 
 if __name__ == '__main__':
     from Pyblosxom.Request import Request
@@ -37,4 +40,3 @@ if __name__ == '__main__':
     pprint(add(request, 1, 2))
     pprint(sub(request, 1, 2))
     pprint(sureFireFault(request))
-   
