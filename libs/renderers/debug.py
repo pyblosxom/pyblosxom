@@ -21,14 +21,14 @@ class Renderer(RendererBase):
         print "------------------------------------------------------"
         print "Entries to process:"
         print "------------------------------------------------------"
-        for content in contents:
+        for content in self._content:
             print "%s" % content['filename']
         print "------------------------------------------------------"
         print "Cached Titles:"
         print "------------------------------------------------------"
         cache_driver = tools.importName('libs.cache', self._py.get('cacheDriver', 'base'))
         cache = cache_driver.BlosxomCache(self._py.get('cacheConfig', ''))
-        for content in contents:
+        for content in self._content:
             cache.load(content['filename'])
             if cache.isCached():
                 print "%s" % cache.getEntry()['title']
@@ -38,7 +38,7 @@ class Renderer(RendererBase):
         print "------------------------------------------------------"
         cache_driver = tools.importName('libs.cache', self._py.get('cacheDriver', 'base'))
         cache = cache_driver.BlosxomCache(self._py.get('cacheConfig', ''))
-        for content in contents:
+        for content in self._content:
             cache.load(content['filename'])
             if cache.isCached():
                 print "%s" % cache.getEntry()['title']
