@@ -44,6 +44,8 @@ def initialize_plugins(configdict):
     load_plugins key does not exist, then we load all the plugins in the
     plugins directory using an alphanumeric sorting order.
     """
+    if callbacks != {}:
+        return
     plugin_list = configdict.get("load_plugins", None)
 
     # if there's no load_plugins key, then we grab all the plugins
