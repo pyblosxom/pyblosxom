@@ -322,7 +322,7 @@ class EnvDict(dict):
         else:
             return dict.__getitem__(self, key)   
 
-class Request:
+class Request(object):
     """
     This class holds the PyBlosxom request.  It holds configuration
     information, HTTP/CGI information, and data that we calculate
@@ -361,8 +361,14 @@ class Request:
         # by pyblosxom during execution
         self._data = data
 
-        # this holds the input stream
-        self._in = environ['wsgi.input']
+        # buffer the input stream in a StringIO instance.
+        # TODO: tests on memory consumption when uploading huge files
+        self._in = StringIO()
+        self._in.write(environ['wsgi.input'].read())
+        # rewind to start
+        self._in.seek(0)
+        # copy methods to the Request object.
+        self._copy_members()
 
         # this holds the FieldStorage instance.
         # initialized when request.getForm is called the first time
@@ -371,18 +377,23 @@ class Request:
         # create and set the Response
         self.setResponse(Response(self))
 
-        # if a input stream is given, copy it's read related methods
-        # to the Request object.
-        if self._in:
-            self._copy_members()
 
     def _copy_members(self):
         """
         Copies methods from the underlying input stream to the request object.
         """
-        props = ['__iter__', 'next', 'read', 'readline', 'readlines', 'seek', 'tell']
+        props = ['next', 'read', 'readline', 'readlines', 'seek', 'tell']
         for prop in props:
             setattr(self, prop, getattr(self._in, prop))
+
+    def __iter__(self):
+        """
+        Can't copy the __iter__ method over from the StringIO instance cause
+        iter looks for the method in the class instead of the instance.
+        So can't do this with _copy_members, have to define it seperatly.
+        See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
+        """
+        return self._in
 
     def setResponse(self, response):
         """
@@ -414,12 +425,8 @@ class Request:
         @returns: L{cgi.FieldStorage}
         """        
         form = cgi.FieldStorage(fp=self._in, environ=self._http, keep_blank_values=0)
-        if form.file:
-            #FIXME - why is this line commented out?
-            #self._in = environ['wsgi.input'] = form.file
-            self._in = form.file
-            self._in.seek(0)
-            self._copy_members()
+        # rewind the input buffer
+        self._in.seek(0)
         return form
 
     def getForm(self):
@@ -535,7 +542,7 @@ class Request:
         return "Request"
 
 
-class Response:
+class Response(object):
     """
     Response class to handle all output related tasks in one place.
 
@@ -562,12 +569,20 @@ class Response:
         """
         Copies methods from the underlying output buffer to the response object.
         """
-        props = ['__iter__', 'close', 'flush', 'next', 
+        props = ['close', 'flush', 'next', 
             'read', 'readline', 'readlines', 'seek', 'tell',
             'write', 'writelines']
         for prop in props:
-            #if not hasattr(self, prop):
             setattr(self, prop, getattr(self._out, prop))
+
+    def __iter__(self):
+        """
+        Can't copy the __iter__ method over from the StringIO instance cause
+        iter looks for the method in the class instead of the instance.
+        So can't do this with _copy_members, have to define it seperatly.
+        See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
+        """
+        return self._out
 
     def setStatus(self, status):
         """
