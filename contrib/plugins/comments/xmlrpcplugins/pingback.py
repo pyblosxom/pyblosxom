@@ -3,7 +3,7 @@ from Pyblosxom.pyblosxom import PyBlosxom
 from Pyblosxom.Request import Request
 from Pyblosxom import tools
 
-import cgi, os, re, sgmllib, time, urllib
+import os, re, sgmllib, time, urllib
 
 class parser(sgmllib.SGMLParser):
     """ Shamelessly grabbed from Sam Ruby
@@ -41,8 +41,6 @@ def fileFor(req, uri):
     # do start callback
     tools.run_callback("start", {'request': req}, mappingfunc=lambda x,y:y)
     
-    req.addHttp({"form": cgi.FieldStorage()})
-    
     p = PyBlosxom(req)
     p.startup()
 
@@ -51,21 +49,19 @@ def fileFor(req, uri):
                                             mappingfunc=lambda x,y:y,
                                             defaultfunc=lambda x:x)
 
-    data['pi_yr'] = ''
-    data['pi_mo'] = ''
-    data['pi_da'] = ''
-    path_info = uri.split('/')[4:] # get rid of http and script
-    if path_info[0] == '':
-        path_info.pop(0)
-
-    p.processPathInfo(path_info)
+    uri = uri.replace(config['base_url'], '')
+    req.addHttp({'PATH_INFO': uri, "form": {}})
+    p.processPathInfo({'request': req})
     
     args = { 'request': req }
     es =  p.defaultFileListHandler(args)
-    
+
+    if len(es) == 1 and uri.find(es[0]['file_path']) >= 0:
+        return es[0]
+
     for i in es:
         if i['fn'] == data['pi_frag'][1:]:
-            return i['file_path']
+            return i
             
 def pingback(request, source, target):
     source_file = urllib.urlopen(source.split('#')[0])
@@ -76,7 +72,7 @@ def pingback(request, source, target):
     if source_page.title == "": source_page.title = source
     
     if target in source_page.hrefs:
-        target_file = fileFor(request, target)
+        target_entry = fileFor(request, target)
 
         body = ''
         try:
@@ -92,7 +88,7 @@ def pingback(request, source, target):
                         if 'description' in item: body = item['description'].strip() or body
                         body=re.compile('<.*?>',re.S).sub('',body)
                         body=re.sub('\s+',' ',body)
-                        body=body[:body.rfind(' ',0,250)][:250] + " ...<br /><br />"
+                        body=body[:body.rfind(' ',0,250)][:250] + " ...<br />"
         except:
             pass
 
@@ -106,10 +102,10 @@ def pingback(request, source, target):
         from comments import writeComment
         config = request.getConfiguration()
         data = request.getData()
-        from Pyblosxom.entries.fileentry import FileEntry
         datadir = config['datadir']
-        entry = FileEntry(config, os.path.join(datadir,target_file+'.txt'), datadir)
-        data['entry_list'] = [ entry ]
+        data['entry_list'] = [ target_entry ]
+
+        # TODO: Check if comment from the URL exists
         writeComment(config, data, cmt)
                
         return "success pinging %s from %s\n" % (source, target)
