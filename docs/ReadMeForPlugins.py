@@ -411,6 +411,27 @@ def cb_story(args = {'renderer':'The Blosxom renderer',
     """
     pass
 
+def cb_story_end(args = {'renderer':'The Blosxom renderer', 
+                     'entry':'The entry to render',
+                     'template':'The template to be filled in'}):
+    """
+    A callback that is called after a story flavour template is rendered
+    
+    C{cb_story} is called after the variables in the entry are substituted
+    into the template.  You have access to all the content variables via 
+    entry.
+    
+    C{args} contains
+    
+      - C{'renderer'} - the L{BlosxomRenderer} that called the callback
+      - C{'entry'} - a L{EntryBase} to be rendered
+      - C{'template'} - a string containing the flavour template to be processed
+
+    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
+    @type args: dict
+    """
+    pass
+
 def cb_foot(args = {'renderer':'The Blosxom renderer', 
                     'entry':'The entry to render',
                     'template':'The template to be filled in'}):

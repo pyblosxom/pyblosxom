@@ -292,6 +292,7 @@ def cb_head(args):
 
     return template
         
+
 def cb_story(args):
     renderer = args['renderer']
     entry = args['entry']
@@ -300,6 +301,17 @@ def cb_story(args):
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 and renderer.flavour.has_key('comment-story'):
         template = renderer.flavour.get('comment-story','')
+    else:
+        entry['num_comments'] = getCommentCount(entry,config)
+        return template
+
+def cb_story_end(args):
+    renderer = args['renderer']
+    entry = args['entry']
+    template = args['template']
+    request = tools.get_registry()["request"]
+    config = request.getConfiguration()
+    if len(renderer.getContent()) == 1 and renderer.flavour.has_key('comment-story'):
         output = []
         entry['comments'] = readComments(entry, config)
         if entry.has_key('comments'):        

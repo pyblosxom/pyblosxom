@@ -139,8 +139,11 @@ class BlosxomRenderer(RendererBase):
             self.dayFlag = 0
             self.outputTemplate(output, entry, 'date_head')
         self.outputTemplate(output, entry, 'story')
+
+        template = u""
+        args = self._run_callback("story_end", { "entry": entry, "template": template }) 
             
-        return u"".join(output), current_date    
+        return "".join(output)+args['template'], current_date    
 
     def _processContent(self):
         """
