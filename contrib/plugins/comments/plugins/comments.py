@@ -2,7 +2,7 @@
 # Comment poster
 #
 
-import cgi, glob, os.path, re, string, time
+import cgi, glob, os.path, re, time
 from xml.sax.saxutils import escape
 from libs import tools
 from libs.entries.base import EntryBase
@@ -28,6 +28,8 @@ def readComments(entry, config):
     """
     filelist = glob.glob(cmtExpr(entry, config))
     filelist.sort()
+    if not entry.has_key('num_comments'):
+        entry['num_comments'] = len(filelist)
     return [ readComment(f) for f in filelist ]
     
 def getCommentCount(entry, config):
@@ -96,7 +98,7 @@ def readComment(filename):
         story.close()
         cmt['cmt_time'] = cmt['cmt_pubDate'] # timestamp as float for comment anchor
         cmt['cmt_pubDate'] = time.ctime(float(cmt['cmt_pubDate']))
-    except SAXException, se:
+    except SAXException:
         story.close()
     except: 
         story.close()
@@ -243,16 +245,11 @@ def cb_prepare(args):
         
         writeComment(config, data, cdict)
 
-    entry_list = data['entry_list']
-        
-    for i in range(len(entry_list)):
-        entry = entry_list[i]
-        entry['num_comments'] = getCommentCount(entry,config)
 
 def cb_head(dict):
     renderer = dict['renderer']
-    entry = dict['entry']
     template = dict['template']
+
     newtemplate = renderer.flavour.get('comment-head','')
     if not newtemplate == '' and len(renderer.getContent()) == 1:
         template = newtemplate
@@ -274,6 +271,7 @@ def cb_story(dict):
             renderer.outputTemplate(output, entry, 'comment-form')
         dict['template'] = template +u"".join(output)
     else:
+        entry['num_comments'] = getCommentCount(entry,config)
         return template
     
 def cb_start(dict):

@@ -21,11 +21,15 @@ def cb_prepare(args):
     if entryList and entryList[0].has_key('mtime'):
         mtime = entryList[0]['mtime']
         latest_cmtime = - 1
-        for i in entryList:
-            if i.has_key('comment_latest_mtime'):
-                cmtime = i['comment_latest_mtime'] 
-                if cmtime > latest_cmtime:
-                    latest_cmtime = cmtime
+        if config.has_key('comment_dir'):
+            try: 
+                latestFilename = config['datadir']+'/'+config['comment_dir']+'/LATEST'
+                latest = file(latestFilename)
+                import cPickle
+                latest_cmtime = cPickle.load(latest)
+                latest.close()
+            except:
+                pass
         if latest_cmtime > mtime:
             mtime = latest_cmtime
         import os, time
