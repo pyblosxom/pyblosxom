@@ -164,7 +164,17 @@ class PyBlosxom:
     
     def common_start(self, start_callbacks=1, render=1):
         """
-        Common pyblosxom initialization used by other CGI scripts
+        Common pyblosxom initialization used by other CGI scripts.
+
+        @param start_callbacks: whether (1) or not (0) we add Pyblosxom
+            startup method to the startup callback.
+        @type  start_callbacks: boolean
+
+        @param render: whether (1) or not (0) we instantiate a renderer
+        @type  render: boolean
+
+        @returns: a tuple containing the config and data dicts
+        @rtype: (config dict, data dict)
         """
         config = self._request.getConfiguration()
         data = self._request.getData()
@@ -271,8 +281,10 @@ def default_entry_parser(filename, request):
 
     @param filename: A filename to extra data and meta data from
     @type filename: string
+
     @param request: A standard request object
     @type request: L{Pyblosxom.Request.Request} object
+
     @returns: A dict containing parsed data and meta data with the 
             particular file (and plugin)
     @rtype: dict
