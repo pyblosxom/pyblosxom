@@ -39,6 +39,8 @@ def getCommentCount(entry, config):
     """
     if entry['absolute_path'] == None: return 0
     filelist = glob.glob(cmtExpr(entry,config))
+    if (len(filelist) > 0):
+        entry['comment_latest_mtime'] = os.stat(filelist[-1]).st_mtime
     return len(filelist)
 
 def cmtExpr(entry, config):
@@ -147,9 +149,10 @@ def writeComment(config, data, comment):
         import smtplib
         try:
             server = smtplib.SMTP(config['comment_smtp_server'])
-            server.sendmail(config['comment_smtp_from'], config['comment_smtp_to'], \
-                            "Subject: write back by %s\r\n\r\n%s\r\n%s" \
-                            %  (comment['author'], cfn, comment['description']))
+            curl = config['base_url']+'/'+entry['file_path']
+            message = "Subject: write back by %s\r\n\r\n%s\r\n%s\r\n%s" \
+                      %  (comment['author'], cfn, curl, comment['description'])
+            server.sendmail(config['comment_smtp_from'], config['comment_smtp_to'], message)
             server.quit()
         except:
             pass
@@ -240,7 +243,6 @@ def cb_prepare(args):
         
         writeComment(config, data, cdict)
 
-    data = request.getData()
     entry_list = data['entry_list']
         
     for i in range(len(entry_list)):
