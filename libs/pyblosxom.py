@@ -25,7 +25,7 @@ class PyBlosxom:
                 path_info = os.environ['PATH_INFO'].split('/')
                 if path_info[0] == '':
                     path_info.pop(0)
-                while re.match(r'^[a-zA-Z]\w*', path_info[0]):
+                while re.match(r'^[a-zA-Z0-9]\w*', path_info[0]):
                     self.py['pi_bl'] += '/%s' % path_info.pop(0)
                     if len(path_info) == 0:
                         break
@@ -131,6 +131,10 @@ class PyBlosxom:
         absolute_path = string.replace(absolute_path, os.path.basename(filename), '')
         absolute_path = absolute_path[1:][:-1]
         fn = re.sub(r'\.txt$', '', os.path.basename(filename))
+        if absolute_path == '':
+            file_path = fn
+        else:
+            file_path = absolute_path+'/'+fn
         tb = '-'
         tb_id = '%s/%s' % (absolute_path, fn)
         tb_id = re.sub(r'[^A-Za-z0-9]', '_', tb_id)
@@ -142,7 +146,7 @@ class PyBlosxom:
                 'tb' : tb,
                 'tb_id' : tb_id,
                 'absolute_path' : absolute_path,
-                'file_path' : absolute_path + '/' + fn,
+                'file_path' : file_path,
                 'fn' : fn,
                 'filename' : filename,
                 'ti' : time.strftime('%H:%M',timetuple),
@@ -203,6 +207,7 @@ class PyBlosxom:
             cache.saveEntry(entryData)
 
         if re.search(r'\Wxml', self.py['content-type']):
+            entryData['title'] = cgi.escape(entryData['title'])
             entryData['body'] = cgi.escape(entryData['body'])
         elif self.py['content-type'] == 'text/plain':
             s = tools.Stripper()
