@@ -29,6 +29,8 @@ __version__ = "$Id$"
 import os, re, string, time, cPickle
 from Pyblosxom import tools, entries
 
+INIT_KEY = "logstats_static_file_initiated"
+
 class PyblStats:
     def __init__(self, config):
         self._config = config
@@ -151,6 +153,7 @@ class PyblStats:
         search_list.append("search.aol.com")
         search_list.append("search.msn.com")
         search_list.append("mail.yahoo.com")
+        search_list.append("mywebsearch.com")
 
         def url(tuple):
             """
@@ -253,13 +256,13 @@ def cb_prepare(args):
     f.close()
 
 
-def generate_entry(output):
+def generate_entry(request, output):
     """
     Takes a bunch of text and generates an entry out of it.  It creates
     a timestamp so that conditionalhttp can handle it without getting
     all fussy.
     """
-    entry = entries.base.EntryBase()
+    entry = entries.base.EntryBase(request)
 
     entry['title'] = "Referrers List"
     entry['filename'] = "referrerlist"
@@ -271,15 +274,26 @@ def generate_entry(output):
     entry.setData(output)
     return entry
 
+def cb_date_head(args):
+    request = args["request"]
+    data = request.getData()
+    if data.has_key(INIT_KEY):
+        entry = args["entry"]
+        entry["date"] = ""
+    return args
+
 def cb_filelist(args):
     request = args["request"]
     pyhttp = request.getHttp()
+    data = request.getData()
     config = request.getConfiguration()
     datadir = config["datadir"]
 
     if not pyhttp["PATH_INFO"].startswith("/referrers"):
         return
 
+    
+    data[INIT_KEY] = 1
     filename = datadir + '/logfile.dat'
     try:
         f = open(filename)
@@ -293,4 +307,4 @@ def cb_filelist(args):
     except (EOFError, IOError):
         stats = PyblStats(config)
 
-    return [generate_entry(stats.genReferrerStats())]
+    return [generate_entry(request, stats.genReferrerStats())]

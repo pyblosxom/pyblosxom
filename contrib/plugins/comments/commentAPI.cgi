@@ -57,10 +57,6 @@ if __name__ == '__main__':
     p.startup()
     config, data = p.common_start(start_callbacks=0, render=0)
    
-    # populate the registry with the reqeust
-    registry = tools.get_registry()
-    registry["request"] = request
-    
     datadir = config['datadir']
     try:
         path = d['PATH_INFO']

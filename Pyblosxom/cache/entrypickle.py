@@ -66,7 +66,7 @@ class BlosxomCache(BlosxomCacheBase):
         keys = []
         cached = []
         if os.path.isdir(self._config):
-            cached = tools.Walk(self._config, 1, re.compile(r'.*\.entrypickle$'))
+            cached = tools.Walk(self._request, self._config, 1, re.compile(r'.*\.entrypickle$'))
         for cache in cached:
             cache_data = pickle.load(open(cache))
             key = cache_data.get('realfilename', '')

@@ -70,9 +70,6 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
     p.startup()
     config, data = p.common_start(start_callbacks=0, render=0)
    
-    registry = tools.get_registry()
-    registry["request"] = request
-    
     datadir = config['datadir']
     
     # must be done after plugin initialization

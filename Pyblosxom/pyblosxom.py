@@ -25,9 +25,6 @@ class PyBlosxom:
         self.flavour = {}
         self.dayFlag = 1 # Used to print valid date footers
 
-        registry = tools.get_registry()
-        registry["request"] = request
-        
     def startup(self):
         """
         The startup step further initializes the Request by setting
@@ -344,7 +341,7 @@ def default_file_list_handler(args):
     config = request.getConfiguration()
 
     if data['bl_type'] == 'dir':
-        filelist = tools.Walk(data['root_datadir'], int(config['depth']))
+        filelist = tools.Walk(request, data['root_datadir'], int(config['depth']))
     elif data['bl_type'] == 'file':
         filelist = [data['root_datadir']]
     else:
@@ -352,7 +349,7 @@ def default_file_list_handler(args):
 
     entrylist = []
     for ourfile in filelist:
-        entry = FileEntry(config, ourfile, data['root_datadir'])
+        entry = FileEntry(request, ourfile, data['root_datadir'])
         entrylist.append((entry._mtime, entry))
 
     # this sorts entries by mtime in reverse order.  entries that have

@@ -39,7 +39,7 @@ class PyblArchives:
         data = self._request.getData()
         root = config["datadir"]
         archives = {}
-        archiveList = tools.Walk(root)
+        archiveList = tools.Walk(self._request, root)
         fulldict = {}
         fulldict.update(config)
         fulldict.update(data)
@@ -47,7 +47,7 @@ class PyblArchives:
         template = config.get('archive_template', 
                     '<a href="%(base_url)s/%(Y)s/%(b)s">%(Y)s-%(b)s</a><br />')
         for mem in archiveList:
-            timetuple = tools.filestat(mem)
+            timetuple = tools.filestat(self._request, mem)
             timedict = dict([(x, time.strftime('%' + x, timetuple)) 
                             for x in list('bmYy')])
             fulldict.update(timedict)

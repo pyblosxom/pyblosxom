@@ -54,14 +54,13 @@ class PyblCategories:
         self._baseurl = config.get("base_url", "")
 
         # build the list of entries
-        elist = tools.Walk(root)
-        elist = [mem[len(root)+1:] for mem in elist]
+        elist = tools.Walk(self._request, root)
+        elist = [mem[len(root):] for mem in elist]
 
         elistmap = {}
         for mem in elist:
             mem = os.path.dirname(mem)
             elistmap[mem] = 1 + elistmap.get(mem, 0)
-            mem = mem.split(os.sep)
         self._elistmap = elistmap
 
         clistmap = {}

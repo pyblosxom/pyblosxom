@@ -68,7 +68,7 @@ class Renderer(RendererBase):
         printout("------------------------------------------------------\n")
         printout("Cached Titles:\n")
         printout("------------------------------------------------------\n")
-        cache = tools.get_cache()
+        cache = tools.get_cache(self._request)
         for content in self._content:
             if type(content) != types.StringType:
                 filename = content['filename']

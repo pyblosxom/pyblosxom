@@ -34,16 +34,15 @@ class FileEntry(base.EntryBase):
     @param root: i have no clue what this is
     @type  root: string
     """
-    def __init__(self, config, filename, root):
-        base.EntryBase.__init__(self)
-        self._config = config
+    def __init__(self, request, filename, root):
+        base.EntryBase.__init__(self, request)
+        self._config = request.getConfiguration()
         self._filename = filename
         self._root = root
 
         self._original_metadata_keys = []
         self._populated_data = 0
         self.__populateBasicMetadata()
-
 
     def getId(self):
         """
@@ -114,7 +113,7 @@ class FileEntry(base.EntryBase):
         self['filename'] = self._filename
 
         # handle the time portions
-        timeTuple = tools.filestat(self._filename)
+        timeTuple = tools.filestat(self._request, self._filename)
         self.setTime(timeTuple)
 
         # when someone does a getMetadata and they're looking for
@@ -130,16 +129,14 @@ class FileEntry(base.EntryBase):
         file could also contain metadata that overrides the metadata
         we normally pull.
         """
-        registry = tools.get_registry()
-        request = registry["request"]
-        data = request.getData()
+        data = self._request.getData()
 
         entrydict = self.getFromCache(self._filename)
         if not entrydict:
             fileExt = re.search(r'\.([\w]+)$', self._filename)
             try:
                 eparser = data['extensions'][fileExt.groups()[0]]
-                entrydict = eparser(self._filename, request)
+                entrydict = eparser(self._filename, self._request)
                 self.addToCache(self._filename, entrydict)
             except IOError:
                 return None

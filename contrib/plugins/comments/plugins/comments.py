@@ -336,7 +336,7 @@ def cb_story(args):
     renderer = args['renderer']
     entry = args['entry']
     template = args['template']
-    request = tools.get_registry()["request"]
+    request = args["request"]
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 and renderer.flavour.has_key('comment-story'):
         template = renderer.flavour.get('comment-story','')
@@ -349,7 +349,7 @@ def cb_story_end(args):
     renderer = args['renderer']
     entry = args['entry']
     template = args['template']
-    request = tools.get_registry()["request"]
+    request = args["registry"]
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 and renderer.flavour.has_key('comment-story'):
         output = []

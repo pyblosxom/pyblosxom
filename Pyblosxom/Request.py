@@ -102,7 +102,7 @@ class Request:
         """
         self.__populateDict(self._configuration, d)
 
-    def __getattr__(self, name, default):
+    def __getattr__(self, name, default=None):
         """
         Sort of simulates the dict except we only have three
         valid attributes: config, data, and http.

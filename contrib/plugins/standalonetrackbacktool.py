@@ -33,7 +33,7 @@ def cb_story(args):
     py['tb_data'] + entry['tb_id'] + '.stor' file.
     """
     entry = args['entry']
-    request = Pyblosxom.tools.get_registry()["request"]
+    request = args["request"]
     config = request.getConfiguration()
 
     datadir = config.get('tb_data', '')

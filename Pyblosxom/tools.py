@@ -64,14 +64,18 @@ class Replacer:
     This class is a utility class used to provide a bound method to the
     C{re.sub()} function.  Gotten from OPAGCGI.
     """
-    def __init__(self, var_dict):
+    def __init__(self, request, var_dict):
         """
         It's only duty is to populate itself with the replacement dictionary
         passed.
 
+        @param request: the Request object
+        @type request: Request
+
         @param var_dict: The dict for variable substitution
         @type var_dict: dict
         """
+        self._request = request
         self.var_dict = var_dict
 
     def replace(self, matchobj):
@@ -87,9 +91,7 @@ class Replacer:
         @returns: Substitutions
         @rtype: string
         """
-        registry = get_registry()
-        request = registry["request"]
-        config = request.getConfiguration()
+        config = self._request.getConfiguration()
         key = matchobj.group(1)
 
         if key.find("(") != -1 and key.find(")"):
@@ -125,11 +127,14 @@ class Replacer:
         else:
             return u''
 
-def parse(var_dict, template):
+def parse(request, var_dict, template):
     """
     This method parses the open file object passed, replacing any keys
     found using the replacement dictionary passed.  Uses the L{Replacer} 
     object.  From OPAGCGI library
+
+    @param request: the Request object
+    @type  request: Request
 
     @param var_dict: The name value pair list containing variable replacements
     @type  var_dict: dict
@@ -141,21 +146,22 @@ def parse(var_dict, template):
     @returns: Substituted template
     @rtype: string
     """
-    registry = get_registry()
-    request = registry["request"]
     config = request.getConfiguration()
     if type(template) != types.UnicodeType: 
         # convert strings to unicode, assumes strings in iso-8859-1
         template = unicode(template, config.get('blog_encoding', 'iso-8859-1'), 'replace')
-    return u'' + VAR_REGEXP.sub(Replacer(var_dict).replace, template)
+    return u'' + VAR_REGEXP.sub(Replacer(request, var_dict).replace, template)
 
 
-def Walk(root='.', recurse=0, pattern='', return_folders=0 ):
+def Walk(request, root='.', recurse=0, pattern='', return_folders=0 ):
     """
     This function walks a directory tree starting at a specified root folder,
     and returns a list of all of the files (and optionally folders) that match
     our pattern(s). Taken from the online Python Cookbook and modified to own
     needs
+
+    @param request: the Request object
+    @type  request: Request
 
     @param root: Starting point to walk from
     @type root: string
@@ -186,8 +192,7 @@ def Walk(root='.', recurse=0, pattern='', return_folders=0 ):
 
     # expand pattern
     if not pattern:
-        registry = get_registry()
-        ext = registry["request"].getData()['extensions']
+        ext = request.getData()['extensions']
         pattern = re.compile(r'.*\.(' + '|'.join(ext.keys()) + r')$')
 
     # check each file
@@ -202,17 +207,19 @@ def Walk(root='.', recurse=0, pattern='', return_folders=0 ):
         # recursively scan other folders, appending results
         if (recurse == 0) or (recurse > 1):
             if os.path.isdir(fullname) and not os.path.islink(fullname):
-                result = result + Walk(fullname, 
+                result = result + Walk(request, fullname, 
                 (recurse > 1 and recurse -  1 or 0), 
                 pattern, return_folders)
 
     return result
 
-filestat_cache = {}
-def filestat(filename):
+def filestat(request, filename):
     """
     Returns the filestat on a given file.  We store the filestat
     in case we've already retrieved it this time.
+
+    @param request: the Pyblosxom Request object
+    @type  request: Request
 
     @param filename: the name of the file to stat
     @type  filename: string
@@ -220,17 +227,21 @@ def filestat(filename):
     @returns: the mtime of the file (same as returned by time.localtime(...))
     @rtype: tuple of 9 ints
     """
-    global filestat_cache
+    data = request.getData()
+    filestat_cache = data.setdefault("filestat_cache", {})
+
     if filestat_cache.has_key(filename):
         return filestat_cache[filename]
 
-    argdict = {"filename": filename, "mtime": os.stat(filename)}
+    argdict = {"request": request, "filename": filename, 
+               "mtime": os.stat(filename)}
     argdict = run_callback("filestat",
                            argdict,
                            mappingfunc=lambda x,y:y,
                            defaultfunc=lambda x:x)
     timetuple = time.localtime(argdict["mtime"][8])
     filestat_cache[filename] = timetuple
+
     return timetuple
 
 def what_ext(extensions, filepath):
@@ -379,31 +390,6 @@ def run_callback(chain, input,
     return output
 
 
-def generate_entry(properties, data, mtime):
-    """
-    Takes a properties dict and a data string and generates a generic
-    entry using the data you provided.
-
-    @param properties: the dict of properties for the entry
-    @type  properties: dict
-
-    @param data: the data content for the entry
-    @type  data: string
-
-    @param mtime: the mtime tuple (as given by time.localtime()).  
-        if you pass in None, then we'll use localtime.
-    @type  mtime: tuple of ints
-    """
-    entry = EntryBase()
-
-    entry.update(properties)
-    entry.setData(data)
-    if mtime:
-        entry.setTime(mtime)
-    else:
-        entry.setTime(time.localtime())
-    return entry
-
 
 # These next few lines are for locking.  At first, they'll be
 # ultra-simple.  We can add sophistication to them later.
@@ -513,44 +499,29 @@ def return_lock(request, lockname):
         del request.getData()["lock_" + lockname]
 
 
-# These next few lines are to save a sort of run-time global registry
-# of important things so that they're global to all the components
-# of pyblosxom whether or not we actually pass them through.
-
-my_registry = {}
-
-def get_registry():
+def get_cache(request):
     """
-    Returns the registry of run-time global things which really should
-    be global to everything in the system.
-
-    @returns: the run-time global registry of things
-    @rtype: dict
-    """
-    return my_registry
-
-def get_cache():
-    """
-    Retrieves the cache from the registry or fetches a new CacheDriver
+    Retrieves the cache from the request or fetches a new CacheDriver
     instance.
+
+    @param request: the Request object for this run
+    @type  request: Request
 
     @returns: A BlosxomCache object reference
     @rtype: L{Pyblosxom.cache.base.BlosxomCacheBase} subclass
     """
-    registry = get_registry()
-
-    mycache = registry.get("cache", "")
+    data = request.getData()
+    mycache = data.get("data_cache", "")
 
     if not mycache:
-        request = registry["request"]
         config = request.getConfiguration()
 
         cacheDriverConfig = config.get('cacheDriver', 'base')
         cacheConfig = config.get('cacheConfig', '')
 
         cache_driver = importName('Pyblosxom.cache', cacheDriverConfig)
-        mycache = cache_driver.BlosxomCache(cacheConfig)
+        mycache = cache_driver.BlosxomCache(request, cacheConfig)
 
-        registry["cache"] = mycache
+        data["data_cache"] = mycache
 
     return mycache

@@ -120,12 +120,12 @@ class PyblCalendar:
         except:
             pass
 
-        archiveList = tools.Walk(root)
+        archiveList = tools.Walk(self._request, root)
 
         yearmonth = {}
 
         for mem in archiveList:
-            timetuple = tools.filestat(mem)
+            timetuple = tools.filestat(self._request, mem)
 
             # if we already have an entry for this date, we skip to the
             # next one because we've already done this processing

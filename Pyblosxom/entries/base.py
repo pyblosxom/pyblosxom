@@ -4,6 +4,9 @@ This module contains the base class for all the Entry classes.  The
 EntryBase class is essentially the API for entries in PyBlosxom.  Reading
 through the comments for this class will walk you through building your
 own EntryBase derivatives.
+
+This module also holds a generic generate_entry function which will generate
+a BaseEntry with data that you provide for it.
 """
 import time
 from Pyblosxom import tools
@@ -20,12 +23,13 @@ class EntryBase:
     whether it came from a file, or a database, or even somewhere off 
     the InterWeeb.
     """
-    def __init__(self):
+    def __init__(self, request):
         global BIGNUM
         self._data = None
         self._metadata = {}
         self._id = ""
         self._mtime = BIGNUM
+        self._request = request
 
     def __repr__(self):
         """
@@ -140,12 +144,13 @@ class EntryBase:
             id
         @rtype: dict or None
         """
-        cache = tools.get_cache()
+        cache = tools.get_cache(self._request)
+
         # cache.__getitem__ returns None if the id isn't there
         if cache.has_key(id):
             return cache[id]
-        else:
-            return None
+
+        return None
 
     def addToCache(self, id, data):
         """
@@ -160,8 +165,9 @@ class EntryBase:
         @param data: the data to store--this should probably be a dict
         @type  data: dict
         """
-        cache = tools.get_cache()
-        cache[id] = data
+        mycache = tools.get_cache(self._request)
+        if mycache:
+            mycache[id] = data
 
     # everything below this point involves convenience functions
     # that work with the above functions.
@@ -282,3 +288,32 @@ class EntryBase:
         if CONTENT_KEY not in keys:
             keys.append(CONTENT_KEY)
         return keys
+
+
+def generate_entry(request, properties, data, mtime):
+    """
+    Takes a properties dict and a data string and generates a generic
+    entry using the data you provided.
+
+    @param request: the Request object
+    @type  request: Request
+
+    @param properties: the dict of properties for the entry
+    @type  properties: dict
+
+    @param data: the data content for the entry
+    @type  data: string
+
+    @param mtime: the mtime tuple (as given by time.localtime()).  
+        if you pass in None, then we'll use localtime.
+    @type  mtime: tuple of ints
+    """
+    entry = EntryBase(request)
+
+    entry.update(properties)
+    entry.setData(data)
+    if mtime:
+        entry.setTime(mtime)
+    else:
+        entry.setTime(time.localtime())
+    return entry

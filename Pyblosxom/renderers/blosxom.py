@@ -27,6 +27,7 @@ class BlosxomRenderer(RendererBase):
                 'iso-8859-1'))
         self._out = sw(self._out)
         self.dayFlag = 1
+        self._request = request
 
     def _getFlavour(self, taste = 'html'):
         """
@@ -70,9 +71,9 @@ class BlosxomRenderer(RendererBase):
         
         pattern = re.compile(r'(content_type|head|date_head|date_foot|foot|story'+custom_flavours+')\.' 
                              + taste)
-        flavourlist = tools.Walk(data['root_datadir'], 1, pattern)
+        flavourlist = tools.Walk(self._request, data['root_datadir'], 1, pattern)
         if not flavourlist:
-            flavourlist = tools.Walk(config['datadir'], 1, pattern)
+            flavourlist = tools.Walk(self._request, config['datadir'], 1, pattern)
 
         for filename in flavourlist:
             flavouring = os.path.basename(filename).split('.')
@@ -101,7 +102,7 @@ class BlosxomRenderer(RendererBase):
         """
         if template:
             template = unicode(template)
-            finaltext = tools.parse(entry, template)
+            finaltext = tools.parse(self._request, entry, template)
             return finaltext.replace(r'\$', '$')
         return ""
 
@@ -169,7 +170,7 @@ class BlosxomRenderer(RendererBase):
             # if the content is a dict, then we parse it as if it were an
             # entry--except it's distinctly not an EntryBase derivative
             self._content.update(data)
-            output = tools.parse(self._content, self.flavour['story'])
+            output = tools.parse(self._request, self._content, self.flavour['story'])
             outputbuffer.append(output)
 
         elif content_type is type([]):
@@ -226,7 +227,7 @@ class BlosxomRenderer(RendererBase):
         self.rendered = 1
 
         # FIXME - we might want to do this at a later point?
-        cache = tools.get_cache()
+        cache = tools.get_cache(self._request)
         if cache:
             cache.close()
                 
@@ -247,7 +248,7 @@ class BlosxomRenderer(RendererBase):
         template = args["template"]
         entry = args["entry"]
 
-        self.write(tools.parse(entry, template))
+        self.write(tools.parse(self._request, entry, template))
             
     def outputTemplate(self, output, entry, flavour_name, override=0):
         """
@@ -296,7 +297,9 @@ class BlosxomRenderer(RendererBase):
         
         Refer to run_callback for more details.
         """
-        input.update({"renderer":self})
+        input.update( { "renderer": self } )
+        input.update( { "request": self._request } )
+
         return tools.run_callback(chain, input, 
                             mappingfunc=lambda x,y: x,
                             defaultfunc=lambda x:x)
