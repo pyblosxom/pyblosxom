@@ -86,7 +86,7 @@ class Replacer:
         replacement dictionary and find the replacement string.
 
         @param matchobj: A C{re} object containing substitutions
-        @type matchobj: C{re}
+        @type  matchobj: C{re} object
 
         @returns: Substitutions
         @rtype: string

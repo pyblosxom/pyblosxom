@@ -37,6 +37,46 @@ care of by callback chains.
      - The blosxom 2.0 entries callback is handled by L{cb_filelist}
      - The blosxom 2.0 filter callback is handled by L{cb_prepare}
      - The blosxom 2.0 sort callback is handled by L{cb_prepare}
+
+B{verify_installation}
+A couple of weeks ago, I checked in code to help out PyBlosxom
+installation and configuration.  I made changes to pyblosxom.cgi so
+that you could run it from the prompt::
+
+   ./pyblosxom.cgi
+
+It tells you your Python version, OS name, and then proceeds to verify
+your config properties (did you specify a valid datadir?  does it
+exist?...) and then initializes all your plugins and executes
+<code>verify_installation(request)</code> on every plugin you have
+installed that has the function.
+
+As a plugin developer, you should add a verify_installation function
+to your plugin module.  Something like this (taken from pycategories)::
+
+   def verify_installation(request):
+       config = request.getConfiguration()
+
+       if not config.has_key("category_flavour"):
+           print "missing optional config property 'category_flavour' which allows "
+           print "you to specify the flavour for the category link.  refer to "
+           print "pycategory plugin documentation for more details."
+       return 1
+
+Basically this gives you (the plugin developer) the opportunity to
+walk the user through configuring your highly complex, quantum-charged,
+turbo plugin in small baby steps without having to hunt for where
+their logs might be.
+
+So check the things you need to check, print out error messages
+(informative ones), and then return a <code>1</code> if the
+plugin is configured correctly or a <code>0</code> if it's not
+configured correctly.
+
+This is not a substitute for reading the installation instructions.  But
+it should be a really easy way to catch a lot of potential problems
+without involving the web server's error logs and debugging information
+being sent to a web-browser and things of that nature.
 """
 import Pyblosxom, os
 from Pyblosxom.Request import Request
@@ -193,7 +233,7 @@ def cb_entryparser(args = {'txt': 'A blosxom text entryparser'}):
     The function is supposed to return a dict, at least containing the key
     C{'title'} and C{'story'}. Entryparsers can use other callback facilities
     like L{cb_preformat} and the L{cb_postformat} callbacks. See
-    L{Pyblosxom.pyblosxom.PyBlosxom.defaultEntryParser} on how to use such facilities.
+    L{Pyblosxom.pyblosxom.blosxom_entry_parser} on how to use such facilities.
 
     All outputs of entryparsers (and together with preformatters and
     postformatters) will be cached by the caching mechanisms.
@@ -204,7 +244,7 @@ def cb_entryparser(args = {'txt': 'A blosxom text entryparser'}):
     peek at the args, append to it, or modify it (not advisable).
 
     By default, typical contents of args::
-        {'txt': L{Pyblosxom.pyblosxom.PyBlosxom.defaultEntryParser}}
+        {'txt': L{Pyblosxom.pyblosxom.blosxom_entry_parser}}
 
     Here's an example code that reads *.plain files::
 

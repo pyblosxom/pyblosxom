@@ -16,7 +16,7 @@ class BlosxomCacheBase:
     Driver should expect empty caches and should attempt to create them from
     scratch.
 
-    @cvar _config: String containing config on where to store the cache.
+    @ivar _config: String containing config on where to store the cache.
         The Value of config is derived from C{py['cacheConfig']} in L{config}.
     @type _config: string
     """
