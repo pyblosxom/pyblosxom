@@ -73,8 +73,8 @@ class CacheDecorator(base.EntryBase):
 
         return self._child.getData()
 
-    def setData(self):
-        self._child.setData()
+    def setData(self, data):
+        self._child.setData(data)
 
     def setMetadata(self, key, value):
         self._child.setMetadata(key, value)
