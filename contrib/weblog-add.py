@@ -84,11 +84,11 @@ def genFormPage():
 </select>
 <p> 
 <b>Title:</b>
-<br>
+<br />
 <input type=text name="title" size=80 value=""> 
 <p>
 <b>Filename (no path and no extension):</b>
-<br>
+<br />
 <input type=text name="filename" size=40 value=""> 
 <p>
 """
@@ -96,7 +96,7 @@ def genFormPage():
     if include_html_syntax:
         print """\
 <b>HTML Summary:</b>
-<br>
+<br />
 <table border=1>
 <tr><th>Hypertext link</th><td>&lt;a href="URL"&gt;linked text&lt;/a&gt;</td></tr>
 <tr><th>Paragraph</th><td>&lt;p&gt;Text&lt;/p&gt;</td></tr>
@@ -107,9 +107,9 @@ def genFormPage():
 <p>"""
     print """\
 <b>Content:</b> 
-<br>
+<br />
 <textarea cols=80 rows=10 name="text"></textarea>
-<br>
+<br />
 <input type=submit> 
 </body>
 </html>

@@ -93,7 +93,7 @@ class Parser:
         """
         if 0:
             print "type", toktype, token.tok_name[toktype], "text", toktext,
-            print "start", srow,scol, "end", erow,ecol, "<br>"
+            print "start", srow,scol, "end", erow,ecol, "<br />"
 
         # calculate new positions
         oldpos = self.pos
