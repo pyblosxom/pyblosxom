@@ -64,18 +64,18 @@ class Replacer:
     This class is a utility class used to provide a bound method to the
     C{re.sub()} function.  Gotten from OPAGCGI.
     """
-    def __init__(self, request, var_dict):
+    def __init__(self, encoding, var_dict):
         """
         It's only duty is to populate itself with the replacement dictionary
         passed.
 
-        @param request: the Request object
-        @type request: Request
+        @param encoding: the encoding to use
+        @type  encoding: string
 
         @param var_dict: The dict for variable substitution
         @type var_dict: dict
         """
-        self._request = request
+        self._encoding = encoding
         self.var_dict = var_dict
 
     def replace(self, matchobj):
@@ -91,7 +91,6 @@ class Replacer:
         @returns: Substitutions
         @rtype: string
         """
-        config = self._request.getConfiguration()
         key = matchobj.group(1)
 
         if key.find("(") != -1 and key.find(")"):
@@ -120,21 +119,21 @@ class Replacer:
 
             if type(r) != types.UnicodeType: 
                 # convert strings to unicode, assumes strings in iso-8859-1
-                r = unicode(r, config.get('blog_encoding', 'iso-8859-1'), 'replace')
+                r = unicode(r, self._encoding, 'replace')
 
             return r
 
         else:
             return u''
 
-def parse(request, var_dict, template):
+def parse(encoding, var_dict, template):
     """
     This method parses the open file object passed, replacing any keys
     found using the replacement dictionary passed.  Uses the L{Replacer} 
     object.  From OPAGCGI library
 
-    @param request: the Request object
-    @type  request: Request
+    @param encoding: the encoding to use
+    @type  encoding: string
 
     @param var_dict: The name value pair list containing variable replacements
     @type  var_dict: dict
@@ -146,19 +145,19 @@ def parse(request, var_dict, template):
     @returns: Substituted template
     @rtype: string
     """
-    config = request.getConfiguration()
     if type(template) != types.UnicodeType: 
         # convert strings to unicode, assumes strings in iso-8859-1
-        template = unicode(template, config.get('blog_encoding', 'iso-8859-1'), 'replace')
-    return u'' + VAR_REGEXP.sub(Replacer(request, var_dict).replace, template)
+        template = unicode(template, encoding, 'replace')
+
+    return u'' + VAR_REGEXP.sub(Replacer(encoding, var_dict).replace, template)
 
 
-def Walk(request, root='.', recurse=0, pattern='', return_folders=0 ):
+def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
     """
     This function walks a directory tree starting at a specified root folder,
     and returns a list of all of the files (and optionally folders) that match
     our pattern(s). Taken from the online Python Cookbook and modified to own
-    needs
+    needs.
 
     @param request: the Request object
     @type  request: Request
@@ -181,19 +180,24 @@ def Walk(request, root='.', recurse=0, pattern='', return_folders=0 ):
     @returns: A list of file paths
     @rtype: list
     """
-    # initialize
-    result = []
+    # expand pattern
+    if not pattern:
+        ext = request.getData()['extensions']
+        pattern = re.compile(r'.*\.(' + '|'.join(ext.keys()) + r')$')
 
     # must have at least root folder
     try:
         names = os.listdir(root)
     except os.error:
-        return result
+        return []
 
-    # expand pattern
-    if not pattern:
-        ext = request.getData()['extensions']
-        pattern = re.compile(r'.*\.(' + '|'.join(ext.keys()) + r')$')
+    return _walk_internal(root, recurse, pattern, return_folders)
+
+def _walk_internal( root, recurse, pattern, return_folders ):
+    # initialize
+    result = []
+
+    names = os.listdir(root)
 
     # check each file
     for name in names:
@@ -201,15 +205,17 @@ def Walk(request, root='.', recurse=0, pattern='', return_folders=0 ):
 
         # grab if it matches our pattern and entry type
         if pattern.match(name):
-            if (os.path.isfile(fullname) and not return_folders) or (return_folders and os.path.isdir(fullname)):
+            if (os.path.isfile(fullname) and not return_folders) or \
+                    (return_folders and os.path.isdir(fullname)):
                 result.append(fullname)
                 
         # recursively scan other folders, appending results
         if (recurse == 0) or (recurse > 1):
             if os.path.isdir(fullname) and not os.path.islink(fullname):
-                result = result + Walk(request, fullname, 
-                (recurse > 1 and recurse -  1 or 0), 
-                pattern, return_folders)
+                result = result + \
+                         _walk_internal(fullname, 
+                                        (recurse > 1 and recurse -  1 or 0), 
+                                        pattern, return_folders)
 
     return result
 
