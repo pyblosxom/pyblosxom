@@ -264,7 +264,7 @@ def cb_story(dict):
     template = dict['template']
     request = tools.get_registry()["request"]
     config = request.getConfiguration()
-    if len(renderer.getContent()) == 1:
+    if len(renderer.getContent()) == 1 and renderer.flavour.has_key('comment-story'):
         template = renderer.flavour.get('comment-story','')
         output = []
         entry['comments'] = readComments(entry, config)
@@ -281,6 +281,8 @@ def cb_start(dict):
     config = request.getConfiguration()
     if not config.has_key('blosxom_custom_flavours'):
         config['blosxom_custom_flavours'] = ['comment-head', 'comment-story', 'comment', 'comment-form']
+    else:
+        config['blosxom_custom_flavours'].append('comment-head', 'comment-story', 'comment', 'comment-form')
     if not config.has_key('comment_dir'):
         config['comment_dir'] = 'comments'
     if not config.has_key('comment_ext'):
