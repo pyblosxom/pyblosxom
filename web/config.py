@@ -44,6 +44,9 @@ py['depth'] = 0
 # How many entries should I show on the home page?
 py['num_entries'] = 40
 
+# What should the default flavour you want used be?
+py['default_flavour'] = "html"
+
 
 ###########################
 # Optional Configurations #
