@@ -167,12 +167,12 @@ class PyblCalendar:
         if index == 0:
             prev = None
         else:
-            prev = ("%s/%s/%s" % (baseurl, keys[index-1][:4], yearmonth[keys[index-1]]), "<")
+            prev = ("%s/%s/%s" % (baseurl, keys[index-1][:4], yearmonth[keys[index-1]]), "&lt;")
 
         if index == len(yearmonth)-1:
             next = None
         else:
-            next = ("%s/%s/%s" % (baseurl, keys[index+1][:4], yearmonth[keys[index+1]]), ">")
+            next = ("%s/%s/%s" % (baseurl, keys[index+1][:4], yearmonth[keys[index+1]]), "&gt;")
 
         # insert the month name and next/previous links
         cal.insert(0, [prev, time.strftime("%B %Y", view), next])
