@@ -29,25 +29,30 @@ class CacheDecorator(base.EntryBase):
         """
         mycache = tools.get_cache()
 
-        if mycache.has_key(self._child.getId()):
+        id = self._child.getId()
+
+        if mycache.has_key(id):
             # we have the item in cache, so we retrieve it from
             # cache and populate our child's data with it
-            entry = mycache[self._child.getId()]
-            self._child.update(entry)
+            entrydict = mycache[id]
+            self._child.setCacheableData(entrydict)
+            self._child["cached"] = "(yes) " + repr(entrydict.keys())
+
         else:
-            # FIXME - would it be better to cache the EntryBase object
-            # itself rather than converting it to a dict and caching
-            # the dict?
-
             # first we build the dict we're going to cache
-            entry = {}
-            for mem in self._child.keys():
-                entry[mem] = self._child[mem]
+            entrydict = self._child.getCacheableData()
 
-            # now we toss it in the cache
-            mycache[self._child.getId()] = entry
+            # if we have something to cache, we toss it in
+            if entrydict:
+                mycache[id] = entrydict
+                self._child["cached"] = "(no) " + repr(entrydict.keys())
+            else:
+                self._child["cached"] = "(no) (no data)"
 
         self._triedcache = 1
+
+    def __repr__(self):
+        return "CD: %d" % self._triedcache
 
     def getId(self):
         return self._child.getId()

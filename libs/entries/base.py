@@ -1,6 +1,9 @@
 # vim: tabstop=4 shiftwidth=4
 """
-This module contains the base class for all the Entry classes.
+This module contains the base class for all the Entry classes.  The
+EntryBase class is essentially the API for entries in PyBlosxom.  Reading
+through the comments for this class will walk you through building your
+own EntryBase derivatives.
 """
 import time
 
@@ -36,6 +39,8 @@ class EntryBase:
         Returns the data string.  This method should be overridden to
         provide from pulling the data from other places.
 
+        Override this.
+
         @returns: the data as a string
         @rtype: string
         """
@@ -48,6 +53,8 @@ class EntryBase:
         of the entry.  Doing so could be hazardous depending on what
         EntryBase subclass you're dealing with.
 
+        Override this.
+
         @param data: the data
         @type  data: string
         """
@@ -56,6 +63,8 @@ class EntryBase:
     def getMetadata(self, key, default=None):
         """
         Returns a given piece of metadata.
+
+        Override this.
 
         @param key: the key being sought
         @type  key: varies
@@ -73,6 +82,14 @@ class EntryBase:
     def setMetadata(self, key, value):
         """
         Sets a key/value pair in the metadata dict.
+
+        Override this.
+
+        @param key: the key string
+        @type  key: string
+
+        @param value: the value string
+        @type  value: string (or an object with a __str__ method)
         """
         self._metadata[key] = value
 
@@ -85,9 +102,43 @@ class EntryBase:
         cache your list of metadata keys, then this method should
         return a copy of that list and not the list itself
         lest it get adjusted.
+
+        Override this.
+
+        @returns: list of metadata keys
+        @rtype: list of strings
         """
         return self._metadata.keys()
 
+    def getCacheableData(self):
+        """
+        It should return a dict of name/value pairs.  The dict will 
+        then be cached.
+
+        Override this if you want to be cacheable.
+
+        getCacheableData and setCacheableData should be inverses of
+        each other.
+
+        @returns: dict of name/value pairs to be cached
+        @rtype: dict
+        """
+        return {}
+
+    def setCacheableData(self, d):
+        """
+        It takes in a dict d of name/value pairs that were originally 
+        created by getCacheableData.
+
+        Override this if you want to be cacheable.
+
+        getCacheableData and setCacheableData should be inverses of
+        each other.
+
+        @param d: the dict of name/value pairs to update our entry with
+        @type  d: dict
+        """
+        pass
 
     # everything below this point involves convenience functions
     # that work with the above functions.
