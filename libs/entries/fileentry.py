@@ -15,14 +15,27 @@ class FileEntry(EntryBase):
         EntryBase.__init__( self )
         self._filename = filename
         self._config = config
-        self.getProperties( root )
+        self._root = root
+        self._initialized = 0
 
-    def getProperties(self, root):
+    def __getitem__(self, key, default=None):
+        if not self._initialized:
+            self._initialized = 1
+            self.getProperties()
+        return EntryBase.__getitem__( self, key, default )
+
+    def __setitem__(self, key, value):
+        if not self._initialized:
+            self._initialized = 1
+            self.getProperties()
+        return EntryBase.__setitem__( self, key, value )
+
+    def getProperties(self):
         """Returns an Entry class of file related contents"""
 
         mtime = tools.filestat(self._filename)[8]
         timeTuple = time.localtime(mtime)
-        path = string.replace(self._filename, root, '')
+        path = string.replace(self._filename, self._root, '')
         path = string.replace(path, os.path.basename(self._filename), '')
         path = path[1:][:-1]
         absolute_path = string.replace(self._filename, self._config['datadir'], '')
