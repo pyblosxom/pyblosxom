@@ -299,14 +299,30 @@ def run_callback(chain, input,
     output = None
 
     for mem in chain:
+        # we call the function with the input dict it returns an output.
         output = mem(input)
+
+        # we fun the output through our donefunc to see if we should stop
+        # iterating through the loop.  the donefunc should return a 1
+        # if we're done--all other values cause us to continue.
         if donefunc(output) == 1:
             break
+
+        # we pass the input we just used and the output we just got
+        # into the mappingfunc which will give us the input for the
+        # next iteration.  in most cases, this consists of either
+        # returning the old input or the old output--depending on
+        # whether we're transforming the data through the chain or not.
         input = mappingfunc(input, output)
 
-    if defaultfunc != None and callable(defaultfunc) and donefunc(output) != 1:
+    # if we have a defaultfunc and we haven't satisfied the donefunc
+    # conditions, then we return whatever the defaultfunc returns
+    # when given the current version of the input.
+    if callable(defaultfunc) and donefunc(output) != 1:
         return defaultfunc(input)
         
+    # we didn't call the defaultfunc--so we return the most recent
+    # output.
     return output
 
 

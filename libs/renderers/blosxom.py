@@ -177,7 +177,7 @@ class BlosxomRenderer(RendererBase):
                 # if entry['pi_yr'] == '':
                 #     break
 
-        return u"".join(outputbuffer)
+        return self._out.write(u"".join(outputbuffer))
 
     def render(self, header = 1):
         """
@@ -210,7 +210,7 @@ class BlosxomRenderer(RendererBase):
             if self.flavour.has_key('head'):
                 self.__outputFlavour(parsevars,'head')
             if self.flavour.has_key('story'):
-                self._out.write(self.__processContent())
+                self.__processContent()
             if self.flavour.has_key('date_foot'): 
                 self.__outputFlavour(parsevars,'date_foot')                
             if self.flavour.has_key('foot'): 
@@ -223,20 +223,24 @@ class BlosxomRenderer(RendererBase):
         if cache:
             cache.close()
                 
-    def __outputFlavour(self, vars, template_name):
+    def __outputFlavour(self, entry, template_name):
         """
         Find the flavour template for template_name, run any blosxom callbacks, 
         substitute vars into it and write the template to the output
         
-        @param vars:
-        @type vars: L{libs.entries.base.EntryBase}
+        @param entry: the EntryBase object
+        @type entry: L{libs.entries.base.EntryBase}
 
         @param template_name: - name of the flavour template 
         @type template_name: string
         """
         template = self.flavour[template_name]
-        template = self._run_callback(template_name, { "entry": vars, "template": template }) 
-        self._out.write(tools.parse(vars, template))
+
+        args = self._run_callback(template_name, { "entry": entry, "template": template }) 
+        template = args["template"]
+        entry = args["entry"]
+
+        self._out.write(tools.parse(entry, template))
             
     def outputTemplate(self, output, entry, flavour_name):
         """
@@ -252,8 +256,13 @@ class BlosxomRenderer(RendererBase):
         @param flavour_name: - name of the flavour template
         @type flavour_name: string
         """
-        template = self.flavour.get(flavour_name,'')
-        template = self._run_callback(flavour_name, { "entry": entry, "template": template })
+        template = self.flavour.get(flavour_name, '')
+
+        args = self._run_callback(flavour_name, {"entry": entry, "template": template })
+
+        template = args["template"]
+        entry = args["entry"]
+
         output.append(self.__printTemplate(entry, template))
 
     def _run_callback(self, chain, input):
@@ -269,9 +278,8 @@ class BlosxomRenderer(RendererBase):
         """
         input.update({"renderer":self})
         return tools.run_callback(chain, input, 
-                            lambda x,y: x.update({"template": y["template"]}),
-                            lambda x:x != None,
-                            lambda x: x["template"])         
+                            mappingfunc=lambda x,y: x,
+                            defaultfunc=lambda x:x)
         
     def getContent(self):
         """
