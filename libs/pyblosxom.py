@@ -267,6 +267,9 @@ class PyBlosxom:
         # import plugins
         import libs.plugins.__init__
         libs.plugins.__init__.initialize_plugins(config)
+        
+        # do start callback
+        tools.run_callback("start", {'request': self._request}, mappingfunc=lambda x,y:y)
 
         # entryparser callback is runned first here to allow other plugins
         # register what file extensions can be used
@@ -329,6 +332,8 @@ class PyBlosxom:
                          'return_code': '404', 
                          'request': self._request})
             renderer.render()
+            # do end callback
+            tools.run_callback("end", {'request':self._request}, mappingfunc=lambda x,y:y)
 
         elif not renderer:
             print "Content-Type: text/plain\n\nThere is something wrong with your setup"

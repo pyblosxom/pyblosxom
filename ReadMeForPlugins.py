@@ -240,3 +240,155 @@ def cb_postformat(args = {'entry_data': {}, 'request': Request()}):
     @type args: dict
     """
     pass
+
+def cb_start(args = {'request': Request()}):
+    """
+    A start up callback for plugins
+    
+    The start callback can be used to perform initialization of a callback.
+    Use this callback for any setup code that your plugin needs, like
+    
+        - reading saved data from a file
+        - checking to make sure configuration variables are set
+    
+    @param args: A dict containing a L{Request()} object
+    @type args: dict
+    """
+    pass
+
+def cb_end(args = {'request' : Request()}):
+    """
+    A finalization callback for plugins
+    
+    The end callback can be used to perform finalization for a callback.
+    Use the end callback to clean up after your plugin has executed.  This
+    is the place to
+    
+        - save data to a file
+        - clean up any temporary files
+    
+    @param args: A dict containing a L{Request()} object
+    @type args: dict
+    """
+    pass
+
+"""
+The BlosxomRenderer plugins supports set of callback functions based on the 
+blosxom 2.0 callbacks.  The names arguments are different, but the 
+BlosxomRenderer callbacks are called at the same points that the
+blosxom 2.0 callbacks are called.
+
+All of the BlosxomRenderer callbacks take the same three arguments
+
+The available blosxom renderer callbacks are:
+ 
+cb_head (corresponds to blosxom 2.0 head)
+cb_date_head (corresponds to blosxom 2.0 date)
+cb_story (corresponds to blosxom 2.0 story)
+cb_foot (corresponds to blosoxm 2.0 foot)
+
+In PyBlosxom, the functionality some of the blosxom 2.0 callbacks are 
+taken care of by callback chains.
+
+The blosxom 2.0 entries callback is handled by cb_filelist
+The blosxom 2.0 filter callback is handled by cb_prepare
+The blosxom 2.0 sort callback is handled by cp_prepare
+"""
+
+def cb_head(args = {'renderer':'The Blosxom renderer', 
+                    'entry':'The entry to render',
+                    'template':'The template to be filled in'}):
+    """
+    A callback that is called before a head flavour template is rendered
+    
+    C{cb_head} is called before the variables in the entry are substituted
+    into the template.  This is the place to modify the head template based
+    on the entry content.  You can also set variables on the entry that will
+    be used by the C{cb_story} or C{cb_foot} templates.  You have access to 
+    all the content variables via entry.
+    
+    Blosxom 2.0 calls this callback 'head'
+
+    C{args} contains
+    
+      - C{'renderer'} - the L{BlosxomRenderer} that called the callback
+      - C{'entry'} - a {BaseEntry}to be rendered
+      - C{'template'} - a string containing the flavour template to be processed
+
+    @param args: a dict containing a L{BlosxomRenderer}, L{BaseEntry}, and template
+    @type args: dict
+    """
+    pass
+
+def cb_date_head(args = {'renderer':'The Blosxom renderer', 
+                         'entry':'The entry to render',
+                         'template':'The template to be filled in'}):
+    """
+    A callback that is called before a date_head flavour template is rendered
+    
+    C{cb_head} is called before the variables in the entry are substituted
+    into the template.  This is the place to modify the date_head template 
+    based on the entry content.  You have access to all the content variables 
+    via entry.
+    
+    Blosxom 2.0 calls this callback 'date'
+
+    C{args} contains
+    
+      - C{'renderer'} - the L{BlosxomRenderer} that called the callback
+      - C{'entry'} - a {BaseEntry}to be rendered
+      - C{'template'} - a string containing the flavour template to be processed
+
+    @param args: a dict containing a L{BlosxomRenderer}, L{BaseEntry}, and template
+    @type args: dict
+    """
+    pass
+
+def cb_story(args = {'renderer':'The Blosxom renderer', 
+                     'entry':'The entry to render',
+                     'template':'The template to be filled in'}):
+    """
+    A callback that is called before a story flavour template is rendered
+    
+    C{cb_story} is called before the variables in the entry are substituted
+    into the template.  This is the place to modify the story template based
+    on the entry content.  You have access to all the content variables via 
+    entry.
+    
+    Blosxom 2.0 calls this callback 'story'
+
+    C{args} contains
+    
+      - C{'renderer'} - the L{BlosxomRenderer} that called the callback
+      - C{'entry'} - a {BaseEntry}to be rendered
+      - C{'template'} - a string containing the flavour template to be processed
+
+    @param args: a dict containing a L{BlosxomRenderer}, L{BaseEntry}, and template
+    @type args: dict
+    """
+    pass
+
+def cb_foot(args = {'renderer':'The Blosxom renderer', 
+                    'entry':'The entry to render',
+                    'template':'The template to be filled in'}):
+    """
+    A callback that is called before a footflavour template is rendered
+    
+    C{cb_foot} is called before the variables in the entry are substituted
+    into the template.  This is the place to modify the foot template based
+    on the entry content.  You have access to all the content variables via 
+    entry.
+    
+    Blosxom 2.0 calls this callback 'foot'
+
+    C{args} contains
+    
+      - C{'renderer'} - the L{BlosxomRenderer} that called the callback
+      - C{'entry'} - a {BaseEntry}to be rendered
+      - C{'template'} - a string containing the flavour template to be processed
+
+    @param args: a dict containing a L{BlosxomRenderer}, L{BaseEntry}, and template
+    @type args: dict
+    """
+    pass
+

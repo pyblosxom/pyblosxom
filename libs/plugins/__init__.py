@@ -70,9 +70,6 @@ def initialize_plugins(configdict):
         for comp in name.split(".")[1:]:
             _module = getattr(_module, comp)
 
-        if _module.__dict__.has_key("initialize"):
-            _module.initialize()
-
         catalogue_plugin(_module)
 
         plugins.append(_module)
