@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 
-import sys, time, os, re, random
+import sys, time, os, re, random, pdb
+pdb.set_trace()
 
 entryDelim = re.compile( r"^--------$", re.MULTILINE )
 sectionDelim = re.compile( r"^-----$", re.MULTILINE )
 
 DEFAULTBREAKS = 1
 
-print "start"
 def convert(inputfile, output_dir_root):    
     input = open(inputfile).read()
     entries = entryDelim.split(input)
-    print "start"
     for entry in entries:
         if entry.strip():
             sections = sectionDelim.split(entry)
@@ -23,7 +22,6 @@ def convert(inputfile, output_dir_root):
             #    no extendedbody is created
             extendedbody = ""
             if len(sections) > 2:
-                print sections
                 extendedbody = sections[2].split(":",1)[1]
             fields = sections[0].strip().split("\n")
             publish = 0
