@@ -156,7 +156,7 @@ class PyBlosxom:
                 'date' : time.strftime('%a, %d %b %Y',timetuple)}
 
 
-    def processEntry(self, filename, current_date):
+    def processEntry(self, filename, current_date, cache):
         """Main workhorse of pyblosxom stories, comments and other miscelany goes
         here"""
 
@@ -164,24 +164,17 @@ class PyBlosxom:
             if template != '':
                 print tools.parseitem(text, tools.parse(text, template)).replace(r'\$', '$')
 
-        entryData = {}
-        try:
-            story = file(filename).readlines()
-        except:
-            return current_date
-        cachedFile = filename + self.py['cache_ext']
-        if os.path.isfile(cachedFile) and os.stat(cachedFile)[8] >= self.py['mtime']:
-            cached = 1
-            try:
-                fp = file(cachedFile, 'rb')
-                entryData = pickle.load(fp)
-                fp.close()
-            except:
-                cached = 0
-        else:
-            cached = 0
+        cache.load(self.py.get('cacheConfig', ''), filename)
 
-        if not cached:
+        if cache.isCached():
+            entryData = cache.getEntry()
+        else:
+            entryData = {}
+            try:
+                story = file(filename).readlines()
+            except:
+                return current_date
+
             if len(story) > 0:
                 entryData['title'] = story.pop(0).strip()
 
@@ -206,14 +199,7 @@ class PyBlosxom:
                 else:
                     entryData['body'] = ''.join(story)
             
-            if int(self.py['cache_enable']):
-                try:
-                    fp = file(cachedFile, 'w+b')
-                    pickle.dump(entryData, fp, 1)
-                    fp.close()
-                except:
-                    # Somehow we cannot create a cache file
-                    pass
+            cache.saveEntry(entryData)
 
         if re.search(r'\Wxml', self.py['content-type']):
             entryData['body'] = cgi.escape(entryData['body'])
@@ -267,15 +253,18 @@ class PyBlosxom:
         
         if self.flavour.has_key('head'): print tools.parse(self.py, self.flavour['head'])
         if self.flavour.has_key('story'):
+            cacheDriver = tools.importName('libs.cache', self.py.get('cacheDriver', 'base'))
+            cache = cacheDriver.blosxomCache()
             # Body stuff
             current_date = ''
             count = 1
             for entry in valid_list:
                 self.py.update(entry)
-                current_date = self.processEntry(entry['filename'], current_date)
+                current_date = self.processEntry(entry['filename'], current_date, cache)
                 if self.py['pi_yr'] == '' and count >= int(self.py['num_entries']):
                     break
                 count += 1
+            cache.close()
         
         if self.flavour.has_key('date_foot'): print tools.parse(self.py, self.flavour['date_foot'])
         if self.flavour.has_key('foot'): print tools.parse(self.py, self.flavour['foot'])

@@ -1,3 +1,11 @@
+2003-02-08 Wari Wahab <pyblosxom@wari.per.sg>
+	* Totally restructured the way caching works now. Two types of cache
+	  drivers now available, a file pickle (works like pyblosxom 0.6 but
+	  you can specify a different directory to store files) and a driver
+	  to cache data in a python shelve
+	* Optimized pyblosxom.py to not read entries at all when data is
+	  already cached
+
 2003-02-07 Wari Wahab <pyblosxom@wari.per.sg>
 	* Fixed PATH_INFO data that was actually set when using cgiwrap even
 	  if it's empty
