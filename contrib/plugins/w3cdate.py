@@ -17,16 +17,10 @@ import time
 from Pyblosxom import tools
 
 def cb_story(args):
-    request = tools.get_registry()["request"]
-    data = request.getData()
-
-    entry_list = data['entry_list']
-        
-    for i in range(len(entry_list)):
-        entry = entry_list[i]
-        t = entry['timetuple']
-        # adjust for daylight savings time
-        tzoffset = 0
-        if time.timezone != 0:
-            tzoffset = time.altzone
-        entry['w3cdate'] = xml.utils.iso8601.tostring(time.mktime(t),tzoffset)
+    entry = args['entry']
+    time_tuple = entry['timetuple']
+    tzoffset = time.timezone
+		# if is_dst flag set, adjust for daylight savings time
+    if time_tuple[8] == 1:
+        tzoffset = time.altzone
+    entry['w3cdate'] = xml.utils.iso8601.tostring(time.mktime(time_tuple),tzoffset)    
