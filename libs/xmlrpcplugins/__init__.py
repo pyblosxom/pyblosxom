@@ -17,7 +17,7 @@ def initialize_plugins():
 
     Plugins in this directory must have the C{register_xmlrpc_methods} in the
     plugin module. It must return a dict containing the XMLRPC method name as
-    the key, and a function reference as its value. For example:
+    the key, and a function reference as its value. For example::
 
         def helloWorld(request, name):
             return "Hello %s" % name
