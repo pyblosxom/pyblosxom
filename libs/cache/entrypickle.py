@@ -50,6 +50,7 @@ class BlosxomCache(BlosxomCacheBase):
         try:
             self.__makepath(self._cacheFile)
             fp = file(self._cacheFile, "w+b")
+            entrydata.update({'realfilename': self._entryid})
             pickle.dump(entrydata, fp, 1)
         except IOError:
             pass
@@ -58,6 +59,25 @@ class BlosxomCache(BlosxomCacheBase):
     def rmEntry(self):
         if os.path.isfile(self._cacheFile):
             os.remove(self._cacheFile)
+
+
+    def keys(self):
+        import re
+        keys = []
+        cached = []
+        if os.path.isdir(self._config):
+            cached = tools.Walk(self._config, 1, re.compile(r'.*\.entrypickle$'))
+        for cache in cached:
+            cache_data = pickle.load(file(cache))
+            key = cache_data.get('realfilename', '')
+            if not key and os.path.isfile(cache):
+                os.remove(cache)
+            self.load(key)
+            if not self.isCached():
+                self.rmEntry()
+            else:
+                keys.append(key)
+        return keys
 
 
     def __makepath(self, path):

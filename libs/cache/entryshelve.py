@@ -18,12 +18,10 @@ import os
 class BlosxomCache(BlosxomCacheBase):
     def __init__(self, config):
         BlosxomCacheBase.__init__(self, config)
-        self._db = None
+        self._db = shelve.open(self._config)
 
     def load(self, entryid):
         BlosxomCacheBase.load(self, entryid)
-        if self._db is None:
-            self._db = shelve.open(self._config)
 
     def getEntry(self):
         """
@@ -35,7 +33,10 @@ class BlosxomCache(BlosxomCacheBase):
 
     def isCached(self):
         data = self._db.get(self._entryid, {'mtime':0})
-        return data['mtime'] == os.stat(self._entryid)[8]
+        if os.path.isfile(self._entryid):
+            return data['mtime'] == os.stat(self._entryid)[8]
+        else:
+            return None
 
 
     def saveEntry(self, entrydata):
@@ -52,6 +53,18 @@ class BlosxomCache(BlosxomCacheBase):
     def rmEntry(self):
         if self._db.has_key(self._entryid):
             del self._db[self._entryid]
+
+    def keys(self):
+        ret = []
+        for key in self._db.keys():
+            self.load(key)
+            if self.isCached():
+                ret.append(key)
+            else:
+                # Remove this key, why is it there in the first place?
+                del self._db[self._entryid]
+        return ret
+    
 
     def close(self):
         self._db.close()

@@ -21,8 +21,8 @@ class BlosxomCacheBase:
                                 # cache Value of config is derived from
                                 # py['cacheConfig']. Document your driver on
                                 # what should be set here
-    
-    
+
+
     def load(self, entryid):
         self._entryid = entryid # The filename of the entry
         self._entrydata = {}    # The data of the entry
@@ -34,7 +34,7 @@ class BlosxomCacheBase:
         """
         return self._entrydata
 
-    
+
     def isCached(self):
         """
         Returns 0 or 1 based on whether there is cached data, returns 0 is
@@ -42,14 +42,14 @@ class BlosxomCacheBase:
         """
         return 0
 
-    
+
     def saveEntry(self, entrydata):
         """
         Store entrydata in cache
         """
         pass
 
-    
+
     def rmEntry(self):
         """
         Remove cache entry: This is not used by pyblosxom, but used by
@@ -63,6 +63,34 @@ class BlosxomCacheBase:
         Close your cache if necessary.
         """
         pass
+
+
+    def __getitem__(self, name):
+        self.load(name)
+        return self.getEntry()
+
+
+    def __setitem__(self, name, value):
+        self.load(name)
+        self.saveEntry(value)
+
+
+    def __delitem__(self, name):
+        self.load(name)
+        self.rmEntry()
+
+
+    def has_key(self, name):
+        self.load()
+        return self.isCached()
+
+
+    def keys(self):
+        """
+        List out a list of keys for the cache, to be overridden by a subclass
+        if a full dict interface is required.
+        """
+        return []
 
 
 class BlosxomCache(BlosxomCacheBase):
