@@ -26,6 +26,9 @@ py['blog_encoding'] = "iso-8859-1"
 # Where are this blog's entries kept?
 py['datadir'] = "/path/to/blog"
 
+# Where should PyBlosxom log files be kept?
+py['logdir'] = "/path/to/logdir"
+
 # List of strings with directories that should be ignored (e.g. "CVS")
 # ex: py['ignore_directories'] = ["CVS", "temp"]
 py['ignore_directories'] = []
