@@ -1,20 +1,28 @@
 <?xml version="1.0"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
-<book>
+
+<book lang="en">
+
 <bookinfo>
 <title>PyBlosxom Manual</title>
 <subtitle>PyBlosxom Manual for PyBlosxom 1.2</subtitle>
 <edition>PyBlosxom Manual for PyBlosxom 1.2</edition>
-
 
 <!--
   If you do any editing on this document, add your name to the below
   author list.
 -->
 <authorgroup>
-<author><firstname>Will</firstname><surname>Guaraldi</surname></author>
+<author>
+  <firstname>Will</firstname>
+  <surname>Guaraldi</surname>
+  <contrib>Primary author</contrib>
+</author>
 </authorgroup>
+
+<date>$Date$</date>
+<releaseinfo>$Id$</releaseinfo>
 
 <copyright>
   <year>2005</year>
@@ -33,24 +41,20 @@ License".
 </para>
 </legalnotice>
 
-<revhistory>
-
-<revision>
-  <revnumber>0.5</revnumber>
-  <date>21 March 2005</date>
-  <authorinitials>wbg</authorinitials>
-  <revremark>
-    Converted from html to docbook; rewrote chapters on installation and flavours;
-    removed chapter on configuration (folded into installation); added a chapter
-    on writing entries (not sure how I missed an obvious subject like that the
-    first few times around); and tidied some things up.  This version of the 
-    manual goes with PyBlosxom 1.2.
-  </revremark>
-</revision>
-
-</revhistory>
+<abstract>
+<para>
+This manual will cover all aspects of using and developing for PyBlosxom.  It
+is a work in progress.
+</para>
+<para>
+This is release $Id$ of the version of the pyblosxom_manual.docbook file as of 
+$Date$.
+</para>
+</abstract>
 
 </bookinfo>
+
+
 
 <toc></toc>
 
@@ -84,6 +88,31 @@ Details on the mailing list are on the web-site at http://pyblosxom.sourceforge.
 </para>
 </sect1>
 
+<sect1>
+<title>Revision History</title>
+<para>
+This is a revision history of this document.  Any major revisions should
+have an item here describing the changes and who did them.
+</para>
+<para>
+<revhistory>
+
+<revision>
+  <revnumber>0.1</revnumber>
+  <date>21 March 2005</date>
+  <authorinitials>wbg</authorinitials>
+  <revremark>
+    Converted from html to docbook; rewrote chapters on installation and flavours;
+    removed chapter on configuration (folded into installation); added a chapter
+    on writing entries (not sure how I missed an obvious subject like that the
+    first few times around); and tidied some things up.  This version of the 
+    manual goes with PyBlosxom 1.2.
+  </revremark>
+</revision>
+
+</revhistory>
+</para>
+</sect1>
 </preface>
 
 
