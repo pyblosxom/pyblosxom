@@ -3,12 +3,5 @@ include ChangeLog
 include INSTALL
 include LICENSE
 recursive-include Pyblosxom *.py
-recursive-include contrib *.py
 recursive-include web *
 recursive-include docs *
-recursive-include contrib/plugins/comments *
-recursive-include contrib/flavour_examples *.1993
-recursive-include contrib/flavour_examples *.html
-recursive-include contrib/flavour_examples *.esf
-recursive-include contrib/flavour_examples *.atom
-recursive-include contrib/flavour_examples *.code
