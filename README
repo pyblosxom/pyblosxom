@@ -22,6 +22,10 @@ Pertinent to users:
 4. Upped our Python requirement to Python 2.2.  If you have an earlier
    version than that, you won't be able to use PyBlosxom 1.2.
 
+5. Changed "defaultFlavour" to "default_flavour".  This property allows
+   you to specify the flavour to use by default if the URI doesn't
+   specify one.  It default to "html".
+
 
 Pertinent to developers and plugin developers:
 ----------------------------------------------
