@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
 <book>
 <bookinfo>
 <title>PyBlosxom Manual</title>
+<subtitle>PyBlosxom Manual for PyBlosxom 1.2</subtitle>
+<edition>PyBlosxom Manual for PyBlosxom 1.2</edition>
+
 
 <!--
   If you do any editing on this document, add your name to the below
@@ -12,8 +15,6 @@
 <authorgroup>
 <author><firstname>Will</firstname><surname>Guaraldi</surname></author>
 </authorgroup>
-
-<edition>PyBlosxom Manual for PyBlosxom 1.2</edition>
 
 <copyright>
   <year>2005</year>
@@ -31,6 +32,24 @@ copy of the license is included in the appendix entitled "GNU Free Documentation
 License".
 </para>
 </legalnotice>
+
+<revhistory>
+
+<revision>
+  <revnumber>0.5</revnumber>
+  <date>21 March 2005</date>
+  <authorinitials>wbg</authorinitials>
+  <revremark>
+    Converted from html to docbook; rewrote chapters on installation and flavours;
+    removed chapter on configuration (folded into installation); added a chapter
+    on writing entries (not sure how I missed an obvious subject like that the
+    first few times around); and tidied some things up.  This version of the 
+    manual goes with PyBlosxom 1.2.
+  </revremark>
+</revision>
+
+</revhistory>
+
 </bookinfo>
 
 <toc></toc>
@@ -65,30 +84,6 @@ Details on the mailing list are on the web-site at http://pyblosxom.sourceforge.
 </para>
 </sect1>
 
-<sect1>
-<title>Revision History</title>
-<para>
-The following is a revision history of this document:
-</para>
-
-<revhistory>
-
-<revision>
-  <revnumber>0.5</revnumber>
-  <date>21 March 2005</date>
-  <authorinitials>wbg</authorinitials>
-  <revremark>
-    Converted from html to docbook; rewrote chapters on installation and flavours;
-    removed chapter on configuration (folded into installation); added a chapter
-    on writing entries (not sure how I missed an obvious subject like that the
-    first few times around); and tidied some things up.  This version of the 
-    manual goes with PyBlosxom 1.2.
-  </revremark>
-</revision>
-
-</revhistory>
-
-</sect1>
 </preface>
 
 
@@ -904,6 +899,15 @@ Here's a really basic set of templates for an html flavour.
 </entry>
 </row>
 <row>
+<entry>date_head.html</entry>
+<entry>
+<programlisting role="html"><![CDATA[
+<div class="date">
+<h2>$date</h2>
+]]></programlisting>
+</entry>
+</row>
+<row>
 <entry>story.html</entry>
 <entry>
 <programlisting role="html"><![CDATA[
@@ -915,6 +919,14 @@ $body
   path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | 
   <a href="$base_url/$file_path.$flavour">permalink</a>
 </p>
+</div>
+]]></programlisting>
+</entry>
+</row>
+<row>
+<entry>date_foot.html</entry>
+<entry>
+<programlisting role="html"><![CDATA[
 </div>
 ]]></programlisting>
 </entry>
@@ -1276,6 +1288,53 @@ There's no reason that all your entries have to come from editing blog entry
 text files in your datadir.  You could rig up procmail to look for emails
 that meet a certain description and convert those emails into blog entries.
 </para>
+
+<sect2>
+<title>weblog-add</title>
+<para>
+You can find the weblog-add CGI script in the Plugin Registry at
+http://pyblosxom.sourceforge.net/ .  This script allows you to create
+entries using a webform.  It doesn't allow you to edit entries after
+the fact and it's pretty basic.  However, it does work and it does allow
+you to create entries when you don't have access to the filesystem.
+</para>
+<para>
+To setup the weblog-add script, do the following:
+</para>
+<orderedlist numeration="arabic">
+<listitem>
+<para>
+copy the weblog-add.py file into your CGI root
+</para>
+</listitem>
+<listitem>
+<para>
+open up the weblog-add.py file in your favorite text editor and change
+the line for blog_root to your datadir.
+</para>
+</listitem>
+<listitem>
+<para>
+set up your cgi directory so that the web-server forces the user to
+authenticate
+</para>
+<para>
+FIXME - how do you do that?
+</para>
+</listitem>
+<listitem>
+<para>
+make sure the weblog-add.py file has the correct permissions so that it 
+will run as a CGI script
+</para>
+</listitem>
+</orderedlist>
+<para>
+When you're using the weblog-add.py script, make sure you use unique
+file names.  That gets a bit hard as your blog gets so big that you
+don't remember what file names exist and what don't.
+</para>
+</sect2>
 
 <sect2>
 <title>Using w.bloggar</title>
@@ -1913,6 +1972,20 @@ py["logdir"] = "/home/will/blog/logs/"
   </para>
   <programlisting role="python">
 py["num_entries"] = 20
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>default_flavour</entry>
+<entry>no</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this specifies what the default flavour should be if the URI doesn't specify
+  a flavour.  this defaults to "html".
+  </para>
+  <programlisting role="python">
+py["default_flavour"] = "joy"
   </programlisting>
 </entry>
 </row>
