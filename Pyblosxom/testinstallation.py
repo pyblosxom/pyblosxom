@@ -96,10 +96,12 @@ def test_installation(request):
 
     print "------"
     print "Now we're going to verify your plugin configuration."
-    if config.has_key("load_plugins"):
+
+    if config.has_key("plugin_dirs"):
+
         from Pyblosxom import plugin_utils
-        plugin_utils.initialize_plugins(config.get("plugin_dirs", []),
-                                        config.get("load_plugins", []))
+        plugin_utils.initialize_plugins(config["plugin_dirs"],
+                                        config.get("load_plugins", None))
 
         no_verification_support = []
 
