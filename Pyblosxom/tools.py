@@ -150,7 +150,7 @@ def parse(var_dict, template):
     return u'' + VAR_REGEXP.sub(Replacer(var_dict).replace, template)
 
 
-def Walk(root = '.', recurse = 0, pattern = '', return_folders = 0 ):
+def Walk(root='.', recurse=0, pattern='', return_folders=0 ):
     """
     This function walks a directory tree starting at a specified root folder,
     and returns a list of all of the files (and optionally folders) that match
