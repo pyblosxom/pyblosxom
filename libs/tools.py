@@ -112,7 +112,7 @@ def Walk(root = '.',
         return result
 
     # expand pattern
-    pattern = pattern or '*'
+    pattern = pattern or re.compile('.*')
     pat_list = string.splitfields( pattern , ';' )
     
     # check each file
