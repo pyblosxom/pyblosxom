@@ -18,25 +18,20 @@ the site.
 
 # Please change this value to where you pyblosxom is installed.
 #BASEURL = 'http://roughingit.subtlehints.net/pyblosxom/'
-BASEURL = 'http://192.168.0.12/blog/'
+# Modify this to where your pyblosxom and config.py is installed
+#sys.path.append('/path/to/config')
+#sys.path.append('/path/to/Pyblosxom/dir')
 
 import re, sgmllib, sys, urllib, xmlrpclib
 from xml.sax import parseString, SAXParseException
 from xml.sax.handler import ContentHandler
 import cPickle, os
 
-# Modify this to where your pyblosxom is installed
-#sys.path.append('/home/subtle/www/roughingit')
-#sys.path.append('/home/subtle/src/pyblosxom')
-sys.path.append('/home/twl/pyblog/blosxom')
-sys.path.append('/home/twl/pyblog/pyblosxom')
 # Get our pyblosxom specifics here
 from Pyblosxom import tools
 from Pyblosxom.pyblosxom import PyBlosxom
 from Pyblosxom.Request import Request
 import config
-
-#import wingdbstub
 
 def excerpt(filename, title, body, blogname):
     """ filename,title,body => url,args
@@ -55,8 +50,7 @@ def excerpt(filename, title, body, blogname):
     body = body[:252]
 
     url = BASEURL + filename
-    url = re.sub('.txt$','',url)
-#    url = re.sub('\.[a-zA-Z]+$','.html', url)
+    url = re.sub('\.[a-zA-Z]+$','',url)
 
     arg = {}
     arg['url'] = url
