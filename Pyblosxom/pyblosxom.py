@@ -7,6 +7,9 @@ import os, time, re, sys
 import tools
 from entries.fileentry import FileEntry
 
+VERSION = "0.9.1"
+VERSION_SPLIT = (0, 9, 1)
+
 class PyBlosxom:
     """
     This is the main class for PyBlosxom functionality.  It handles

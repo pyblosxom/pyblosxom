@@ -3,6 +3,12 @@
 import os.path, sys, os
 from distutils.core import setup
 
+# this affects the names of all the directories we do stuff with
+sys.path.insert(0, "./")
+from Pyblosxom import pyblosxom
+VER = pyblosxom.VERSION
+PVER = "pyblosxom-" + VER
+
 def Walk(root='.'):
     """
     A really really scaled down version of what we have in tools.py.
@@ -29,10 +35,6 @@ def Walk(root='.'):
                 
     return result
 
-# this affects the names of all the directories we do stuff with
-VERSION="cvs"
-PVER = "pyblosxom-" + VERSION
-
 # we grab all the files in the contrib directory
 contrib_folders = Walk("contrib")
 
@@ -46,6 +48,7 @@ platform = sys.platform
 matrix = { "win32": "win32",
            "linux": "nix",
            "cygwin": "nix",
+           "netbsd": "nix",
            "openbsd": "nix",
            "freebsd": "nix" }
 
@@ -113,7 +116,7 @@ if sys.version < '2.2.3':
     DistributionMetadata.download_url = None
 
 setup(name="pyblosxom",
-    version=VERSION,
+    version=VER,
     description="pyblosxom weblog engine",
     author="Wari Wahab",
     author_email="wari@home.wari.org",
