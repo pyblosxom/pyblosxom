@@ -93,18 +93,11 @@ class Replacer:
         key = matchobj.group(1)
 
         if key.find("(") != -1 and key.find(")"):
-            # FIXME - security issue here because we're using eval.
-            # course, the things it allows us to do can be done using
-            # plugins much more easily--so it's kind of a moot point.
-            try:
-                args = eval(key[key.find("("):] + ",")
-            except:
-                args = ()
-
+            args = key[key.find("(")+1:key.rfind(")")]
             key = key[:key.find("(")]
 
         else:
-            args = ()
+            args = None
 
         if self.var_dict.has_key(key):
             r = self.var_dict[key]
@@ -112,7 +105,13 @@ class Replacer:
             # if the value turns out to be a function, then we call it
             # with the args that we were passed.
             if callable(r):
-                r = r(*args)
+                # FIXME - security issue here because we're using eval.
+                # course, the things it allows us to do can be done using
+                # plugins much more easily--so it's kind of a moot point.
+                if args:
+                    r = eval("r(" + args + ")")
+                else:
+                    r = r()
 
             if type(r) != types.StringType and type(r) != types.UnicodeType:
                 r = str(r)
