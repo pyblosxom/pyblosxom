@@ -1,3 +1,6 @@
+2003-01-27 Wari Wahab <pyblosxom@wari.per.sg>
+	* Fixed some ugly defaults in the example flavours
+
 2003-01-22 Wari Wahab <pyblosxom@wari.per.sg>
 	* Changed the text/xml detection just in case someone wants to use
 	  application/rss+xml as the content-type for rss feeds. This will
