@@ -1,3 +1,11 @@
+2003-01-09 Wari Wahab <pyblosxom@wari.per.sg>
+	* Cleanup some codes of the main pyblosxom.cgi
+	* Remove conditionalHTTP and 404 error generator to be plugins (placed
+	  in the contrib directory so users have to choice to include it in or
+	  not)
+	* Added weblogs.com and blo.gs pings plugin, also in the contrib
+	  directory
+
 2003-01-07 Wari Wahab <pyblosxom@wari.per.sg>
 	* Removed two files from the plugins directory because they are not
 	  relevant to the new drop-in plugins architecture
