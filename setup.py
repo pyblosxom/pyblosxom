@@ -104,7 +104,7 @@ setup(name="pyblosxom",
     author_email="wari@home.wari.org",
     url="http://roughingit.subtlehints.net/pyblosxom",
     packages=['Pyblosxom', 'Pyblosxom.cache', 'Pyblosxom.entries', 'Pyblosxom.renderers'],
-    licence = 'MIT',
+    license = 'MIT',
     long_description =
 """Pyblosxom is a weblog engine that uses the filesystem as the database of
 your entries.
