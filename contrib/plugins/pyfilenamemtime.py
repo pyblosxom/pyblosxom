@@ -20,14 +20,14 @@ def cb_filestat(args):
     mtch = DAYMATCH.search(os.path.basename(filename))
     if mtch:
         try:
-			year = int(mtch.groups()[0])
-			mo = int(mtch.groups()[1])
-			day = int(mtch.groups()[2])
-			hr = int(mtch.groups()[3])
-			minute = int(mtch.groups()[4]) 
-			mtime = time.mktime((year,mo,day,hr,minute,0,0,0,-1))
+            year = int(mtch.groups()[0])
+            mo = int(mtch.groups()[1])
+            day = int(mtch.groups()[2])
+            hr = int(mtch.groups()[3])
+            minute = int(mtch.groups()[4]) 
+            mtime = time.mktime((year,mo,day,hr,minute,0,0,0,-1))
         except:
-			# TODO: Some sort of debugging code here?
+            # TODO: Some sort of debugging code here?
             pass
 
     if mtime: 
