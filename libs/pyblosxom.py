@@ -166,10 +166,11 @@ class PyBlosxom:
 
         cache.load(self.py.get('cacheConfig', ''), filename)
 
+        entryData = {}
         if cache.isCached():
             entryData = cache.getEntry()
-        else:
-            entryData = {}
+        
+        if not entryData:
             try:
                 story = file(filename).readlines()
             except:
