@@ -75,7 +75,7 @@ def readComment(filename):
     class cmtHandler(ContentHandler):
         def __init__(self, cmt):
             self._data = ""
-	    self.cmt = cmt
+            self.cmt = cmt
         def startElement(self, name, atts):
             self._data = ""
         def endElement(self, name):
