@@ -81,7 +81,7 @@ class BlosxomCacheBase:
 
 
     def has_key(self, name):
-        self.load()
+        self.load(name)
         return self.isCached()
 
 
