@@ -1,4 +1,9 @@
 2003-02-11 Wari Wahab <pyblosxom@wari.per.sg>
+	* Config.py no longer used an INI file, this will load faster than
+	  having an INI file to parse
+	* Updated config.py with values that reflect the current pyblosxom CVS
+	  state.
+	* py['tb_data'] no longer a default value in pyblosxom.py
 	* Added a contrib/entryparsers/ directory and basically store what we
 	  can handle over there. Users get a standard txt.py entryparser as
 	  default

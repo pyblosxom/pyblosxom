@@ -138,7 +138,7 @@ class PyBlosxom:
         tb = '-'
         tb_id = '%s/%s' % (absolute_path, fn)
         tb_id = re.sub(r'[^A-Za-z0-9]', '_', tb_id)
-        if os.path.isfile('%s/%s.stor' % (self.py['tb_data'], tb_id)):
+        if os.path.isfile('%s/%s.stor' % (self.py.get('tb_data', ''), tb_id)):
             tb = '+'
 
         return {'mtime' : mtime, 
