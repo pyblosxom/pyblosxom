@@ -26,6 +26,13 @@ Pertinent to users:
    you to specify the flavour to use by default if the URI doesn't
    specify one.  It default to "html".
 
+6. We moved the main PyBlosxom site to http://pyblosxom.sourceforge.net/ .
+   There's a "powered by pyblosxom" image at:
+
+      http://pyblosxom.sourceforge.net/images/pb_pyblosxom.gif
+
+   You should adjust your templates accordingly.
+
 
 Pertinent to developers and plugin developers:
 ----------------------------------------------
