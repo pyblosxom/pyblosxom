@@ -6,10 +6,12 @@ import re, os, sys, cgi, codecs
 """
 BlosxomRenderer can use the following keys from config.py:
 
-py['blosxom_custom_flavours'] is a string containing additional flavour templates to be recognized
-by PyBlosxom.  If you supply this string, it must begin with '|' and each template name needs to be
-separated by '|'.  The string cannot end with '|'
+py['blosxom_custom_flavours'] is a list of strings containing additional
+flavour templates to be recognized by PyBlosxom.
 
+examples::
+
+    py["blosxom_custom_flavours"] = ["registry", "magictemplate"]
 """
 
 class BlosxomRenderer(RendererBase):
@@ -53,7 +55,11 @@ class BlosxomRenderer(RendererBase):
         data = self._request.getData()
         config = self._request.getConfiguration()
 
-        custom_flavours = config.get('blosxom_custom_flavours','')
+        custom_flavours = config.get('blosxom_custom_flavours', [])
+        if custom_flavours:
+            custom_flavours = "|" + "|".join(custom_flavours)
+        else:
+            custom_flavours = ""
         
         pattern = re.compile(r'(config|content_type|head|date_head|date_foot|foot|story'+custom_flavours+')\.' 
                              + taste)
