@@ -40,6 +40,11 @@ doc_files = ["INSTALL", "LICENSE",
              fixf("docs/README.contrib"), fixf("docs/README.plugins"), 
              fixf("docs/ReadMeForPlugins.py")]
 
+def is_goodfile(path, f):
+    if f in ["CVS"] or os.path.isdir(path + os.sep + f):
+        return 0
+    return 1
+
 # FIXME - this doesn't account for a variety of platforms
 if sys.platform == "win32":
     pydf = []
@@ -47,7 +52,7 @@ if sys.platform == "win32":
 
     for mem in contrib_folders:
         f = os.listdir(mem)
-        f = [mem + os.sep + m for m in f if m.endswith(".py")]
+        f = [mem + os.sep + m for m in f if is_goodfile(mem, m)]
         pydf.append( (root + mem, f) )
 
 elif sys.platform in ["linux1", "linux2"]:
@@ -61,7 +66,7 @@ elif sys.platform in ["linux1", "linux2"]:
     root = "/usr/share/" + PVER + "/"
     for mem in contrib_folders:
         f = os.listdir(mem)
-        f = [mem + os.sep + m for m in f if m.endswith(".py")]
+        f = [mem + os.sep + m for m in f if is_goodfile(mem, m)]
         pydf.append( (root + mem, f) )
 
 else:
