@@ -128,6 +128,7 @@ def prepare(args):
         f = file(filename)
         stats = cPickle.load(f)
         stats._request = request
+        stats._config = config
         f.close()
 
     except IOError:
