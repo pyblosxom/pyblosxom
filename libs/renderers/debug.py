@@ -46,8 +46,7 @@ class Renderer(RendererBase):
         print "------------------------------------------------------"
         print "Cached Titles:"
         print "------------------------------------------------------"
-        cache_driver = tools.importName('libs.cache', config.get('cacheDriver', 'base'))
-        cache = cache_driver.BlosxomCache(config.get('cacheConfig', ''))
+        cache = tools.get_registry()['cache']
         for content in self._content:
             cache.load(content['filename'])
             if cache.isCached():
@@ -57,8 +56,6 @@ class Renderer(RendererBase):
         print "------------------------------------------------------"
         print "Cached Entry Bodies:"
         print "------------------------------------------------------"
-        cache_driver = tools.importName('libs.cache', config.get('cacheDriver', 'base'))
-        cache = cache_driver.BlosxomCache(config.get('cacheConfig', ''))
         for content in self._content:
             cache.load(content['filename'])
             if cache.isCached():
