@@ -2,7 +2,7 @@
 """
 Generates a calendar along the lines of this one:
 
-    January 2003
+<   January 2003   >
 Mo Tu We Th Fr Sa Su
        1  2  3  4  5
  6  7  8  9 10 11 12
@@ -18,17 +18,24 @@ pyblosxom section:
 
    calendarstyle = pre | css
 
-with default for pre.  In css mode, it has the following CSS things:
+with default for pre.  In css mode, it uses the following CSS classes:
 
-   calendarhead
+   blosxomCalendar      - for the calendar table
+   blosxomCalendarHead  - for the month year header
+   blosxomCalendarEmpty - for filler days
+   blosxomCalendarCell  - for calendar days that aren't today
+   blosxomCalendarToday - today (if it's on the calendar)
 
-(Should we add more?)
 """
 __author__ = "Will Guaraldi - willg@bluesock.org"
 __version__ = "$Id$"
 
 from libs import tools
 import time, os, calendar, sys, string
+
+YEAR = 0
+MONTH = 1
+DAY = 2
 
 class PyblCalendar:
 	def __init__(self, py, entryList):
@@ -49,8 +56,8 @@ class PyblCalendar:
 		"""
 		Generates the calendar.  We'd like to walk the archives
 		for things that happen in this month and mark the dates
-		accordingly.  And possibly turn this into a table with
-		CSS markup and such.
+		accordingly.  After doing that we pass it to a formatting
+		method which turns the thing into HTML.
 		"""
 		root = self._py["datadir"]
 		baseurl = self._py.get("base_url", "")
@@ -79,8 +86,8 @@ class PyblCalendar:
 			if tools.month2num.has_key(temp):
 				temp = int(tools.month2num[temp])
 			else:
-				temp = today[1]
-		today = tuple([today[0]] + [temp] + list(today)[2:])
+				temp = today[MONTH]
+		today = tuple([today[YEAR]] + [temp] + list(today)[2:])
 
 		archiveList = tools.Walk(root)
 
@@ -92,19 +99,30 @@ class PyblCalendar:
 
 			# we keep track of all the ones we got so we can figure
 			# out what the previous and next months are
-			yearmonth[str(timetuple[0]) + string.zfill(timetuple[1], 2)] = time.strftime("%b", timetuple)
+			yearmonth[str(timetuple[YEAR]) + string.zfill(timetuple[MONTH], 2)] = time.strftime("%b", timetuple)
 
-			if timetuple[0] != today[0] or timetuple[1] != today[1]:
+			if timetuple[0:2] != today[0:2]:
 				continue
 
-			day = str(timetuple[2]).rjust(2)
+			day = str(timetuple[DAY]).rjust(2)
 			
 			if highlight.has_key(day):
 				continue
 
 			datepiece = time.strftime("%Y/%b/%d", timetuple)
-			highlight[day] = (baseurl + "/" + datepiece, day)
+			highlight[day] = (0, baseurl + "/" + datepiece, day)
 
+
+		# we figure out what today's date actually is and if it's on
+		# the calendar we're showing, then we toss in a highlight
+		# for that day
+		todaysdate = time.localtime()
+		if todaysdate[0:2] == today[0:2]:
+			day = str(todaysdate[DAY]).rjust(2)
+			if highlight.has_key(day):
+				highlight[day] = tuple([1] + highlight[day][1:])
+			else:
+				highlight[day] = (1, "", day)
 
 		# create the calendar
 		calendar.setfirstweekday(calendar.SUNDAY)
@@ -154,24 +172,35 @@ class PyblCalendar:
 			else:
 				return " "
 
-		cal2 = ["<table border=\"0\" cellspacing=\"4\" cellpadding=\"0\">"]
+		cal2 = ["<table class=\"blosxomCalendar\">"]
 		cal2.append("<tr>")
 		cal2.append("<td align=\"left\">" + fixl(cal[0][0]) + "</td>")
-		cal2.append("<td colspan=\"5\" align=\"center\"><span class=\"calendarhead\">" + cal[0][1] + "</span></td>")
+		cal2.append("<td colspan=\"5\" align=\"center\" class=\"blosxomCalendarHead\">" + cal[0][1] + "</td>")
 		cal2.append("<td align=\"right\">" + fixl(cal[0][2]) + "</td>")
 		cal2.append("</tr>")
 		cal2.append("<tr><td>" + "</td><td>".join(cal[1]) + "</td></tr>")
 
 		def fixday(highlight, day):
-			if day == 0: return "  "
+			if day == 0: return "<td class=\"blosxomCalendarEmpty\">&nbsp;</td>"
 			day = str(day).rjust(2)
 			if highlight.has_key(day):
-				return "<a href=\"%s\">%s</a>" % (highlight[day][0], highlight[day][1])
-			return day
+				key = highlight[day]
+				if key[0] == 1:
+					out = ["<td class=\"blosxomCalendarToday\">"]
+				else:
+					out = ["<td class=\"blosxomCalendarCell\">"]
+
+				if key[1]:
+					out.append("<a href=\"%s\">%s</a>" % (key[1], key[2]))
+				else:
+					out.append("%s" % key[2])
+				out.append("</td>")
+				return "".join(out)
+			return "<td class=\"blosxomCalendarCell\">%s</td>" % day
 
 		for mem in cal[2:]:
 			mem = [fixday(highlight, m) for m in mem]
-			cal2.append("<tr><td align=\"center\">" + "</td><td align=\"center\">".join(mem) + "</td></tr>")
+			cal2.append("<tr>" + "".join(mem) + "</tr>")
 
 		cal2.append("</table>")
 
@@ -197,7 +226,9 @@ class PyblCalendar:
 			if day == 0: return "  "
 			day = str(day).rjust(2)
 			if highlight.has_key(day):
-				return "<a href=\"%s\">%s</a>" % (highlight[day][0], highlight[day][1])
+				key = highlight[day]
+				if key[0] == 0 and key[1]:
+					return "<a href=\"%s\">%s</a>" % (key[1], key[2])
 			return day
 
 		for mem in cal[2:]:
