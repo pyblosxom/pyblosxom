@@ -108,7 +108,7 @@ def pingback(request, source, target):
         data = request.getData()
         from libs.entries.fileentry import FileEntry
         datadir = config['datadir']
-        entry = FileEntry(config, datadir+'/'+target_file+'.txt', datadir)
+        entry = FileEntry(config, os.path.join(datadir,target_file+'.txt'), datadir)
         data['entry_list'] = [ entry ]
         writeComment(config, data, cmt)
                
