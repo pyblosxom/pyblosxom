@@ -1,0 +1,59 @@
+To install comments:
+
+1. Install plugins/commentdecorator.py in your lib/plugins directory
+
+2. If you want trackbacks, install trackback.cgi in your pyblosxom 
+   directory and make it executable as a CGI.  The CGI must be callable
+   via a URI on your blog site. 
+
+3. If you want pingbacks, install xmlrpcplugins/pingback.py in your
+   lib/xmlrpcplugins directory
+
+4  In config.py, 
+   add 'commentdecorator' to py['load_plugins']
+
+   Comments are stored in a directory which will parallel the data
+   directory.  The comments themselves are stored as XML files named
+   entryname-datetime.suffix.  The comment system allows you to specify
+   the directory where the comment directory tree will stored, and the
+   suffix used for comment files.
+
+   set py['comment_dir'] to the directory (in your data directory)
+   where you want the comments to be stored.  The default value is a
+   directory named 'comments' in your data directory.
+
+   set py['comment_ext'] to the change comment file extension.  The
+   default file extension is 'cmt'
+
+5  The comment system can notify you via e-mail when new
+   comments/trackbacks/pingbacks are posted.  If you want to enable this 
+   feature, create the following config.py entries:
+
+   py['comment_smtp_server'] - your SMTP server
+   py['comment_smtp_from'] - the address sending the notification
+   py['comment_smtp_to'] - the address receiving the notification
+
+   set for e-mail notification stuff - fix vars
+
+6. Copy the flavour files from the flavours directory.  There are
+   flavours for .html and rss.  You should copy both.  The comment-story
+   template is used to format a single entry that has comments .  The
+   comment template is used to format a single
+   comment/trackback/pingback.  The comment-form template provides the
+   form used to enter new comments.
+
+7. Edit the comment-story, comment, and comment-form templates.  You
+   will have to adjust trackback URI's to match your webserver
+   configuration.  Variables that are available are:
+
+   Available in the story and comment-story templates:
+   $num_comments - Contains an integer count of the number of comments
+   associated with this entry
+   
+   Available in the comment template:
+   $cmt_title - the title of the comment
+   $cmt_description - the content of the comment or excerpt of the trackback/pingback
+   $cmt_link - the pingback link referring to this entry
+   $cmt_author - the author of the comment or trackback
+   $cmt_pubDate - the date and time of the comment/trackback/pingback
+   $cmt_source - the source of the trackback
