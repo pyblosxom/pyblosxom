@@ -2,6 +2,7 @@
 This is the main module for PyBlosxom functionality.  PyBlosxom's setup 
 and default handlers are defined here.
 """
+from __future__ import nested_scopes
 import os, time, re, sys
 import tools
 from entries.fileentry import FileEntry

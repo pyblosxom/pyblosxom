@@ -33,7 +33,7 @@ class PyblCategories:
         itemlist = item.split(os.sep)
 
         num = 0
-        for key in self._elistmap:
+        for key in self._elistmap.keys():
             if key.find(item) == 0:
                 num = num + self._elistmap[key]
         num = " (%d)" % num

@@ -70,15 +70,16 @@ def readComment(filename):
     @returns: a comment dict
     """
     
-    from xml.sax import saxutils, make_parser, SAXException
-    from xml.sax.handler import feature_namespaces
-    class cmtHandler(saxutils.DefaultHandler):
+    from xml.sax import make_parser, SAXException
+    from xml.sax.handler import feature_namespaces, ContentHandler
+    class cmtHandler(ContentHandler):
         def __init__(self, cmt):
             self._data = ""
+	    self.cmt = cmt
         def startElement(self, name, atts):
             self._data = ""
         def endElement(self, name):
-            cmt['cmt_'+name] = self._data
+            self.cmt['cmt_'+name] = self._data
         def characters(self, content):
             self._data += content
 
@@ -95,9 +96,9 @@ def readComment(filename):
         cmt['cmt_time'] = cmt['cmt_pubDate'] # timestamp as float for comment anchor
         cmt['cmt_pubDate'] = time.ctime(float(cmt['cmt_pubDate']))
     except SAXException:
-        story.close()
+        pass
     except: 
-        story.close()
+        pass
     return cmt
 
 def writeComment(config, data, comment):
@@ -114,7 +115,6 @@ def writeComment(config, data, comment):
     @type: dict
     """
     entry = data['entry_list'][0]
-    datadir = config['datadir']
     cdir = os.path.join(config['comment_dir'],entry['absolute_path'])
     cdir = os.path.normpath(cdir)
     if not os.path.isdir(cdir):

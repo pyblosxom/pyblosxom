@@ -168,14 +168,14 @@ class BlosxomRenderer(RendererBase):
             # whatever it returns as a string
             outputbuffer.append(self._content())
 
-        elif content_type is dict:
+        elif content_type is type({}):
             # if the content is a dict, then we parse it as if it were an
             # entry--except it's distinctly not an EntryBase derivative
             self._content.update(data)
             output = tools.parse(self._content, self.flavour['story'])
             outputbuffer.append(output)
 
-        elif content_type is list:
+        elif content_type is type([]):
             current_date = ''
 
             maxcount = config['num_entries']

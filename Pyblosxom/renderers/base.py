@@ -120,7 +120,7 @@ class RendererBase:
         different way
         """
         self.write('\n'.join(['%s: %s' % (x, self._header[x]) 
-                for x in self._header]))
+                for x in self._header.keys()]))
         self.write('\n\n')
 
 

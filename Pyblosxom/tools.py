@@ -189,7 +189,7 @@ def Walk(root = '.', recurse = 0, pattern = '', return_folders = 0 ):
     if not pattern:
         registry = get_registry()
         ext = registry["request"].getData()['extensions']
-        pattern = re.compile(r'.*\.(' + '|'.join(ext) + r')$')
+        pattern = re.compile(r'.*\.(' + '|'.join(ext.keys()) + r')$')
 
     # check each file
     for name in names:

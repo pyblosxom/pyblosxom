@@ -40,7 +40,7 @@ __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
 
 from Pyblosxom import tools
-import time, os, calendar, sys, string
+import time, calendar, string
 
 class PyblCalendar:
     def __init__(self, request):
