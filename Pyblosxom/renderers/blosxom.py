@@ -1,12 +1,3 @@
-# vim: shiftwidth=4 tabstop=4 expandtab
-from Pyblosxom import tools
-from Pyblosxom.renderers.base import RendererBase
-import re, os, sys, codecs
-try:
-    from xml.sax.saxutils import escape
-except ImportError:
-    from cgi import escape
-
 """
 BlosxomRenderer can use the following keys from config.py:
 
@@ -16,7 +7,17 @@ flavour templates to be recognized by PyBlosxom.
 examples::
 
     py["blosxom_custom_flavours"] = ["registry", "magictemplate"]
+
 """
+
+from Pyblosxom import tools
+from Pyblosxom.renderers.base import RendererBase
+import re, os, sys, codecs
+try:
+    from xml.sax.saxutils import escape
+except ImportError:
+    from cgi import escape
+
 
 class BlosxomRenderer(RendererBase):
     def __init__(self, request, stdoutput = sys.stdout):
@@ -138,12 +139,13 @@ class BlosxomRenderer(RendererBase):
                 self.outputTemplate(output, entry,'date_foot')
             self.dayFlag = 0
             self.outputTemplate(output, entry, 'date_head')
-        self.outputTemplate(output, entry, 'story')
+
+        self.outputTemplate(output, entry, 'story', override=1)
 
         template = u""
         args = self._run_callback("story_end", { "entry": entry, "template": template }) 
             
-        return "".join(output)+args['template'], current_date    
+        return "".join(output) + args['template'], current_date    
 
     def _processContent(self):
         """
@@ -183,10 +185,6 @@ class BlosxomRenderer(RendererBase):
                 output, current_date = self._processEntry(entry, current_date)
                 outputbuffer.append(output)
 
-                # FIXME what's this do?
-                # if entry['pi_yr'] == '':
-                #     break
-
         return self.write(u"".join(outputbuffer))
 
     def render(self, header = 1):
@@ -210,7 +208,7 @@ class BlosxomRenderer(RendererBase):
         self.flavour = self._getFlavour(data.get('flavour', 'html'))
         data['content-type'] = self.flavour['content_type'].strip()
         if header:
-            if self._needs_content_type:
+            if self._needs_content_type and data['content-type'] !="":
                 self.addHeader('Content-type', '%(content-type)s' % data)
 
             self.showHeaders()
@@ -251,23 +249,36 @@ class BlosxomRenderer(RendererBase):
 
         self.write(tools.parse(entry, template))
             
-    def outputTemplate(self, output, entry, flavour_name):
+    def outputTemplate(self, output, entry, flavour_name, override=0):
         """
         Find the flavour template for flavour_name, run any blosxom callbacks,
         substitute entry into it and append the template to the output
         
-        @param output:
+        @param output: list of strings of the output
         @type output: list
 
-        @param entry:
+        @param entry: the entry to render with this flavour template
         @type entry: L{Pyblosxom.entries.base.EntryBase}
 
-        @param flavour_name: - name of the flavour template
+        @param flavour_name: name of the flavour template
         @type flavour_name: string
-        """
-        template = self.flavour.get(flavour_name, '')
 
-        args = self._run_callback(flavour_name, {"entry": entry, "template": template })
+        @param override: whether (1) or not (0) this template can
+            be overriden with the flavour_name property of the entry
+        @type  override: boolean
+        """
+        template = ""
+        if override == 1:
+            # here we do a quick override...  if the entry has a template
+            # field we use that instead of the flavour_name
+            actual_flavour_name = entry.get("flavour_name", flavour_name)
+            template = self.flavour.get(actual_flavour_name, '')
+
+        if not template:
+            template = self.flavour.get(flavour_name, '')
+
+        # we run this through the regular callbacks
+        args = self._run_callback(flavour_name, { "entry": entry, "template": template })
 
         template = args["template"]
         entry = args["entry"]
@@ -302,3 +313,6 @@ class BlosxomRenderer(RendererBase):
         
 class Renderer(BlosxomRenderer):
     pass
+
+
+# vim: shiftwidth=4 tabstop=4 expandtab
