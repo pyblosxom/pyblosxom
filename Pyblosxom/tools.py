@@ -404,6 +404,98 @@ def generate_entry(properties, data, mtime):
         entry.setTime(time.localtime())
     return entry
 
+
+# These next few lines are for locking.  At first, they'll be
+# ultra-simple.  We can add sophistication to them later.
+LOCKS = {}
+
+def get_lock(request, lockname):
+    """
+    This gets a lock as determined by the lockname.  Locks are
+    implemented as files that we open for writing (thus the file
+    system acts as the lock arbiter) but don't actually write
+    anything in them.  We return a 0 if we cannot get the lock
+    or some other such issue occurs and a 1 if we successfully
+    got the lock.
+
+    @param request: the Request object associated with this
+        run
+    @type  request: Request
+
+    @param lockname: the name of the lock to retrieve.  this
+        could be the name of the file you're trying to synchronize
+        on if you like.  we add a ".lock" to the end of the lock
+        name to create the filename we use as the lock.
+    @type  string:
+
+    @returns: 0 if not successful, 1 if we are successful
+    @rtype:   boolean
+    """
+    global LOCKS
+    datadir = request.getData()["datadir"]
+    if datadir[-1] != os.sep:
+        datadir += os.sep 
+
+    lockname = datadir + lockname + ".lock"
+
+    # note: right now locks are done globally to the pyblosxom
+    # instance and not the specific request.
+
+    counter = 100
+    lockfile = None
+    if not LOCKS.has_key(lockname):
+        while lockfile == None and counter > 0:
+            try:
+                lockfile = open(lockname, "w")
+            except:
+                time.sleep(.05)
+                counter -= 1
+
+    if lockfile:
+        LOCKS[lockname] = lockfile
+        return 1
+    return 0
+
+def return_lock(request, lockname):
+    """
+    Returns the lock that you opened earlier.
+
+    If the lock doesn't exist, then we'll do nothing so feel free to
+    call this method as often as you like.
+
+    NOTE: if you do not return the lock, then we maintain an open
+    file on the lock file we use.  If Pyblosxom is running as a CGI
+    script this probably won't matter much since when the process dies
+    it'll close the open files.  If Pyblosxom is running as a thread
+    of a single Python interpreter, then this will hose all the other
+    threads until you restart the interpreter.
+
+    @param request: the Request object associated with this
+        run
+    @type  request: Request
+
+    @param lockname: the name of the lock to retrieve.  this
+        could be the name of the file you're trying to synchronize
+        on if you like.  we add a ".lock" to the end of the lock
+        name to create the filename we use as the lock.
+    @type  string:
+    """
+    global LOCKS
+    datadir = request.getData()["datadir"]
+    if datadir[-1] != os.sep:
+        datadir += os.sep 
+
+    lockname = datadir + lockname + ".lock"
+
+    if LOCKS.has_key(lockname) and LOCKS[lockname]:
+        try:
+            LOCKS[lockname].close()
+        except:
+            pass
+
+        del LOCKS[lockname]
+
+
 # These next few lines are to save a sort of run-time global registry
 # of important things so that they're global to all the components
 # of pyblosxom whether or not we actually pass them through.
