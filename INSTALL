@@ -49,11 +49,11 @@
        and blog entries in.
      4 Edit config.py in your cgi-bin. It is well commented so it
        shouldn't be to hard.
-     5 Surf away to your new blog using a url (depending on how you did
+     5 Run "./pyblosxom.cgi".  This should run the installation verification
+       code which will verify your datadir and other configured properties.
+     6 Surf away to your new blog using a url (depending on how you did
        your installation) something like
        http://your-server-here/~username/cgi-bin/pyblosxom.cgi.
-
-   TODO: should there be a simple site in the distribution?
 
 1.4 Complicated Installation
 
