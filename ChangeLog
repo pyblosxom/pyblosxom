@@ -1,3 +1,8 @@
+2003-06-24 Wari Wahab <wari@homedotwaridotorg>
+	* Updated the xmlrpc plugins system
+	* Moved and removed a whole lot of files around
+	* Flavour_examples now part of contrib instead
+
 2003-06-17 Wari Wahab <wari@homedotwaridotorg>
 	* Updated renderers to use the callback system
 	* Added documentation for cb_renderer()
