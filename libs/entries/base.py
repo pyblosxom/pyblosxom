@@ -5,6 +5,7 @@ This module contains the base class for all the Entry classes.
 import time
 
 CONTENT_KEY = "content"
+DOESNOTEXIST = "THISKEYDOESNOTEXIST"
 
 class EntryBase:
     """
@@ -13,9 +14,22 @@ class EntryBase:
     whether it came from a file, or a database, or even somewhere off 
     the InterWeeb.
     """
-    def __init__(self):
+    def __init__(self, config):
+        self._config = config
         self._data = None
         self._metadata = {}
+
+    def getId(self):
+        """
+        This should return an id that's unique enough for caching 
+        purposes.
+
+        Override this.
+
+        @returns: string id
+        @rtype: string
+        """
+        return ""
 
     def getData(self):
         """
@@ -39,17 +53,28 @@ class EntryBase:
         """
         self._data = data
 
-    def getId(self):
+    def getMetadata(self, key, default=None):
         """
-        This should return an id that's unique enough for caching 
-        purposes.
+        Returns a given piece of metadata.
 
-        Override this.
+        @param key: the key being sought
+        @type  key: varies
 
-        @returns: string id
-        @rtype: string
+        @param default: the default to return if the key does not
+            exist
+        @type  default: varies
+
+        @return: either the default (if the key did not exist) or the
+            value of the key in the metadata dict
+        @rtype: varies
         """
-        return ""
+        return self._metadata.get(key, default)
+
+    def setMetadata(self, key, value):
+        """
+        Sets a key/value pair in the metadata dict.
+        """
+        self._metadata[key] = value
 
     def setTime(self, timeTuple):
         """
@@ -78,19 +103,28 @@ class EntryBase:
         item is CONTENT_KEY then we return the result from 
         self.getData().
 
+        This is just a convenience method for getData(...) and 
+        getMetadata(...).
+
+        There's no reason to override this--override getData and
+        getMetadata instead.
+
         @returns: the value of self._metadata.get(key, default) or 
             self.getData()
         @rtype: varies
         """
         if key == CONTENT_KEY:
             return self.getData()
-        return self._metadata.get(key, default)
+        return self.getMetadata(key, default)
 
     def __setitem__(self, key, value):
         """
         Sets the metadata[key] to the given value.
 
-        Note: using the key CONTENT_KEY is probably not a good idea.
+        This is a convenience method for setData(...) and setMetadata(...).
+
+        There's no reason to override this.  Override setData and
+        setMetadata.
 
         @param key: the given key name
         @type key: varies
@@ -98,10 +132,10 @@ class EntryBase:
         @param value: the given value
         @type value: varies
         """
-        self._metadata[key] = value
-
-    def __delitem__(self, key):
-        del self._metadata[key]
+        if key == CONTENT_KEY:
+            self.setData(value)
+        else:
+            self.setMetadata(key, value)
 
     def has_key(self, key):
         """
@@ -116,7 +150,10 @@ class EntryBase:
         """
         if key == CONTENT_KEY:
             return 1
-        return self._metadata.has_key(key)
+        value = self.getMetadata(key, DOESNOTEXIST)
+        if value == DOESNOTEXIST:
+            return 0
+        return 1
 
     def keys(self):
         """
