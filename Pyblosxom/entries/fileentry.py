@@ -51,6 +51,7 @@ class FileEntry(base.EntryBase):
         return "<fileentry f'%s' r'%s'>" % (self._filename, self._root)
 
     def setTimeLazy(self, timetuple):
+        """set the time without populating the entry"""
         self._timetuple = timetuple
         self._mtime = time.mktime(timetuple)
         self._fulltime = time.strftime("%Y%m%d%H%M%S", timetuple)
