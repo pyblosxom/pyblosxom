@@ -78,6 +78,22 @@ py['num_entries'] = 40
 #py['load_plugins'] = []
 
 
+# Doing static rendering?  Static rendering essentially "compiles" your
+# blog into a series of static html pages.
+# What directory do you want your static html pages to go into?
+#py["static_dir"] = "/path/to/static/dir"
+
+# What flavours shout get generated?
+#py["static_flavours"] = ["html", "rss"]
+
+# What other paths should we statically render?
+# This is for additional urls handled by other plugins like the booklist
+# and plugin_info plugins.  If there are multiple flavours you want
+# to capture, specify each:
+# ex: py["static_urls"] = ["/booklist.rss", "/booklist.html"]
+#py["static_urls"] = ["/path/to/url1", "/path/to/url2"]
+
+
 ###########################
 # Nothing to modify below #
 ###########################

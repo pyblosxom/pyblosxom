@@ -26,7 +26,7 @@ __license__ = "Python"
 
 if __name__ == '__main__':
     from Pyblosxom.pyblosxom import Request, test_installation, PyBlosxom
-    import os
+    import os, sys
 
     req = Request()
     req.addConfiguration(config.py)
@@ -39,11 +39,14 @@ if __name__ == '__main__':
     req.addHttp(d)
 
     if not os.environ.get("REQUEST_METHOD", ""):
-        test_installation(req)
+        if len(sys.argv) > 1 and sys.argv[1] == "--static":
+            p = PyBlosxom(req)
+            p.runStaticRenderer()
+        else:
+            test_installation(req)
 
     else:
         p = PyBlosxom(req)
-        p.initialize()
         p.run()
 
 # vim: shiftwidth=4 tabstop=4 expandtab
