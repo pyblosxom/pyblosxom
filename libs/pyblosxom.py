@@ -25,7 +25,7 @@ class PyBlosxom:
                 path_info = os.environ['PATH_INFO'].split('/')
                 if path_info[0] == '':
                     path_info.pop(0)
-                while re.match(r'^[a-zA-Z0-9]\w*', path_info[0]):
+                while re.match(r'^[a-zA-Z]\w*', path_info[0]):
                     self.py['pi_bl'] += '/%s' % path_info.pop(0)
                     if len(path_info) == 0:
                         break
