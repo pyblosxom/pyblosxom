@@ -56,24 +56,31 @@ class PyblCalendar:
 		baseurl = self._py.get("base_url", "")
 		markup = self._py.get("calendarstyle", "pre")
 		
-		today = self._entryList[0]["timetuple"]
+		if len(self._entryList) > 0:
+			today = self._entryList[0]["timetuple"]
+		else:
+			# if there are no entries, we shouldn't even try to
+			# do something fancy.
+			self._cal = ""
+			return
 
 		# this comes in as 2001, 2002, 2003, ...  so we can convert it
 		# without an issue
 		temp = self._py["pi_yr"]
 		if temp:
-			# today = (int(temp),) + today[1:]
 			today = tuple([int(temp)] + list(today)[1:])
 
-		# this comes in as Jan, Feb, ...  so we convert it with a quick
-		# lookup for today in there as well
-		lookup = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4,
-					"May": 5, "Jun": 6, "Jul": 7, "Aug": 8,
-					"Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12,
-					"": today[1]}
-
+		# the month is a bit harder since it can come in as "08", "", or
+		# "Aug" (in the example of August).
 		temp = self._py["pi_mo"]
-		today = tuple([today[0]] + [lookup[temp]] + list(today)[2:])
+		if temp.isdigit():
+			temp = int(temp)
+		else:
+			if tools.month2num.has_key(temp):
+				temp = tools.month2num[temp]
+			else:
+				temp = today[1]
+		today = tuple([today[0]] + [temp] + list(today)[2:])
 
 		archiveList = tools.Walk(root)
 
