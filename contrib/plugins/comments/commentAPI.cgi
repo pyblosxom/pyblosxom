@@ -90,16 +90,14 @@ if __name__ == '__main__':
         # TODO: replace this with a $base_url type of rewrite.
         if len(path) > 0:
             path = path[1:]
+            path = os.path.join(datadir, path)
 
         # path should represent a category URI which can be used to
         # locate the filentry containing the post to be commented on.
         # TODO: fix this os it works for Wari
         filename = ''
-        for ext in data['extensions'].keys():
-            if os.path.isfile(os.path.join(datadir,path + '.' + ext)):
-                filename = os.path.join(datadir,os.path.normpath('%s.%s' % (path, ext)))
-                break 
-
+        ext = tools.what_ext(data['extensions'].keys(),path)
+        filename = os.path.normpath('%s.%s' % (path, ext))
         # synthesize a file entry and put it on the entry list
         # TODO: I think this can be eliminated when we make the pyblosxom.py
         #       entry point in 0.8
