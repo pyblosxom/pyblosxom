@@ -47,12 +47,12 @@ def cb_prepare(args):
                                'Last-Modified', '%s' % lastModed)
             renderer.render()
 
-        from libs import tools
-        # Log request as "We have it!"
-        tools.run_callback("logrequest",
-                {'filename':config.get('logfile',''),
-                'return_code': '304',
-                'request': request})
+            from libs import tools
+            # Log request as "We have it!"
+            tools.run_callback("logrequest",
+                    {'filename':config.get('logfile',''),
+                    'return_code': '304',
+                    'request': request})
                                                                                                   
         renderer.addHeader('ETag', '"%s"' % mtime,
                            'Last-Modified', '%s' % lastModed)
