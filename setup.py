@@ -70,19 +70,16 @@ if platform == "win32":
 elif platform == "nix":
     pydf = []
 
-    root = "/usr/share/" + PVER + "/"
     for mem in contrib_folders:
         f = os.listdir(mem)
-        f = [mem + os.sep + m for m in f if os.path.isfile(mem + os.sep + m)]
-        pydf.append( (root + mem, f) )
+        f = [os.path.join(mem, m) for m in f if os.path.isfile(os.path.join(mem, m))]
+        pydf.append( (os.path.join('share', PVER, mem), f) )
 
     # we want to move the web script files as well, so we sneak them
     # in here.
-    web_files = [os.path.normpath("web/pyblosxom.cgi"), 
-                 os.path.normpath("web/config.py")]
-
-    pydf.append( ("/usr/share/" + PVER + "/web", web_files) )
-    # pydf.append( ("/usr/share/doc/" + PVER, doc_files) )
+    pydf.append( [os.path.join('share', PVER, 'web'),
+                  [os.path.normpath("web/pyblosxom.cgi"), 
+                   os.path.normpath("web/config.py")]])
 
 else:
     # we don't know what platform they have, so we print out
