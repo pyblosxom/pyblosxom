@@ -15,6 +15,7 @@ def cb_prepare(args):
 
     data = request.getData()
     config = request.getConfiguration()
+    http = request.getHttp()
     entryList = data["entry_list"]
     renderer = data["renderer"]
 
@@ -33,14 +34,14 @@ def cb_prepare(args):
                 pass
         if latest_cmtime > mtime:
             mtime = latest_cmtime
-        import os, time
+        import time
         # Get our first file timestamp for ETag and Last Modified
         # Last-Modified: Wed, 20 Nov 2002 10:08:12 GMT
         # ETag: "2bdc4-7b5-3ddb5f0c"
         lastModed = time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime(mtime))
-        if ((os.environ.get('HTTP_IF_NONE_MATCH','') == '"%s"' % mtime) or
-            (os.environ.get('HTTP_IF_NONE_MATCH','') == '%s' % mtime) or
-            (os.environ.get('HTTP_IF_MODIFIED_SINCE','') == lastModed)):
+        if ((http.get('HTTP_IF_NONE_MATCH','') == '"%s"' % mtime) or
+            (http.get('HTTP_IF_NONE_MATCH','') == '%s' % mtime) or
+            (http.get('HTTP_IF_MODIFIED_SINCE','') == lastModed)):
             renderer.addHeader('Status', '304 Not Modified',
                                'ETag', '"%s"' % mtime,
                                'Last-Modified', '%s' % lastModed)
