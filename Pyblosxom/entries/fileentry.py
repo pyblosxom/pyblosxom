@@ -5,13 +5,6 @@ from a file system.  Since pulling data from the file system and parsing
 it is expensive (especially when you have 100s of entries) we delay
 fetching data until it's demanded.
 
-We know some metadata at the beginning.  This is the data that's
-populated via the __populateBasicMetadata(...) method.  We keep
-track of the metadata keys that it has populated and when we're
-asked for something that we don't have, then we get the file from
-the filesystem, parse it, and populate the rest of the metadata
-and the contents of the file.
-
 The FileEntry calls EntryBase methods addToCache and getFromCache
 to handle caching.
 """
@@ -23,7 +16,6 @@ class FileEntry(base.EntryBase):
     """
     This class gets it's data and metadata from the file specified
     by the filename argument.
-
     """
     def __init__(self, request, filename, root, datadir=""):
         """
@@ -49,9 +41,11 @@ class FileEntry(base.EntryBase):
         if self._datadir.endswith(os.sep):
             self._datadir = self._datadir[:-1]
 
-        self._original_metadata_keys = []
+        self._timetuple = tools.filestat(self._request, self._filename)
+        self._mtime = time.mktime(self._timetuple)
+        self._fulltime = time.strftime("%Y%m%d%H%M%S", self._timetuple)
+
         self._populated_data = 0
-        self.__populateBasicMetadata()
 
     def __repr__(self):
         return "<fileentry f'%s' r'%s'>" % (self._filename, self._root)
@@ -79,24 +73,21 @@ class FileEntry(base.EntryBase):
 
     def getMetadata(self, key, default=None):
         """
-        Some of our metadata comes from os.stats--and the rest
-        comes from running the entry parser on the file.  so
-        we try to fulfill as many things from os.stats as we
-        can before retrieving and parsing the file.
+        We populate our metadata lazily--only when it's requested.
+        This delays parsing of the file as long as we can.
         """
-        if self._populated_data == 1 or key in self._original_metadata_keys:
-            return self._metadata.get(key, default)
+        if self._populated_data == 0:
+            self.__populateData()
 
-        self.__populateData()
         return self._metadata.get(key, default)
         
-    def __populateBasicMetadata(self):
+    def __populateData(self):
         """
         Fills the metadata dict with metadata about the given file.  This
         metadata consists of things we pick up from an os.stat call as
         well as knowledge of the filename and the root directory.
-        The rest of the metadata comes from parsing the file itself which
-        is done with __populateData.
+        We then parse the file and fill in the rest of the information
+        that we know.
         """
         file_basename = os.path.basename(self._filename)
 
@@ -128,19 +119,6 @@ class FileEntry(base.EntryBase):
         timeTuple = tools.filestat(self._request, self._filename)
         self.setTime(timeTuple)
 
-        # when someone does a getMetadata and they're looking for
-        # a key not in this list, then we'll have to parse the
-        # file and complete the list of keys.
-        self._original_metadata_keys = self.keys()
-        self._original_metadata_keys.remove(base.CONTENT_KEY)
-
-    def __populateData(self):
-        """
-        Populates the rest of the data for this entry from a given
-        file.  This could be just the contents of the file, but the
-        file could also contain metadata that overrides the metadata
-        we normally pull.
-        """
         data = self._request.getData()
 
         entrydict = self.getFromCache(self._filename)

@@ -547,22 +547,26 @@ def blosxom_file_list_handler(args):
 
     entrylist = []
     for ourfile in filelist:
-        entry = FileEntry(request, ourfile, data['root_datadir'])
-        entrylist.append((entry._mtime, entry))
+        e = FileEntry(request, ourfile, data['root_datadir'])
+        entrylist.append((e._mtime, e))
 
     # this sorts entries by mtime in reverse order.  entries that have
     # no mtime get sorted to the top.
     entrylist.sort()
     entrylist.reverse()
-    entrylist = [x[1] for x in entrylist]
     
     # Match dates with files if applicable
     if data['pi_yr']:
+        # FIXME - when does this actually get called?  does it matter?  (wbg)
         month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
         matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
-        valid_list = [x for x in entrylist if re.match(matchstr, x['fulltime'])]
+        valid_list = [x for x in entrylist if re.match(matchstr, x[1]._fulltime)]
     else:
         valid_list = entrylist
+
+    # This is the maximum number of entries we can show
+    valid_list = valid_list[:config['num_entries']]
+    valid_list = [x[1] for x in valid_list]
 
     return valid_list
 
