@@ -99,7 +99,7 @@ class CallbackChain:
         ret = None
         for mem in chain:
             ret = mem(data)
-            if ret == None:
+            if ret != None:
                 break
                 
         return ret
