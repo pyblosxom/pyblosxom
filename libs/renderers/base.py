@@ -11,15 +11,14 @@ class RendererBase:
         interfaces for all Renderer onject.
     """
 
-
-    def __init__(self, py, out = sys.stdout):
+    def __init__(self, request, out = sys.stdout):
         """
         Constructor: Initializes the Renderer
 
         @param py: The shared py dict
         @param out: File like object to print to.
         """
-        self._py = py
+        self._request = request
         self._header = []
         self._out = out
         self._content = None

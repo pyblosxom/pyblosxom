@@ -17,8 +17,12 @@ To install:
 
 Questions, comments, concerns?  Email bwinton@latte.ca for help.
 """
+from libs import api
+
 __author__ = "Blake Winton - bwinton@latte.ca"
 __version__ = "$Id$"
+
+
 class PyFirstDate:
     """
     This class stores the state needed to determine whether we're
@@ -30,14 +34,15 @@ class PyFirstDate:
     @type _count: int
     @ivar _count: The number of times we've been called (currently 0 or 1)
     """
-    def __init__(self, py):
+    def __init__(self, request):
         """
         Initialize the PyFirstDate class.
 
         @type py: dictionary
         @param py: A reference to the L{global py dictionary<py>}.
         """
-        self._dayDiv = py.get("firstDayDiv", "blosxomDayDiv")
+        config = request.getConfiguration()
+        self._dayDiv = config.get("firstDayDiv", "blosxomDayDiv")
         self._count = 0
 
     def __str__(self):
@@ -55,17 +60,14 @@ class PyFirstDate:
             self._dayDiv = "blosxomDayDiv"
         return self._dayDiv
 
-def load(py, entryList, renderer):
+def prepare(args)
     """
     Populate the L{global py dictionary<py>} with an instance of the
     L{PyFirstDate} class in the "dayDivClass" key.
-
-    @type py: dictionary
-    @param py: A reference to the L{global py dictionary<py>}.
-    @type entryList: unknown
-    @param entryList: Unused.  Added for API compatibility.
     """
-    py["dayDivClass"] = PyFirstDate(py)
+    request = args[0]
+    data = request.getData()
+    data["dayDivClass"] = PyFirstDate(py)
 
-if __name__ == '__main__':
-    pass
+def initialize():
+    api.prepareChain.register(prepare)

@@ -20,58 +20,67 @@ config.py example:
 __author__ = "Will Guaraldi - willg@bluesock.org"
 __version__ = "$Id$"
 
-from libs import tools
+from libs import tools, api
 import re, os
 
 class PyblCategories:
-	def __init__(self, py):
-		self._py = py
-		self._categories = None
+    def __init__(self, request):
+        self._request = request
+        self._categories = None
 
-	def __str__(self):
-		if self._categories == None:
-			self.genCategories()
-		return self._categories
+    def __str__(self):
+        if self._categories == None:
+            self.genCategories()
+        return self._categories
 
-	def genitem(self, item):
-		itemlist = item.split("/")
+    def genitem(self, item):
+        itemlist = item.split("/")
 
-		num = 0
-		for key in self._elistmap:
-			if key.find(item) == 0:
-				num = num + self._elistmap[key]
-		num = " (%d)" % num
+        num = 0
+        for key in self._elistmap:
+            if key.find(item) == 0:
+                num = num + self._elistmap[key]
+        num = " (%d)" % num
 
-		return (((len(itemlist)-1) * "&nbsp;&nbsp;") + 
-				"<a href=\"%s/%s%s\">%s</a>%s" % (self._baseurl, item, self._flavour, itemlist[-1] +"/", num))
+        return (((len(itemlist)-1) * "&nbsp;&nbsp;") + 
+                "<a href=\"%s/%s%s\">%s</a>%s" % (self._baseurl, item, self._flavour, itemlist[-1] +"/", num))
 
-	def genCategories(self):
-		root = self._py["datadir"]
-		if self._py.get("category_flavour", "") == "":
-			self._flavour = ""
-		else:
-			self._flavour = "?flav=" + self._py["category_flavour"]
+    def genCategories(self):
+        config = self._request.getConfiguration()
+        root = config["datadir"]
 
-		self._baseurl = self._py.get("base_url", "")
+        flav = config.get("category_flavour", "")
+        if flav:
+            self._flavour = "?flav=" + flav
+        else:
+            self._flavour = ""
 
-		# build the list of directories (categories)
-		clist = tools.Walk(root, pattern=re.compile('.*'), return_folders=1)
-		clist = [mem[len(root)+1:] for mem in clist]
-		clist.sort()
-		clist.insert(0, "")
+        self._baseurl = config.get("base_url", "")
 
-		# build the list of entries
-		elist = tools.Walk(root)
-		elist = [mem[len(root)+1:] for mem in elist]
+        # build the list of directories (categories)
+        clist = tools.Walk(root, pattern=re.compile('.*'), return_folders=1)
+        clist = [mem[len(root)+1:] for mem in clist]
+        clist.sort()
+        clist.insert(0, "")
 
-		elistmap = {}
-		for mem in elist:
-			mem = os.path.dirname(mem)
-			elistmap[mem] = 1 + elistmap.get(mem, 0)
-		self._elistmap = elistmap
+        # build the list of entries
+        elist = tools.Walk(root)
+        elist = [mem[len(root)+1:] for mem in elist]
 
-		clist = map(self.genitem, clist)
-		self._categories = "<br>".join(clist)
+        elistmap = {}
+        for mem in elist:
+            mem = os.path.dirname(mem)
+            elistmap[mem] = 1 + elistmap.get(mem, 0)
+        self._elistmap = elistmap
 
-def load(py, entryList, renderer):
-	py["categorylinks"] = PyblCategories(py)
+        clist = map(self.genitem, clist)
+        self._categories = "<br>".join(clist)
+
+
+def prepare(args):
+    request = args[0]
+    data = request.getData()
+    data["categorylinks"] = PyblCategories(request)
+
+def initialize():
+    api.prepareChain.register(prepare)

@@ -21,18 +21,23 @@ __version__ = "$Id$"
 
 import xmlrpclib, os, time
 import cPickle as pickle
+from libs import api
 
-class weblogsPing:
-    def __init__(self, py, entryList):
+class WeblogsPing:
+    def __init__(self, request):
+        config = request.getConfiguration()
+        pyhttp = request.getHttp()
+
         self.pingData = {}
         if entryList:
             self._latest = entryList[0]['mtime']
         else:
             self._latest = 0
-        self._file = os.path.join(py['datadir'], 'LATEST')
-        self._title = py['blog_title']
-        self._site = 'http://%s%s' % (os.environ['HTTP_HOST'], 
-                     os.environ['SCRIPT_NAME'])
+        self._file = os.path.join(config['datadir'], 'LATEST')
+        self._title = config['blog_title']
+
+        # FIXME - do we want to use config["base_url"] instead here?
+        self._site = 'http://%s%s' % (pyhttp['HTTP_HOST'], pyhttp['SCRIPT_NAME'])
         self._xml = self._site + '?flav=rss'
 
     def ping(self):
@@ -84,5 +89,9 @@ class weblogsPing:
             # Something wrong with the file, abort.
             return 0
 
-def load(py, entryList, renderer):
-    weblogsPing(py, entryList).ping()
+def prepare(args):
+    request = args[0]
+    WeblogsPing(request).ping()
+
+def initialize():
+    api.prepareChain.register(prepare)

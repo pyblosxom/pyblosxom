@@ -10,7 +10,14 @@ entryList.
 __author__ = "Wari Wahab pyblosxom@wari.per.sg"
 __version__ = "$Id$"
 
-def load(py, entryList, renderer):
+from libs import api
+
+def prepare(args):
+    request = args[0]
+    data = request.getData()
+    entryList = data["entry_list"]
+    renderer = data["renderer"]
+
     if entryList:
         import os, time
         # Get our first file timestamp for ETag and Last Modified
@@ -28,5 +35,8 @@ def load(py, entryList, renderer):
 
             from libs import tools
             tools.logRequest(py.get('logfile',''), '304')
-        renderer.addHeader(['ETag: "%s"' % entryList[0]['mtime'],
+            renderer.addHeader(['ETag: "%s"' % entryList[0]['mtime'],
                 'Last-Modified: %s' % lastModed])
+
+def initialize():
+    api.prepareChain.register(prepare)

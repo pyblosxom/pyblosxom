@@ -4,8 +4,8 @@ from libs.renderers.base import RendererBase
 import re, os, sys, cgi
 
 class BlosxomRenderer(RendererBase):
-    def __init__(self, py, out = sys.stdout):
-        RendererBase.__init__(self, py, out)
+    def __init__(self, request, out = sys.stdout):
+        RendererBase.__init__(self, request, out)
         self.dayFlag = 1
 
     def __getFlavour(self, taste = 'html'):
@@ -39,11 +39,14 @@ class BlosxomRenderer(RendererBase):
         # End of ugly portion! Yucks :)
         # Look for flavours in datadir
 
+        data = self._request.getData()
+        config = self._request.getConfiguration()
+
         pattern = re.compile(r'(config|content_type|head|date_head|date_foot|foot|story)\.' 
                 + taste)
-        flavourlist = tools.Walk(self._py['root_datadir'], 1, pattern)
+        flavourlist = tools.Walk(data['root_datadir'], 1, pattern)
         if not flavourlist:
-            flavourlist = tools.Walk(self._py['datadir'], 1, pattern)
+            flavourlist = tools.Walk(config['datadir'], 1, pattern)
 
         for filename in flavourlist:
             flavouring = os.path.basename(filename).split('.')
@@ -61,13 +64,16 @@ class BlosxomRenderer(RendererBase):
                 if s.strip() != '':
                     match = re.match(r'(\w+)\s+(.*)', s)
                     if match:
-                        self._py[match.groups()[0]] = match.groups()[1].strip()
+                        data[match.groups()[0]] = match.groups()[1].strip()
             
         return flavours[taste]
 
     def __processEntry(self, filename, current_date, cache):
-        """Main workhorse of pyblosxom stories, comments and other miscelany goes
-        here"""
+        """
+        Main workhorse of pyblosxom stories, comments and other miscelany goes
+        here
+        """
+        data = self._request.getData()
 
         def printTemplate(text, template):
             if template != '':
@@ -83,23 +89,23 @@ class BlosxomRenderer(RendererBase):
         if not entryData:
             fileExt = re.search(r'\.([\w]+)$', filename)
             try:
-                entryData = self._py['extensions'][fileExt.groups()[0]].parse(filename, self._py, cache)
+                entryData = data['extensions'][fileExt.groups()[0]].parse(filename, self._request, cache)
             except IOError:
                 return current_date
 
-        if re.search(r'\Wxml', self._py['content-type']):
+        if re.search(r'\Wxml', data['content-type']):
             entryData['title'] = cgi.escape(entryData['title'])
             entryData['body'] = cgi.escape(entryData['body'])
-        elif self._py['content-type'] == 'text/plain':
+        elif data['content-type'] == 'text/plain':
             s = tools.Stripper()
             s.feed(entryData['body'])
             s.close()
             p = ['  ' + line for line in s.gettext().split('\n')]
             entryData['body'] = '\n'.join(p)
             
-        entryData.update(self._py)
-        if self._py['date'] != current_date:
-            current_date = self._py['date']
+        entryData.update(data)
+        if data['date'] != current_date:
+            current_date = data['date']
             if not self.dayFlag:
                 printTemplate(entryData, self.flavour.get('date_foot' ,''))
             self.dayFlag = 0
@@ -109,29 +115,42 @@ class BlosxomRenderer(RendererBase):
 
 
     def __processContent(self):
-        cache_driver = tools.importName('libs.cache', self._py.get('cacheDriver', 'base'))
-        cache = cache_driver.BlosxomCache(self._py.get('cacheConfig', ''))
+        config = self._request.getConfiguration()
+        data = self._request.getData()
+
+        cache_driver = tools.importName('libs.cache', config.get('cacheDriver', 'base'))
+        cache = cache_driver.BlosxomCache(config.get('cacheConfig', ''))
         # Body stuff
         content_type = type(self._content)
         if callable(self._content):
             sys._out.write(self._content())
         elif content_type is dict:
-            self._content.update(self._py)
+            self._content.update(data)
             self._out.write(tools.parse(self._content, self.flavour['story']))
         elif content_type is list:
             current_date = ''
             count = 1
             for entry in self._content:
-                self._py.update(entry)
+                data.update(entry)
                 current_date = self.__processEntry(entry['filename'], current_date, cache)
-                if self._py['pi_yr'] == '' and count >= int(self._py['num_entries']):
+                if data['pi_yr'] == '' and count >= int(config['num_entries']):
                     break
                 count += 1
             cache.close()
                 
     def render(self, header = 1):
-        self.flavour = self.__getFlavour(self._py.get('flavour', 'html'))
-        self._py['content-type'] = self.flavour['content_type'].strip()
+        data = self._request.getData()
+        config = self._request.getConfiguration()
+
+        parsevars = {}
+        for mem in config.keys():
+            parsevars[mem] = config[mem]
+
+        for mem in data.keys():
+            parsevars[mem] = data[mem]
+
+        self.flavour = self.__getFlavour(data.get('flavour', 'html'))
+        data['content-type'] = self.flavour['content_type'].strip()
         if header:
             if self._needs_content_type:
                 self.addHeader(['Content-type: %(content_type)s' % self.flavour])
@@ -142,13 +161,13 @@ class BlosxomRenderer(RendererBase):
         
         if self._content:
             if self.flavour.has_key('head'): 
-                self._out.write(tools.parse(self._py, self.flavour['head']))
+                self._out.write(tools.parse(parsevars, self.flavour['head']))
             if self.flavour.has_key('story'):
                 self.__processContent()
             if self.flavour.has_key('date_foot'): 
-                self._out.write(tools.parse(self._py, self.flavour['date_foot']))
+                self._out.write(tools.parse(parsevars, self.flavour['date_foot']))
             if self.flavour.has_key('foot'): 
-                self._out.write(tools.parse(self._py, self.flavour['foot']))
+                self._out.write(tools.parse(parsevars, self.flavour['foot']))
         
         self.rendered = 1
 

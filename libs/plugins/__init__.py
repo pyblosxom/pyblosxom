@@ -1,56 +1,57 @@
-# vim: tabstop=4 shiftwidth=4
+# vim: shiftwidth=4 tabstop=4 expandtab
 import os, glob
 
 plugins = []
 
-def load_plugins(py, valid_list, renderer):
-	"""
-	Allows the plugin to register itself with the py_dict.
-	"""
-	global plugins
+def load_plugins(request, renderer):
+    """
+    FIXME - this is going away and should get replaced by an initialize
+    callback chain
+    """
+    global plugins
 
-	for mem in plugins:
-		if mem.__dict__.has_key("load"):
-			mem.load(py, valid_list, renderer)
+    for mem in plugins:
+        if mem.__dict__.has_key("load"):
+            mem.load(request, renderer)
 
 def initialize_plugins():
-	"""
-	Imports and initializes plugins from this directory so they can register
-	with the api callbacks.
-	"""
-	index = __file__.rfind(os.sep)
-	if index == -1:
-		path = "." + os.sep
-	else:
-		path = __file__[:index]
+    """
+    Imports and initializes plugins from this directory so they can register
+    with the api callbacks.
+    """
+    index = __file__.rfind(os.sep)
+    if index == -1:
+        path = "." + os.sep
+    else:
+        path = __file__[:index]
 
-	_module_list = glob.glob( os.path.join(path, "*.py"))
+    _module_list = glob.glob( os.path.join(path, "*.py"))
 
-	for mem in _module_list:
-		mem2 = mem[mem.rfind(os.sep)+1:mem.rfind(".")]
+    for mem in _module_list:
+        mem2 = mem[mem.rfind(os.sep)+1:mem.rfind(".")]
 
-		# we skip modules whose names start with an _ .  this
-		# allows people to test stuff without having to move
-		# it in and out of a directory.
-		if mem2[0] == "_":
-			continue
+        # we skip modules whose names start with an _ .  this
+        # allows people to test stuff without having to move
+        # it in and out of a directory.
+        if mem2[0] == "_":
+            continue
 
-		try:
-			name = "libs.plugins." + mem2
-			_module = __import__(name)
-			for comp in name.split(".")[1:]:
-				_module = getattr(_module, comp)
+        try:
+            name = "libs.plugins." + mem2
+            _module = __import__(name)
+            for comp in name.split(".")[1:]:
+                _module = getattr(_module, comp)
 
-			# if the module has a load function, we call it
-			# with our py dict so it can bind itself to variable
-			# names of its own accord
+            # if the module has a load function, we call it
+            # with our py dict so it can bind itself to variable
+            # names of its own accord
 
-			if _module.__dict__.has_key("initialize"):
-				_module.initialize()
+            if _module.__dict__.has_key("initialize"):
+                _module.initialize()
 
-			plugins.append(_module)
+            plugins.append(_module)
 
-		except Exception, e:
-			# FIXME - we kicked up an exception--where to we spit 
-			# it out to?
-			print e
+        except Exception, e:
+            # FIXME - we kicked up an exception--where to we spit 
+            # it out to?
+            print e

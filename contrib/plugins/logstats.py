@@ -18,13 +18,12 @@ import string, re, time, cPickle
 from libs import api
 
 class PyblStats:
-    def __init__(self, py):
-        self._py = py
+    def __init__(self, request):
+        self._request = request
         self._referrers ={}
         self._referrersText = ""
         self._requestors = {}
         self._destinations = {}
-
 
     def __str__(self):
         """
@@ -55,8 +54,10 @@ class PyblStats:
         """
         Generate the list of referring files
         """
+        config = self._request.getConfigurat()
+
         # initialize blacklist
-        bad_list = string.split(self._py.get('refer_blacklist',''),',')
+        bad_list = string.split(config.get('refer_blacklist',''),',')
 
         def url(tuple):
             """
@@ -114,26 +115,23 @@ def processRequest(args):
     f = file(filename,"w")
     cPickle.dump(stats, f)
 
+def prepare(args):
+    request = args[0]
+    config = request.getConfiguration()
+    data = request.getData()
+
+    try:
+        filename = config['logfile']+'.dat'
+        f = file(filename)
+        stats = cPickle.load(f)
+        stats._request = request
+        f.close()
+
+    except IOError:
+        stats = PyblStats(data)
+
+    data["referrers"] = stats.genReferrers()
 
 def initialize():
     api.logRequest.register(processRequest)
-
-def load(py, entryList, renderer):
-    """
-    part of the pyblosxom framework
-    """
-    try:
-        filename = py['logfile']+'.dat'
-        f = file(filename)
-        stats = cPickle.load(f)
-        stats._py = py
-        f.close()
-    except IOError:
-        stats = PyblStats(py)
-
-    py["referrers"] = stats.genReferrers()
-
-
-# command line testing
-if __name__ == '__main__':
-    pass
+    api.prepareChain.register(prepare)

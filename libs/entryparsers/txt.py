@@ -18,7 +18,9 @@ Text of entry, etc, etc
 from libs import tools
 import re
 
-def parse(filename, py, cache):
+def parse(filename, request, cache):
+    config = request.getConfiguration()
+
     entryData = {}
 
     try:
@@ -37,7 +39,7 @@ def parse(filename, py, cache):
         else:
             break
 
-    preformatter = tools.importName('libs.preformatters', py.get('parser', 'plain'))
+    preformatter = tools.importName('libs.preformatters', config.get('parser', 'plain'))
     if preformatter:
         entryData['body'] = preformatter.PreFormatter(story).parse()
     else:

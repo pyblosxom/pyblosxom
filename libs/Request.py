@@ -41,37 +41,37 @@ class Request:
         pass
 
     def __populateDict(self, currdict, newdict):
-       for mem in newdict.keys():
-           currdict[mem] = newdict[mem]
+        for mem in newdict.keys():
+            currdict[mem] = newdict[mem]
 
     def addHttp(self, d):
         """
-       Takes in a dict and adds/overrides values in the existing
-       http dict with the new values.
+        Takes in a dict and adds/overrides values in the existing
+        http dict with the new values.
 
-       @param d: the dict with the new keys/values to add
-       @type  d: dict
-       """
-       self.__populateDict(self._http, d)
+        @param d: the dict with the new keys/values to add
+        @type  d: dict
+        """
+        self.__populateDict(self._http, d)
 
     def addData(self, d):
         """
-       Takes in a dict and adds/overrides values in the existing
-       data dict with the new values.
+        Takes in a dict and adds/overrides values in the existing
+        data dict with the new values.
 
-       @param d: the dict with the new keys/values to add
-       @type  d: dict
-       """
-       self.__populateDict(self._data, d)
+        @param d: the dict with the new keys/values to add
+        @type  d: dict
+        """
+        self.__populateDict(self._data, d)
 
     def addConfiguration(self, d):
         """
-       Takes in a dict and adds/overrides values in the existing
-       configuration dict with the new values.
+        Takes in a dict and adds/overrides values in the existing
+        configuration dict with the new values.
 
-       @param d: the dict with the new keys/values to add
-       @type  d: dict
-       """
-       self.__populateDict(self._configuration, d)
+        @param d: the dict with the new keys/values to add
+        @type  d: dict
+        """
+        self.__populateDict(self._configuration, d)
 
 # vim: shiftwidth=4 tabstop=4 expandtab
