@@ -103,6 +103,7 @@ import Pyblosxom, os
 from Pyblosxom.pyblosxom import Request
 from Pyblosxom.renderers.blosxom import BlosxomRenderer
 from Pyblosxom.entries.base import EntryBase
+from Pyblosxom.entries.fileentry import FileEntry
 from Pyblosxom.pyblosxom import PyBlosxom
 
 def cb_prepare(args):
@@ -306,9 +307,9 @@ def cb_entryparser(entryparsingdict):
             entryData['story'] = open(filename).read()
             return entryData
 
-    @param args: a dict that comtains file extension -> entry parsing 
-        function pairs
-    @type args: dict
+    @param entryparsingdict: a dict that comtains file extension -> entry 
+        parsing function pairs
+    @type  entryparsingdict: dict
 
     @returns: the entry parsing dict
     @rtype: dict
@@ -355,87 +356,93 @@ def cb_preformat(args):
     """
     pass
 
-
-def cb_postformat(args = {'entry_data': {}, 'request': Request()}):
+def cb_postformat(args):
     """
-    A callback for postformatters
-
-    Postformatters are callbacks that may make further modification to the
-    entry text, called after a preformatter. It can also be used for 
-    extensive operations on a particular entry, adding extra keys to the 
-    given 'entry_data' dict. If a cache is used in a particular installation, 
-    the resulting data will be saved in the cache, so using this chain may 
-    not be useful for dynamic data like comment counts, for example. 
+    The postformat callback allows plugins to make further modifications
+    to entry text.  It typically gets called after a preformatter by
+    the entryparser.  It can also be used to add additional properties
+    to entries.  The changes from postformat functions are saved in the
+    cache (if the user has caching enabled).  As such, this shouldn't
+    be used for dynamic data like comment counts.
 
     Examples of usage:
 
-        - Adding a word count property to the entry
-        - Using a macro replacement plugin (Radio Userland glossary)
-        - Acronym expansion
-        - A 'more' text processor
+     - Adding a word count property to the entry
+     - Using a macro replacement plugin (Radio Userland glossary)
+     - Acronym expansion
+     - A 'more' text processor
 
-    A typical C{args} contains the following:
+    Functions that implement this callback will get an args dict containing:
 
-        - C{'entry_data'} - A dict that minimally contains a C{'title'} and
-              a C{'story'}
-        - C{'request'} - A typical L{Request} object
+     - C{'entry_data'} - a dict that minimally contains a C{'title'} and
+                         a C{'story'}
+     - C{'request'} - a L{Request} object
 
-    @param args: A dict containing a L{Request()} object, and an entry_data 
-         dict
-    @type args: dict
+    Functions that implement this callback don't need to return 
+    anything--modifications to the C{'entry_data'} dict are done in place.
+
+    @param args: a dict containing C{'request'} and C{'entry_data'}
+    @type  args: dict
     """
     pass
 
-def cb_start(args = {'request': Request()}):
+def cb_start(args):
     """
-    Callback that allows plugins to execute startup/initialization code.
+    The start callback allows plugins to execute startup/initialization code.
     Use this callback for any setup code that your plugin needs, like:
     
-        - reading saved data from a file
-        - checking to make sure configuration variables are set
-        - allocating resources
+     - reading saved data from a file
+     - checking to make sure configuration variables are set
+     - allocating resources
 
     Note: The cb_start callback is slightly different than in blosxom in 
     that cb_start is called for every PyBlosxom request regardless of 
     whether it's handled by the default blosxom handler.  In general,
     it's better to delay allocating resources until you absolutely know 
     you are going to use them.
-    
-    
-    @param args: A dict containing a L{Request()} object
-    @type args: dict
+
+    Functions that implement this callback will get an args dict containing:
+
+     - C{'request'} - a L{Request} object
+
+    Functions that implement this callback don't need to return 
+    anything.
+
+    @param args: a dict containing C{'request'}
+    @type  args: dict
     """
     pass
 
 def cb_end(args = {'request' : Request()}):
     """
-    Allows plugins to perform teardown.
-    
-    The cb_end callback should be used to return any resources allocated,
+    The start callback allows plugins to execute teardown/cleanup code,
     save any data that hasn't been saved, clean up temporary files,
     and otherwise return the system to a normal state.
 
-    Use the end callback to clean up after your plugin has executed.  This
-    is the place to
+    Examples of usage:
     
-        - save data to a file
-        - clean up any temporary files
+     - save data to a file
+     - clean up any temporary files
     
+    Functions that implement this callback will get an args dict containing:
+
+     - C{'request'} - a L{Request} object
+
+    Functions that implement this callback don't need to return 
+    anything.
+
     Note: The cb_end callback is called for every PyBlosxom request regardless
     of whether it's handled by the default blosxom handler.  This is slightly
     different than blosxom.
 
-    @param args: A dict containing a L{Request()} object
-    @type args: dict
+    @param args: a dict containing C{'request'}
+    @type  args: dict
     """
     pass
 
-
-def cb_head(args = {'renderer':'The Blosxom renderer', 
-                    'entry':'The entry to render',
-                    'template':'The template to be filled in'}):
+def cb_head(args):
     """
-    A callback that is called before a head flavour template is rendered
+    The head callback is called before a head flavour template is rendered.
     
     C{cb_head} is called before the variables in the entry are substituted
     into the template.  This is the place to modify the head template based
@@ -443,115 +450,140 @@ def cb_head(args = {'renderer':'The Blosxom renderer',
     be used by the C{cb_story} or C{cb_foot} templates.  You have access to 
     all the content variables via entry.
     
-    Blosxom 2.0 calls this callback 'head'
+    Blosxom 2.0 calls this callback 'head'.
 
-    C{args} contains
+    Functions that implement this callback will get an args dict containing:
     
+      - C{'request'} - the L{Request} object
       - C{'renderer'} - the L{BlosxomRenderer} that called the callback
       - C{'entry'} - a L{EntryBase} to be rendered
       - C{'template'} - a string containing the flavour template to be processed
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
-    @type args: dict
+    Functions that implement this callback must return the input args
+    dict whether or not they adjust anything in it.
+
+    Example in which we add the number of entries being rendered
+    to the $blog_title variable::
+
+       def cb_head(args):
+           request = args["request"]
+           config = request.getConfiguration()
+           data = request.getData()
+
+           num_entries = len(data.get("entry_list", []))
+           config["blog_title"] = config.get("blog_title", "") + ": %d entries" % num_entries
+
+           return args
+
+    @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} 
+        and C{'template'}
+    @type  args: dict
     """
     pass
 
-def cb_date_head(args = {'renderer':'The Blosxom renderer', 
-                         'entry':'The entry to render',
-                         'template':'The template to be filled in'}):
+def cb_date_head(args):
     """
-    A callback that is called before a date_head flavour template is rendered
+    The date_head callback is called before a date_head flavour template
+    is rendered.
     
-    C{cb_head} is called before the variables in the entry are substituted
+    C{cb_date_head} is called before the variables in the entry are substituted
     into the template.  This is the place to modify the date_head template 
     based on the entry content.  You have access to all the content variables 
     via entry.
     
-    Blosxom 2.0 calls this callback 'date'
+    Blosxom 2.0 calls this callback 'date'.
 
-    C{args} contains
+    Functions that implement this callback will get an args dict containing:
     
+      - C{'request'} - the L{Request} object
       - C{'renderer'} - the L{BlosxomRenderer} that called the callback
       - C{'entry'} - a L{EntryBase} to be rendered
       - C{'template'} - a string containing the flavour template to be processed
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
+    Functions that implement this callback must return the input args
+    dict whether or not they adjust anything in it.
+
+    @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} and
+        C{'template'}
     @type args: dict
     """
     pass
 
-def cb_story(args = {'renderer': 'The Blosxom renderer', 
-                     'request': 'The PyBlosxom Request',
-                     'entry': 'The entry to render',
-                     'template': 'The template to be filled in'}):
+
+def cb_story(args):
     """
-    This callback gets called before the entry is rendered.  The template
-    used is typically the story template, but we allow entries to override
-    this if they have a "template" property.  If they have the "template"
-    property, then we'll use that template instead.
+    The story callback gets called before the entry is rendered.
+
+    The template used is typically the story template, but we allow 
+    entries to override this if they have a "template" property.  If they 
+    have the "template" property, then we'll use that template instead.
 
     C{cb_story} is called before the variables in the entry are substituted
     into the template.  This is the place to modify the story template based
     on the entry content.  You have access to all the content variables via 
     entry.
     
-    Blosxom 2.0 calls this callback 'story'
+    Blosxom 2.0 calls this callback 'story'.
 
-    C{args} contains
+    Functions that implement this callback will get an args dict containing:
     
       - C{'renderer'} - the L{BlosxomRenderer} that called the callback
       - C{'request'} - the PyBlosxom a L{Request} being handled
       - C{'template'} - a string containing the flavour template to be processed
       - C{'entry'} - a L{EntryBase} object to be rendered
 
-    Example:
+    Functions that implement this callback must return the input args
+    dict whether or not they adjust anything in it.
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{Request}, L{EntryBase}, and template
+    @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} and
+        C{'template'}
     @type args: dict
     """
     pass
 
-def cb_story_end(args = {'renderer':'The Blosxom renderer', 
-                     'entry':'The entry to render',
-                     'template':'The template to be filled in'}):
+def cb_story_end(args):
     """
-    A callback that is called after a story flavour template is rendered
+    The story_end callback is is called after the variables in the entry 
+    are substituted into the template.  You have access to all the 
+    content variables via entry.
     
-    C{cb_story} is called after the variables in the entry are substituted
-    into the template.  You have access to all the content variables via 
-    entry.
+    Functions that implement this callback will get an args dict containing:
     
-    C{args} contains
-    
-      - C{'renderer'} - the L{BlosxomRenderer} that called the callback
-      - C{'entry'} - a L{EntryBase} to be rendered
-      - C{'template'} - a string containing the flavour template to be processed
+     - C{'request'} - the L{Request} object
+     - C{'renderer'} - the L{BlosxomRenderer} that called the callback
+     - C{'entry'} - a L{EntryBase} to be rendered
+     - C{'template'} - a string containing the flavour template to be processed
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
+    Functions that implement this callback must return the input args
+    dict whether or not they adjust anything in it.
+
+    @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} and
+        C{'template'}
     @type args: dict
     """
     pass
 
-def cb_foot(args = {'renderer':'The Blosxom renderer', 
-                    'entry':'The entry to render',
-                    'template':'The template to be filled in'}):
+def cb_foot(args):
     """
-    A callback that is called before a footflavour template is rendered
+    The foot callback is called before the variables in the entry are 
+    substituted into the foot template.  This is the place to modify the 
+    foot template based on the entry content.  You have access to all the 
+    content variables via entry.
     
-    C{cb_foot} is called before the variables in the entry are substituted
-    into the template.  This is the place to modify the foot template based
-    on the entry content.  You have access to all the content variables via 
-    entry.
-    
-    Blosxom 2.0 calls this callback 'foot'
+    Blosxom 2.0 calls this callback 'foot'.
 
-    C{args} contains
+    Functions that implement this callback will get an args dict containing:
     
-      - C{'renderer'} - the L{BlosxomRenderer} that called the callback
-      - C{'entry'} - a L{EntryBase} to be rendered
-      - C{'template'} - a string containing the flavour template to be processed
+     - C{'request'} - the L{Request} object
+     - C{'renderer'} - the L{BlosxomRenderer} that called the callback
+     - C{'entry'} - a L{EntryBase} to be rendered
+     - C{'template'} - a string containing the flavour template to be processed
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
+    Functions that implement this callback must return the input args
+    dict whether or not they adjust anything in it.
+
+    @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} and
+        C{'template'}
     @type args: dict
     """
     pass
