@@ -1,11 +1,8 @@
 #!/usr/bin/env python
-# vim: shiftwidth=4 tabstop=4 expandtab
 """pyblosxom
-A Bloxsom clone in python, see http://www.raelity.org/apps/blosxom/ for details
+A Bloxsom clone in python, see http://www.raelity.org/apps/blosxom/ for 
+Blosxom details.
 """
-# Uncomment this if you put Pyblosxom directory outside of pyblosxom.cgi
-#import sys
-#sys.path.append('/path/to/Pyblosxom/directory')
 # Uncomment this if something goes wrong (for debugging)
 #import cgitb; cgitb.enable()
 
@@ -13,11 +10,18 @@ A Bloxsom clone in python, see http://www.raelity.org/apps/blosxom/ for details
 # (make it executable or deny access)
 import config
 
+# If the user defined a "codebase" property in their config file,
+# then we insert that into our sys.path because that's where the
+# PyBlosxom installation is.
+if config.py.has_key("codebase"):
+    import sys
+    sys.path.insert(0, config.py["codebase"])
+
 __author__ = 'Wari Wahab <wari@wari.per.sg>'
 __version__ = config.py['pyblosxom_version']
 __date__ = "$Date$"
 __revision__ = "$Revision$"
-__copyright__ = "Copyright (c) 2003 Wari Wahab"
+__copyright__ = "Copyright (c) 2003-2004 Wari Wahab"
 __license__ = "Python"
 
 if __name__ == '__main__':
@@ -38,3 +42,5 @@ if __name__ == '__main__':
     p = PyBlosxom(req)
     p.startup()
     p.run()
+
+# vim: shiftwidth=4 tabstop=4 expandtab

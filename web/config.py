@@ -1,8 +1,13 @@
 py = {}
-xmlrpc = {}
+
 ###############
 # Start Below #
 ###############
+# If your PyBlosxom installation is in a funky place, uncomment
+# this next line and point it to your PyBlosxom installation
+# directory.
+#py["codebase"] = "/path/to/pyblosxom/installation"
+
 # What's this blog's title?
 py['blog_title'] = "Another pyblosxom blog"
 
@@ -28,6 +33,7 @@ py['depth'] = 0
 
 # How many entries should I show on the home page?
 py['num_entries'] = 40
+
 
 ###########################
 # Optional Configurations #
@@ -67,22 +73,6 @@ py['num_entries'] = 40
 # ex: py['load_plugins'] = ["pycalendar", "pyfortune", "pyarchives"]
 #py['load_plugins'] = []
 
-###################################
-# XMLRPC Configuration parameters #
-###################################
-# XML-RPC data, if you use XMLRPC, then the information below needs to
-# be set up
-# Username and password to access this server, you can define one or more
-#xmlrpc['usernames'] = {'someuser': 'somepassword'}
-
-# See the infomation above for setting up the plugins for xmlrpc
-#py['xmlrpc_plugin_dirs'] = ['/path/to/my/xmlrpc/plugins']
-#py['load_xmlrpc_plugins'] = []
-
-# maxrequest_length - How much data do you expect to send via XMLRPC?
-# Default is 10KB, which should actually be enough for quite a large
-# posting. This is added to avoid attacks
-#xmlrpc['maxrequest_length'] = 10000
 
 ###########################
 # Nothing to modify below #
@@ -91,7 +81,7 @@ __author__ = 'Wari Wahab <wari at wari dot per dot sg>'
 __version__ = "CVS"
 __date__ = "$Date$"
 __revision__ = "$Revision$"
-__copyright__ = "Copyright (c) 2003 Wari Wahab"
+__copyright__ = "Copyright (c) 2003-2004 Wari Wahab"
 __license__ = "MIT License"
 py['pyblosxom_version'] = __version__
 py['pyblosxom_name'] = 'pyblosxom'
