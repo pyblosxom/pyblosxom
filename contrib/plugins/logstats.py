@@ -318,3 +318,15 @@ def cb_filelist(args):
     except (EOFError, IOError):
         stats = PyblStats(config)
     return [generate_entry(request, stats.genReferrerStats())]
+
+def verify_installation(request):
+    config = request.getConfiguration()
+    retval = 1
+
+    # all config properties are optional
+    props = ['referrer_length','num_referrers', 'refer_blacklist']
+    for i in props:
+        if not config.has_key(i):
+            print("missing optional property: '%s'" % i)
+
+    return retval

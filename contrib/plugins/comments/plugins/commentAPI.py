@@ -24,6 +24,16 @@ from Pyblosxom import tools
 
 tools.make_logger('/tmp/commentAPI.log')
 
+def verify_installation(request):
+    config = request.getConfiguration()
+    retval = 1
+
+    # all config properties are optional
+    if not config.has_key('commentAPI_urltrigger'):
+        print("missing optional property: 'commentAPI_urltrigger'")
+
+    return retval
+
 def cb_handle(args):
     """
 

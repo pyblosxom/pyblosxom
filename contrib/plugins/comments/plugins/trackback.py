@@ -22,6 +22,16 @@ tb_bad_response = """<?xml version="1.0" encoding="iso-8859-1"?>
 <message>%s</message>
 </response>"""
 
+def verify_installation(request):
+    config = request.getConfiguration()
+    retval = 1
+
+    # all config properties are optional
+    if not config.has_key('trackback_urltrigger'):
+        print("missing optional property: 'trackback_urltrigger'")
+
+    return retval
+
 def cb_handle(args):
     """
 

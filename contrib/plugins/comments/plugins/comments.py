@@ -9,22 +9,35 @@ from xml.sax.saxutils import escape
 from Pyblosxom import tools
 from Pyblosxom.entries.base import EntryBase
 
-try:
-    import logging
-except ImportError:    
-    def log(str):
-        pass
-else:
-    logger = logging.getLogger('comments')
-    hdlr = logging.FileHandler('/tmp/comments.log')
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-    hdlr.setFormatter(formatter)
-    logger.addHandler(hdlr) 
-    logger.setLevel(logging.INFO)
-
-    def log(str):
-        logger.info(str)
+tools.make_logger('/tmp/comments.log')
     
+def verify_installation(request):
+    config = request.getConfiguration()
+
+    retval = 1
+
+    if config.has_key('comment_dir') and not os.path.isdir(config['comment_dir']):
+        print 'The "comment_dir" property in the config file must refer to a directory'
+        retval = 0
+
+    actual_smtp_keys = []
+    smtp_keys=['comment_smtp_server', 'comment_smtp_from', 'comment_smtp_to']
+    for k in smtp_keys:
+        if config.has_key(k):
+            actual_smtp_keys.append(k)
+    if len(k) > 0:
+        for i in smtp_keys:
+            if i not in actual_smtp_keys:
+                print("Missing comment SMTP property: '%s'" % i)
+                retval = 0
+    
+    optional_keys = ['comment_dir', 'comment_ext']
+    for i in optional_keys:
+        if config.has_key(i):
+            print("mission optional property: '%s'" % i)
+
+    return retval
+
 #
 # file system  implementation
 # Comments are stored 1 per file, in a parallel hierarchy to the datadir
@@ -47,7 +60,7 @@ def readComments(entry, config):
     try:
         return [ readComment(f) for f in filelist ]
     except:
-        log("Couldn't read comments for entry: ",entry)
+        tools.log("Couldn't read comments for entry: ",entry)
         return []
     
 def getCommentCount(entry, config):
@@ -119,7 +132,7 @@ def readComment(filename):
         cmt['cmt_pubDate'] = time.ctime(float(cmt['cmt_pubDate']))
         story.close()
     except:
-        log("Couldn't read: ", filename)
+        tools.log("Couldn't read: ", filename)
         story.close()
     return cmt
 
@@ -148,7 +161,7 @@ def writeComment(config, data, comment):
     try :
         cfile = open(cfn, "w")
     except:
-        log("Couldn't open comment file %s for writing" % cfn)
+        tools.log("Couldn't open comment file %s for writing" % cfn)
         return
     else:
         pass
@@ -167,7 +180,7 @@ def writeComment(config, data, comment):
         cfile.write("</item>\n")
         cfile.close()
     except:
-        log("Error writing comment data for ", cfn)
+        tools.log("Error writing comment data for ", cfn)
         cfile.close()
         
     #write latest pickle
@@ -176,7 +189,7 @@ def writeComment(config, data, comment):
     try:
         latest = open(latestFilename,"w")
     except:
-        log("Couldn't open latest comment pickle for writing")
+        tools.log("Couldn't open latest comment pickle for writing")
         return
     else:
         modTime = float(comment['pubDate'])
@@ -205,7 +218,7 @@ def writeComment(config, data, comment):
             server.sendmail(from_addr=config['comment_smtp_from'], to_addrs=config['comment_smtp_to'], msg=message)
             server.quit()
         except:
-            log("Error sending mail: %s" % message)
+            tools.log("Error sending mail: %s" % message)
             pass
 
 def clean_author(s):

@@ -43,6 +43,25 @@ __version__ = "$Id$"
 import glob, os, urllib
 from Pyblosxom.entries import fileentry
 
+def verify_installation(request):
+    config = request.getConfiguration()
+
+    retval = 1
+
+    if not config.has_key('lucene_home') or not os.path.isdir(config['lucene_home']):
+        print 'The "lucene_home" property in the config file must refer to a directory that contains the lucene libraries.'
+        retval = 0
+
+    if not config.has_key('JAVA_HOME') or not os.path.isfile(config['JAVA_HOME']):
+        print 'The "JAVA_HOME" property in the config file must refer to the "java" command on your system.'
+        retval = 0
+
+    if not config.has_key('lucene_bin') or not os.path.isdir(config['lucene_bin']):
+        print 'The "lucene_bin" property in the config file must refer to a directory that contains the lucene plugin scripts index.sh and search.sh.'
+        retval = 0
+
+    return retval
+
 def makeEntry(filename, request):
     """
     @param filename: filename of matching entry

@@ -6,6 +6,10 @@ from xmlrpclib import Fault
 
 import os, re, sgmllib, time, urllib, urlparse
 
+def verify_installation(request):
+    # no config parameters
+    return 1
+
 class parser(sgmllib.SGMLParser):
     """ Shamelessly grabbed from Sam Ruby
     from http://www.intertwingly.net/code/mombo/pingback.py

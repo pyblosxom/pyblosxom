@@ -43,6 +43,16 @@ from Pyblosxom import tools, plugin_utils
 LINEFEED = os.linesep
 
 
+def verify_installation(request):
+    config = request.getConfiguration()
+    retval = 1
+
+    # all config properties are optional
+    if not config.has_key('xmlrpc_blogger_metaweblog'):
+        print("missing optional property: 'xmlrpc_blogger_metaweblog'")
+
+    return retval
+
 def cb_xmlrpc_register(args):
     """
     Binds the methods that we handle with the function instances.
