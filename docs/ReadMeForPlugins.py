@@ -39,16 +39,16 @@ care of by callback chains.
      - The blosxom 2.0 sort callback is handled by L{cb_prepare}
 
 B{verify_installation}
-A couple of weeks ago, I checked in code to help out PyBlosxom
-installation and configuration.  I made changes to pyblosxom.cgi so
-that you could run it from the prompt::
+
+For 0.9, I made changes to pyblosxom.cgi so that you could run it from 
+the prompt::
 
    ./pyblosxom.cgi
 
 It tells you your Python version, OS name, and then proceeds to verify
 your config properties (did you specify a valid datadir?  does it
 exist?...) and then initializes all your plugins and executes
-<code>verify_installation(request)</code> on every plugin you have
+verify_installation(request) on every plugin you have
 installed that has the function.
 
 As a plugin developer, you should add a verify_installation function
@@ -69,9 +69,8 @@ turbo plugin in small baby steps without having to hunt for where
 their logs might be.
 
 So check the things you need to check, print out error messages
-(informative ones), and then return a <code>1</code> if the
-plugin is configured correctly or a <code>0</code> if it's not
-configured correctly.
+(informative ones), and then return a 1 if the plugin is configured 
+correctly or a 0 if it's not configured correctly.
 
 This is not a substitute for reading the installation instructions.  But
 it should be a really easy way to catch a lot of potential problems
