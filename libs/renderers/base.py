@@ -28,6 +28,50 @@ class RendererBase:
         self.rendered = None
 
 
+    def write(self, data):
+        """
+        Convenience method for programs to use instead of accessing
+        self._out.write()
+
+        Other classes can override this if there is a unique way to
+        write out data, for example, a two stream output, e.g. one
+        output stream and one output log stream.
+
+        Another use for this could be a plugin that writes out binary
+        files, but because renderers and other frameworks may probably
+        not want you to write to C{stdout} directly, this method assists
+        you nicely. For example::
+
+            def cb_start(args):
+                req = args['request']
+                renderer = req['renderer']
+
+                if reqIsGif and gifFileExists(theGifFile):
+                    # Read the file
+                    data = file(theGifFile).read()
+                    
+                    # Modify header
+                    renderer.addHeader('Content-type', 'image/gif')
+                    renderer.addHeader('Content-Length', len(data))
+                    renderer.showHeader()
+
+                    # Write to output
+                    renderer.write(data)
+
+                    # Tell pyblosxom not to render anymore as data is
+                    # processed already
+                    renderer.rendered = 1
+
+        This simple piece of pseudocode explains what you could do with
+        this method, though I highly don't recommend this, unless
+        pyblosxom is running continuously.
+
+        @param data: Piece of string you want printed
+        @type data: string
+        """
+        self._out.write(data)
+
+
     def addHeader(self, *args):
         """
         Populates the HTTP header with lines of text
@@ -75,8 +119,9 @@ class RendererBase:
         Show HTTP Headers. Override this if your renderer uses headers in a
         different way
         """
-        self._out.write('\n'.join(['%s: %s' % (x, self._header[x]) for x in self._header]))
-        self._out.write('\n\n')
+        self.write('\n'.join(['%s: %s' % (x, self._header[x]) 
+                for x in self._header]))
+        self.write('\n\n')
 
 
     def render(self, header = 1):
@@ -94,7 +139,7 @@ class RendererBase:
                 self.showHeader()
 
         if self._content:
-            self._out.write(self._content)
+            self.write(self._content)
         self.rendered = 1
 
 class Renderer(RendererBase):

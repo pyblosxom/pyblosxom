@@ -192,7 +192,7 @@ class BlosxomRenderer(RendererBase):
                 # if entry['pi_yr'] == '':
                 #     break
 
-        return self._out.write(u"".join(outputbuffer))
+        return self.write(u"".join(outputbuffer))
 
     def render(self, header = 1):
         """
@@ -254,7 +254,7 @@ class BlosxomRenderer(RendererBase):
         template = args["template"]
         entry = args["entry"]
 
-        self._out.write(tools.parse(entry, template))
+        self.write(tools.parse(entry, template))
             
     def outputTemplate(self, output, entry, flavour_name):
         """

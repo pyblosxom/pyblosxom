@@ -7,7 +7,7 @@ class Renderer(RendererBase):
         pyhttp = self._request.getHttp()
         config = self._request.getConfiguration()
         data = self._request.getData()
-        printout = self._out.write
+        printout = self.write
 
         self.addHeader('Content-type', 'text/plain')
         self.showHeaders()
