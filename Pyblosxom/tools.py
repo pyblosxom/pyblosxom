@@ -197,7 +197,10 @@ def _walk_internal( root, recurse, pattern, return_folders ):
     # initialize
     result = []
 
-    names = os.listdir(root)
+    try:
+        names = os.listdir(root)
+    except:
+        return []
 
     # check each file
     for name in names:
