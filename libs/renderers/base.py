@@ -60,6 +60,15 @@ class RendererBase:
         self._needs_content_type = flag
 
 
+    def showHeaders(self):
+        """
+        Show HTTP Headers. Override this is your renderer uses headers in a
+        different way
+        """
+        self._out.write('\n'.join(self._header))
+        self._out.write('\n\n')
+
+
     def render(self, header = 1):
         """
         Do final rendering.
@@ -69,11 +78,10 @@ class RendererBase:
         """
         if header:
             if self._header:
-                for line in self._header:
-                    self._out.write(line + '\n')
+                self.showHeader()
             else:
-                self._out.write('Content-Type: text/plain\n')
-            self._out.write('\n')
+                self.addHeader('Content-Type: text/plain')
+                self.showHeader()
 
         if self._content:
             self._out.write(self._content)
