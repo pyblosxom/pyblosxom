@@ -1,3 +1,12 @@
+2003-06-17 Wari Wahab <wari@homedotwaridotorg>
+	* Updated renderers to use the callback system
+	* Added documentation for cb_renderer()
+	* Cleaned up setup.py installation script
+
+2003-06-08 Will
+	* Revamped the plugin system so that plugin directories can be defined
+	  by the user and is no longer tied to the pyblosxom system
+
 2003-05-27 Wari Wahab <wari@homedotwaridotorg>
 	* Major restructuring taken place. Removed libs/ from existence and
 	  renamed it to a more dist friendly Pyblosxom/

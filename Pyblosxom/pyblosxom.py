@@ -255,16 +255,17 @@ class PyBlosxom:
         data = self._request.getData()
         pyhttp = self._request.getHttp()
 
-        # instantiate the renderer with the current request and store it
-        # in the data dict
-        renderer = tools.importName('Pyblosxom.renderers', 
-                config.get('renderer', 'blosxom')).Renderer(self._request, 
-                config.get('stdoutput', sys.stdout))
-        data["renderer"] = renderer
-
         # import plugins
         import plugin_utils
         plugin_utils.initialize_plugins(config)
+
+        # instantiate the renderer with the current request and store it
+        # in the data dict
+        data['renderer'] = tools.run_callback('renderer', {'request': self._request},
+                donefunc = lambda x: x != None, 
+                defaultfunc = lambda x: tools.importName('Pyblosxom.renderers', 
+                        config.get('renderer', 'blosxom')).Renderer(self._request, 
+                        config.get('stdoutput', sys.stdout)))
         
         # do start callback
         tools.run_callback("start", {'request': self._request}, mappingfunc=lambda x,y:y)
@@ -309,6 +310,7 @@ class PyBlosxom:
         # now we pass the entry_list through the renderer
         entry_list = data["entry_list"]
 
+        renderer = data['renderer']
         if renderer and not renderer.rendered:
             if entry_list:
                 renderer.setContent(entry_list)
@@ -335,4 +337,4 @@ class PyBlosxom:
 
         elif not renderer:
             output = config.get('stdoutput', sys.stdout)
-            output.write("Content-Type: text/plain\n\nThere is something wrong with your setup")
+            output.write("Content-Type: text/plain\n\nThere is something wrong with your setup\n")

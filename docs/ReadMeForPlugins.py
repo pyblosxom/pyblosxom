@@ -1,4 +1,5 @@
 # vim: tabstop=4 shiftwidth=4 expandtab
+# This document uses epydoc syntax, see http://epydoc.sf.net
 """
 C{README} for Plugins
 
@@ -143,6 +144,27 @@ def cb_filelist(args = {'request' : Request()}):
     @type args: dict
     @returns: None or list of L{EntryBase}.
     @rtype: list
+    """
+    pass
+
+
+def cb_renderer(args = {'request' : Request()}):
+    """
+    A callback to returb a L{PyBlosxom.renderers.base.RendererBase} instance.
+    The default renderer is the ones available in the L{PyBlosxom.renderers} as
+    default, and called using::
+                
+      tools.importName('Pyblosxom.renderers', 
+              config.get('renderer', 'blosxom')).Renderer(self._request, 
+              config.get('stdoutput', sys.stdout)))
+    
+    If C{None} is returned, then the callback chain will try the next plugin in
+    the list.
+
+    @param args: A dict containing a L{Request()} object
+    @type args: dict
+    @returns: None or a L{Pyblosxom.renderers.base.RendererBase} instance
+    @rtype: object instace
     """
     pass
 
