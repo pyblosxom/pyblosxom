@@ -163,8 +163,9 @@ class EntryBase:
         @type  timeTuple: tuple of ints
         """
         self['timetuple'] = timeTuple
-        self['mtime'] = time.mktime(timeTuple)
-        gmTimeTuple = time.gmtime(self['mtime'])
+        mtime = time.mktime(timeTuple)
+        gmTimeTuple = time.gmtime(mtime)
+        self['mtime'] = mtime
         self['ti'] = time.strftime('%H:%M', timeTuple)
         self['mo'] = time.strftime('%b', timeTuple)
         self['mo_num'] = time.strftime('%m', timeTuple)
