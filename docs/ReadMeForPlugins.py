@@ -146,8 +146,8 @@ def cb_prepare(args):
     @param args: dict containing C{'request'}
     @type  args: dict
 
-    @return: none
-    @rtype:  none
+    @return: None
+    @rtype:  None
     """
     pass
 
@@ -178,8 +178,8 @@ def cb_logrequest(args):
         C{'request'}
     @type  args: dict
 
-    @return: none
-    @rtype:  none
+    @return: None
+    @rtype:  None
     """
     pass
 
@@ -235,6 +235,9 @@ def cb_pathinfo(args):
 
     @param args: a dict containing C{'request'}
     @type  args: dict
+
+    @return: None
+    @rtype:  None
     """
     pass
 
@@ -410,10 +413,13 @@ def cb_start(args):
 
     @param args: a dict containing C{'request'}
     @type  args: dict
+
+    @return: None
+    @rtype:  None
     """
     pass
 
-def cb_end(args = {'request' : Request()}):
+def cb_end(args):
     """
     The start callback allows plugins to execute teardown/cleanup code,
     save any data that hasn't been saved, clean up temporary files,
@@ -437,6 +443,9 @@ def cb_end(args = {'request' : Request()}):
 
     @param args: a dict containing C{'request'}
     @type  args: dict
+
+    @return: None
+    @rtype:  None
     """
     pass
 
@@ -478,6 +487,9 @@ def cb_head(args):
     @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} 
         and C{'template'}
     @type  args: dict
+
+    @returns: the args dict
+    @rtype: dict
     """
     pass
 
@@ -506,6 +518,9 @@ def cb_date_head(args):
     @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} and
         C{'template'}
     @type args: dict
+
+    @returns: the args dict
+    @rtype: dict
     """
     pass
 
@@ -538,6 +553,9 @@ def cb_story(args):
     @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} and
         C{'template'}
     @type args: dict
+
+    @returns: the args dict
+    @rtype: dict
     """
     pass
 
@@ -560,6 +578,9 @@ def cb_story_end(args):
     @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} and
         C{'template'}
     @type args: dict
+
+    @returns: the args dict
+    @rtype: dict
     """
     pass
 
@@ -585,5 +606,8 @@ def cb_foot(args):
     @param args: a dict containing C{'request'}, C{'renderer'}, C{'entry'} and
         C{'template'}
     @type args: dict
+
+    @returns: the args dict
+    @rtype: dict
     """
     pass
