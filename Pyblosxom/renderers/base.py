@@ -17,8 +17,8 @@ class RendererBase:
 
         @param request: The L{Pyblosxom.Request.Request} object
         @type request: L{Pyblosxom.Request.Request} object
-        @param out: File like object to print to.
-        @type out: file
+        @param stdoutput: File like object to print to.
+        @type stdoutput: file
         """
         self._request = request
         self._header = {}

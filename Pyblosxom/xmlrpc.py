@@ -73,18 +73,18 @@ def authenticate(request, username, password):
     A convenient authentication for plugins to use
 
     @param request: Request object for the current request
-    @type request: L{libs.Request.Request} object
+    @type request: L{Pyblosxom.Request.Request} object
     @param username: Username for authentication
     @type username: string
     @param password: Password for authentication
     @type password: string
     @raises xmlrpclib.Fault: This happens when the username password combo is
         wrong
-    @warning: The L{libs.Request.Request} must contain a configuration dict
+    @warning: The L{Pyblosxom.Request.Request} must contain a configuration dict
         with C{['xmlrpc']['usernames']} in it. The username is derived from the
         key value pair dict there:
 
-        >>> req = libs.Request.Request()
+        >>> req = Pyblosxom.Request.Request()
         >>> req.addConfiguration({'xmlrpc': {'usernames': {'foo': 'bar'}}})
         >>> authenticate(req, 'foo', 'bar')
     """

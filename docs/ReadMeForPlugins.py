@@ -168,8 +168,8 @@ def cb_pathinfo(args = {'request' : Request()}):
 
 def cb_renderer(args = {'request' : Request()}):
     """
-    A callback to returb a L{PyBlosxom.renderers.base.RendererBase} instance.
-    The default renderer is the ones available in the L{PyBlosxom.renderers} as
+    A callback to returb a L{Pyblosxom.renderers.base.RendererBase} instance.
+    The default renderer is the ones available in the L{Pyblosxom.renderers} as
     default, and called using::
                 
       tools.importName('Pyblosxom.renderers', 
