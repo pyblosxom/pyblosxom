@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 
-import sys
-import time
-import os
-import re
-import random
+import sys, time, os, re, random
 
 entryDelim = re.compile( r"^--------$", re.MULTILINE )
 sectionDelim = re.compile( r"^-----$", re.MULTILINE )
