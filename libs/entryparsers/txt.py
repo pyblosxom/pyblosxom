@@ -38,7 +38,8 @@ def parse(filename, request):
         else:
             break
 
-    preformatter = tools.importName('libs.preformatters', config.get('parser', 'plain'))
+    preformatter = tools.importName('libs.preformatters', 
+            (entryData.get('parser', '') or config.get('parser', 'plain')))
     if preformatter:
         entryData['body'] = preformatter.PreFormatter(story).parse()
     else:
