@@ -86,59 +86,28 @@ class PyBlosxom:
 
         return valid_list
 
-
-    def run(self):
+    def processPathInfo(self, path_info):
         """
-        Main loop for pyblosxom.
+        Process path_info for URI according to path specifications, fill in data dict accordingly
+
+        @param: path_info
+        @type: array of components of uri, typically obtained by uri.split("/")
+        
+        The paths specification looks like this:
+        /cat - category
+        /2002 - year
+        /2002/Feb (or 02) - Year and Month
+        /2002/Feb/03#entry - Year, Month, Date, fragment id = entry name
+        /cat/2002/Feb/31 - year and month day in category.
+        /foo.html and /cat/foo.html - file foo.* in / and /cat
+        To simplify checking, four digits directory name is not allowed.
         """
         config = self._request.getConfiguration()
         data = self._request.getData()
-        pyhttp = self._request.getHttp()
-
-        # instantiate the renderer with the current request and store it
-        # in the data dict
-        renderer = tools.importName('libs.renderers', 
-                config.get('renderer', 'blosxom')).Renderer(self._request)
-        data["renderer"] = renderer
-
-        # import entryparsers here to allow other plugins register what file
-        # extensions can be used
-        import libs.entryparsers.__init__
-        libs.entryparsers.__init__.initialize_extensions()
-        data['extensions'] = libs.entryparsers.__init__.ext
-        
-        # import plugins and allow them to register with the api
-        import libs.plugins.__init__
-        libs.plugins.__init__.initialize_plugins(config)
-
-        api.fileListHandler.register(self.defaultFileListHandler, api.LAST)
-        
-        form = self._request.getHttp()["form"]
-        data['flavour'] = (form.has_key('flav') and 
-                form['flav'].value or 
-                config.get('defaultFlavour', 'html'))
-
-        path_info = []
-        
-        # Get the blog name if possible
-        data['pi_yr'] = ''
-        data['pi_mo'] = ''
-        data['pi_da'] = ''
-        
-        if pyhttp.get('PATH_INFO', ''):
-            path_info = pyhttp['PATH_INFO'].split('/')
 
         data['path_info'] = list(path_info)
         data['root_datadir'] = config['datadir']
 
-        # Process path_info
-        # The paths specification looks like this:
-        # /cat - category
-        # /2002 - year
-        # /2002/Feb (or 02) - Year and Month
-        # /cat/2002/Feb/31 - year and month day in category.
-        # /foo.html and /cat/foo.html - file foo.* in / and /cat
-        # To simplify checking, four digits directory name is not allowed.
         got_date = 0
         for path_data in path_info:
             if not path_data:
@@ -221,6 +190,50 @@ class PyBlosxom:
                         config['blog_title'] += ' : %s' % os.path.dirname(data['pi_bl'])
                     data['root_datadir'] = dirname
                     data['bl_type'] = 'dir'
+                    
+    
+    def run(self):
+        """
+        Main loop for pyblosxom.
+        """
+        config = self._request.getConfiguration()
+        data = self._request.getData()
+        pyhttp = self._request.getHttp()
+
+        # instantiate the renderer with the current request and store it
+        # in the data dict
+        renderer = tools.importName('libs.renderers', 
+                config.get('renderer', 'blosxom')).Renderer(self._request)
+        data["renderer"] = renderer
+
+        # import entryparsers here to allow other plugins register what file
+        # extensions can be used
+        import libs.entryparsers.__init__
+        libs.entryparsers.__init__.initialize_extensions()
+        data['extensions'] = libs.entryparsers.__init__.ext
+        
+        # import plugins and allow them to register with the api
+        import libs.plugins.__init__
+        libs.plugins.__init__.initialize_plugins(config)
+
+        api.fileListHandler.register(self.defaultFileListHandler, api.LAST)
+        
+        form = self._request.getHttp()["form"]
+        data['flavour'] = (form.has_key('flav') and 
+                form['flav'].value or 
+                config.get('defaultFlavour', 'html'))
+
+        path_info = []
+        data['pi_yr'] = ''
+        data['pi_mo'] = ''
+        data['pi_da'] = ''
+        data['pi_frag'] = ''
+        
+        if pyhttp.get('PATH_INFO', ''):
+            path_info = pyhttp['PATH_INFO'].split('/')
+
+        # process the path info to determine what kind of blog entry(ies) this is
+        self.processPathInfo(path_info)
 
         # calling fileList will generate a list of entries from the
         # api.fileListHandler
