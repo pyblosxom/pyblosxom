@@ -2,7 +2,10 @@
 from libs import tools
 from libs.renderers.base import RendererBase
 import re, os, sys, cgi, codecs
-from xml.sax.saxutils import escape
+try:
+    from xml.sax.saxutils import escape
+except ImportError:
+    from cgi import escape
 
 """
 BlosxomRenderer can use the following keys from config.py:
