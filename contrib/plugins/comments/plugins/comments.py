@@ -2,7 +2,7 @@
 # Comment poster
 #
 
-import cgi, glob, os.path, re, time
+import cgi, glob, os.path, re, time, cPickle
 from xml.sax.saxutils import escape
 from libs import tools
 from libs.entries.base import EntryBase
@@ -41,8 +41,6 @@ def getCommentCount(entry, config):
     """
     if entry['absolute_path'] == None: return 0
     filelist = glob.glob(cmtExpr(entry,config))
-    if (len(filelist) > 0):
-        entry['comment_latest_mtime'] = os.stat(filelist[-1]).st_mtime
     return len(filelist)
 
 def cmtExpr(entry, config):
@@ -125,6 +123,7 @@ def writeComment(config, data, comment):
         os.makedirs(cdir)
     cfn = cdir+'/'+entry['fn']+"-"+comment['pubDate']+"."+config['comment_ext']
      
+    # write comment
     try :
         cfile = file(cfn, "w")
     
@@ -143,6 +142,17 @@ def writeComment(config, data, comment):
         cfile.close()
     except:
         cfile.close()
+        
+    #write latest pickle
+    try:
+        latestFilename = datadir+'/'+config['comment_dir']+'/LATEST'
+        latest = file(latestFilename,"w")
+        modTime = float(comment['pubDate'])
+        cPickle.dump(modTime,latest)
+        latest.close()
+    except (EOFError, IOError):
+        pass
+    
     
     # if the right config keys are set, notify by e-mail
     if config.has_key('comment_smtp_server') and \
