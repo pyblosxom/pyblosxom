@@ -102,15 +102,16 @@ class EntryBase:
         @type  timeTuple: tuple of ints
         """
         self['timetuple'] = timeTuple
-        self['ti'] = time.strftime('%H:%M',timeTuple)
-        self['mo'] = time.strftime('%b',timeTuple)
-        self['mo_num'] = time.strftime('%m',timeTuple)
-        self['da'] = time.strftime('%d',timeTuple)
-        self['yr'] = time.strftime('%Y',timeTuple)
-        self['fulltime'] = time.strftime('%Y%m%d%H%M%S',timeTuple)
+        self['mtime'] = time.mktime(timeTuple)
+        self['ti'] = time.strftime('%H:%M', timeTuple)
+        self['mo'] = time.strftime('%b', timeTuple)
+        self['mo_num'] = time.strftime('%m', timeTuple)
+        self['da'] = time.strftime('%d', timeTuple)
+        self['yr'] = time.strftime('%Y', timeTuple)
+        self['fulltime'] = time.strftime('%Y%m%d%H%M%S', timeTuple)
         # YYYY-MM-DDThh:mm:ssTZD
-        self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%S%Z',timeTuple)
-        self['date'] = time.strftime('%a, %d %b %Y',timeTuple)
+        self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%S%Z', timeTuple)
+        self['date'] = time.strftime('%a, %d %b %Y', timeTuple)
 
     def __getitem__(self, key, default=None):
         """

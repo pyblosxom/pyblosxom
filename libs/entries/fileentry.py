@@ -112,7 +112,7 @@ class FileEntry(base.EntryBase):
         # handle the time portions
         mtime = tools.filestat(self._filename)[8]
         timeTuple = time.localtime(mtime)
-        self['mtime'] = mtime
+        # self['mtime'] = mtime
         self.setTime(timeTuple)
 
         # when someone does a getMetadata and they're looking for
