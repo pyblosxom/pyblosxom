@@ -59,14 +59,15 @@ def verify_installation(request):
         print 'The "comment_dir" property in the config file must refer to a directory'
         retval = 0
 
-    actual_smtp_keys = []
+    smtp_keys_defined = []
     smtp_keys=['comment_smtp_server', 'comment_smtp_from', 'comment_smtp_to']
     for k in smtp_keys:
         if config.has_key(k):
-            actual_smtp_keys.append(k)
-    if len(k) > 0:
+            smtp_keys_defined.append(k)
+
+    if smtp_keys_defined:
         for i in smtp_keys:
-            if i not in actual_smtp_keys:
+            if i not in smtp_keys_defined:
                 print("Missing comment SMTP property: '%s'" % i)
                 retval = 0
     
