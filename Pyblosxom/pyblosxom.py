@@ -15,8 +15,8 @@ import tools
 from entries.fileentry import FileEntry
 
 
-VERSION = "1.2"
-VERSION_DATE = VERSION + " 3/25/2005"
+VERSION = "1.3"
+VERSION_DATE = VERSION + " devel"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
 class PyBlosxom:
