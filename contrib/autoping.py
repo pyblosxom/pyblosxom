@@ -36,7 +36,7 @@ from Pyblosxom.pyblosxom import PyBlosxom
 from Pyblosxom.Request import Request
 import config
 
-import wingdbstub
+#import wingdbstub
 
 def excerpt(filename, title, body, blogname):
     """ filename,title,body => url,args
