@@ -282,6 +282,14 @@ def cb_head(args):
     newtemplate = renderer.flavour.get('comment-head','')
     if not newtemplate == '' and len(renderer.getContent()) == 1:
         args['template'] = newtemplate
+
+        # expand all of entry vars for expansion
+        entry = args['entry']
+        single_entry = entry['entry_list'][0]
+        single_entry['title'] # force lazy evaluation
+        entry.update(single_entry)
+        args['entry'] = entry
+
     return template
         
 def cb_story(args):
