@@ -55,7 +55,7 @@ class PyblCategories:
 
         # build the list of entries
         elist = tools.Walk(root)
-        elist = [mem[len(root)+1:] for mem in elist]
+        elist = [mem[len(root):] for mem in elist]
 
         elistmap = {}
         for mem in elist:
