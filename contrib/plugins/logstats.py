@@ -54,7 +54,7 @@ class PyblStats:
         """
         Generate the list of referring files
         """
-        config = self._request.getConfigurat()
+        config = self._request.getConfiguration()
 
         # initialize blacklist
         bad_list = string.split(config.get('refer_blacklist',''),',')

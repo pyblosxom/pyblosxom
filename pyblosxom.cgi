@@ -7,7 +7,7 @@ A Bloxsom clone in python, see http://www.raelity.org/apps/blosxom/ for details
 #import sys
 #sys.path.append('/path/to/libs/directory')
 # Uncomment this if something goes wrong (for debugging)
-import cgitb; cgitb.enable()
+#import cgitb; cgitb.enable()
 
 # Settings are now in config.py, you should disable access to it by htaccess
 # (make it executable or deny access)

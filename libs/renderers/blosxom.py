@@ -64,7 +64,7 @@ class BlosxomRenderer(RendererBase):
                 if s.strip() != '':
                     match = re.match(r'(\w+)\s+(.*)', s)
                     if match:
-                        data[match.groups()[0]] = match.groups()[1].strip()
+                        config[match.groups()[0]] = match.groups()[1].strip()
             
         return flavours[taste]
 

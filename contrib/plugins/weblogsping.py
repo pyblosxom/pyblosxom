@@ -27,8 +27,10 @@ class WeblogsPing:
     def __init__(self, request):
         config = request.getConfiguration()
         pyhttp = request.getHttp()
+        data = request.getData()
 
-        self.pingData = {}
+        self._pingData = {}
+        entryList = data['entry_list']
         if entryList:
             self._latest = entryList[0]['mtime']
         else:
@@ -44,7 +46,7 @@ class WeblogsPing:
         if os.path.isfile(self._file):
             try:
                 fp = file(self._file, 'rb')
-                self.pingData = pickle.load(fp)
+                self._pingData = pickle.load(fp)
                 fp.close()
             except IOError:
                 # Something wrong with the file, abort.
@@ -55,8 +57,8 @@ class WeblogsPing:
                 return
         
         # Timecheck.
-        if self._latest > self.pingData['lastPing'] or \
-           self._latest > self.pingData['latest']:
+        if self._latest > self._pingData['lastPing'] or \
+           self._latest > self._pingData['latest']:
             self.__doPing()
         return
 
@@ -76,13 +78,13 @@ class WeblogsPing:
 
     def __saveResults(self, pingTime, response, response1):
         latest = (pingTime == 0 and 1 or self._latest)
-        self.pingData = {'lastPing' : pingTime,
+        self._pingData = {'lastPing' : pingTime,
                          'response' : response,
                          'response1' : response1,
                          'latest' : latest}
         try:
             fp = file(self._file, 'w+b')
-            pickle.dump(self.pingData, fp, 1)
+            pickle.dump(self._pingData, fp, 1)
             fp.close()
             return 1
         except IOError:
