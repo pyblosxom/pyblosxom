@@ -53,9 +53,12 @@ class xmlrpcHandler:
                 response = xmlrpclib.dumps(response, methodresponse=1)
 
         except:
-            print 'Content-type: text/plain\n\nXML-RPC call expected\nDebug: %s:%s' % (sys.exc_type, sys.exc_value)
+            resp_str = 'Content-type: text/plain\n\nXML-RPC call expected\nDebug: %s:%s' % (sys.exc_type, sys.exc_value)
         else:
-            print 'Content-type: text/xml\nContent-length: %d\n\n%s\n' % (len(response), response)
+            resp_str = 'Content-type: text/xml\nContent-length: %d\n\n%s' % (len(response), response)
+
+        sys.stdout.write(resp_str)
+        sys.stdout.flush()
 
 
     def xmlrpcCall(self, meth_name, args):

@@ -21,10 +21,10 @@ if __name__ == '__main__':
             raise ValueError, 'Request too large - %s bytes' % contentLength
     except:
         response = xmlrpclib.dumps(xmlrpclib.Fault(1, "%s: %s" % sys.exc_info()[:2]))
-        print 'Content-type: text/xml'
-        print 'Content-length: %s' % len(response)
-        print
-        print response
+        resp_str = 'Content-Type: text/xml\nContent-Length: %s\n\n' % len(response)
+        resp_str += response
+        sys.stdout.write(resp_str)
+        sys.stdout.flush()
     else:
         from Pyblosxom.Request  import Request
         from Pyblosxom.xmlrpc import xmlrpcHandler
