@@ -31,6 +31,9 @@ comments:
  2. fn - the filename of the entry without the file extension and without
     the directory.  ex. "staticrendering"
  3. file_path - the absolute_path plus the fn.  ex. "dev/pyblosxom/staticrendering"
+
+Also, for any entry that you don't want to have comments, just add
+"nocomments" to the properties of the entry.
 """
 import cgi, glob, os.path, re, time, cPickle
 from xml.sax.saxutils import escape
@@ -411,7 +414,7 @@ def cb_story(args):
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 \
             and renderer.flavour.has_key('comment-story') \
-            and not entry.has_key("no_comments"):
+            and not entry.has_key("nocomments"):
         template = renderer.flavour.get('comment-story','')
         args['template'] = template
 
@@ -426,7 +429,7 @@ def cb_story_end(args):
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 \
             and renderer.flavour.has_key('comment-story') \
-            and not entry.has_key("no_comments"):
+            and not entry.has_key("nocomments"):
         output = []
         entry['comments'] = readComments(entry, config)
         if entry.has_key('comments'):        
