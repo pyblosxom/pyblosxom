@@ -58,7 +58,7 @@ def parse(dict, template):
     This method parses the open file object passed, replacing any keys
     found using the replacement dictionary passed. From OPAGCGI library"""
     replacer = Replacer(dict).replace
-    replaced = '' + re.sub(r'\$([A-Za-z0-9_\-]+)', replacer, template)
+    replaced = '' + re.sub(r'(?<!\\)\$([A-Za-z0-9_\-]+)', replacer, template)
     return replaced
 
 

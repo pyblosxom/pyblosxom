@@ -85,6 +85,7 @@ class CallbackChain:
 		return data
 
 import os
+
 # CallbackChain to generate a os.stat tuple about a given file.
 # call filestat.executeChain(filename) and get back a os.stat like
 # tuple with all the pieces worked out.

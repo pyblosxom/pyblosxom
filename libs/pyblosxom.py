@@ -152,7 +152,7 @@ class PyBlosxom:
 
         def printTemplate(text, template):
             if template != '':
-                print tools.parseitem(text, tools.parse(text, template))
+                print tools.parseitem(text, tools.parse(text, template)).replace(r'\$', '$')
 
         entryData = {}
         try:
