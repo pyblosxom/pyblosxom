@@ -39,7 +39,7 @@ class BlosxomRenderer(RendererBase):
         html = {'content_type' : 'text/html',
                 'head' : """<html><head><link rel="alternate" type="application/rss+xml" title="RSS" href="$url/?flav=rss" /><title>$blog_title $pi_da $pi_mo $pi_yr</title></head><body><center><font size="+3">$blog_title</font><br />$pi_da $pi_mo $pi_yr</center><p />""",
                 'date_head' : '<div class="blosxomDayDiv">\n<span class="blosxomDate">$date</span>',
-                'story' : """<p><a name="$fn"><b>$title</b></a><br />$body<br /><br />posted at: $ti | path: <a href="$url/$path">/$path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></p>\n""",
+                'story' : """<p><a name="$fn"><b>$title</b></a><br />$body<br /><br />posted at: $ti | path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></p>\n""",
                 'date_foot' : '</div>',
                 'foot' : """<p /><center><a href="http://roughingit.subtlehints.net/pyblosxom"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" border="0" /></body></html>"""}
         rss = {'content_type' : 'text/xml',
@@ -137,7 +137,7 @@ class BlosxomRenderer(RendererBase):
         if entry['date'] != current_date:
             current_date = entry['date']
             if not self.dayFlag:
-                self.outputTemplate(output, entry,'date_foot')
+                self.outputTemplate(output, entry, 'date_foot')
             self.dayFlag = 0
             self.outputTemplate(output, entry, 'date_head')
 
@@ -250,10 +250,14 @@ class BlosxomRenderer(RendererBase):
 
         self.write(tools.parse(self._request, entry, template))
             
-    def outputTemplate(self, output, entry, flavour_name, override=0):
+    def outputTemplate(self, output, entry, template_name, override=0):
         """
-        Find the flavour template for flavour_name, run any blosxom callbacks,
-        substitute entry into it and append the template to the output
+        Find the flavour template for template_name, run any blosxom callbacks,
+        substitute entry into it and append the template to the output.
+
+        If the entry has a "template_name" property and override is 1
+        (this happens in the story template), then we'll use that
+        template instead.
         
         @param output: list of strings of the output
         @type output: list
@@ -261,25 +265,26 @@ class BlosxomRenderer(RendererBase):
         @param entry: the entry to render with this flavour template
         @type entry: L{Pyblosxom.entries.base.EntryBase}
 
-        @param flavour_name: name of the flavour template
-        @type flavour_name: string
+        @param template_name: name of the flavour template to use
+        @type template_name: string
 
         @param override: whether (1) or not (0) this template can
-            be overriden with the flavour_name property of the entry
+            be overriden with the "template_name" property of the entry
         @type  override: boolean
         """
         template = ""
         if override == 1:
             # here we do a quick override...  if the entry has a template
-            # field we use that instead of the flavour_name
-            actual_flavour_name = entry.get("flavour_name", flavour_name)
-            template = self.flavour.get(actual_flavour_name, '')
+            # field we use that instead of the template_name argument
+            # passed in.
+            actual_template_name = entry.get("template_name", template_name)
+            template = self.flavour.get(actual_template_name, '')
 
         if not template:
-            template = self.flavour.get(flavour_name, '')
+            template = self.flavour.get(template_name, '')
 
         # we run this through the regular callbacks
-        args = self._run_callback(flavour_name, { "entry": entry, "template": template })
+        args = self._run_callback(template_name, { "entry": entry, "template": template })
 
         template = args["template"]
         entry = args["entry"]
