@@ -935,10 +935,9 @@ def blosxom_process_path_info(args):
     data['bl_type'] = ''
 
     if data['pi_bl'] != '':
-        # do this only once. and as twisted/mod_python may cache it don't use addition.
-        # Otherwise you end up with blog_title's like:
-        # $blog_title : $pi_bl : $pi_bl : $pi_bl : $pi_bl : $pi_bl .... n
-        config['blog_title'] = '%s : %s' % (config['blog_title'], data['pi_bl'])
+        data['blog_title_with_path'] = '%s : %s' % (config['blog_title'], data['pi_bl'])
+    else:
+        data['blog_title_with_path'] = config["blog_title"]
 
     # If all we've got is a directory, things are simple
     if os.path.isdir(blog_result):
