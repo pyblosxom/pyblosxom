@@ -231,8 +231,9 @@ def writeComment(config, data, comment):
         import smtplib
         author = escape_SMTP_commands(clean_author(comment['author']))
         description = escape_SMTP_commands(comment['description'])
-        email = comment['email']
-        if email is None:
+        if comment.has_key('email'):
+            email = comment['email']
+        else:
             email = config['comment_smtp_from']
         try:
             server = smtplib.SMTP(config['comment_smtp_server'])
@@ -385,11 +386,12 @@ def cb_prepare(args):
         
         cdict = {'title': form['title'].value, \
                  'author' : form['author'].value, \
-                 'email' : form['email'].value, \
                  'pubDate' : str(time.time()), \
                  'link' : url, \
                  'source' : '', \
                  'description' : body }
+        if form.has_key('email'):
+            cdict['email'] = form['email'].value
         
         writeComment(config, data, cdict)
 
