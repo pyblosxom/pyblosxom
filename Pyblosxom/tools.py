@@ -167,6 +167,18 @@ def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
     our pattern(s). Taken from the online Python Cookbook and modified to own
     needs.
 
+    It will look at the config "ignore_directories" for a list of 
+    directories to ignore.  It uses a regexp that joins all the things
+    you list.  So the following::
+
+       config.py["ignore_directories"] = ["CVS", "dev/pyblosxom"]
+
+    turns into the regexp::
+
+       .*?(CVS|dev/pyblosxom)$
+
+    It will also skip all directories that start with a period.
+
     @param request: the Request object
     @type  request: Request
 
@@ -193,15 +205,24 @@ def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
         ext = request.getData()['extensions']
         pattern = re.compile(r'.*\.(' + '|'.join(ext.keys()) + r')$')
 
+    ignore = request.getConfiguration().get("ignore", None)
+    if type(ignore) == type(""): ignore = [ignore]
+    if ignore:
+        for i in range(0, len(ignore)):
+            ignore[i] = re.escape(ignore[i])
+        ignorere = re.compile(r'.*?(' + '|'.join(ignore) + r')$')
+    else:
+        ignorere = None
+
     # must have at least root folder
     try:
         names = os.listdir(root)
     except os.error:
         return []
 
-    return _walk_internal(root, recurse, pattern, return_folders)
+    return _walk_internal(root, recurse, pattern, ignorere, return_folders)
 
-def _walk_internal( root, recurse, pattern, return_folders ):
+def _walk_internal( root, recurse, pattern, ignorere, return_folders ):
     # initialize
     result = []
 
@@ -222,11 +243,13 @@ def _walk_internal( root, recurse, pattern, return_folders ):
                 
         # recursively scan other folders, appending results
         if (recurse == 0) or (recurse > 1):
-            if os.path.isdir(fullname) and not os.path.islink(fullname):
+            if name[0] != "." and os.path.isdir(fullname) and \
+                    not os.path.islink(fullname) and \
+                    (not ignorere or not ignorere.match(fullname)):
                 result = result + \
                          _walk_internal(fullname, 
                                         (recurse > 1 and recurse -  1 or 0), 
-                                        pattern, return_folders)
+                                        pattern, ignorere, return_folders)
 
     return result
 
