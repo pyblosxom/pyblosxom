@@ -16,8 +16,8 @@ class PyBlosxom:
         """
         Initializes the PyBlosxom class
 
-        @param request: A C{Request} object
-        @type request: C{libs.Request} object
+        @param request: A L{libs.Request.Request} object
+        @type request: L{libs.Request.Request} object
         """
 
         global myrequest
@@ -57,7 +57,7 @@ class PyBlosxom:
         EntryBase subclass objects which it returns.
 
         @param args: dict containing the incoming Request object
-        @type args: C{libs.Request.Request}
+        @type args: L{libs.Request.Request}
 
         @returns: the content we want to render
         @rtype: list of EntryBase objects
@@ -262,7 +262,11 @@ class PyBlosxom:
         if renderer and not renderer.rendered:
             if entry_list:
                 renderer.setContent(entry_list)
-                tools.logRequest(config.get('logfile',''), '200')
+                # Log it as success
+                tools.run_callback("logrequest", 
+                        {'filename':config.get('logfile',''), 
+                         'return_code': '200', 
+                         'request': self._request})
             else:
                 renderer.addHeader(['Status: 404 Not Found'])
                 renderer.setContent(
@@ -270,7 +274,11 @@ class PyBlosxom:
                      'body': 'Somehow I cannot find the page you want. ' + 
                      'Go Back to <a href="%s">%s</a>?' 
                      % (config["base_url"], config["blog_title"])})
-                tools.logRequest(config.get('logfile',''), '404')
+                # Log it as failure
+                tools.run_callback("logrequest", 
+                        {'filename':config.get('logfile',''), 
+                         'return_code': '404', 
+                         'request': self._request})
             renderer.render()
 
         elif not renderer:

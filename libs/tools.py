@@ -35,6 +35,7 @@ for k,v in month2num.items():
 # all the valid month possibilities
 MONTHS = num2month.keys() + month2num.keys()
 
+
 class Stripper(sgmllib.SGMLParser):
     """
     Strips HTML
@@ -51,7 +52,8 @@ class Stripper(sgmllib.SGMLParser):
         text = string.join(self.data, "")
         #return string.join(string.split(text)) # normalize whitespace
         return text # non - normalized whitespace
-    
+
+
 class Replacer:
     """
     Class for replacing variables in a template
@@ -98,7 +100,7 @@ def parse(dict, template):
     parse(dict) -> string
     
     This method parses the open file object passed, replacing any keys
-    found using the replacement dictionary passed. Uses the Replacer object.
+    found using the replacement dictionary passed. Uses the L{Replacer} object.
     From OPAGCGI library
 
     @param dict: The name value pair list containing variable replacements
@@ -112,19 +114,6 @@ def parse(dict, template):
     replaced = u'' + re.sub(ur'(?<!\\)\$([A-Za-z0-9_\-]+)', replacer, template)
     return replaced
 
-def logRequest(filename = '', return_code = '200'):
-    """
-    Calls the api's logRequest callback chain to do some statistical analysis
-    based on the current request.
-    
-    @param filename: Base filename to log to
-    @type filename: string
-
-    @param return_code: HTTP standard return code
-    @type return_code: string
-    """
-    args = {"filename": filename, "return_code": return_code }
-    run_callback("logrequest", args)
 
 def Walk(root = '.', recurse = 0, pattern = '', return_folders = 0 ):
     """
@@ -188,6 +177,7 @@ def Walk(root = '.', recurse = 0, pattern = '', return_folders = 0 ):
                 pattern, return_folders)
 
     return result
+
 
 def importName(modulename, name):
     """
@@ -258,6 +248,7 @@ def generateRandStr(minlen=5, maxlen=10):
         randStr += whrandom.choice(chars)
     return randStr
 
+
 def run_blosxom_callback(chain, input):
     """
     Makes calling blosxom callbacks a bit easier since they all have the
@@ -271,6 +262,7 @@ def run_blosxom_callback(chain, input):
     """
     return run_callback(chain, input, 
             lambda x,y: x.update({"template": y["template"]}))
+
 
 def run_callback(chain, input, 
         mappingfunc=lambda x,y:x, 
@@ -357,7 +349,7 @@ def get_cache():
     instance.
 
     @returns: A BlosxomCache object reference
-    @rtype: C{libs.cache.base.BlosxomCacheBase} subclass
+    @rtype: L{libs.cache.base.BlosxomCacheBase} subclass
     """
     registry = get_registry()
 

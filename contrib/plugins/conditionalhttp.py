@@ -34,6 +34,11 @@ def cb_prepare(args):
             renderer.render()
 
         from libs import tools
-        tools.logRequest(config.get('logfile',''), '304')
+        # Log request as "We have it!"
+        tools.run_callback("logrequest",
+                {'filename':config.get('logfile',''),
+                'return_code': '304',
+                'request': request})
+                                                                                                  
         renderer.addHeader(['ETag: "%s"' % entryList[0]['mtime'],
             'Last-Modified: %s' % lastModed])

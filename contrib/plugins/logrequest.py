@@ -21,12 +21,13 @@ def cb_logrequest(args):
     import os, time
     filename = args["filename"] + '.txt'
     returnCode = args["return_code"]
+    httpData = args['request'].getHttp()
 
     file(filename, 'a').write('%s - - [%s] "%s %s" %s - "%s" "%s"\n' %
-        (os.environ.get('REMOTE_ADDR', '-'),
+        (httpData.get('REMOTE_ADDR', '-'),
         time.strftime('%d/%b/%Y:%H:%M:%S %Z', time.localtime()),
-        os.environ.get('REQUEST_METHOD', '-'),
-        os.environ.get('REQUEST_URI', '-'),
+        httpData.get('REQUEST_METHOD', '-'),
+        httpData.get('REQUEST_URI', '-'),
         returnCode,
-        os.environ.get('HTTP_REFERER', '-'),
-        os.environ.get('HTTP_USER_AGENT', '-')))
+        httpData.get('HTTP_REFERER', '-'),
+        httpData.get('HTTP_USER_AGENT', '-')))

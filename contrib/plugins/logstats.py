@@ -6,11 +6,11 @@ Generate a string containing the last 15 referrers, marked up with HTML
 <a> tag.  If the string is longer than 40 characters, truncate by displaying ...
 You can access the list of referrers as the variable $referrers
 
-You can control the number of referrers displayed in config.py:
-py['num_referrers'] = n  
+You can control the number of referrers displayed in config.py::
+    py['num_referrers'] = n  
 
-You can control the length of the referrer string in config.py:
-py['referrer_length'] = l
+You can control the length of the referrer string in config.py::
+    py['referrer_length'] = l
 
 TODO:
 Compute some additional statistics
@@ -124,6 +124,7 @@ def cb_prepare(args):
     request = args["request"]
     config = request.getConfiguration()
     data = request.getData()
+    httpData = request.getHttp()
 
     try:
         filename = config['logfile']+'.dat'
@@ -138,9 +139,9 @@ def cb_prepare(args):
     except (EOFError, IOError):
         stats = PyblStats(config)
 
-    stats.addReferer(os.environ.get('HTTP_REFERER', '-'))
-    stats.addDestination(os.environ.get('REQUEST_URI', '-'))
-    stats.addVisitor(os.environ.get('REMOTE_ADDR', '-'))
+    stats.addReferer(httpData.get('HTTP_REFERER', '-'))
+    stats.addDestination(httpData.get('REQUEST_URI', '-'))
+    stats.addVisitor(httpData.get('REMOTE_ADDR', '-'))
 
     data["referrers"] = stats.genReferrers()
 
