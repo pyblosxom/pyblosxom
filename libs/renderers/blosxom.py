@@ -52,9 +52,6 @@ class BlosxomRenderer(RendererBase):
         (e, d, sr, sw) = codecs.lookup('iso-8859-1')
         self._out = sw(self._out)
         self.dayFlag = 1
-        # import plugins and allow them to register with the api
-        import libs.renderers.blosxomplugins.__init__
-        libs.renderers.blosxomplugins.__init__.initialize_plugins(self._request.getConfiguration())       
 
     def __getFlavour(self, taste = 'html'):
         """
