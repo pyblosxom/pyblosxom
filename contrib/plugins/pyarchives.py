@@ -57,7 +57,7 @@ class PyblArchives:
         for mem in archiveList:
             timetuple = tools.filestat(self._request, mem)
             timedict = {}
-            for x in ["b", "m", "Y", "y"]:
+            for x in ["B", "b", "m", "Y", "y"]:
                 timedict[x] = time.strftime("%" + x, timetuple)
 
             fulldict.update(timedict)
