@@ -305,6 +305,27 @@ def what_ext(extensions, filepath):
             return ext
     return None
 
+def is_year(s):
+    """
+    Checks s to see if it's likely to be a year or not.  In order to be
+    considered to be a year, it must pass the following criteria:
+
+     1. four digits
+     2. first two digits are either 19 or 20.
+
+    @param s: the string to check for "year-hood"
+    @type  s: string
+
+    @return: 1 if s is likely to be a year or 0 if it is not
+    @rtype: boolean
+    """
+    if not s: return 0
+
+    if len(s) == 4 and s.isdigit() and (s.startswith("19") or s.startswith("20")):
+        return 1
+    return 0
+
+
 def importName(modulename, name):
     """
     Module importer
