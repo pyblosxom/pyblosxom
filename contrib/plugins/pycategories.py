@@ -38,9 +38,34 @@ Available variables in the category_item template:
   flavour       'html'                                 string
   count         70                                     int
   indent        '&nbsp;&nbsp;&nbsp;&nbsp;'             string
+
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright 2004, 2005 Will Guaraldi
 """
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
+__url__ = "http://pyblosxom.sourceforge.net/"
+__description__ = "Builds a list of categories."
 
 from Pyblosxom import tools
 import re, os
