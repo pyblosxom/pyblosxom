@@ -189,7 +189,6 @@ class PyBlosxom:
                 mtime = time.localtime(mtime)
                 year = time.strftime("%Y", mtime)
                 month = time.strftime("%m", mtime)
-                # monthname = tools.num2month[month]
                 day = time.strftime("%d", mtime)
 
                 dates[year] = 1
@@ -199,6 +198,7 @@ class PyBlosxom:
                     dates[year + "/" + month + "/" + day] = 1
 
                 if monthnames:
+                    monthname = tools.num2month[month]
                     dates[year + "/" + monthname] = 1
                     dates[year + "/" + monthname + "/" + day] = 1
 
