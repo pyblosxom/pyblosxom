@@ -25,7 +25,7 @@ Please refer to the documentation at:
     - http://www.raelity.org/archives/computers/internet/weblogs/blosxom/youve_got_trackbacks.html
     - http://www.raelity.org/archives/computers/internet/weblogs/blosxom/trackback_blosxom_conversion_chart.html
 """
-import libs, os
+import Pyblosxom, os
 
 def cb_story(args):
     """
@@ -33,7 +33,7 @@ def cb_story(args):
     py['tb_data'] + entry['tb_id'] + '.stor' file.
     """
     entry = args['entry']
-    request = libs.tools.get_registry()["request"]
+    request = Pyblosxom.tools.get_registry()["request"]
     config = request.getConfiguration()
 
     datadir = config.get('tb_data', '')

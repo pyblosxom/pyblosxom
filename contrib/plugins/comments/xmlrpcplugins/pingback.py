@@ -1,7 +1,7 @@
 from config import py
-from libs.pyblosxom import PyBlosxom
-from libs.Request import Request
-from libs import tools
+from Pyblosxom.pyblosxom import PyBlosxom
+from Pyblosxom.Request import Request
+from Pyblosxom import tools
 
 import cgi, os, re, sgmllib, time, urllib
 
@@ -35,8 +35,8 @@ def fileFor(req, uri):
     data = req.getData()
 
     # import plugins
-    import libs.plugins.__init__
-    libs.plugins.__init__.initialize_plugins(config)
+    import Pyblosxom.plugins.__init__
+    Pyblosxom.plugins.__init__.initialize_plugins(config)
 
     # do start callback
     tools.run_callback("start", {'request': req}, mappingfunc=lambda x,y:y)
@@ -103,10 +103,10 @@ def pingback(request, source, target):
                'source' : '',
                'description' : body}
         
-        from libs.plugins.comments import writeComment
+        from Pyblosxom.plugins.comments import writeComment
         config = request.getConfiguration()
         data = request.getData()
-        from libs.entries.fileentry import FileEntry
+        from Pyblosxom.entries.fileentry import FileEntry
         datadir = config['datadir']
         entry = FileEntry(config, os.path.join(datadir,target_file+'.txt'), datadir)
         data['entry_list'] = [ entry ]

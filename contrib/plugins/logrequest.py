@@ -2,7 +2,7 @@
 """
 Standard logRequest plugin.
 
-Drop this file in the libs/plugins/ directory of pyblosxom, and in your
+Drop this file in the Pyblosxom/plugins/ directory of pyblosxom, and in your
 config.py (or your config INI file depending on your installation), create a
 config entry called logfile and this will be the filename you want this
 logRequest plugin to log to.

@@ -2,7 +2,7 @@
 Allow searching of the blog by using a Lucene search for a set of terms
 
 To install:
-1) Put lucene.py in pyblosxom/libs/plugins
+1) Put lucene.py in pyblosxom/Pyblosxom/plugins
 2) In config.py add lucene to py['load_plugins']
 3) Place the contents of pyblosxom/contrib/plugins/lucene/bin in a
    directory readable by pybloxsom.  In config.py, set py['lucene_bin'] to
@@ -33,7 +33,7 @@ __author__ = "Ted Leung - twl@sauria.com"
 __version__ = "$Id$"
 
 import glob, os, urllib
-from libs.entries import fileentry
+from Pyblosxom.entries import fileentry
 
 def makeEntry(filename,config):
     """

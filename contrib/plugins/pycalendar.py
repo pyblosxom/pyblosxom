@@ -39,7 +39,7 @@ To use, place $calendar in your head/foot template.
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
 
-from libs import tools
+from Pyblosxom import tools
 import time, os, calendar, sys, string
 
 class PyblCalendar:

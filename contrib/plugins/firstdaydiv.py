@@ -3,7 +3,7 @@ This is my fancy module to add a token which tells us whether we're
 the first day being displayed or not.
 
 To install:
- 1. Copy this file into your pyblosxom/libs/plugins directory.
+ 1. Copy this file into your pyblosxom/Pyblosxom/plugins directory.
 
  2. Create a file named date_head.html in your datadir containing::
 
@@ -37,8 +37,8 @@ class PyFirstDate:
         """
         Initialize the PyFirstDate class.
 
-        @type request: L{libs.Request.Request} object
-        @param request: A reference to the L{libs.Request.Request} object.
+        @type request: L{Pyblosxom.Request.Request} object
+        @param request: A reference to the L{Pyblosxom.Request.Request} object.
         """
         config = request.getConfiguration()
         self._dayDiv = config.get("firstDayDiv", "blosxomDayDiv")
@@ -61,7 +61,7 @@ class PyFirstDate:
 
 def cb_prepare(args):
     """
-    Populate the L{libs.Request.Request} with an instance of the
+    Populate the L{Pyblosxom.Request.Request} with an instance of the
     L{PyFirstDate} class in the "dayDivClass" key.
     """
     request = args["request"]

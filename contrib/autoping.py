@@ -31,9 +31,9 @@ import cPickle, os
 sys.path.append('/home/twl/pyblog/blosxom')
 sys.path.append('/home/twl/pyblog/pyblosxom')
 # Get our pyblosxom specifics here
-from libs import tools
-from libs.pyblosxom import PyBlosxom
-from libs.Request import Request
+from Pyblosxom import tools
+from Pyblosxom.pyblosxom import PyBlosxom
+from Pyblosxom.Request import Request
 import config
 
 import wingdbstub
@@ -188,7 +188,7 @@ def pingback(parser):
 
 def autoping(name):
     # Load up the cache (You can just import the base cache here)
-    cache_driver = tools.importName('libs.cache', config.py.get('cacheDriver', 'base'))
+    cache_driver = tools.importName('Pyblosxom.cache', config.py.get('cacheDriver', 'base'))
     cache = cache_driver.BlosxomCache(config.py.get('cacheConfig', ''))
     try:
         filename = os.path.join(config.py['datadir'], name)

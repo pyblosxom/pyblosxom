@@ -5,9 +5,9 @@ For example, a .csv file could be converted into a table automatically.
 rtf->html conversions, or .doc -> html conversions.
 
 To install entryparsers, just copy the files that handles a certain extension
-into you libs/plugins/ directory. Drop in a file with that particular extension
-you like, like entering a normal blosxom entry, and hopefully, it'll get
-rendered beautifully as HTML.
+into you Pyblosxom/plugins/ directory. Drop in a file with that particular
+extension you like, like entering a normal blosxom entry, and hopefully, it'll
+get rendered beautifully as HTML.
 
 The files placed here are in the form of ext.py, where ext it the extension of
 the file we expect to handle.

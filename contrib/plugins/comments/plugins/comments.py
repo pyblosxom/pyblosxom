@@ -7,8 +7,8 @@
 
 import cgi, glob, os.path, re, time, cPickle
 from xml.sax.saxutils import escape
-from libs import tools
-from libs.entries.base import EntryBase
+from Pyblosxom import tools
+from Pyblosxom.entries.base import EntryBase
     
 """
 This module contains an extension to Blosxom file entries to support comments

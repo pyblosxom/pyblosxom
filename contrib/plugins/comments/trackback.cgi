@@ -43,10 +43,10 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
               'link' : form['url'].value, \
               'source' : form['blog_name'].value, \
               'description' : form['excerpt'].value }
-    from libs import tools
-    from libs.entries.fileentry import FileEntry
-    from libs.plugins.comments import writeComment
-    from libs.Request import Request
+    from Pyblosxom import tools
+    from Pyblosxom.entries.fileentry import FileEntry
+    from Pyblosxom.plugins.comments import writeComment
+    from Pyblosxom.Request import Request
 
     request = Request()
     request.addConfiguration(config.py)
@@ -54,15 +54,15 @@ if form.has_key("title") and form.has_key("excerpt") and form.has_key("url") and
     data = request.getData()
 
     # import plugins
-    import libs.plugins.__init__
-    libs.plugins.__init__.initialize_plugins(config)
+    import Pyblosxom.plugins.__init__
+    Pyblosxom.plugins.__init__.initialize_plugins(config)
     
     # do start callback
     tools.run_callback("start", {'request': request}, mappingfunc=lambda x,y:y)
 
     # entryparser callback is runned first here to allow other plugins
     # register what file extensions can be used
-    from libs.pyblosxom import PyBlosxom
+    from Pyblosxom.pyblosxom import PyBlosxom
 
     p = PyBlosxom(request)
     p.startup()

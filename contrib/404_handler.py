@@ -5,7 +5,7 @@ This is a helper for pyblosxom, see:
     http://roughingit.subtlehints.net/py_stuff/weblogs/hacks/Half_Baked_and_a_Mostly_Fried.html
     for details
 """
-# Uncomment this to look for libs/ directory elsewhere
+# Uncomment this to look for Pyblosxom/ directory elsewhere
 #sys.path.append('/path/to/pyblosxom/installation/dir')
 # Uncomment to debug (May not work due to buffering)
 #import cgitb; cgitb.enable()
@@ -30,7 +30,7 @@ py['pyblosxom_version'] = __version__
 py['pyblosxom_name'] = 'pyblosxom'
 
 from StringIO import StringIO
-from libs.pyblosxom import PyBlosxom
+from Pyblosxom.pyblosxom import PyBlosxom
 
 def makepath(path):
     """
@@ -65,8 +65,8 @@ if __name__ == '__main__':
         os.environ['PATH_INFO'] = pathInfo
         os.environ['SCRIPT_NAME'] = pyblosxomScriptPath
         os.environ['HTTP_HOST'] = hostName
-        from libs.pyblosxom import PyBlosxom
-        from libs.Request import Request
+        from Pyblosxom.pyblosxom import PyBlosxom
+        from Pyblosxom.Request import Request
         import os, cgi
 
         req = Request()

@@ -15,7 +15,7 @@ config.py example::
 __author__ = "Wari Wahab - wari at wari dot per dot sg"
 __version__ = "$Id$"
 
-from libs import tools
+from Pyblosxom import tools
 import time, os
 
 class PyblArchives:

@@ -6,7 +6,7 @@ part of the docutils project (http://docutils.sourceforge.net/).  To
 use, you need a *recent* version of docutils.  A development snapshot 
 (http://docutils.sourceforge.net/#development-snapshots) will work fine.  
 
-Install docutils, copy this file to your pyblosxom libs/plugins
+Install docutils, copy this file to your pyblosxom Pyblosxom/plugins
 directory, and you're ready to go.  Files with a .rst extension will be
 marked up as reStructuredText. 
 
@@ -26,7 +26,7 @@ __version__ = '$Id$'
 __author__ = 'Sean Bowman <sean dot bowman at acm dot org>'
 
 from docutils.core import publish_string
-from libs import tools
+from Pyblosxom import tools
 
 def cb_entryparser(args):
     args[FILE_EXT] = readfile

@@ -42,7 +42,7 @@ from MoinMoin.request import Request
 from MoinMoin.Page import Page
 from MoinMoin.user import User
 from cStringIO import StringIO
-from libs import tools
+from Pyblosxom import tools
 import sys
 
 
@@ -79,7 +79,7 @@ def readfile(filename, request):
     @param filename: the file in question
     @param request: The request object
     @type filename: string
-    @type request: L{libs.Request.Request} object
+    @type request: L{Pyblosxom.Request.Request} object
     @returns: Data of the entry
     @rtype: dict
     """

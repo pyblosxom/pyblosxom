@@ -7,8 +7,8 @@ high-bit characters to their HTML numeric entity equivalent.
 See: http://diveintomark.org/projects/pytextile/index.html for details
 
 Install textile.py in a python searchable path, copy this file to your
-pyblosxom libs/plugins directory, and you're ready to go.  Files with a .txtl
-extension will be marked up as textile. 
+pyblosxom Pyblosxom/plugins directory, and you're ready to go.  Files with a
+.txtl extension will be marked up as textile. 
 
 You can configure this as your default preformatter for .txt files by
 configuring it in your config file as follows::
@@ -26,7 +26,7 @@ title of your blog::
 __version__ = '$Id$'
 __author__ = 'Wari Wahab <wari at home dot wari dot org>'
 
-from libs import tools
+from Pyblosxom import tools
 from textile import textile
 
 def cb_entryparser(args):

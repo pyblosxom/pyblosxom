@@ -47,7 +47,7 @@ def cb_prepare(args):
                                'Last-Modified', '%s' % lastModed)
             renderer.render()
 
-            from libs import tools
+            from Pyblosxom import tools
             # Log request as "We have it!"
             tools.run_callback("logrequest",
                     {'filename':config.get('logfile',''),

@@ -1,0 +1,9 @@
+Inside the contrib/ directory, you'll see the plugins/ directory. To install
+a given plugin, move the plugin file you want from the contrib/ directory
+to the Pyblosxom/plugins/ directory of your installation.
+
+Some plugins take effect immediately, like the conditionalhttp.py and the
+statusnotfound.py. Some requires a little bit more information in using it,
+like files to store data, or some variables to put inside your flavour
+templates.  Do read the plugin file itself to see what extra steps you need 
+to do before installing it.

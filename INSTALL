@@ -13,8 +13,8 @@
 1.1 Simple Installation
 
    For  a  simple  installation, extract pyblosxom.cgi, config.py and the
-   libs/ directory into your cgi-bin/. If you do not like the libs/ to be
-   in  the  cgi-bin/, you can place it elsewhere outside of Document Root
+   Pyblosxom/ directory into your cgi-bin/. If you do not like the Pyblosxom/
+   to be in  the  cgi-bin/, you can place it elsewhere outside of Document Root
    of  your  web  server and comment out the 4th line in pyblosxom.cgi to
    reflect where your path is.
     1 import sys
@@ -67,13 +67,13 @@ DirectoryIndex blog
 
    In  order  to  prevent visitors from peeking your configuration files,
    you can do it a couple of ways:
-     * Storing  libs/  and config.py outside of the web server's document
+     * Storing  Pyblosxom/  and config.py outside of the web server's document
        root.
      * Denying via .htaccess
 
   1.3.1 Using a different library path for PyBlosxom files
 
-   If  you install the libs/ directory elsewhere, outside of your www/ or
+   If  you install the Pyblosxom/ directory elsewhere, outside of your www/ or
    cgi-bin/  directory,  you  can place config.py there as well. Here's a
    simple scenario:
      * You installed pyblosxom.cgi in /home/joe/www
@@ -86,12 +86,7 @@ DirectoryIndex blog
     `-- joe
         |-- pyblosxom
         |   |-- config.py
-        |   `-- libs
-        |       |-- plugins
-        |       |   |-- pyarchives.py
-        |       |   |-- pycalendar.py
-        |       |   `-- pycategory.py
-        |       |-- preformatters
+        |   `-- Pyblosxom
         |       |-- pyblosxom.py
         |       `-- tools.py
         `-- www

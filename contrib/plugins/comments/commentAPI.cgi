@@ -31,10 +31,10 @@ import config, os, sys, time
 from xml.dom.minidom import parseString
 
 if __name__ == '__main__':
-    from libs import tools
-    from libs.entries.fileentry import FileEntry
-    from libs.plugins.comments import writeComment
-    from libs.Request import Request
+    from Pyblosxom import tools
+    from Pyblosxom.entries.fileentry import FileEntry
+    from Pyblosxom.plugins.comments import writeComment
+    from Pyblosxom.Request import Request
     
     d = {}
     for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER", "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR", "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME"]:
@@ -47,15 +47,15 @@ if __name__ == '__main__':
     data = request.getData()
     
     # import plugins
-    import libs.plugins.__init__
-    libs.plugins.__init__.initialize_plugins(config)
+    import Pyblosxom.plugins.__init__
+    Pyblosxom.plugins.__init__.initialize_plugins(config)
     
     # do start callback
     tools.run_callback("start", {'request': request}, mappingfunc=lambda x,y:y)
 
     # entryparser callback is runned first here to allow other plugins
     # register what file extensions can be used
-    from libs.pyblosxom import PyBlosxom
+    from Pyblosxom.pyblosxom import PyBlosxom
     data['extensions'] = tools.run_callback("entryparser",
                                             {'txt': PyBlosxom.defaultEntryParser},
                                             mappingfunc=lambda x,y:y,

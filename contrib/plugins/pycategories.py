@@ -16,7 +16,7 @@ config.py example::
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
 
-from libs import tools
+from Pyblosxom import tools
 import re, os
 
 class PyblCategories:
