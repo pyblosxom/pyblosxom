@@ -902,10 +902,14 @@ def blosxom_process_path_info(args):
     
     data['bl_type'] = ''
 
+    if data['pi_bl'] != '':
+        # do this only once. and as twisted/mod_python may cache it don't use addition.
+        # Otherwise you end up with blog_title's like:
+        # $blog_title : $pi_bl : $pi_bl : $pi_bl : $pi_bl : $pi_bl .... n
+        config['blog_title'] = '%s : %s' % (config['blog_title'], data['pi_bl'])
+
     # If all we've got is a directory, things are simple
     if os.path.isdir(blog_result):
-        if data['pi_bl'] != '':
-            config['blog_title'] += ' : %s' % data['pi_bl']
         data['root_datadir'] = blog_result
         data['bl_type'] = 'dir'
 
@@ -915,7 +919,6 @@ def blosxom_process_path_info(args):
 
         ext = tools.what_ext(data["extensions"].keys(), blog_result)
         if ext:
-            config['blog_title'] += ' : %s' % data['pi_bl']
             data['bl_type'] = 'file'
             data['root_datadir'] = blog_result + '.' + ext
 
@@ -928,15 +931,13 @@ def blosxom_process_path_info(args):
             if fileext:
                 data['flavour'] = ext[1:]
                 data['root_datadir'] = filename + '.' + fileext
-                config['blog_title'] += ' : %s' % data['pi_bl']
                 data['bl_type'] = 'file'
 
             elif (os.path.basename(filename) == 'index' and os.path.isdir(dirname)):
                 # blanket flavours?
                 data['flavour'] = ext[1:]
                 if os.path.dirname(data['pi_bl']) != '':
-
-                    config['blog_title'] += ' : %s' % os.path.dirname(data['pi_bl'])
+                    config['blog_title'] = '%s : %s' % (config['blog_title'], os.path.dirname(data['pi_bl']))
                 data['root_datadir'] = dirname
                 data['bl_type'] = 'dir'
                 
