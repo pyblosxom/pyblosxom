@@ -6,8 +6,8 @@ from distutils.core import setup
 # this affects the names of all the directories we do stuff with
 sys.path.insert(0, "./")
 from Pyblosxom import pyblosxom
-VER = "cvs"
-# VER = pyblosxom.VERSION
+# VER = "cvs"
+VER = pyblosxom.VERSION
 PVER = "pyblosxom-" + VER
 
 def Walk(root='.'):
