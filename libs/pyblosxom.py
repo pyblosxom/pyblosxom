@@ -2,7 +2,6 @@
 import os, time, string, re, cgi
 import tools
 from entries.fileentry import FileEntry
-from entries.cachedecorator import CacheDecorator
 import cPickle as pickle
 
 class PyBlosxom:
@@ -79,7 +78,7 @@ class PyBlosxom:
 
         entrylist = []
         for ourfile in filelist:
-            entry = CacheDecorator(FileEntry(config, ourfile, data['root_datadir']))
+            entry = FileEntry(config, ourfile, data['root_datadir'])
             entrylist.append(entry)
         entrylist = tools.sortDictBy(entrylist, "mtime")
         

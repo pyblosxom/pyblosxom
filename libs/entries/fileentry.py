@@ -123,7 +123,7 @@ class FileEntry(base.EntryBase):
         if absolute_path == '':
             file_path = fn
         else:
-            file_path = absolute_path + '/' + fn
+            file_path = os.path.join(absolute_path, fn)
 
         tb = '-'
         tb_id = '%s/%s' % (absolute_path, fn)
@@ -166,14 +166,19 @@ class FileEntry(base.EntryBase):
         """
         registry = tools.get_registry()
         request = registry["request"]
+        cache = tools.get_cache()
         data = request.getData()
 
-        fileExt = re.search(r'\.([\w]+)$', self._filename)
-        try:
-            eparser = data['extensions'][fileExt.groups()[0]]
-            entrydict = eparser.parse(self._filename, request)
-            self.update(entrydict)
-        except IOError:
-            return None
+        if cache.has_key(self._filename):
+            self.update(cache[self._filename])
+        else:
+            fileExt = re.search(r'\.([\w]+)$', self._filename)
+            try:
+                eparser = data['extensions'][fileExt.groups()[0]]
+                entrydict = eparser.parse(self._filename, request)
+                cache[self._filename] = entrydict
+                self.update(entrydict)
+            except IOError:
+                return None
 
         self._populated_data = 1
