@@ -567,8 +567,9 @@ def blosxom_file_list_handler(args):
         valid_list = entrylist
 
     # This is the maximum number of entries we can show (zero indicates show all entries)
-    if config.get('num_entries', 0):
-        valid_list = valid_list[:config['num_entries']]
+    max = config.get("num_entries", 0)
+    if max:
+        valid_list = valid_list[:max]
     valid_list = [x[1] for x in valid_list]
 
     return valid_list
