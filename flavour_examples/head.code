@@ -162,7 +162,6 @@ a:active, a:hover {
     <dd>&middot; <a href="http://osdir.com/modules.php?op=modload&name=Downloads&file=index&req=ratedownload&lid=52">Rate this App @ OSDir.com</a><br /><dd>
     <dd>&middot; <a href="http://roughingit.subtlehints.net">RoughingIT</a></dd>
     <dd>&middot; <a href="http://wiki.subtlehints.net/moin/PyBlosxom">pyblosxom wiki page</a></dd>
-    <dd>&middot; Latest: <a href="http://roughingit.subtlehints.net/code/pyblosxom.0+5i_rev1.tar.gz">pyblosxom 0+5i_rev1</a></dd>
     </dl>
 </td>
 <!-- This is your main content window: -->
