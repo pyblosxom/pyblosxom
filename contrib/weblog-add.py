@@ -71,7 +71,7 @@ def genFormPage():
 <title>content creation</title>
 </head>
 <body>
-<form action="add">
+<form action="weblog-add.py">
 <b>Category:</b>
 <select name="category">"""
 	for path in categories:
