@@ -114,8 +114,7 @@ class PyBlosxom:
         data = request.getData()
         config = request.getConfiguration()
         return (data['bl_type'] == 'dir' and 
-                tools.Walk(data['root_datadir'], 
-                    int(config['depth'])) or 
+                tools.Walk(data['root_datadir'], int(config['depth'])) or 
                 [data['root_datadir']])
 
     def run(self):
@@ -153,8 +152,9 @@ class PyBlosxom:
         # Match dates with files if applicable
         if not data['pi_yr'] == '':
             month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
+            matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
             valid_list = ([x for x in dataList
-                       if re.match('^' + data['pi_yr'] + month + data['pi_da'], x['fulltime'])])
+                       if re.match(matchstr, x['fulltime'])])
         else:
             valid_list = dataList
 
@@ -164,7 +164,7 @@ class PyBlosxom:
         # plugins giving them a chance to transform the data.
         # plugins modify the request in-place--no need to return
         # things.
-        self._request = api.prepareChain.executeHandler((self._request,))
+        api.prepareChain.executeHandler((self._request,))
         
         valid_list = data["entry_list"]
 
