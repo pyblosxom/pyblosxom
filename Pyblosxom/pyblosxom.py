@@ -242,7 +242,9 @@ class PyBlosxom:
         # any ( url, query ) tuples they want rendered.
         print "(before) building %s files." % len(renderme)
         handled = tools.run_callback("staticrender_filelist",
-                        {'request': self._request, 'filelist': renderme})
+                        {'request': self._request, 
+                         'filelist': renderme,
+                         'flavours': flavours})
 
         print "building %s files." % len(renderme)
 
