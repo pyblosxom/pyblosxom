@@ -1,7 +1,3 @@
-# Windows INI style file to read to override the values below
-configFile = '../../p.ini'
-# -----------------------------------------------------------
-
 py = {}
 # What's this blog's title?
 py['blog_title'] = "Another pyblosxom blog"
