@@ -45,7 +45,7 @@ class BlosxomRenderer(RendererBase):
                'story' : """<item>\n    <title>$title</title>\n    <link>$base_url/$file_path.html</link>\n    <description>$body</description>\n  </item>\n""",
                'foot' : '   </channel>\n</rss>'}
         rss3 = {'content_type' : 'text/plain',
-                'head' : """title: $blog_title\ndescription: $blog_description\nlink: $url\ncreator: wari@wari.per.sg Wari Wahab\nerrorsTo: wari@wari.per.sg Wari Wahab\nlang: $blog_language\n\n\n""",
+                'head' : """title: $blog_title\ndescription: $blog_description\nlink: $url\ncreator: $blog_author\nerrorsTo: $blog_author\nlang: $blog_language\n\n\n""",
                 'story' :  """title: $title\nlink: $base_url/$file_path.html\ncreated: $w3cdate\nsubject: $path\nguid: $file_path\n\n""",
                 'foot' : ''}
         esf = {'content_type' : 'text/plain',
