@@ -42,7 +42,19 @@ doc_files = ["INSTALL", "LICENSE",
              os.path.normpath("docs/ReadMeForPlugins.py")]
 
 # FIXME - this doesn't account for a variety of platforms
-if sys.platform == "win32":
+platform = sys.platform
+matrix = { "win32": "win32",
+           "linux": "nix",
+           "cygwin": "nix",
+           "openbsd": "nix",
+           "freebsd": "nix" }
+
+for mem in matrix.keys():
+    if platform.startswith(mem):
+        platform = matrix[mem]
+        break
+
+if platform == "win32":
     pydf = []
     root = "c:\\Program Files\\" + PVER + "\\"
 
@@ -51,7 +63,7 @@ if sys.platform == "win32":
         f = [mem + os.sep + m for m in f if os.path.isfile(mem + os.sep + m)]
         pydf.append( (root + mem, f) )
 
-elif sys.platform in ["linux1", "linux2", "cygwin", "openbsd3", "freebsd5"]:
+elif platform == "nix":
     pydf = []
 
     root = "/usr/share/" + PVER + "/"
