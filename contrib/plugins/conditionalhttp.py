@@ -15,6 +15,7 @@ from libs import api
 def prepare(args):
     request = args[0]
     data = request.getData()
+    config = request.getConfiguration()
     entryList = data["entry_list"]
     renderer = data["renderer"]
 
@@ -33,10 +34,10 @@ def prepare(args):
             renderer.needsContentType(None)
             renderer.render()
 
-            from libs import tools
-            tools.logRequest(py.get('logfile',''), '304')
-            renderer.addHeader(['ETag: "%s"' % entryList[0]['mtime'],
-                'Last-Modified: %s' % lastModed])
+        from libs import tools
+        tools.logRequest(config.get('logfile',''), '304')
+        renderer.addHeader(['ETag: "%s"' % entryList[0]['mtime'],
+            'Last-Modified: %s' % lastModed])
 
 def initialize():
     api.prepareChain.register(prepare)
