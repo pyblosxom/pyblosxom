@@ -69,7 +69,12 @@ if __name__ == '__main__':
         path = d['PATH_INFO']
         if len(path) > 0:
             path = path[1:]
-        entry = FileEntry(config, os.path.join(datadir, path+'.txt'), datadir )
+        filename = ''
+        for ext in data['extensions'].keys():
+            if os.path.isfile(os.path.join(datadir,path + '.' + ext)):
+                filename = os.path.join(datadir,os.path.normpath('%s.%s' % (path, ext)))
+                break 
+        entry = FileEntry(config, filename, datadir )
         data = {}
         data['entry_list'] = [ entry ]
        
