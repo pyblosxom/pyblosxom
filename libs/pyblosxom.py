@@ -127,20 +127,27 @@ class PyBlosxom:
                     path_info.pop(0)
 
                 def isMonth(s):
-                    if re.match("0[1-9]|1[0-2]",s): return 1
-                    elif re.match("Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec",s): return 1
-                    else: return 0
+                    if re.match("0[1-9]|1[0-2]",s):
+                        return 1
+                    elif re.match("Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec",s):
+                        return 1
+                    else:
+                        return 0
 
                 # try to see if its a yyyy/mm/dd style url first
-                if len(path_info) > 0 and re.match('2[0-9]{3}', path_info[0]):
+                if len(path_info) > 0 and len(path_info[0]) == 4 and path_info[0].isdigit():
                     data['pi_yr'] = path_info.pop(0)
-                    if len(path_info) > 0 and isMonth(path_info[0]):
+
+                    if len(path_info) > 0 and path_info[0] in tools.MONTHS:
                         data['pi_mo'] = path_info.pop(0)
-                        if len(path_info) > 0 and re.match("[0-3][0-9]",path_info[0]):
-                            data['pi_da'] = path_info[0][0:2]
+
+                        if len(path_info) > 0 and re.match("^[0-3][0-9]$", path_info[0]):
+                            data['pi_da'] = path_info[0]
                             match = re.search("(?P<frag>\#.+)",path_info[0])
+
                             if match != None and match.lastgroup == 'frag':
                                 data['pi_frag'] = match.group('frag')
+
                 else: # see if it is a category style url
                     while re.match(r'^[_a-zA-Z0-9]\w*', path_info[0]):
                         data['pi_bl'] += '/%s' % path_info.pop(0)
@@ -148,8 +155,8 @@ class PyBlosxom:
                             break
                         
             data['path_info'] = list(path_info)
-
             data['root_datadir'] = config['datadir']
+
             if os.path.isdir(config['datadir'] + data['pi_bl']):
                 if data['pi_bl'] != '':
                     config['blog_title'] += ' : %s' % data['pi_bl']

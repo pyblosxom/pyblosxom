@@ -22,6 +22,9 @@ for k,v in month2num.items():
     num2month[v] = k
     num2month[int(v)] = k
 
+# all the valid month possibilities
+MONTHS = num2month.keys() + month2num.keys()
+
 class Stripper(sgmllib.SGMLParser):
     """Strips HTML"""
     def __init__(self):
