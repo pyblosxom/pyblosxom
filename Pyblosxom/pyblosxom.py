@@ -56,6 +56,9 @@ class PyBlosxom:
         import plugin_utils
         plugin_utils.initialize_plugins(config.get("plugin_dirs", []), config.get("load_plugins", None))
 
+        # run the start callback
+        tools.run_callback("start", {'request': self._request})
+
         # entryparser callback is run here first to allow other plugins
         # register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
@@ -384,9 +387,6 @@ def blosxom_handler(request):
         r = r.Renderer(request, config.get("stdoutput", sys.stdout))
 
     data['renderer'] = r
-
-    # run the start callback
-    tools.run_callback("start", {'request': request})
 
     request.addHttp( {"form": cgi.FieldStorage() } )
     # process the path info to determine what kind of blog entry(ies) 
