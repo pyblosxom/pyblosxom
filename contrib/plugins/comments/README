@@ -3,16 +3,44 @@ To install comments:
 IMPORTANT:  You must have the pyXML module installed in order to use 
 the comment system.
 
-1. Install plugins/comments.py in your lib/plugins directory
+1. Install plugins/comments.py in your plugins directory
 
 2. If you want trackbacks, install trackback.cgi in your pyblosxom 
    directory and make it executable as a CGI.  The CGI must be callable
-   via a URI on your blog site. 
+   via a URI on your blog site. You need to have comments.py installed 
+   in order for this to work
 
 3. If you want pingbacks, install xmlrpcplugins/pingback.py in your
-   lib/xmlrpcplugins directory
+   lib/xmlrpcplugins directory.  You need to have comments.py installed
+   in order for this to work.  You must also define py['base_url'].
 
-4  In config.py, 
+4. If you want support for the CommentAPI, install CommentAPI.cgi in your
+   pyblosxom directory and make it executable as a CGI.  If you enable
+   CommentAPI in your RSS feed (see below), some RSS aggregator programs
+   will provide an interface that can post a comment to a blog entry.
+   For more information on CommentAPI, the specification is at
+   http://wellformedweb.org/story/9 and a list of implementations is at
+   http://wellformedweb.org/news/35
+
+   The CGI must be callable via a URI on your blog site (see below for 
+   more details). You need to have comments.py installed in order for this 
+   to work.  
+
+   Then you must add the commentAPI tags to your RSS 2.0 feed.  The best 
+   way to do this is to add an XML namespace declaration to the rss
+   element:
+
+   xmlns:wfw="http://wellformedweb.org/CommentAPI"
+    
+   Then inside your RSS items you need to add a wfw:comment element:
+    
+   <wfw:comment>###commentAPI###/$file_path</wfw:comment>
+    
+   where ###commentAPI### is replaced by the URI that you mapped your
+   CommentAPI.cgi to  At the moment, you need to map to a URI one level
+   below the $base_url of the blog
+
+5. In config.py, 
    add 'comments' to py['load_plugins']
 
    Comments are stored in a directory which will parallel the data
@@ -28,7 +56,7 @@ the comment system.
    set py['comment_ext'] to the change comment file extension.  The
    default file extension is 'cmt'
 
-5  The comment system can notify you via e-mail when new
+6.  The comment system can notify you via e-mail when new
    comments/trackbacks/pingbacks are posted.  If you want to enable this 
    feature, create the following config.py entries:
 
@@ -38,14 +66,14 @@ the comment system.
 
    set for e-mail notification stuff - fix vars
 
-6. Copy the flavour files from the flavours directory.  There are
+7. Copy the flavour files from the flavours directory.  There are
    flavours for .html and rss.  You should copy both.  The comment-story
    template is used to format a single entry that has comments .  The
    comment template is used to format a single
    comment/trackback/pingback.  The comment-form template provides the
    form used to enter new comments.
 
-7. Edit the comment-story, comment, and comment-form templates.  You
+8. Edit the comment-story, comment, and comment-form templates.  You
    will have to adjust trackback URI's to match your webserver
    configuration.  Variables that are available are:
 
