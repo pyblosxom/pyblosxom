@@ -70,7 +70,7 @@ class PyblCategories:
         self._elistmap = elistmap
 
         clist = map(self.genitem, clist)
-        self._categories = "<br>".join(clist)
+        self._categories = "<br />".join(clist)
 
 
 def cb_prepare(args):
