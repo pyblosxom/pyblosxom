@@ -42,6 +42,7 @@ class PyBlosxom:
         """
         config['pyblosxom_name'] = "pyblosxom"
         config['pyblosxom_version'] = VERSION_DATE
+        self._config = config
         self._request = Request(config, environ, data)
 
     def initialize(self):
@@ -55,6 +56,9 @@ class PyBlosxom:
         data = self._request.getData()
         pyhttp = self._request.getHttp()
         config = self._request.getConfiguration()
+
+        # initialize the tools module
+        tools.initialize(config)
 
         data["pyblosxom_version"] = VERSION_DATE
         data['pi_bl'] = ''
@@ -82,6 +86,21 @@ class PyBlosxom:
                                         {'txt': blosxom_entry_parser},
                                         mappingfunc=lambda x,y:y,
                                         defaultfunc=lambda x:x)
+
+    def cleanup(self):
+        """
+        Cleanup everything.
+        This should be called when Pyblosxom has done all its work.
+        Right before exiting.
+        """
+        # log some usefull stuff for debugging
+        # this will only be logged if the log_level is "debug"
+        log = tools.getLogger()
+        response = self.getResponse()
+        log.debug("status = %s", response.status)
+        log.debug("headers = %s", response.headers)
+        
+        tools.cleanup()
 
     def getRequest(self):
         """
@@ -134,6 +153,11 @@ class PyBlosxom:
 
         # do end callback
         tools.run_callback("end", {'request': self._request})
+        
+        # we're done, clean up.
+        # only call this if we're not in static rendering mode.
+        if static == False:
+            self.cleanup()
 
 
     def runCallback(self, callback="help"):
@@ -304,9 +328,14 @@ class PyBlosxom:
             print "rendering '%s' ..." % url
             tools.render_url(config, url, q)
 
+        # we're done, clean up
+        self.cleanup()
+
 
     def testInstallation(self):
+        tools.initialize(self._config)
         test_installation(self._request)
+        tools.cleanup()
 
 
 class EnvDict(dict):
