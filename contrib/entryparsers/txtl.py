@@ -34,8 +34,11 @@ def cb_entryparser(args):
     return args
 
 def cb_preformat(args):
-    if args['parser'] == PREFORMATTER_ID:
+    if args['parser'] == PREFORMATTER_ID and \
+           args['request'].getData()['flavour'] == "html":
         return parse(''.join(args['story']))
+    else:
+        return ''.join(args['story']).replace("&","&") 
 
 def parse(story):
     return textile(story)
