@@ -778,6 +778,7 @@ def test_installation(request):
         for mem in plugin_utils.plugins:
             if "verify_installation" in dir(mem):
                 print "=== plugin: '%s'" % mem.__name__
+                print "    file: %s" % mem.__file__
 
                 if "__version__" in dir(mem):
                     print "    version: %s" % mem.__version__
@@ -793,7 +794,7 @@ def test_installation(request):
                     print " FAIL!!! ", error_message
 
             else:
-                no_verification_support.append(mem.__name__)
+                no_verification_support.append( "'%s' (%s)" % (mem.__name__, mem.__file__))
 
         if len(no_verification_support) > 0:
             print ""
