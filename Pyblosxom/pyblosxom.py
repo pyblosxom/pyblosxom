@@ -112,18 +112,22 @@ class PyBlosxom:
                         mappingfunc=lambda x,y:x,
                         donefunc=lambda x:x)
 
-        if handled:
-            return
+        if not handled == 1:
+            self.defaultHandler(config, data)
 
+        # do end callback
+        tools.run_callback("end", {'request':self._request})
+
+    def defaultHandler(self, config, data):
         import cgi
 
         self._request.addHttp( {"form": cgi.FieldStorage() } )
         # process the path info to determine what kind of blog entry(ies) 
         # this is
         tools.run_callback("pathinfo",
-                           {"request": self._request},
-                           donefunc=lambda x:x != None,
-                           defaultfunc=blosxom_process_path_info)
+                               {"request": self._request},
+                               donefunc=lambda x:x != None,
+                               defaultfunc=blosxom_process_path_info)
 
         # call the filelist callback to generate a list of entries
         data["entry_list"] = tools.run_callback("filelist",
