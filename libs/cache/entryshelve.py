@@ -16,13 +16,14 @@ import shelve
 import os
 
 class blosxomCache(blosxomCacheBase):
-    def __init__(self):
+    def __init__(self, config):
+        blosxomCacheBase.__init__(self, config)
         self._db = None
 
-    def load(self, config, entryID):
-        blosxomCacheBase.load(self, config, entryID)
+    def load(self, entryID):
+        blosxomCacheBase.load(self, entryID)
         if self._db is None:
-            self._db = shelve.open(config)
+            self._db = shelve.open(self._config)
 
     def getEntry(self):
         """

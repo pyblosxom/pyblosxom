@@ -16,14 +16,18 @@ class blosxomCacheBase:
     Driver should expect empty caches and should attempt to create them from
     scratch.
     """
-    
-    def load(self, config, entryID):
-        self._entryID = entryID # The filename of the entry
-        self._entryData = {}    # The data of the entry
+    def __init__(self, config):
         self._config = config   # Dict containing config on where to store
                                 # cache Value of config is derived from
-                                # py['configparams']. Document your driver on
+                                # py['cacheConfig']. Document your driver on
                                 # what should be set here
+    
+    
+    def load(self, entryID):
+        self._entryID = entryID # The filename of the entry
+        self._entryData = {}    # The data of the entry
+
+
     def getEntry(self):
         """
         Gets the data from the cache, returns a dict or an empty dict.

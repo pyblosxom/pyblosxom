@@ -164,7 +164,7 @@ class PyBlosxom:
             if template != '':
                 print tools.parseitem(text, tools.parse(text, template)).replace(r'\$', '$')
 
-        cache.load(self.py.get('cacheConfig', ''), filename)
+        cache.load(filename)
 
         entryData = {}
         if cache.isCached():
@@ -255,7 +255,7 @@ class PyBlosxom:
         if self.flavour.has_key('head'): print tools.parse(self.py, self.flavour['head'])
         if self.flavour.has_key('story'):
             cacheDriver = tools.importName('libs.cache', self.py.get('cacheDriver', 'base'))
-            cache = cacheDriver.blosxomCache()
+            cache = cacheDriver.blosxomCache(self.py.get('cacheConfig', ''))
             # Body stuff
             current_date = ''
             count = 1

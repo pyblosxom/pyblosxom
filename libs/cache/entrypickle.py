@@ -18,9 +18,10 @@ from os import makedirs
 from os.path import normpath,dirname,exists,abspath
 
 class blosxomCache(blosxomCacheBase):
-    def load(self, config, entryID):
-        blosxomCacheBase.load(self, config, entryID)
-        self._cacheFile = os.path.join(config, entryID.replace('/', '_')) + '.entryplugin'
+    def load(self, entryID):
+        blosxomCacheBase.load(self, entryID)
+        self._cacheFile = os.path.join(self._config, entryID.replace('/', '_')) + \
+                '.entryplugin'
 
 
     def getEntry(self):
