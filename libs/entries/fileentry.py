@@ -69,31 +69,6 @@ class FileEntry(base.EntryBase):
         self.__populateData()
         return self._metadata.get(key, default)
         
-    def getCacheableData(self):
-        """
-        Implements the getCacheableData API method.  We only want to
-        populate the cacheable dict with things that we get from 
-        retrieving and parsing the entry itself--not things we get
-        from doing an os.stat.
-        """
-        entrydict = {}
-
-        entrydict[base.CONTENT_KEY] = self.getData()
-
-        for mem in self._metadata.keys():
-            if mem not in self._original_metadata_keys:
-                entrydict[mem] = self._metadata[mem]
-
-        return entrydict
-
-    def setCacheableData(self, d):
-        """
-        Implements the setCacheableData API method.  We can just do
-        an update here since we don't need to do any special processing.
-        """
-        self.update(d)
-        self._populated_data = 1
-
     def __populateBasicMetadata(self):
         """
         Fills the metadata dict with metadata about the given file.  This
@@ -166,19 +141,17 @@ class FileEntry(base.EntryBase):
         """
         registry = tools.get_registry()
         request = registry["request"]
-        cache = tools.get_cache()
         data = request.getData()
 
-        if cache.has_key(self._filename):
-            self.update(cache[self._filename])
-        else:
+        entrydict = self.getFromCache(self._filename)
+        if not entrydict:
             fileExt = re.search(r'\.([\w]+)$', self._filename)
             try:
                 eparser = data['extensions'][fileExt.groups()[0]]
                 entrydict = eparser.parse(self._filename, request)
-                cache[self._filename] = entrydict
-                self.update(entrydict)
+                self.addToCache(self._filename, entrydict)
             except IOError:
                 return None
 
+        self.update(entrydict)
         self._populated_data = 1

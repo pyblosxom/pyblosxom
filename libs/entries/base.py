@@ -6,6 +6,7 @@ through the comments for this class will walk you through building your
 own EntryBase derivatives.
 """
 import time
+from libs import tools
 
 CONTENT_KEY = "body"
 DOESNOTEXIST = "THISKEYDOESNOTEXIST"
@@ -110,35 +111,40 @@ class EntryBase:
         """
         return self._metadata.keys()
 
-    def getCacheableData(self):
+    def getFromCache(self, id):
         """
-        It should return a dict of name/value pairs.  The dict will 
-        then be cached.
+        Retrieves information from the cache that pertains to this
+        specific id.
 
-        Override this if you want to be cacheable.
+        This is a helper method--call this to get data from the cache.
+        Do not override it.
 
-        getCacheableData and setCacheableData should be inverses of
-        each other.
+        @param id: a unique key for the information you're retrieving
+        @type  id: string
 
-        @returns: dict of name/value pairs to be cached
-        @rtype: dict
+        @returns: dict with the values or None if there's nothing for that
+            id
+        @rtype: dict or None
         """
-        return {}
+        cache = tools.get_cache()
+        # cache.__getitem__ returns None if the id isn't there
+        return cache[self._filename]
 
-    def setCacheableData(self, d):
+    def addToCache(self, id, data):
         """
-        It takes in a dict d of name/value pairs that were originally 
-        created by getCacheableData.
+        Over-writes the cached dict for key id with the data dict.
 
-        Override this if you want to be cacheable.
+        This is a helper method--call this to add data to the cache.
+        Do not override it.
 
-        getCacheableData and setCacheableData should be inverses of
-        each other.
+        @param id: a unique key for the information you're storing
+        @type  id: string
 
-        @param d: the dict of name/value pairs to update our entry with
-        @type  d: dict
+        @param data: the data to store--this should probably be a dict
+        @type  data: dict
         """
-        pass
+        cache = tools.get_cache()
+        cache[id] = data
 
     # everything below this point involves convenience functions
     # that work with the above functions.
