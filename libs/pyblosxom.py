@@ -62,11 +62,6 @@ class PyBlosxom:
 
         path_info = data['path_info']
 
-        # Python is unforgiving as perl in this case
-        data['pi_yr'] = (len(path_info) > 0 and path_info.pop(0) or '')
-        data['pi_mo'] = (len(path_info) > 0 and path_info.pop(0) or '')
-        data['pi_da'] = (len(path_info) > 0 and path_info.pop(0) or '')
-
         if data['bl_type'] == 'dir':
             filelist = tools.Walk(data['root_datadir'], int(config['depth']))
         else:
@@ -115,9 +110,6 @@ class PyBlosxom:
 
         api.fileListHandler.register(self.defaultFileListHandler, api.LAST)
         
-        # CGI command handling
-        tools.cgiRequest(self._request)
-
         # If we use XML-RPC, we don't need favours and GET/POST fields
         if not self.xmlRpcCall:
             form = self._request.getHttp()["form"]
@@ -126,16 +118,35 @@ class PyBlosxom:
             path_info = []
 
             # Get the blog name if possible
+            data['pi_yr'] = ''
+            data['pi_mo'] = ''
+            data['pi_da'] = ''
             if pyhttp.get('PATH_INFO', ''):
                 path_info = pyhttp['PATH_INFO'].split('/')
                 if path_info[0] == '':
                     path_info.pop(0)
 
-                while re.match(r'^[a-zA-Z]\w*', path_info[0]):
-                    data['pi_bl'] += '/%s' % path_info.pop(0)
-                    if len(path_info) == 0:
-                        break
+                def isMonth(s):
+                    if re.match("0[1-9]|1[0-2]",s): return 1
+                    elif re.match("Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec",s): return 1
+                    else: return 0
 
+                # try to see if its a yyyy/mm/dd style url first
+                if len(path_info) > 0 and re.match('2[0-9]{3}', path_info[0]):
+                    data['pi_yr'] = path_info.pop(0)
+                    if len(path_info) > 0 and isMonth(path_info[0]):
+                        data['pi_mo'] = path_info.pop(0)
+                        if len(path_info) > 0 and re.match("[0-3][0-9]",path_info[0]):
+                            data['pi_da'] = path_info[0][0:2]
+                            match = re.search("(?P<frag>\#.+)",path_info[0])
+                            if match != None and match.lastgroup == 'frag':
+                                data['pi_frag'] = match.group('frag')
+                else: # see if it is a category style url
+                    while re.match(r'^[_a-zA-Z0-9]\w*', path_info[0]):
+                        data['pi_bl'] += '/%s' % path_info.pop(0)
+                        if len(path_info) == 0:
+                            break
+                        
             data['path_info'] = list(path_info)
 
             data['root_datadir'] = config['datadir']

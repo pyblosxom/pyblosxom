@@ -190,13 +190,6 @@ parseitem = CallbackChain()
 # Output: None
 logRequest = CallbackChain()
 
-# CallbackChain to handle cgi requests based on a plugin
-#  
-# Input: entry dict contain a "cgiForm" entry
-#
-# Output:
-#   updated entry dict
-cgiHandler = CallbackChain()
 
 # CallbackChain to generate file list based on a plugin
 #  

@@ -92,13 +92,6 @@ def logRequest(filename = '', returnCode = '200'):
     """
     api.logRequest.executeHandler((filename, returnCode))
 
-def cgiRequest(request):
-    """
-    Takes an entry dict with a cgiForm entry and processes some of the 
-    CGI parameters
-    """
-    api.cgiHandler.executeHandler(request)
-
 def fileList(request):
     """
     Takes an entry dict and returns a file list
