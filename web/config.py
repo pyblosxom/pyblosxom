@@ -14,8 +14,11 @@ py['blog_title'] = "Another pyblosxom blog"
 # What's this blog's description (for outgoing RSS feed)?
 py['blog_description'] = "blosxom with a touch of python"
 
-# What's this blog's author name and email?
-py['blog_author'] = "name email@blah.com"
+# What's this blog's author name?
+py['blog_author'] = "name"
+
+# What's the blog author's email address?
+py["blog_email"] = "email@blah.com"
 
 # What's this blog's primary language (for outgoing RSS feed)?
 py['blog_language'] = "en"
