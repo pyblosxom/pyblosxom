@@ -29,8 +29,8 @@ class PyblStats:
         self._referrersText = ""
         self._requestors = {}
         self._destinations = {}
-        self._referrer_length = int(config['referrer_length'])
-        self._num_referrers = int(config['num_referrers'])
+        self._referrer_length = int(config.get('referrer_length', 10))
+        self._num_referrers = int(config.get('num_referrers', 15))
 
     def __str__(self):
         """
@@ -132,8 +132,8 @@ def prepare(args):
         stats = cPickle.load(f)
         stats._request = request
         stats._config = config
-        stats._referrer_length = int(config['referrer_length'])
-        stats._num_referrers = int(config['num_referrers'])
+        stats._referrer_length = int(config.get('referrer_length', 15))
+        stats._num_referrers = int(config.get('num_referrers', 15))
         f.close()
 
     except (EOFError, IOError):
