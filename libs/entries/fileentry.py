@@ -1,7 +1,19 @@
 # vim: tabstop=4 shiftwidth=4
 """
-This module contains the classes necessary to get entries
-from a file system.
+This module contains FileEntry class which is used to retrieve entries 
+from a file system.  Since pulling data from the file system and parsing 
+it is expensive (especially when you have 100s of entries) we delay
+fetching data until it's demanded.
+
+We know some metadata at the beginning.  This is the data that's
+populated via the __populateBasicMetadata(...) method.  We keep
+track of the metadata keys that it has populated and when we're
+asked for something that we don't have, then we get the file from
+the filesystem, parse it, and populate the rest of the metadata
+and the contents of the file.
+
+The FileEntry doesn't handle caching at all--that's handled by
+the CacheDecorator which wraps the FileEntry.
 """
 import time, os, re
 from libs import tools
@@ -9,7 +21,8 @@ import base
 
 class FileEntry(base.EntryBase):
     """
-    This class gets it's data and metadata from a file.
+    This class gets it's data and metadata from the file specified
+    by the filename argument.
     """
     def __init__(self, config, filename, root):
         base.EntryBase.__init__(self)
@@ -48,7 +61,7 @@ class FileEntry(base.EntryBase):
         Some of our metadata comes from os.stats--and the rest
         comes from running the entry parser on the file.  so
         we try to fulfill as many things from os.stats as we
-        can before parsing the file.
+        can before retrieving and parsing the file.
         """
         if self._populated_data == 1 or key in self._original_metadata_keys:
             return self._metadata.get(key, default)

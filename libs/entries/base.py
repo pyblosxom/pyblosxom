@@ -6,6 +6,7 @@ import time
 
 CONTENT_KEY = "body"
 DOESNOTEXIST = "THISKEYDOESNOTEXIST"
+DOESNOTEXIST2 = "THISKEYDOESNOTEXIST2"
 
 class EntryBase:
     """
@@ -180,12 +181,11 @@ class EntryBase:
         if key == CONTENT_KEY:
             return 1
 
-        # we do this cheesy little thing in case the metadata dict
-        # has to be populated in order to figure out if it has a given
-        # key.
         value = self.getMetadata(key, DOESNOTEXIST)
         if value == DOESNOTEXIST:
-            return 0
+            value = self.getMetadata(key, DOESNOTEXIST2)
+            if value == DOESNOTEXIST2:
+                return 0
 
         return 1
 
