@@ -32,6 +32,16 @@ py['datadir'] = "/path/to/blog"
 # Where should PyBlosxom log files be kept?
 py['logdir'] = "/path/to/logdir"
 
+# Where should the application log to?
+# If set to "NONE" log messages are silently ignored.
+# Falls back to sys.stderr if the file can't be opened for writing.
+py['log_file'] = "/path/to/pyblosxom.log"
+
+# What log level should be used for the log_file?
+# One of: critical, error, warning, info, debug
+# For production 'warning' or 'error' is recommended.
+py['log_level'] = "warning"
+
 # List of strings with directories that should be ignored (e.g. "CVS")
 # ex: py['ignore_directories'] = ["CVS", "temp"]
 py['ignore_directories'] = []
