@@ -19,7 +19,7 @@ def prepare(args):
     entryList = data["entry_list"]
     renderer = data["renderer"]
 
-    if entryList:
+    if entryList and entryList[0].has_key('mtime'):
         import os, time
         # Get our first file timestamp for ETag and Last Modified
         # Last-Modified: Wed, 20 Nov 2002 10:08:12 GMT
