@@ -85,6 +85,9 @@ This plugin implements Google's nofollow support for links in the body of the
 comment. If you display the link of the comment poster in your HTML template 
 then you must add the rel="nofollow" attribute to your template as well
 """
+__author__ = "Ted Leung"
+__version__ = "$Id$"
+
 import cgi, glob, os.path, re, time, cPickle, os, codecs
 from xml.sax.saxutils import escape
 from Pyblosxom import tools
