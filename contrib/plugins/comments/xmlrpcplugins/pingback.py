@@ -39,18 +39,15 @@ def fileFor(req, uri):
     uri = "%s://%s%s" % (urldata[0], urldata[1], urldata[2])
     fragment = urldata[4]
 
-    p = PyBlosxom(req)
-    p.startup()
-    config, data = p.common_start(start_callbacks=0, render=0)
-
     # We get our path here
     path = uri.replace(config['base_url'], '')
     req.addHttp({'PATH_INFO': path, "form": {}})
-    p.processPathInfo({'request': req})
+    from Pyblosxom.pyblosxom import blosxom_process_path_info
+    blosxom_process_path_info({'request': req})
     
     args = { 'request': req }
-    from Pyblosxom.pyblosxom import default_file_list_handler
-    es = default_file_list_handler(args)
+    from Pyblosxom.pyblosxom import blosxom_file_list_handler
+    es = blosxom_file_list_handler(args)
 
     # We're almost there
     if len(es) == 1 and path.find(es[0]['file_path']) >= 0:
@@ -118,5 +115,9 @@ def pingback(request, source, target):
     else:
         raise Fault(0x0011, "%s does not point to %s" % (target, source))
 
-def register_xmlrpc_methods():
-    return {'pingback.ping': pingback }
+def cb_xmlrpc_register(args):
+    """
+    Register as a pyblosxom XML-RPC plugin
+    """
+    args['methods'].update({'pingback.ping': pingback })
+    return args
