@@ -5,6 +5,12 @@ from entries.fileentry import FileEntry
 import cPickle as pickle
 
 class PyBlosxom:
+    """
+    This is the main class for PyBlosxom functionality.  It handles
+    initialization, defines default behavior, and also pushes the
+    request through all the steps until the output is rendered and
+    we're complete.
+    """
     def __init__(self, request, xmlRpcCall=0):
         self._request = request
         self.xmlRpcCall = xmlRpcCall
@@ -12,6 +18,10 @@ class PyBlosxom:
         self.dayFlag = 1 # Used to print valid date footers
         
     def startup(self):
+        """
+        The startup step further initializes the Request by setting
+        additional information in the _data dict.
+        """
         data = self._request.getData()
         pyhttp = self._request.getHttp()
         config = self._request.getConfiguration()
@@ -70,15 +80,48 @@ class PyBlosxom:
         data['pi_mo'] = (len(path_info) > 0 and path_info.pop(0) or '')
         data['pi_da'] = (len(path_info) > 0 and path_info.pop(0) or '')
 
+
     def defaultFileListHandler(self, request):
+        """
+        This is the default handler for getting entries.  It takes the
+        request object in and figures out which entries based on the
+        default behavior that we want to show and generates a list of
+        EntryBase subclass objects which it returns.
+
+        @param request: the incoming Request object
+        @type request: libs.Request.Request
+
+        @returns: the content we want to render
+        @rtype: list of EntryBase objects
+        """
         data = request.getData()
         config = request.getConfiguration()
-        return (data['bl_type'] == 'dir' and 
+
+        filelist = (data['bl_type'] == 'dir' and 
                 tools.Walk(data['root_datadir'], int(config['depth'])) or 
                 [data['root_datadir']])
 
+        entrylist = []
+        for ourfile in filelist:
+            entry = FileEntry(config, ourfile, data['root_datadir'])
+            entrylist.append(entry)
+        entrylist = tools.sortDictBy(entrylist, "mtime")
+        
+        # Match dates with files if applicable
+        if not data['pi_yr'] == '':
+            month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
+            matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
+            valid_list = [x for x in entrylist if re.match(matchstr, x['fulltime'])]
+        else:
+            valid_list = entrylist
+
+        return valid_list
+
+
     def run(self):
-        """Main loop for pyblosxom"""
+        """
+        Main loop for pyblosxom.
+        """
         config = self._request.getConfiguration()
         data = self._request.getData()
 
@@ -102,36 +145,24 @@ class PyBlosxom:
         
         # CGI command handling
         tools.cgiRequest(self._request)
-        filelist = tools.fileList(self._request)
-        
-        dataList = []
-        for ourfile in filelist:
-            entry = FileEntry(config, ourfile, data['root_datadir'])
-            dataList.append(entry)
-        dataList = tools.sortDictBy(dataList,"mtime")
-        
-        # Match dates with files if applicable
-        if not data['pi_yr'] == '':
-            month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
-            matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
-            valid_list = ([x for x in dataList
-                       if re.match(matchstr, x['fulltime'])])
-        else:
-            valid_list = dataList
 
-        data["entry_list"] = valid_list
-
+        # calling fileList will generate a list of entries from the
+        # api.fileListHandler
+        data["entry_list"] = tools.fileList(self._request)
+        
         # we pass the request with the entry_list through the
         # plugins giving them a chance to transform the data.
         # plugins modify the request in-place--no need to return
         # things.
         api.prepareChain.executeHandler((self._request,))
         
-        valid_list = data["entry_list"]
+
+        # now we pass the entry_list through the renderer
+        entry_list = data["entry_list"]
 
         if renderer and not renderer.rendered:
-            if valid_list:
-                renderer.setContent(valid_list)
+            if entry_list:
+                renderer.setContent(entry_list)
                 tools.logRequest(config.get('logfile',''), '200')
             else:
                 renderer.addHeader(['Status: 404 Not Found'])
