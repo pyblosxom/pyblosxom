@@ -23,7 +23,8 @@ def cb_prepare(args):
         latest_cmtime = - 1
         if config.has_key('comment_dir'):
             try: 
-                latestFilename = config['datadir']+'/'+config['comment_dir']+'/LATEST'
+                import os.path
+                latestFilename = os.path.join(config['comment_dir'],'LATEST.cmt')
                 latest = file(latestFilename)
                 import cPickle
                 latest_cmtime = cPickle.load(latest)

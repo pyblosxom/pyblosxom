@@ -57,8 +57,8 @@ def cmtExpr(entry, config):
     @returns: a string containing the regular expression for comment entries
     """
     
-    cmtDir = config['datadir']+'/'+config['comment_dir']+'/'+entry['absolute_path']
-    cmtExpr = cmtDir+'/'+entry['fn']+'-*.'+config['comment_ext']
+    cmtDir = os.path.join(config['comment_dir'],entry['absolute_path'])
+    cmtExpr = os.path.join(cmtDir,entry['fn']+'-*.'+config['comment_ext'])
     return cmtExpr
 
     
@@ -117,11 +117,11 @@ def writeComment(config, data, comment):
     """
     entry = data['entry_list'][0]
     datadir = config['datadir']
-    cdir = datadir+'/'+config['comment_dir']+'/'+entry['absolute_path']
+    cdir = os.path.join(config['comment_dir'],entry['absolute_path'])
     cdir = os.path.normpath(cdir)
     if not os.path.isdir(cdir):
         os.makedirs(cdir)
-    cfn = cdir+'/'+entry['fn']+"-"+comment['pubDate']+"."+config['comment_ext']
+    cfn = os.path.join(cdir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_ext'])
      
     # write comment
     try :
@@ -145,7 +145,7 @@ def writeComment(config, data, comment):
         
     #write latest pickle
     try:
-        latestFilename = datadir+'/'+config['comment_dir']+'/LATEST'
+        latestFilename = os.path.join(config['comment_dir'],'LATEST.cmt')
         latest = file(latestFilename,"w")
         modTime = float(comment['pubDate'])
         cPickle.dump(modTime,latest)
@@ -163,7 +163,7 @@ def writeComment(config, data, comment):
             server = smtplib.SMTP(config['comment_smtp_server'])
             curl = config['base_url']+'/'+entry['file_path']
             message = "Subject: write back by %s\r\n\r\n%s\r\n%s\r\n%s" \
-                      %  (comment['author'], cfn, curl, comment['description'])
+                      %  (comment['author'], comment['description'], cfn, curl)
             server.sendmail(config['comment_smtp_from'], config['comment_smtp_to'], message)
             server.quit()
         except:
@@ -295,6 +295,6 @@ def cb_start(dict):
             if mem not in config['blosxom_custom_flavours']:
                 config['blosxom_custom_flavours'].append(mem)
     if not config.has_key('comment_dir'):
-        config['comment_dir'] = 'comments'
+        config['comment_dir'] = os.path.join(config['datadir'],'comments')
     if not config.has_key('comment_ext'):
         config['comment_ext'] = 'cmt'
