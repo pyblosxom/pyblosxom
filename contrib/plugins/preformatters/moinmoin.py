@@ -1,9 +1,9 @@
 # vim: tabstop=4 shiftwidth=4 expandtab
 """
-Preformatter for the MoinMoin wiki software
+Preformatter and entryparser for the MoinMoin wiki software
 
-This preformatter uses the services of MoinMoin http://moin.sourceforge.net/
-which is an excellent open source WikiWiki system.
+This preformatter/entryparser uses the services of MoinMoin
+http://moin.sourceforge.net/ which is an excellent open source WikiWiki system.
 
 Requirements:
     
@@ -22,6 +22,12 @@ your blog::
     #parser wiki
     This is a text in '''wiki''' format
 
+To use this as an entryparser, all you need to do is to name your files with a
+.wiki extension. For example a helloworld.wiki file could contain::
+
+    Hello World <- The title
+    This is the ''wiki'' text :)
+
 @var __author__: Who's to blame for this
 @var __version__: Revision of this module
 @var PREFORMATTER_ID: This preformatter will activate on this ID
@@ -36,6 +42,7 @@ from MoinMoin.request import Request
 from MoinMoin.Page import Page
 from MoinMoin.user import User
 from cStringIO import StringIO
+from libs import tools
 import sys
 
 
@@ -50,6 +57,40 @@ def cb_preformat(args):
         return parse(''.join(args['story']))
 
 
+def cb_entryparser(args):
+    """
+    Entryparser chain callback - This plugins takes in a *.wiki file and treats
+    it like a normal blosxom entry file. Postformat callbacks are also called
+    from this entryparser.
+
+    @param args: dict containing function references for each extensions
+    @type args: dict
+    """
+    args['wiki'] = readfile
+    return args
+
+
+def readfile(filename, request):
+    """
+    Reads a file and passes it to L{parse} to format in moinmoin wiki
+
+    @param filename: the file in question
+    @param request: The request object
+    @type filename: string
+    @type request: L{libs.Request.Request} object
+    """
+    entryData = {}
+    d = file(filename).read()
+    entryData['title'] = d.split('\n')[0]
+    d = d[len(entryData['title']):] 
+    entryData['body'] = parse(d)
+    # Call the postformat callbacks
+    tools.run_callback('postformat',
+            {'request': request,
+             'entry_data': entryData})
+    return entryData
+
+    
 def parse(story):
     """
     The main workhorse that does nothing but call MoinMoin to do its dirty
