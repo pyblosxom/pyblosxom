@@ -300,6 +300,7 @@ class PyBlosxom:
         print "building %s files." % len(renderme)
 
         for url, q in renderme:
+            url = url.replace(os.sep, "/")
             print "rendering '%s' ..." % url
             tools.render_url(config, url, q)
 
