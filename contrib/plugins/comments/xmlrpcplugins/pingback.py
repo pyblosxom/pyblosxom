@@ -33,18 +33,24 @@ class parser(sgmllib.SGMLParser):
 def fileFor(req, uri):
     config = req.getConfiguration()
     data = req.getData()
-    import libs.entryparsers.__init__
-    libs.entryparsers.__init__.initialize_extensions()
 
     # import plugins
     import libs.plugins.__init__
     libs.plugins.__init__.initialize_plugins(config)
+
+    # do start callback
+    tools.run_callback("start", {'request': req}, mappingfunc=lambda x,y:y)
     
     req.addHttp({"form": cgi.FieldStorage()})
     
     p = PyBlosxom(req)
     p.startup()
-    data['extensions'] = libs.entryparsers.__init__.ext
+
+    data['extensions'] = tools.run_callback("entryparser",
+                                            {'txt': PyBlosxom.defaultEntryParser},
+                                            mappingfunc=lambda x,y:y,
+                                            defaultfunc=lambda x:x)
+
     data['pi_yr'] = ''
     data['pi_mo'] = ''
     data['pi_da'] = ''
