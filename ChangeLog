@@ -1,5 +1,6 @@
 2003-04-22  Theodore W. Leung  <twl@dev>
 	* Update conditionalhttp to work when comments are present
+	* w3cdate is now provided by the w3cdate plugin, not entries/base.py
 
 2003-04-20  Theodore W. Leung  <twl@dev>
 	* Update autoping to use new pyblosxom internals

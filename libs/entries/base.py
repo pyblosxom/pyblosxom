@@ -170,8 +170,6 @@ class EntryBase:
         self['da'] = time.strftime('%d', timeTuple)
         self['yr'] = time.strftime('%Y', timeTuple)
         self['fulltime'] = time.strftime('%Y%m%d%H%M%S', timeTuple)
-        # YYYY-MM-DDThh:mm:ssTZD
-        self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%S%Z', timeTuple)
         self['date'] = time.strftime('%a, %d %b %Y', timeTuple)
 
     def __getitem__(self, key, default=None):
