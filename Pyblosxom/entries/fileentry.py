@@ -50,6 +50,11 @@ class FileEntry(base.EntryBase):
     def __repr__(self):
         return "<fileentry f'%s' r'%s'>" % (self._filename, self._root)
 
+    def setTimeLazy(self, timetuple):
+        self._timetuple = timetuple
+        self._mtime = time.mktime(timetuple)
+        self._fulltime = time.strftime("%Y%m%d%H%M%S", timetuple)
+
     def getId(self):
         """
         Returns the id for this content item--in this case, it's the
@@ -116,9 +121,8 @@ class FileEntry(base.EntryBase):
         self['fn'] = fn
         self['filename'] = self._filename
 
-        # handle the time portions
-        timeTuple = tools.filestat(self._request, self._filename)
-        self.setTime(timeTuple)
+        #timetuple is set at __init__ time or by setTimeLazy
+        self.setTime(self._timetuple)
 
         data = self._request.getData()
 
