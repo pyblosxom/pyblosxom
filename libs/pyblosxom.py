@@ -205,7 +205,7 @@ class PyBlosxom:
                     # Somehow we cannot create a cache file
                     pass
 
-        if self.py['content-type'] == 'text/xml':
+        if re.search(r'\Wxml', self.py['content-type']):
             entryData['body'] = cgi.escape(entryData['body'])
         elif self.py['content-type'] == 'text/plain':
             s = tools.Stripper()

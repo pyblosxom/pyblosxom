@@ -1,3 +1,10 @@
+2003-01-22 Wari Wahab <pyblosxom@wari.per.sg>
+	* Changed the text/xml detection just in case someone wants to use
+	  application/rss+xml as the content-type for rss feeds. This will
+	  ensure that anything that ends with xml will be have the content
+	  'sanitized' with escaped < & > for xml. See
+	  http://www.intertwingly.net/blog/1142.html for details
+
 2003-01-15 Wari Wahab <pyblosxom@wari.per.sg>
 	* Modified 404_handler.py to work with new pyblosxom subsystem
 
