@@ -38,7 +38,7 @@ def cb_preformat(args):
     """
     Preformat callback chain looks for this.
 
-    @params args: a dict with 'parser' string and a list 'story'
+    @param args: a dict with 'parser' string and a list 'story'
     @type args: dict
     """
     if args['parser'] == PREFORMATTER_ID:
@@ -49,7 +49,7 @@ def parse(text):
     """
     Load some text and add linebreaks markup
 
-    @params text: A text for conversion
+    @param text: A text for conversion
     @type text: string
     """
     text = re.sub('\n\n+','</p><p>',text)

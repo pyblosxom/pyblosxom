@@ -5,18 +5,20 @@ import sys
 class RendererBase:
     """
     Basic Renderer:
-        Pyblosxom Core handles the Input and Process of the system and passes
-        the result of the process to the Renderers for output. All renderers
-        are child classes of RendererBase. RenderBase will contain the public
-        interfaces for all Renderer onject.
+        - Pyblosxom Core handles the Input and Process of the system and passes
+          the result of the process to the Renderers for output. All renderers
+          are child classes of RendererBase. RenderBase will contain the public
+          interfaces for all Renderer onject.
     """
 
     def __init__(self, request, out = sys.stdout):
         """
         Constructor: Initializes the Renderer
 
-        @param py: The shared py dict
+        @param request: The L{libs.Request.Request} object
+        @type request: L{libs.Request.Request} object
         @param out: File like object to print to.
+        @type out: file
         """
         self._request = request
         self._header = []
@@ -41,8 +43,8 @@ class RendererBase:
         Sets the content
 
         @param content: What content are we to show?
-        @type content: list List of entries to process
-        @type content: dict Simple dict containing at least 'title' and 'body'
+        @type content: C{list} List of entries to process or C{dict} Simple
+            dict containing at least 'title' and 'body'
         """
         self._content = content
 
@@ -63,7 +65,7 @@ class RendererBase:
         Do final rendering.
 
         @param header: Do we want to show headers?
-        @param content: Do we want to display the page?
+        @type header: boolean
         """
         if header:
             if self._header:

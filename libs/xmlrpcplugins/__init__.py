@@ -62,20 +62,19 @@ def authenticate(request, username, password):
     A convenient authentication for plugins to use
 
     @param request: Request object for the current request
+    @type request: L{libs.Request.Request} object
     @param username: Username for authentication
-    @param password: Password for authentication
-    @type request: C{libs.Request} object
     @type username: string
+    @param password: Password for authentication
     @type password: string
-    @raise xmlrpclib.Fault: This happens when the username password combo is wrong
-    @warning: The C{libs.Request} must contain a configuration dict with
+    @raises xmlrpclib.Fault: This happens when the username password combo is wrong
+    @warning: The L{libs.Request.Request} must contain a configuration dict with
         C{['xmlrpc']['usernames']} in it. The username is devired from the key
         value pair dict there:
 
-        >>> req = libs.Request()
+        >>> req = libs.Request.Request()
         >>> req.addConfiguration({'xmlrpc': {'usernames': {'foo': 'bar'}}})
         >>> authenticate(req, 'foo', 'bar')
-                    
     """
     auth = request.getConfiguration()['xmlrpc']['usernames']
     if not auth.has_key(username) or password != auth[username]:

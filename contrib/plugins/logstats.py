@@ -43,8 +43,8 @@ class PyblStats:
         """
         Add a reference to a uri.
         
-        @param uri - uri being referenced
-        @type string
+        @param uri: - uri being referenced
+        @type uri: string
         """
         # process -
         if uri == '-':
@@ -118,8 +118,8 @@ def cb_prepare(args):
     """
     Callback registered with prepareChain.  This does all the work
     
-    @param: args dict containing the request
-    @type: dict
+    @param args: args dict containing the request
+    @type args: dict
     """
     request = args["request"]
     config = request.getConfiguration()

@@ -37,8 +37,8 @@ class PyFirstDate:
         """
         Initialize the PyFirstDate class.
 
-        @type py: dictionary
-        @param py: A reference to the L{libs.Request.Request.getConfiguration()}.
+        @type request: L{libs.Request.Request} object
+        @param request: A reference to the L{libs.Request.Request} object.
         """
         config = request.getConfiguration()
         self._dayDiv = config.get("firstDayDiv", "blosxomDayDiv")

@@ -39,7 +39,7 @@ def cb_preformat(args):
     """
     Preformat callback chain looks for this.
 
-    @params args: a dict with 'parser' string and a list 'story'
+    @param args: a dict with 'parser' string and a list 'story'
     @type args: dict
     """
     if args['parser'] == PREFORMATTER_ID:
@@ -52,7 +52,7 @@ def parse(text, wikibaseurl):
     """
     The main workhorse that convert wiki text into html markup
 
-    @params text: Text for conversion
+    @param text: Text for conversion
     @type text: string
     """
     # WikiName pattern used in your wiki

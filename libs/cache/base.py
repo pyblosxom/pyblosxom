@@ -15,15 +15,28 @@ class BlosxomCacheBase:
 
     Driver should expect empty caches and should attempt to create them from
     scratch.
+
+    @cvar _config: String containing config on where to store the cache. The Value
+        of config is derived from C{py['cacheConfig']} in L{config}.
+    @type _config: string
     """
     def __init__(self, config):
-        self._config = config   # Dict containing config on where to store
-                                # cache Value of config is derived from
-                                # py['cacheConfig']. Document your driver on
-                                # what should be set here
+        """
+        Constructor - setup and load up the cache
+
+        @param config: String containing config on where to store the cache
+        @type config: string
+        """
+        self._config = config
 
 
     def load(self, entryid):
+        """
+        Try to load up the cache with entryid (a unique key for the entry)
+
+        @param entryid: The key identifier for your cache
+        @type entryid: string
+        """
         self._entryid = entryid # The filename of the entry
         self._entrydata = {}    # The data of the entry
 
@@ -39,6 +52,9 @@ class BlosxomCacheBase:
         """
         Returns 0 or 1 based on whether there is cached data, returns 0 is
         cache data is stale
+
+        @returns: 0 or 1 based on cache
+        @rtype: boolean
         """
         return 0
 
@@ -46,6 +62,9 @@ class BlosxomCacheBase:
     def saveEntry(self, entrydata):
         """
         Store entrydata in cache
+
+        @param entrydata: The payload, usually a dict
+        @type entrydata: dict
         """
         pass
 
@@ -65,23 +84,31 @@ class BlosxomCacheBase:
         pass
 
 
-    def __getitem__(self, name):
-        self.load(name)
+    def __getitem__(self, key):
+        """
+        Convenience function to make this class look like a dict
+        """
+        self.load(key)
+        if not self.has_key(key):
+            raise KeyError
         return self.getEntry()
 
 
-    def __setitem__(self, name, value):
-        self.load(name)
+    def __setitem__(self, key, value):
+        """
+        Synonymous to L{saveEntry}
+        """
+        self.load(key)
         self.saveEntry(value)
 
 
-    def __delitem__(self, name):
-        self.load(name)
+    def __delitem__(self, key):
+        self.load(key)
         self.rmEntry()
 
 
-    def has_key(self, name):
-        self.load(name)
+    def has_key(self, key):
+        self.load(key)
         return self.isCached()
 
 
@@ -91,6 +118,13 @@ class BlosxomCacheBase:
         if a full dict interface is required.
         """
         return []
+
+
+    def get(self, key, default=None):
+        try:
+            return self.__getitem__(key)
+        except KeyError:
+            return default
 
 
 class BlosxomCache(BlosxomCacheBase):

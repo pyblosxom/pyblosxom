@@ -43,7 +43,7 @@ def cb_preformat(args):
     """
     Preformat callback chain looks for this.
 
-    @params args: a dict with 'parser' string and a list 'story'
+    @param args: a dict with 'parser' string and a list 'story'
     @type args: dict
     """
     if args['parser'] == PREFORMATTER_ID:
@@ -55,7 +55,7 @@ def parse(story):
     The main workhorse that does nothing but call MoinMoin to do its dirty
     laundry
 
-    @params story: A text for conversion
+    @param story: A text for conversion
     @type story: string
     """
     s = StringIO()

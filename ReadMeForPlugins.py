@@ -18,6 +18,8 @@ if possible.
 """
 import libs, os
 from libs.Request import Request
+from libs.renderers.blosxom import BlosxomRenderer
+from libs.entries.base import EntryBase
 
 def cb_prepare(args):
     """
@@ -108,14 +110,14 @@ def cb_filestat(args = {'filename': 'A file', 'mtime': os.stat('/')}):
 
 def cb_filelist(args = {'request' : Request()}):
     """
-    A callback to generate a list of L{libs.entries.base.EntryBase} subclasses. 
+    A callback to generate a list of L{EntryBase} subclasses. 
     
     If C{None} is returned, then the callback chain will try the next plugin in
     the list.
 
     @param args: A dict containing a L{Request()} object
     @type args: dict
-    @returns: None or list of L{libs.entries.base.EntryBase}.
+    @returns: None or list of L{EntryBase}.
     @rtype: list
     """
     pass
@@ -312,10 +314,10 @@ def cb_head(args = {'renderer':'The Blosxom renderer',
     C{args} contains
     
       - C{'renderer'} - the L{BlosxomRenderer} that called the callback
-      - C{'entry'} - a {BaseEntry}to be rendered
+      - C{'entry'} - a L{EntryBase} to be rendered
       - C{'template'} - a string containing the flavour template to be processed
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{BaseEntry}, and template
+    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
     @type args: dict
     """
     pass
@@ -336,10 +338,10 @@ def cb_date_head(args = {'renderer':'The Blosxom renderer',
     C{args} contains
     
       - C{'renderer'} - the L{BlosxomRenderer} that called the callback
-      - C{'entry'} - a {BaseEntry}to be rendered
+      - C{'entry'} - a L{EntryBase} to be rendered
       - C{'template'} - a string containing the flavour template to be processed
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{BaseEntry}, and template
+    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
     @type args: dict
     """
     pass
@@ -360,10 +362,10 @@ def cb_story(args = {'renderer':'The Blosxom renderer',
     C{args} contains
     
       - C{'renderer'} - the L{BlosxomRenderer} that called the callback
-      - C{'entry'} - a {BaseEntry}to be rendered
+      - C{'entry'} - a L{EntryBase} to be rendered
       - C{'template'} - a string containing the flavour template to be processed
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{BaseEntry}, and template
+    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
     @type args: dict
     """
     pass
@@ -384,10 +386,10 @@ def cb_foot(args = {'renderer':'The Blosxom renderer',
     C{args} contains
     
       - C{'renderer'} - the L{BlosxomRenderer} that called the callback
-      - C{'entry'} - a {BaseEntry}to be rendered
+      - C{'entry'} - a L{EntryBase} to be rendered
       - C{'template'} - a string containing the flavour template to be processed
 
-    @param args: a dict containing a L{BlosxomRenderer}, L{BaseEntry}, and template
+    @param args: a dict containing a L{BlosxomRenderer}, L{EntryBase}, and template
     @type args: dict
     """
     pass
