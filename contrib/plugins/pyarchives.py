@@ -42,14 +42,9 @@ class PyblArchives:
             
         archives = {}
         archiveList = tools.Walk(root)
+
         for mem in archiveList:
-            argdict = {"filename": mem, "mtime": os.stat(mem)}
-            argdict = tools.run_callback("filestat", 
-                                         argdict,
-                                         mappingfunc=lambda x,y:y,
-                                         defaultfunc=lambda x:x)
-            mtime = argdict["mtime"][8]
-            timetuple = time.localtime(mtime)
+            timetuple = tools.filestat(mem)
             mo = time.strftime('%b',timetuple)
             mo_num = time.strftime('%m',timetuple)
             da = time.strftime('%d',timetuple)
