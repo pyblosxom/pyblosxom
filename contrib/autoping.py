@@ -17,10 +17,11 @@ the site.
 """
 
 # Please change this value to where you pyblosxom is installed.
-#BASEURL = 'http://roughingit.subtlehints.net/pyblosxom/'
+BASEURL = 'http://www.sauria.com/blog/'
 # Modify this to where your pyblosxom and config.py is installed
-#sys.path.append('/path/to/config')
-#sys.path.append('/path/to/Pyblosxom/dir')
+import sys
+sys.path.append('/home/twl/pyblog/blosxom')
+sys.path.append('/home/twl/pyblog/pyblosxom')
 
 import re, sgmllib, sys, urllib, xmlrpclib
 from xml.sax import parseString, SAXParseException
@@ -29,7 +30,7 @@ import cPickle, os
 
 # Get our pyblosxom specifics here
 from Pyblosxom import tools
-from Pyblosxom.pyblosxom import PyBlosxom
+from Pyblosxom.pyblosxom import default_entry_parser
 from Pyblosxom.Request import Request
 import config
 
@@ -183,7 +184,8 @@ def pingback(parser):
 def autoping(name):
     # Load up the cache (You can just import the base cache here)
     cache_driver = tools.importName('Pyblosxom.cache', config.py.get('cacheDriver', 'base'))
-    cache = cache_driver.BlosxomCache(config.py.get('cacheConfig', ''))
+    req = Request()
+    cache = cache_driver.BlosxomCache(req, config.py.get('cacheConfig', ''))
     try:
         filename = os.path.join(config.py['datadir'], name)
         entryData = {}
@@ -196,9 +198,7 @@ def autoping(name):
         if not entryData:
             fileExt = re.search(r'\.([\w]+)$', filename)
             try:
-                req = Request()
-                p = PyBlosxom(req)
-                entryData = p.defaultEntryParser(filename,req)
+                entryData = default_entry_parser(filename,req)
             except IOError:
                 pass
         
