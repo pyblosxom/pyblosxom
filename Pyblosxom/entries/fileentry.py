@@ -145,9 +145,11 @@ class FileEntry(base.EntryBase):
 
         entrydict = self.getFromCache(self._filename)
         if not entrydict:
-            fileExt = re.search(r'\.([\w]+)$', self._filename)
+            fileExt = os.path.splitext(self._filename)
+            if fileExt:
+                fileExt = fileExt[1][1:]
             try:
-                eparser = data['extensions'][fileExt.groups()[0]]
+                eparser = data['extensions'][fileExt]
                 entrydict = eparser(self._filename, self._request)
                 self.addToCache(self._filename, entrydict)
             except IOError:
