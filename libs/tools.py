@@ -8,8 +8,8 @@ The swiss army knife for all things pyblosxom
 @var num2month: A dict of number month format to its literal format
 @var MONTHS: A list of valid literal and numeral months
 """
+import plugins.__init__
 import sgmllib, re, os, string,  types
-import api
 
 month2num = { 'nil' : '00',
               'Jan' : '01',
@@ -112,47 +112,21 @@ def parse(dict, template):
     replaced = u'' + re.sub(ur'(?<!\\)\$([A-Za-z0-9_\-]+)', replacer, template)
     return replaced
 
-def filestat(filename):
-    """
-    Calls the api's filestat callback chain to figure out what the
-    stats on a given file are.  
-
-    This calls the filestat chain and returns the final mtime.
-
-    @param filename: The file to get the time from
-    @type filename: string
-    """
-    args = { "filename": filename, "mtime": os.stat(filename) }
-    return api.filestat.executeTransform(args)["mtime"]
-
 def logRequest(filename = '', return_code = '200'):
     """
     Calls the api's logRequest callback chain to do some statistical analysis
     based on the current request.
     
-    This calls the chain with (filename, returnCode) and returns None
-
     @param filename: Base filename to log to
     @type filename: string
+
     @param return_code: HTTP standard return code
     @type return_code: string
     """
     args = {"filename": filename, "return_code": return_code }
-    api.logRequest.executeHandler(args)
+    run_callback("logrequest", args)
 
-def fileList(request):
-    """
-    Takes an entry dict and returns a file list
-
-    @param request: A standard Request object
-    @type request: C{libs.Request.Request}
-    """
-    return api.fileListHandler.executeListHandler({"request": request})
-
-def Walk(root = '.', 
-         recurse = 0, 
-         pattern = '', 
-         return_folders = 0 ):
+def Walk(root = '.', recurse = 0, pattern = '', return_folders = 0 ):
     """
     This function walks a directory tree starting at a specified root folder,
     and returns a list of all of the files (and optionally folders) that match
@@ -161,15 +135,19 @@ def Walk(root = '.',
 
     @param root: Starting point to walk from
     @type root: string
+
     @param recurse: Depth of recursion,
         - 0: All the way
         - 1: Just this level
         - I{n}: I{n} depth of recursion
     @type recurse: integer
+
     @param pattern: A C{re.compile}'d object
     @type pattern: object
+
     @param return_folders: If true, just return list of folders
     @type return_folders: boolean
+
     @returns: A list of file paths
     @rtype: list
     """
@@ -219,8 +197,10 @@ def importName(modulename, name):
 
     @param modulename: The base name of the module to import from
     @type modulename: string
+
     @param name: The name of the module to import from the modulename
     @type name: string
+
     @returns: If successful, returns an imported object reference, else C{None}
     @rtype: object
     """
@@ -242,8 +222,10 @@ def sortDictBy(list, key):
 
     @param list: A list of dicts
     @type list: list
+
     @param key: The key in the list to sort with
     @type key: string
+
     @returns: A new list with sorted entries
     @rtype: list
     """
@@ -261,6 +243,7 @@ def generateRandStr(minlen=5, maxlen=10):
 
     @param minlen: The minimum length the string should be
     @type minlen: integer
+
     @param maxlen: The maximum length the string could be
     @type maxlen: integer
 
@@ -274,6 +257,83 @@ def generateRandStr(minlen=5, maxlen=10):
     for x in range(randStr_size):
         randStr += whrandom.choice(chars)
     return randStr
+
+def run_blosxom_callback(chain, input):
+    """
+    Makes calling blosxom callbacks a bit easier since they all have the
+    same mechanics.  This function merely calls run_callback with
+    the arguments given and a mappingfunc.
+
+    The mappingfunc copies the "template" value from the output to the 
+    input for the next function.
+
+    Refer to run_callback for more details.
+    """
+    return run_callback(chain, input, 
+            lambda x,y: x.update({"template": y["template"]}))
+
+def run_callback(chain, input, 
+        mappingfunc=lambda x,y:x, 
+        donefunc=lambda x:0,
+        defaultfunc=None):
+    """
+    Executes a callback chain on a given piece of data.
+    passed in is a dict of name/value pairs.  Consult the documentation
+    for the specific callback chain you're executing.
+
+    Callback chains should conform to their documented behavior.
+    This function allows us to do transforms on data, handling data,
+    and also callbacks.
+
+    The difference in behavior is affected by the mappingfunc passed
+    in which converts the output of a given function in the chain
+    to the input for the next function.
+
+    @param chain: the callback chain to run
+    @type  chain: string
+
+    @param input: data is a dict filled with name/value pairs--refer
+        to the callback chain documentation for what's in the data 
+        dict.
+    @type  input: dict
+
+    @param mappingfunc: the function that maps output arguments
+        to input arguments for the next iteration.  It must take
+        two arguments: the original dict and the return from the
+        previous function.  It defaults to returning the original
+        dict.
+    @type  mappingfunc: function
+
+    @param donefunc: this function tests whether we're done doing
+        what we're doing.  If this function returns true (1) then
+        we'll drop out of the loop.
+    @type  donefunc: function
+
+    @param defaultfunc: if this is set and we finish going through all
+        the functions in the chain and none of them have returned something
+        that satisfies the donefunc, then we'll execute the defaultfunc
+        with the latest version of the input dict.
+    @type  defaultfunc: function
+
+    @returns: the transformed dict
+    @rtype: dict
+    """
+    chain = plugins.__init__.get_callback_chain(chain)
+
+    output = None
+
+    for mem in chain:
+        output = mem(input)
+        if donefunc(output) == 1:
+            break
+        input = mappingfunc(input, output)
+
+    if defaultfunc != None and callable(defaultfunc) and donefunc(output) != 1:
+        return defaultfunc(input)
+        
+    return output
+
+
 
 # These next few lines are to save a sort of run-time global registry
 # of important things so that they're global to all the components
@@ -293,7 +353,8 @@ def get_registry():
 
 def get_cache():
     """
-    Pads the global registry dict with a cache object
+    Retrieves the cache from the registry or fetches a new CacheDriver
+    instance.
 
     @returns: A BlosxomCache object reference
     @rtype: C{libs.cache.base.BlosxomCacheBase} subclass

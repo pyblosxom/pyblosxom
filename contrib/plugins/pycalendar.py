@@ -32,7 +32,7 @@ To use, place $calendar in your head/foot template.
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
 
-from libs import tools, api
+from libs import tools
 import time, os, calendar, sys, string
 
 class PyblCalendar:
@@ -118,7 +118,11 @@ class PyblCalendar:
         yearmonth = {}
 
         for mem in archiveList:
-            timetuple = time.localtime(tools.filestat(mem)[8])
+            argdict = {"filename": mem, "mtime": os.stat(mem)}
+            argdict = tools.run_callback("filestat", 
+                                         argdict,
+                                         mappingfunc=lambda x,y:y)
+            timetuple = time.localtime(argdict["mtime"][8])
 
             # if we already have an entry for this date, we skip to the
             # next one because we've already done this processing
@@ -231,13 +235,10 @@ class PyblCalendar:
 
         return "\n".join(cal2)
 
-def prepare(args):
+def cb_prepare(args):
     request = args["request"]
     data = request.getData()
     if data.has_key("entry_list") and data["entry_list"]:
         data["calendar"] = PyblCalendar(request)
-
-def initialize():
-    api.prepareChain.register(prepare)
 
 # vim: tabstop=4 shiftwidth=4

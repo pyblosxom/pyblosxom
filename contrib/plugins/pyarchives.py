@@ -19,7 +19,7 @@ config.py example:
 __author__ = "Wari Wahab - wari at wari dot per dot sg"
 __version__ = "$Id$"
 
-from libs import tools, api
+from libs import tools
 import time, os
 
 class PyblArchives:
@@ -46,8 +46,12 @@ class PyblArchives:
             
         archives = {}
         archiveList = tools.Walk(root)
-        for file in archiveList:
-            mtime = tools.filestat(file)[8]
+        for mem in archiveList:
+            argdict = {"filename": mem, "mtime": os.stat(mem)}
+            argdict = tools.run_callback("filestat", 
+                                         argdict,
+                                         mappingfunc=lambda x,y:y)
+            mtime = argdict["mtime"][8]
             timetuple = time.localtime(mtime)
             mo = time.strftime('%b',timetuple)
             mo_num = time.strftime('%m',timetuple)
@@ -64,14 +68,7 @@ class PyblArchives:
             result.append(archives[key])
         self._archives = '\n'.join(result)
 
-def prepare(args):
+def cb_prepare(args):
     request = args["request"]
     data = request.getData()
     data["archivelinks"] = PyblArchives(request)
-
-def initialize():
-    api.prepareChain.register(prepare)
-
-if __name__ == '__main__':
-    # print genLinearArchive('../../../blosxom', 'http://roughingit.subtlehints.net/p')
-    pass

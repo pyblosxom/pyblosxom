@@ -5,7 +5,6 @@ change the mtime to be the timestamp instead of the one kept by the
 filesystem. For example, a valid filename would be
 foo-2002-04-01-00-00.txt for April fools day on the year 2002
 """
-from libs import api
 import os, re, time
 
 __author__ = 'Tim Roberts http://www.probo.com/timr/blog/'
@@ -13,7 +12,7 @@ __version__ = '$Id$'
 
 DAYMATCH = re.compile('([0-9]{4})-([0-1][0-9])-([0-3][0-9])-([0-2][0-9])-([0-5][0-9]).txt')
 
-def filestat(args):
+def cb_filestat(args):
     filename = args["filename"]
     stattuple = args["mtime"]
     
@@ -30,6 +29,3 @@ def filestat(args):
         args["mtime"] = tuple(list(stattuple[:8]) + [mtime] + list(stattuple[9:]))
 
     return args
-
-def initialize():
-    api.filestat.register(filestat, api.LAST)

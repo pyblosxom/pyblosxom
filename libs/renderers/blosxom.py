@@ -3,48 +3,48 @@ from libs import tools
 from libs.renderers.base import RendererBase
 import re, os, sys, cgi, codecs
 
-#
-# BlosxomRenderer can use two keys from config.py:
-#
-# py['blosxom_custom_flavours'] is a string containing additional flavour templates to be recognized
-# by PyBlosxom.  If you supply this string, it must begin with '|' and each template name needs to be
-# separated by '|'.  The string cannot end with '|'
-#
-# py['blosxom_plugins'] is a list of plugin names (files in libs/renderers/blosxomplugins, without the
-# .py suffix), in the order in which you wish them to be called.
-#
-# BlosxomRenderer plugins support a set of callback functions based on the blosxom 2.0 callback names. 
-# The arguments are different, but the BlosxomRenderer callbacks are called at the same points that the
-# blosxom 2.0 callbacks are called.
-#
-# All of the BlosxomRenderer callbacks take the same three arguments
-# 
-# @param: renderer - the renderer that called the callback
-# @type: BlosxomRenderer
-#
-# @param: entry - the entry being processed
-# @type: BaseEntry
-#
-# @param: template -- the template being processed.
-# @type: string
-#
-# The available blosxom renderer callbacks are:
-#  
-# start
-# head
-# date_head (corresponds to blosxom 2.0 date)
-# story
-# foot
-#
-# There is no callback corresponding to the blosxom 2.0 end callback.
-# 
-# In PyBlosxom, the functionality some of the blosxom 2.0 callbacks are 
-# taken care of by callback chains.
-#
-# The blosxom 2.0 entries callback is handled by the fileListHandler callback chain
-# The blosxom 2.0 filter callback is handled by the prepareChain callback chain
-# The blosxom 2.0 sort callback is handled by the prepareChain callback chain
-#
+"""
+BlosxomRenderer can use two keys from config.py:
+
+py['blosxom_custom_flavours'] is a string containing additional flavour templates to be recognized
+by PyBlosxom.  If you supply this string, it must begin with '|' and each template name needs to be
+separated by '|'.  The string cannot end with '|'
+
+py['blosxom_plugins'] is a list of plugin names (files in libs/renderers/blosxomplugins, without the
+.py suffix), in the order in which you wish them to be called.
+
+BlosxomRenderer plugins support a set of callback functions based on the blosxom 2.0 callback names. 
+The arguments are different, but the BlosxomRenderer callbacks are called at the same points that the
+blosxom 2.0 callbacks are called.
+
+All of the BlosxomRenderer callbacks take the same three arguments
+
+@param: renderer - the renderer that called the callback
+@type: BlosxomRenderer
+
+@param: entry - the entry being processed
+@type: BaseEntry
+
+@param: template -- the template being processed.
+@type: string
+
+The available blosxom renderer callbacks are:
+ 
+start
+head
+date_head (corresponds to blosxom 2.0 date)
+story
+foot
+
+There is no callback corresponding to the blosxom 2.0 end callback.
+
+In PyBlosxom, the functionality some of the blosxom 2.0 callbacks are 
+taken care of by callback chains.
+
+The blosxom 2.0 entries callback is handled by the fileListHandler callback chain
+The blosxom 2.0 filter callback is handled by the prepareChain callback chain
+The blosxom 2.0 sort callback is handled by the prepareChain callback chain
+"""
 
 class BlosxomRenderer(RendererBase):
     def __init__(self, request, out = sys.stdout):

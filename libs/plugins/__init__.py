@@ -3,6 +3,37 @@ import os, glob
 
 plugins = []
 
+# this holds a list of callbacks (any function that begins with cp_) and the
+# list of function instances that support that callback.
+callbacks = {}
+
+def catalogue_plugin(plugin_module):
+    """
+    We go through the plugin's contents and catalogue all the
+    functions that start with cb_.  These are callbacks.
+
+    @param plugin_module: the module to catalogue
+    @type  plugin_module: module
+    """
+    listing = dir(plugin_module)
+
+    listing = [m for m in listing if m.startswith("cb_")]
+
+    for mem in listing:
+        func = getattr(plugin_module, mem)
+        memadj = mem[3:]
+        if callable(func):
+            callbacks.setdefault(memadj, []).append(func)
+            
+def get_callback_chain(chain):
+    """
+    Returns a list of functions registered with the callback.
+
+    @returns: list of functions registered with the callback
+    @rtype: list of functions
+    """
+    return callbacks.get(chain, [])
+
 def initialize_plugins(configdict):
     """
     Imports and initializes plugins from this directory so they can register
@@ -32,8 +63,8 @@ def initialize_plugins(configdict):
 
         plugin_list.sort()
 
-    for mem in plugin_list:
 
+    for mem in plugin_list:
         name = "libs.plugins." + mem
         _module = __import__(name)
         for comp in name.split(".")[1:]:
@@ -41,5 +72,7 @@ def initialize_plugins(configdict):
 
         if _module.__dict__.has_key("initialize"):
             _module.initialize()
+
+        catalogue_plugin(_module)
 
         plugins.append(_module)

@@ -10,10 +10,9 @@ entryList.
 __author__ = "Wari Wahab pyblosxom@wari.per.sg"
 __version__ = "$Id$"
 
-from libs import api
-
-def prepare(args):
+def cb_prepare(args):
     request = args["request"]
+
     data = request.getData()
     config = request.getConfiguration()
     entryList = data["entry_list"]
@@ -38,6 +37,3 @@ def prepare(args):
         tools.logRequest(config.get('logfile',''), '304')
         renderer.addHeader(['ETag: "%s"' % entryList[0]['mtime'],
             'Last-Modified: %s' % lastModed])
-
-def initialize():
-    api.prepareChain.register(prepare)

@@ -1,6 +1,6 @@
 # vim: shiftwidth=4 tabstop=4 expandtab
 import os, time, string, re, cgi
-import tools, api
+import tools
 from entries.fileentry import FileEntry
 from entries.cachedecorator import CacheDecorator
 import cPickle as pickle
@@ -139,10 +139,12 @@ class PyBlosxom:
                 # Day
                 if path_info and re.match("^([0-2][0-9]|3[0-1])", path_info[0]):
                     # Potential day here
-                    data['pi_da'] = path_info[0][0:2] # grab date - must be 2 digits
-                    # if there is a fragment identifier #entryname, place that in "pi_frag"
-                    # the fragment identifier won't appear when this code is call via CGI, but
-                    # will appear when called to processing string URI's for pingback
+                    data['pi_da'] = path_info[0][0:2]
+                    # grab date - must be 2 digits if there is a fragment 
+                    # identifier #entryname, place that in "pi_frag"
+                    # the fragment identifier won't appear when this code 
+                    # is call via CGI, but will appear when called to 
+                    # processing string URI's for pingback
                     match = re.search("(?P<frag>\#.+)",path_info[0])
                     if match != None and match.lastgroup == 'frag':
                         data['pi_frag'] = match.group('frag')
@@ -220,12 +222,10 @@ class PyBlosxom:
         libs.entryparsers.__init__.initialize_extensions()
         data['extensions'] = libs.entryparsers.__init__.ext
         
-        # import plugins and allow them to register with the api
+        # import plugins
         import libs.plugins.__init__
         libs.plugins.__init__.initialize_plugins(config)
 
-        api.fileListHandler.register(self.defaultFileListHandler, api.LAST)
-        
         form = self._request.getHttp()["form"]
         data['flavour'] = (form.has_key('flav') and 
                 form['flav'].value or 
@@ -240,18 +240,20 @@ class PyBlosxom:
         if pyhttp.get('PATH_INFO', ''):
             path_info = pyhttp['PATH_INFO'].split('/')
 
-        # process the path info to determine what kind of blog entry(ies) this is
+        # process the path info to determine what kind of blog entry(ies) 
+        # this is
         self.processPathInfo(path_info)
 
-        # calling fileList will generate a list of entries from the
-        # api.fileListHandler
-        data["entry_list"] = tools.fileList(self._request)
+        # call the filelist callback to generate a list of entries
+        data["entry_list"] = tools.run_callback("filelist",
+                                   {"request": self._request},
+                                   donefunc=lambda x:x != None,
+                                   defaultfunc=self.defaultFileListHandler)
         
-        # we pass the request with the entry_list through the
-        # plugins giving them a chance to transform the data.
-        # plugins modify the request in-place--no need to return
-        # things.
-        api.prepareChain.executeHandler({"request": self._request})
+        # we pass the request with the entry_list through the prepare callback
+        # giving everyone a chance to transform the data.  the request is
+        # modified in place.
+        tools.run_callback("prepare", {"request": self._request})
         
 
         # now we pass the entry_list through the renderer

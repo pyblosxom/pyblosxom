@@ -20,7 +20,7 @@ config.py example:
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
 
-from libs import tools, api
+from libs import tools
 import re, os
 
 class PyblCategories:
@@ -77,10 +77,7 @@ class PyblCategories:
         self._categories = "<br>".join(clist)
 
 
-def prepare(args):
+def cb_prepare(args):
     request = args["request"]
     data = request.getData()
     data["categorylinks"] = PyblCategories(request)
-
-def initialize():
-    api.prepareChain.register(prepare)

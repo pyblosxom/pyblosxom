@@ -20,7 +20,6 @@ __author__ = "Ted Leung - twl@sauria.com"
 __version__ = "$Id$"
 
 import os, re, string, time, cPickle
-from libs import api
 
 class PyblStats:
     def __init__(self, config):
@@ -115,7 +114,7 @@ class PyblStats:
         self._referrersText = string.join(refs[0:self._num_referrers-1])
         return self._referrersText
 
-def prepare(args):
+def cb_prepare(args):
     """
     Callback registered with prepareChain.  This does all the work
     
@@ -150,9 +149,3 @@ def prepare(args):
     stats._config = None
     f = file(filename,"w")
     cPickle.dump(stats, f)
-
-def initialize():
-    """
-    Register the prepareChain handler
-    """
-    api.prepareChain.register(prepare)

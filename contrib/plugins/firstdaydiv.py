@@ -17,8 +17,6 @@ To install:
 
 Questions, comments, concerns?  Email bwinton@latte.ca for help.
 """
-from libs import api
-
 __author__ = "Blake Winton - bwinton@latte.ca"
 __version__ = "$Id$"
 
@@ -60,14 +58,12 @@ class PyFirstDate:
             self._dayDiv = "blosxomDayDiv"
         return self._dayDiv
 
-def prepare(args):
+def cb_prepare(args):
     """
     Populate the L{global py dictionary<py>} with an instance of the
     L{PyFirstDate} class in the "dayDivClass" key.
     """
     request = args["request"]
+
     data = request.getData()
     data["dayDivClass"] = PyFirstDate(request)
-
-def initialize():
-    api.prepareChain.register(prepare)

@@ -17,9 +17,7 @@ The resulting file will be file + the extension of .txt
 
 If the filename is relative, then it will be written to where pyblosxom runs.
 """
-from libs import api
-
-def logRequest(args):
+def cb_logrequest(args):
     import os, time
     filename = args["filename"] + '.txt'
     returnCode = args["return_code"]
@@ -32,6 +30,3 @@ def logRequest(args):
         returnCode,
         os.environ.get('HTTP_REFERER', '-'),
         os.environ.get('HTTP_USER_AGENT', '-')))
-
-def initialize():
-    api.logRequest.register(logRequest)

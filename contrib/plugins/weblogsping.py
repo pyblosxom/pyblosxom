@@ -21,7 +21,6 @@ __version__ = "$Id$"
 
 import xmlrpclib, os, time
 import cPickle as pickle
-from libs import api
 
 class WeblogsPing:
     def __init__(self, request):
@@ -91,9 +90,6 @@ class WeblogsPing:
             # Something wrong with the file, abort.
             return 0
 
-def prepare(args):
+def cb_prepare(args):
     request = args["request"]
     WeblogsPing(request).ping()
-
-def initialize():
-    api.prepareChain.register(prepare)
