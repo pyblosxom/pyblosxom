@@ -75,7 +75,7 @@ class PyBlosxom:
                 'date_head' : '<div class="blosxomDayDiv">\n<span class="blosxomDate">$date</span>',
                 'story' : """<p><a name="$fn"><b>$title</b></a><br />$body<br /><br />posted at: $ti | path: <a href="$url/$path">/$path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></p>\n""",
                 'date_foot' : '</div>',
-                'foot' : """<p /><center><a href="http://roughingit.subtlehints.net/pyblosxom/weblogs/tools/pyblosxom/#pyblosxom_0+5i"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" border="0" /></body></html>"""}
+                'foot' : """<p /><center><a href="http://roughingit.subtlehints.net/pyblosxom"><img src="http://roughingit.subtlehints.net/images/pb_pyblosxom.gif" border="0" /></body></html>"""}
         rss = {'content_type' : 'text/xml',
                'head' : """<?xml version="1.0"?>\n<!-- name="generator" content="pyblosxom/0+5i" -->\n<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n<rss version="0.91">\n  <channel>\n    <title>$blog_title $pi_da $pi_mo $pi_yr</title>\n    <link>$url</link>\n    <description>$blog_description</description>\n    <language>$blog_language</language>\n""",
                'story' : """<item>\n    <title>$title</title>\n    <link>$base_url/$file_path.html</link>\n    <description>$body</description>\n  </item>\n""",
@@ -270,5 +270,4 @@ class PyBlosxom:
         if self.flavour.has_key('date_foot'): print tools.parse(self.py, self.flavour['date_foot'])
         if self.flavour.has_key('foot'): print tools.parse(self.py, self.flavour['foot'])
         
-        # Enable if you want logging
-        #tools.logRequest()
+        tools.logRequest(self.py.get('logfile',''), '200')

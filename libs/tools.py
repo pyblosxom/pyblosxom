@@ -83,6 +83,14 @@ def filestat(filename):
     """
     return api.filestat.executeChain((filename, os.stat(filename)))[1]
 
+def logRequest(filename = '', returnCode = '200'):
+    """
+    Calls the api's logRequest callback chain to do some statistical analysis
+    based on the current request.
+
+    This calls the chain with (filename, returnCode) and returns None
+    """
+    api.logRequest.executeChain((filename, returnCode))
 
 def Walk(root = '.', 
          recurse = 0, 
@@ -122,9 +130,9 @@ def Walk(root = '.',
         if (recurse == 0) or (recurse > 1):
             if os.path.isdir(fullname) and not os.path.islink(fullname):
                 result = result + Walk(fullname, 
-			(recurse > 1 and recurse -  1 or 0), 
-			pattern, return_folders)
-            
+                (recurse > 1 and recurse -  1 or 0), 
+                pattern, return_folders)
+
     return result
 
 def importName(modulename, name):
@@ -154,15 +162,3 @@ def generateRandStr(minlen=5, maxlen=10):
     for x in range(randStr_size):
         randStr += whrandom.choice(chars)
     return randStr
-
-
-def logRequest(filename = 'referer.txt', returnCode = '200'):
-    import os, time
-    file(filename, 'a').write('%s - - [%s] "%s %s" %s - "%s" "%s"\n' %
-        (os.environ.get('REMOTE_ADDR', '-'),
-	 time.strftime('%d/%b/%Y:%H:%M:%S %Z', time.localtime()),
-	 os.environ.get('REQUEST_METHOD', '-'),
-	 os.environ.get('REQUEST_URI', '-'),
-	 returnCode,
-	 os.environ.get('HTTP_REFERER', '-'),
-	 os.environ.get('HTTP_USER_AGENT', '-')))

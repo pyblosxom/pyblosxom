@@ -110,3 +110,12 @@ filestat = CallbackChain()
 #    adjusted text_string (string)
 parseitem = CallbackChain()
 
+# CallbackChain to do a final logging based on a log plugin
+#
+# Input:
+#    filename (string) - Filename to log to
+#    returnCode (string) - Error code to log
+#
+# Output: None
+logRequest = CallbackChain()
+
