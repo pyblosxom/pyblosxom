@@ -54,12 +54,13 @@ def cb_handle(args):
 
     path_info = pyhttp['PATH_INFO']
     if path_info.startswith(urltrigger):
-        print "Content-type: text/xml"
-        print
+        response = request.getResponse()
+        response.addHeader("Content-type", "text/xml")
 
-        form = cgi.FieldStorage()
+        form = request.getForm()
 
-        message = "not trackback"
+        message = "not trackback: %s" % path_info
+
         if form.has_key("title") and form.has_key("excerpt") and \
                form.has_key("url") and form.has_key("blog_name"):
             import time
@@ -70,7 +71,7 @@ def cb_handle(args):
                       'source' : form['blog_name'].value, \
                       'description' : form['excerpt'].value }
             from Pyblosxom.entries.fileentry import FileEntry
-            from Pyblosxom.Request import Request
+            from Pyblosxom.pyblosxom import Request
             from Pyblosxom.pyblosxom import PyBlosxom
 
             datadir = config['datadir']
@@ -86,18 +87,16 @@ def cb_handle(args):
                 data = {}
                 data['entry_list'] = [ entry ]
                 writeComment(request, config, data, cdict, config['blog_encoding'])
-                print tb_good_response
+                print >> response, tb_good_response
             except OSError:
                 message = 'URI '+path_info+" doesn't exist"
                 tools.log(message)
-                print tb_bad_response % message
+                print >> response, tb_bad_response % message
 
         else:
             tools.log(message)
-            print tb_bad_response % message
+            print >> response, tb_bad_response % message
 
-        import sys
-        sys.stdout.flush()
         # no further handling is needed
         return 1
     else:
