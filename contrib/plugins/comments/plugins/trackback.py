@@ -59,17 +59,16 @@ def cb_handle(args):
 
         form = request.getForm()
 
-        message = "not trackback: %s" % path_info
+        message = "A trackback must have at least a URL field (see http://www.sixapart.com/pronet/docs/trackback_spec )"
 
-        if form.has_key("title") and form.has_key("excerpt") and \
-               form.has_key("url") and form.has_key("blog_name"):
+        if form.has_key("url"):
             import time
-            cdict = { 'title': form['title'].value, \
-                      'author': 'Trackback from %s' % form['blog_name'].value, \
+            cdict = { 'title': form.getvalue('title', ''), \
+                      'author': 'Trackback from %s' % form.getvalue('blog_name', ''), \
                       'pubDate' : str(time.time()), \
                       'link' : form['url'].value, \
-                      'source' : form['blog_name'].value, \
-                      'description' : form['excerpt'].value }
+                      'source' : form.getvalue('blog_name', ''), \
+                      'description' : form.getvalue('excerpt', '') }
             from Pyblosxom.entries.fileentry import FileEntry
             from Pyblosxom.pyblosxom import Request
             from Pyblosxom.pyblosxom import PyBlosxom
