@@ -1,5 +1,6 @@
 """
-This plugin allows pyblosxom to process trackback pings.  You must have the 
+This plugin allows pyblosxom to process trackback
+<http://www.sixapart.com/pronet/docs/trackback_spec> pings.  You must have the 
 comments plugin installed as well, although you don't need to enable comments 
 on your blog in order for trackbacks to work
 

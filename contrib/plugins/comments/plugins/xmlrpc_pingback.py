@@ -1,3 +1,11 @@
+"""
+This module contains an XML-RPC extension to support pingback
+<http://www.hixie.ch/specs/pingback/pingback> pings.   You must have the 
+comments plugin installed as well, although you don't need to enable comments 
+on your blog in order for trackbacks to work
+
+"""
+
 from config import py
 from Pyblosxom.pyblosxom import PyBlosxom
 from Pyblosxom import tools
