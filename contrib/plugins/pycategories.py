@@ -5,23 +5,47 @@ and how many entries are in each category.  It generates html with
 this information and stores it in the $categorylinks variable which
 you can use in your head or foot templates.
 
-Additionally, you can specify the flavour for the link by creating an 
-entry in the config.py file or the ini file with the name 
+Additionally, you can specify the flavour for the link by creating an
+entry in the config.py file or the ini file with the name
 "category_flavour" and the value of the flavour you want to use.
 
 config.py example::
 
-   py["category_flavour"] = "index"
+	py["category_flavour"] = "index"
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright 2004, 2005 Will Guaraldi
 """
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
+__url__ = "http://pyblosxom.sourceforge.net/"
+__description__ = "Builds a list of categories."
 
 from Pyblosxom import tools
 import re, os
 
 def verify_installation(request):
     config = request.getConfiguration()
-    if not config.has_key("category_flavour"):
+    if not config.has_key("category_flavour"):-        
         print "missing optional config property 'category_flavour' which allows "
         print "you to specify the flavour for the category link.  refer to "
         print "pycategory plugin documentation for more details."

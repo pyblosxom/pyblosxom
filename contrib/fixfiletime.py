@@ -1,16 +1,37 @@
 #!/usr/bin/env python2
 """
-This is a quick script for fixing the atime/mtime for blog files.
-It's often the case that I misspell something or want to add an
-update, but because the timestamp for the blog entry comes from
-the mtime of the file, I screw it up and cause it to cycle to the
-top of my blog again.  Rrrrr....
+This is a script for backdating mtime for blog files.  It allows you to
+write an entry today and backdate it to yesterday.
 
-Anyhow, this allows you to quickly fix that.
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright 2004, 2005 Will Guaraldi
 """
 import os, time, sys
 
-__author__ = "Will Guaraldi   willg@bluesock.org"
+__author__ = "Will Guaraldi - willg at bluesock dot org"
+__version__ = "$Id$"
+__url__ = "http://pyblosxom.sourceforge.net/"
+__description__ = "Allows you to backdate entries."
 
 if len(sys.argv) > 1:
    filename = sys.argv[1]
