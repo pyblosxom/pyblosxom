@@ -33,6 +33,10 @@ Copyright 2004, 2005 Wari Wahab
 __author__ = "Wari Wahab pyblosxom@wari.per.sg"
 __version__ = "$Id$"
 
+from Pyblosxom import tools
+
+#tools.make_logger('/tmp/conditionalhttp.log')
+
 def cb_prepare(args):
     request = args["request"]
 
@@ -45,7 +49,7 @@ def cb_prepare(args):
     if entryList and entryList[0].has_key('mtime'):
         mtime = entryList[0]['mtime']
         latest_cmtime = - 1
-        if config.has_key('comment_dir'):
+        if config.has_key('comment_dir') and not "rss" in http.get('REQUEST_URI','') :
             try: 
                 import os.path
                 latestFilename = os.path.join(config['comment_dir'],'LATEST.cmt')
@@ -79,3 +83,4 @@ def cb_prepare(args):
                                                                                                   
         renderer.addHeader('ETag', '"%s"' % mtime,
                            'Last-Modified', '%s' % lastModed)
+#        tools.log("Requested URI %s mtime %s, moded %s" % (http.get('REQUEST_URI','-'), mtime, lastModed))

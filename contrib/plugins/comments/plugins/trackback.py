@@ -20,7 +20,8 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-This plugin allows pyblosxom to process trackback pings.  You must have the 
+This plugin allows pyblosxom to process trackback
+<http://www.sixapart.com/pronet/docs/trackback_spec> pings.  You must have the 
 comments plugin installed as well, although you don't need to enable comments 
 on your blog in order for trackbacks to work
 
@@ -75,23 +76,23 @@ def cb_handle(args):
 
     path_info = pyhttp['PATH_INFO']
     if path_info.startswith(urltrigger):
-        print "Content-type: text/xml"
-        print
+        response = request.getResponse()
+        response.addHeader("Content-type", "text/xml")
 
-        form = cgi.FieldStorage()
+        form = request.getForm()
 
-        message = "not trackback"
-        if form.has_key("title") and form.has_key("excerpt") and \
-               form.has_key("url") and form.has_key("blog_name"):
+        message = "A trackback must have at least a URL field (see http://www.sixapart.com/pronet/docs/trackback_spec )"
+
+        if form.has_key("url"):
             import time
-            cdict = { 'title': form['title'].value, \
-                      'author': 'Trackback from %s' % form['blog_name'].value, \
+            cdict = { 'title': form.getvalue('title', ''), \
+                      'author': 'Trackback from %s' % form.getvalue('blog_name', ''), \
                       'pubDate' : str(time.time()), \
                       'link' : form['url'].value, \
-                      'source' : form['blog_name'].value, \
-                      'description' : form['excerpt'].value }
+                      'source' : form.getvalue('blog_name', ''), \
+                      'description' : form.getvalue('excerpt', '') }
             from Pyblosxom.entries.fileentry import FileEntry
-            from Pyblosxom.Request import Request
+            from Pyblosxom.pyblosxom import Request
             from Pyblosxom.pyblosxom import PyBlosxom
 
             datadir = config['datadir']
@@ -107,18 +108,16 @@ def cb_handle(args):
                 data = {}
                 data['entry_list'] = [ entry ]
                 writeComment(request, config, data, cdict, config['blog_encoding'])
-                print tb_good_response
+                print >> response, tb_good_response
             except OSError:
                 message = 'URI '+path_info+" doesn't exist"
                 tools.log(message)
-                print tb_bad_response % message
+                print >> response, tb_bad_response % message
 
         else:
             tools.log(message)
-            print tb_bad_response % message
+            print >> response, tb_bad_response % message
 
-        import sys
-        sys.stdout.flush()
         # no further handling is needed
         return 1
     else:

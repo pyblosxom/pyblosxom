@@ -1,5 +1,5 @@
 /*
- * Modified from the sample to only index .txt files
+ * Modified from http://cvs.apache.org/viewcvs.cgi/jakarta-lucene/src/demo/org/apache/lucene/demo/IndexFiles.java?view=markup to only index .txt files
  */
 
 

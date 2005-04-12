@@ -20,6 +20,11 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+This module contains an XML-RPC extension to support pingback
+<http://www.hixie.ch/specs/pingback/pingback> pings.   You must have the 
+comments plugin installed as well, although you don't need to enable comments 
+on your blog in order for trackbacks to work
+
 """
 
 from config import py
