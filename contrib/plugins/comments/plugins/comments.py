@@ -306,7 +306,7 @@ def writeComment(request, config, data, comment, encoding):
     cdir = os.path.normpath(cdir)
     if not os.path.isdir(cdir):
         os.makedirs(cdir)
-    cfn = os.path.join(cdir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_ext'])
+    cfn = os.path.join(cdir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_draft_ext'])
      
     argdict = { "request": request, "comment": comment }
     reject = tools.run_callback("comment_reject",
@@ -329,6 +329,7 @@ def writeComment(request, config, data, comment, encoding):
     cfile.write(makeXMLField('title',comment))
     cfile.write(makeXMLField('author',comment))
     cfile.write(makeXMLField('link',comment))
+    cfile.write(makeXMLField('email',comment))
     cfile.write(makeXMLField('source',comment))
     cfile.write(makeXMLField('pubDate',comment))
     cfile.write(makeXMLField('description',comment))
@@ -342,7 +343,7 @@ def writeComment(request, config, data, comment, encoding):
         latest = open(latestFilename,"w")
     except IOError:
         tools.log("Couldn't open latest comment pickle for writing")
-        return
+        return "Couldn't open latest comment pickle for writing."
     else:
         modTime = float(comment['pubDate'])
 
@@ -353,11 +354,19 @@ def writeComment(request, config, data, comment, encoding):
         # should log or e-mail
         if latest:
             latest.close()
-        return
+        return "Unable to dump latest comment pickle."
+
+    ret = ""
     
     if config.has_key('comment_smtp_server') and \
        config.has_key('comment_smtp_to'):
-        send_email(config, entry, comment, cdir, cfn)
+        ret = send_email(config, entry, comment, cdir, cfn)
+
+    # figure out if the comment was submitted as a draft
+    if config["comment_ext"] != config["comment_draft_ext"]:
+       return ret + "Comment was submitted for approval.  Thanks!"
+
+    return ret + "Comment submitted.  Thanks!"
 
 def send_email(config, entry, comment, comment_dir, comment_filename):
     """Send an email to the blog owner on a new comment
@@ -395,7 +404,6 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         server = smtplib.SMTP(config['comment_smtp_server'])
         curl = config['base_url']+'/'+entry['file_path']
         comment_dir = os.path.join(config['comment_dir'], entry['absolute_path'])
-        comment_filename = os.path.join(comment_dir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_draft_ext'])
 
         message = []
         message.append("From: %s" % email)
@@ -410,6 +418,9 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         server.quit()
     except Exception, e:
         tools.log("Error sending mail: %s" % e)
+        return "Error sending mail: %s" % e
+
+    return ""
 
 def clean_author(s):
     """
@@ -568,6 +579,7 @@ def cb_prepare(args):
 
         data["comment_message"] = writeComment(request, config, data, \
                                                 cdict, encoding)
+
 def escape_link(linkstring):
     """Don't allow html in the link string"""
     for c in "<>'\"":
