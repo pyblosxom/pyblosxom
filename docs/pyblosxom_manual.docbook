@@ -2405,6 +2405,31 @@ py["default_flavour"] = "joy"
 </entry>
 </row>
 <row>
+<entry>ignore_directories</entry>
+<entry>no</entry>
+<entry>list of strings</entry>
+<entry>
+  <para>
+  this allows you to ignore directories in your datadir.  For example,
+  if you use CVS to manage your datadir, then you would want to ignore
+  all CVS directories.  You would set your ignore_directories like
+  this:
+  </para>
+  <programlisting role="python">
+py["ignore_directories"] = [ "CVS" ]
+  </programlisting>
+  <para>
+  If you wanted to store drafts of entries you need to think about some
+  more in a single directory (kind of like a postponed-msgs folder),
+  then you would create a directory in your datadir and set your
+  ignore_directories like this:
+  </para>
+  <programlisting role="python">
+py["ignore_directories"] = [ "draft" ]
+  </programlisting>
+</entry>
+</row>
+<row>
 <entry>plugin_dirs</entry>
 <entry>no</entry>
 <entry>list of strings</entry>
