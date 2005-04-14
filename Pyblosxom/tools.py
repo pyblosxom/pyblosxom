@@ -700,6 +700,17 @@ def getLogger(log_file=None):
         int_level = getattr(logging, log_level.upper())
         logger.setLevel(int_level)
 
+        # only log messages from plugins listed in log_filter.
+        # add 'root' to the log_filter list to still allow application level messages.
+        log_filter = _config.get('log_filter', None)
+        if log_filter:
+            orig_log = logger._log
+            def _log(self, level, msg, args, exc_info=None):
+                if log_name in log_filter or (log_name == "" and 'root' in log_filter):
+                    orig_log(level, msg, args, exc_info)
+            import new
+            logger._log = new.instancemethod(_log, logger, logger.__class__)
+
         # remember that we've seen this handler
         _loghandler_registry[key] = True
 

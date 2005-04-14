@@ -238,7 +238,7 @@ class Logger:
         self.handlers = []
         self.disabled = 0
 
-    def __log(self, level, msg, args, exc_info=None):
+    def _log(self, level, msg, args, exc_info=None):
         # log the message or not depending on the current loglevel
         if self.level > level:
             return
@@ -276,21 +276,21 @@ class Logger:
         self.level = level
 
     def critical(self, msg, *args, **kwargs):
-        apply(self.__log, (CRITICAL, msg, args), kwargs)
+        apply(self._log, (CRITICAL, msg, args), kwargs)
     fatal = critical
 
     def error(self, msg, *args, **kwargs):
-        apply(self.__log, (ERROR, msg, args), kwargs)
+        apply(self._log, (ERROR, msg, args), kwargs)
 
     def warning(self, msg, *args, **kwargs):
-        apply(self.__log, (WARNING, msg, args), kwargs)
+        apply(self._log, (WARNING, msg, args), kwargs)
     warn = warning
 
     def info(self, msg, *args, **kwargs):
-        apply(self.__log, (INFO, msg, args), kwargs)
+        apply(self._log, (INFO, msg, args), kwargs)
 
     def debug(self, msg, *args, **kwargs):
-        apply(self.__log, (DEBUG, msg, args), kwargs)
+        apply(self._log, (DEBUG, msg, args), kwargs)
 
     def exception(self, msg, *args):
         apply(self.error, (msg,) + args, {'exc_info': 1})
