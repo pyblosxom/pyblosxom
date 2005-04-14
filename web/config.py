@@ -37,10 +37,18 @@ py['logdir'] = "/path/to/logdir"
 # Falls back to sys.stderr if the file can't be opened for writing.
 py['log_file'] = "/path/to/pyblosxom.log"
 
-# What log level should be used for the log_file?
+# At what level should we log to log_file?
 # One of: critical, error, warning, info, debug
 # For production 'warning' or 'error' is recommended.
 py['log_level'] = "warning"
+
+# Let's you specify which channels should be logged.
+# If specified, only messages from the listed channels are logged.
+# Each plugin logs to it's own channel, therefor channelname == pluginname.
+# Application level messages are logged to a channel named 'root'.
+# If you use log_filter and ommit the 'root' channel here, app level messages 
+# are not logged! log_filter is mainly interesting to debug a specific plugin.
+#py['log_filter'] = ['root', 'plugin1', 'plugin2']
 
 # List of strings with directories that should be ignored (e.g. "CVS")
 # ex: py['ignore_directories'] = ["CVS", "temp"]
