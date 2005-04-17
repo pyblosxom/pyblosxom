@@ -14,7 +14,9 @@ Quick Preface
 =============
 
 For the most up-to-date installation instructions, check out the
-PyBlosxom Manual at http://pyblosxom.sourceforge.net/ .
+PyBlosxom Manual for the appropriate version of PyBlosxom at 
+http://pyblosxom.sourceforge.net/ .  The manual has more detailed
+instructions than these and covers other scenarios.
 
 
 1 A Quick Note
@@ -44,7 +46,7 @@ You need:
 
     * a web-server (preferably Apache, but PyBlosxom can probably be made 
       to run on any web server with CGI abilities)
-    * python version 2.1 or later
+    * python version 2.2 or later
     * a text editor (notepad, vi, emacs, nano, ...) 
 
 
