@@ -32,6 +32,8 @@ Copyright 2004, 2005 Wari Wahab
 """
 __author__ = "Wari Wahab pyblosxom@wari.per.sg"
 __version__ = "$Id$"
+__url__ = "http://pyblosxom.sourceforge.net/"
+__description__ = "Allows for caching if-not-modified-since...."
 
 def cb_prepare(args):
     request = args["request"]
@@ -57,7 +59,9 @@ def cb_prepare(args):
                 pass
         if latest_cmtime > mtime:
             mtime = latest_cmtime
+
         import time
+
         # Get our first file timestamp for ETag and Last Modified
         # Last-Modified: Wed, 20 Nov 2002 10:08:12 GMT
         # ETag: "2bdc4-7b5-3ddb5f0c"
@@ -65,17 +69,25 @@ def cb_prepare(args):
         if ((http.get('HTTP_IF_NONE_MATCH','') == '"%s"' % mtime) or
             (http.get('HTTP_IF_NONE_MATCH','') == '%s' % mtime) or
             (http.get('HTTP_IF_MODIFIED_SINCE','') == lastModed)):
+
             renderer.addHeader('Status', '304 Not Modified',
                                'ETag', '"%s"' % mtime,
                                'Last-Modified', '%s' % lastModed)
+
+            # whack the content here so that we don't then go render it
+            renderer.setContent(None)
+
             renderer.render()
 
             from Pyblosxom import tools
+
             # Log request as "We have it!"
             tools.run_callback("logrequest",
                     {'filename':config.get('logfile',''),
                     'return_code': '304',
                     'request': request})
-                                                                                                  
+
+            return
+
         renderer.addHeader('ETag', '"%s"' % mtime,
                            'Last-Modified', '%s' % lastModed)
