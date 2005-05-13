@@ -57,7 +57,9 @@ required):
     comment_smtp_to - the person to send comment notifications to.
     comment_rejected_words - the list of words that will cause automatic
                              rejection of the comment--this is a very
-                             poor man's spam reducer.
+                             poor man's spam reducer.  You need Will
+                             Guaraldi's comment blacklist plugin as well.
+       <http://www.bluesock.org/~willg/dev/pyblosxom/wbgcomment_blacklist.py>
     comment_nofollow - set this to 1 to add rel="nofollow" attributes to
                   links in the description -- these attributes are embedded
                   in the stored representation.
