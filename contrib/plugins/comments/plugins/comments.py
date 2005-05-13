@@ -1,36 +1,14 @@
 """
-Copyright (c) 2003-2005 Ted Leung
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
 This module contains an extension to Blosxom file entries to support
 comments.
 
 Contributors:
-Ted Leung
-Will Guaraldi
-Wari Wahab
-Robert Wall
-Bill Mill
-Roberto De Almeida
+  Ted Leung
+  Will Guaraldi
+  Wari Wahab
+  Robert Wall
+  Bill Mill
+  Roberto De Almeida
 
 If you make any changes to this plugin, please a send a patch with your
 changes to twl+pyblosxom@sauria.com so that we can incorporate your changes.
@@ -55,11 +33,6 @@ required):
                         If you omit this, the from address will be the
                         e-mail address as input in the comment form
     comment_smtp_to - the person to send comment notifications to.
-    comment_rejected_words - the list of words that will cause automatic
-                             rejection of the comment--this is a very
-                             poor man's spam reducer.  You need Will
-                             Guaraldi's comment blacklist plugin as well.
-       <http://www.bluesock.org/~willg/dev/pyblosxom/wbgcomment_blacklist.py>
     comment_nofollow - set this to 1 to add rel="nofollow" attributes to
                   links in the description -- these attributes are embedded
                   in the stored representation.
@@ -108,6 +81,30 @@ If you would like comment previews, you need to do 2 things.
 This plugin implements Google's nofollow support for links in the body of the 
 comment. If you display the link of the comment poster in your HTML template 
 then you must add the rel="nofollow" attribute to your template as well
+
+
+
+Copyright (c) 2003-2005 Ted Leung
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 """
 __author__ = "Ted Leung"
 __version__ = "$Id$"
@@ -122,8 +119,8 @@ def cb_start(args):
     config = request.getConfiguration()
     logdir = config.get("logdir", "/tmp/")
 
-    logfile = os.path.normpath(logdir + os.sep + "comments.log")
-    tools.make_logger(logfile)
+    # logfile = os.path.normpath(logdir + os.sep + "comments.log")
+    # tools.make_logger(logfile)
 
     if not config.has_key('comment_dir'):
         config['comment_dir'] = os.path.join(config['datadir'],'comments')
@@ -285,7 +282,8 @@ def readComment(filename, encoding):
         cmt['cmt_pubDate'] = time.ctime(float(cmt['cmt_pubDate'])) #pretty time
         return cmt
     except: #don't error out on a bad comment
-        tools.log('bad comment file: %s' % filename)
+        # tools.log('bad comment file: %s' % filename)
+        pass
 
 def writeComment(request, config, data, comment, encoding):
     """
@@ -320,7 +318,7 @@ def writeComment(request, config, data, comment, encoding):
     try :
         cfile = codecs.open(cfn, "w", encoding)
     except IOError:
-        tools.log("Couldn't open comment file %s for writing" % cfn)
+        # tools.log("Couldn't open comment file %s for writing" % cfn)
         return
     
     def makeXMLField(name, field):
@@ -344,7 +342,7 @@ def writeComment(request, config, data, comment, encoding):
     try:
         latest = open(latestFilename,"w")
     except IOError:
-        tools.log("Couldn't open latest comment pickle for writing")
+        # tools.log("Couldn't open latest comment pickle for writing")
         return "Couldn't open latest comment pickle for writing."
     else:
         modTime = float(comment['pubDate'])
@@ -419,7 +417,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
                         msg="\n".join(message))
         server.quit()
     except Exception, e:
-        tools.log("Error sending mail: %s" % e)
+        # tools.log("Error sending mail: %s" % e)
         return "Error sending mail: %s" % e
 
     return ""
