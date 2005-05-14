@@ -89,7 +89,7 @@ You can have as many flavours as you want in your datadir.
 </para>
 
 <warning>
-  <title>be careful with your flavours</title>
+  <title>warning: be careful with your flavour names</title>
   <para>
     The one thing to be aware of is creating a flavour where the name is 
     the same extension as file extensions of your blog entries.  For example,

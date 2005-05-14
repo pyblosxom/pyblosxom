@@ -94,12 +94,12 @@ You might have to change the <varname>base_url</varname> property in your
 <filename>config.py</filename> file to match the new URL.
 </para>
 
-<note>
-  <title>base_url property</title>
+<warning>
+  <title>warning: base_url value</title>
   <para>
     The base_url property should NOT have a trailing slash.
   </para>
-</note>
+</warning>
     
 <para>
 If you're running on Apache, you might have to tell Apache that this is a CGI

@@ -94,8 +94,8 @@ That should be about it.  On some occasions, you may have to change the code
 in the plugin itself to meet your specific needs.
 </para>
 
-<tip>
-  <title>Apache, no suexec, .pyc files, and problems</title>
+<note>
+  <title>note: Apache, no suexec, .pyc files, and problems</title>
   <para>
     If you're not running suexec, then Apache may not be able to generate
     the .pyc files for your plugins.  This may result in your plugins
@@ -109,7 +109,7 @@ in the plugin itself to meet your specific needs.
     Every time you install a new plugin or change an existing plugin,
     you'll need to remove the .pyc files and re-generate them.
   </para>
-</tip>
+</note>
 </sect1>
 
 <sect1>

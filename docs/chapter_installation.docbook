@@ -213,7 +213,7 @@ end paragraph tag in the last line.
 </para>
 
 <note>
-  <title>using a different markup for blog entries</title>
+  <title>note: using a different markup for blog entries</title>
   <para>
     If you want to use a different markup like reST or Textile or Moinmoin or
     something like that, see the chapter on entry parsers for how to set it up.
@@ -289,7 +289,7 @@ place like <filename>/var/logs/apache</filename> or <filename>/var/logs/httpd</f
 </para>
 
 <note>
-  <title>assumptions....</title>
+  <title>note: make sure you read the installation chapter</title>
   <para>
     At this point, running <command>./pyblosxom.cgi</command> at the command prompt 
     should work fine.  If you haven't done that and you're busy trouble-shooting,

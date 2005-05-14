@@ -24,7 +24,7 @@ front--you can add them as you need them.
 </para>
 
 <warning>
-  <title>dates as categories</title>
+  <title>warning: don't use dates as category names</title>
   <para>
     If you have categories like "2002", "2002/02", and such in the form
     yyyy/mm/dd, then PyBlosxom will get confused between its date-based
@@ -54,7 +54,7 @@ a metadata variable name, then the metadata variable value.
 </para>
 
 <warning>
-  <title>storing the mtime in metadata</title>
+  <title>warning: don't store the mtime in metadata</title>
   <para>
     Unfortunately, you cannot store the mtime of your blog entry in the 
     metadata of the entry itself.  The problem here is that we don't open
@@ -160,8 +160,8 @@ it again in vi and fix the mistake.  The mtime of the entry has now changed...
 the time that will show up in my blog as the posting date.
 </para>
 
-<note>
-  <title>issues with using mtime</title>
+<warning>
+  <title>warning: be careful with the mtimes</title>
   <para>
     There are some issues with this method for storing the posting date.  First,
     if you ever change the blog entry, the mtime will change as well.  That
@@ -173,7 +173,7 @@ the time that will show up in my blog as the posting date.
     open up your favorite editor to edit the file, and when you're done, it'll 
     reset the mtime of the file back to what it was.
   </para>
-</note>
+</warning>
 </sect1>
 
 <sect1>
