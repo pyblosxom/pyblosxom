@@ -1,0 +1,207 @@
+<appendix>
+<title>config.py variables</title>
+<para>
+Here is a non-comprehensive list of configuration variables:
+</para>
+
+<table>
+<title>Configuration variables</title>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>variable</entry>
+<entry>required</entry>
+<entry>data type</entry>
+<entry>description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>blog_title</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  the title of your blog
+  </para>
+  <programlisting role="python">
+py["blog_title"] = "Will's Blog of Awesome Stuff"
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>blog_description</entry>
+<entry>no</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  the description of your blog
+  </para>
+  <programlisting role="python">
+py["blog_description"] = "Blog of thoughts, comments, code examples, and such."
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>blog_author</entry>
+<entry>no</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is you--your name.
+  </para>
+  <programlisting role="python"><![CDATA[
+py["blog_author"] = "Will <will at blah dot org>"
+]]></programlisting>
+</entry>
+</row>
+<row>
+<entry>blog_language</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is the primary language code of your blog.
+  </para>
+  <programlisting role="python">
+py["blog_language"] = "en"
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>blog_encoding</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is the encoding of your blog. iso-8859-1, utf-8, ...
+  </para>
+  <programlisting role="python">
+py["blog_encoding"] = "iso-8859-1"
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>datadir</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is the full path to where your PyBlosxom entries are kept.
+  </para>
+  <programlisting role="python">
+# example for unix/linux/osx
+py["datadir"] = "/home/will/blog/datadir/"
+
+# examples for windows
+py["datadir"] = "/blogdata/datadir/"
+py["datadir"] = "e:/blogdata/datadir/"
+  </programlisting>
+  <para>
+  If you're using Windows, don't use \ in the datadir path.
+  </para>
+</entry>
+</row>
+<row>
+<entry>logdir</entry>
+<entry>yes</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this is the full path to the directory for logs.
+  </para>
+  <programlisting role="python">
+# example for unix/linux/osx
+py["logdir"] = "/home/will/blog/logs/"
+
+# examples for windows
+py["logdir"] = "/blogdata/logs/"
+py["logdir"] = "e:/blogdata/logs/"
+  </programlisting>
+  <para>
+  If you're using Windows, don't use \ in the logdir path.
+  </para>
+</entry>
+</row>
+<row>
+<entry>num_entries</entry>
+<entry>no</entry>
+<entry>int</entry>
+<entry>
+  <para>
+  how many entries should show up on a given page? This defaults to 0 which will show all entries.
+  </para>
+  <programlisting role="python">
+py["num_entries"] = 20
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>default_flavour</entry>
+<entry>no</entry>
+<entry>string</entry>
+<entry>
+  <para>
+  this specifies what the default flavour should be if the URI doesn't specify
+  a flavour.  this defaults to "html".
+  </para>
+  <programlisting role="python">
+py["default_flavour"] = "joy"
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>ignore_directories</entry>
+<entry>no</entry>
+<entry>list of strings</entry>
+<entry>
+  <para>
+  this allows you to ignore directories in your datadir.  For example,
+  if you use CVS to manage your datadir, then you would want to ignore
+  all CVS directories.  You would set your ignore_directories like
+  this:
+  </para>
+  <programlisting role="python">
+py["ignore_directories"] = [ "CVS" ]
+  </programlisting>
+  <para>
+  If you wanted to store drafts of entries you need to think about some
+  more in a single directory (kind of like a postponed-msgs folder),
+  then you would create a directory in your datadir and set your
+  ignore_directories like this:
+  </para>
+  <programlisting role="python">
+py["ignore_directories"] = [ "draft" ]
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>plugin_dirs</entry>
+<entry>no</entry>
+<entry>list of strings</entry>
+<entry>
+  <para>
+  the list of directories your plugins are stored in.
+  </para>
+  <programlisting role="python">
+py["plugin_dirs"] = ["/home/will/pyblosxom/plugins/"]
+  </programlisting>
+</entry>
+</row>
+<row>
+<entry>load_plugins</entry>
+<entry>no</entry>
+<entry>list of strings</entry>
+<entry>
+  <para>
+  if this is not set, then PyBlosxom will load all the plugins in the plugin dirs you specified in alphabetical order. If this is set, then PyBlosxom will only load the plugins specified.
+  </para>
+  <programlisting role="python">
+py["load_plugins"] = ["pycalendar", "rss2renderer"]
+  </programlisting>
+</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</appendix>

@@ -1,0 +1,644 @@
+<!--
+  CHAPTER FLAVOURS
+-->
+<chapter>
+<title>Flavours</title>
+<para>
+PyBlosxom uses renderers to take the data provided in the entries and 
+transform it into the output.  Output can be html, xhtml, xml, or anything 
+else--anything that you could get back from a CGI script or web application.  
+The default renderer can be set in your config file like this:
+</para>
+<programlisting role="python">
+py["renderer"] = "blosxom"
+</programlisting>
+<para>
+PyBlosxom comes with two renderers: blosxom and debug.  The debug renderer
+displays all the data in the various parts of the PyBlosxom Request
+object.  This is really helpful to see what variables are at your disposal
+and also to debug problems you might be having with plugins you've installed.
+</para>
+<para>
+The blosxom renderer renders entries just like Blosxom does.
+</para>
+<para>
+If you want your blog rendered using a different template system--say
+Cheetah or htmltmpl--implement a renderer that does so as a PyBlosxom
+plugin.  There's more on this in the chapter on writing plugins.
+</para>
+<para>
+The rest of this chapter walks through the blosxom renderer which comes
+with PyBlosxom.
+</para>
+
+<sect1>
+<title>Flavours and Templates</title>
+<para>
+The blosxom renderer uses the same template style that Blosxom uses.  As
+such, you can use most Blosxom flavour templates without too many 
+modifications.
+</para>
+<para>
+A flavour can be thought of as a theme or an output format.  For example,
+you could have an HTML flavour that renders the blog data in HTML format.
+You could have an XHTML flavour that renders the blog in a strict XHTML
+format.  You could have a happy-sunshine flavour that renders the blog
+in HTML format using a happy sunshiney look and feel.  So on and so forth.
+</para>
+<para>
+A flavour consists of a series of templates each of which is a part of 
+the page that finally gets rendered:
+</para>
+<itemizedlist>
+<listitem><para>content_type - holds the content type of the flavour</para></listitem>
+<listitem><para>head - holds everything before all the entries</para></listitem>
+<listitem><para>story - holds a single entry</para></listitem>
+<listitem><para>foot - holds everything after all the entries</para></listitem>
+<listitem><para>date_head - shows at the start of a date (this only exists in PyBlosxom)</para></listitem>
+<listitem><para>date_foot - shows at the end of a date (this only exists in PyBlosxom)</para></listitem>
+</itemizedlist>
+<para>
+Flavour templates are stored in your datadir alongside all your entries.
+</para>
+<para>
+Say you had an html flavour of your site.  You would have the following 
+files in your datadir:
+</para>
+<itemizedlist>
+<listitem><para>content_type.html</para></listitem>
+<listitem><para>head.html</para></listitem>
+<listitem><para>story.html</para></listitem>
+<listitem><para>foot.html</para></listitem>
+<listitem><para>date_head.html</para></listitem>
+<listitem><para>date_foot.html</para></listitem>
+</itemizedlist>
+<para>
+If you want to create a "joy" flavour, you would have the following files 
+in your datadir:
+</para>
+<itemizedlist>
+<listitem><para>content_type.joy</para></listitem>
+<listitem><para>head.joy</para></listitem>
+<listitem><para>story.joy</para></listitem>
+<listitem><para>foot.joy</para></listitem>
+<listitem><para>date_head.joy</para></listitem>
+<listitem><para>date_foot.joy</para></listitem>
+</itemizedlist>
+<para>
+You can have as many flavours as you want in your datadir.
+</para>
+
+<warning>
+  <title>be careful with your flavours</title>
+  <para>
+    The one thing to be aware of is creating a flavour where the name is 
+    the same extension as file extensions of your blog entries.  For example,
+    the default extension for pyblosxom blog entries is <filename>.txt</filename>.
+    Don't create a "txt" flavour.
+  </para>
+</warning>
+
+<para>
+PyBlosxom comes with a default html flavour.  The template code is built 
+into the blosxom renderer file itself and doesn't require you to create 
+or copy over any files.  However, since it's incredibly bland, most people 
+either create their own flavour or use one from the flavour registry on 
+http://pyblosxom.sourceforge.net/ .
+</para>
+</sect1>
+
+<sect1>
+<title>Template Variables</title>
+<para>
+Here's the variables that are available in your templates. Plugins will 
+add variables. To get a complete list of what variables are available in 
+your blog, use the debug renderer by changing the renderer property in 
+your <filename>config.py</filename> file to debug like this:
+</para>
+<programlisting role="python">
+py["renderer"] = "debug"
+</programlisting>
+<para>
+That will tell you all kinds of stuff about the data structures involved 
+in the request.
+</para>
+
+<sect2>
+<title>Variables From config.py</title>
+<para>
+These template variables are available to all templates. They come directly 
+from your <filename>config.py</filename> file.
+</para>
+
+<table>
+<title>Template variables from config.py</title>
+<tgroup cols="3">
+<thead>
+<row>
+<entry>variable name</entry>
+<entry>description</entry>
+<entry>example</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>blog_description</entry>
+<entry>the description of the blog</entry>
+<entry>blosxom with a touch of python</entry>
+</row>
+<row>
+<entry>blog_title</entry>
+<entry>the title of the blog</entry>
+<entry>RoughingIT - pyblosxom : /weblogs/tools/pyblosxom</entry>
+</row>
+<row>
+<entry>blog_language</entry>
+<entry>the language of the blog</entry>
+<entry>en</entry>
+</row>
+<row>
+<entry>blog_encoding</entry>
+<entry>the encoding of the blog</entry>
+<entry>iso8859-1</entry>
+</row>
+<row>
+<entry>blog_author</entry>
+<entry>the author of the blog (hopefully you)</entry>
+<entry>Joe Dirt</entry>
+</row>
+<row>
+<entry>blog_email</entry>
+<entry>the email address of the author of the blog (feel free to obfuscate it)</entry>
+<entry>joe at joe dot com</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+Additionally, any other properties you set in <filename>config.py</filename> are 
+available in your templates. If you wanted to create a <varname>blog_images</varname> 
+variable holding the base url of the directory with all your images:
+</para>
+<programlisting role="python">
+py["blog_images"] = "http://www.joe.com/~joe/images/"
+</programlisting>
+<para>
+to your <filename>config.py</filename> file and it would be available in all your 
+templates.
+</para>
+</sect2>
+
+<sect2>
+<title>Calculated Template Variables</title>
+<para>
+These template variables are available to all templates as well.  They are 
+calculated based on the request.
+</para>
+
+<table>
+<title>Calculated template variables</title>
+<tgroup cols="3">
+<thead>
+<row>
+<entry>variable name</entry>
+<entry>description</entry>
+<entry>example</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>content_type</entry>
+<entry>the content type of this page</entry>
+<entry>text/html</entry>
+</row>
+<row>
+<entry>root_datadir</entry>
+<entry>the root datadir of this page?</entry>
+<entry>/home/subtle/blosxom/weblogs/tools/pyblosxom</entry>
+</row>
+<row>
+<entry>url</entry>
+<entry>the PATH_INFO to this page</entry>
+<entry>pyblosxom/weblogs/tools/pyblosxom</entry>
+</row>
+<row>
+<entry>flavour</entry>
+<entry>the flavour for this page</entry>
+<entry>html</entry>
+</row>
+<row>
+<entry>pi_yr</entry>
+<entry>the four-digit year the user requested</entry>
+<entry>2002</entry>
+</row>
+<row>
+<entry>pi_mo</entry>
+<entry>the month name the user requested</entry>
+<entry>Sep</entry>
+</row>
+<row>
+<entry>pi_da</entry>
+<entry>the day number the user requested</entry>
+<entry>15</entry>
+</row>
+<row>
+<entry>pi_bl</entry>
+<entry>the entry the user requested to see</entry>
+<entry>weblogs/tools/pyblosxom</entry>
+</row>
+<row>
+<entry>pyblosxom_version</entry>
+<entry>the version number and release date of the pyblosxom version you're using</entry>
+<entry>1.2 3/25/2005</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+</sect2>
+
+<sect2>
+<title>Template Variables Only Available in the story Template</title>
+<para>
+These template variables are only available in your story template.
+</para>
+<table>
+<title>Variables in the story template</title>
+<tgroup cols="3">
+<thead>
+<row>
+<entry>variable name</entry>
+<entry>description</entry>
+<entry>example</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>title</entry>
+<entry>title of the entry</entry>
+<entry>First Post!</entry>
+</row>
+<row>
+<entry>filename</entry>
+<entry>template file name and path of the entry</entry>
+<entry>/home/subtle/blosxom/weblogs/tools/pyblosxom/index.txt</entry>
+</row>
+<row>
+<entry>file_path</entry>
+<entry>just the filename and extensions of the entry</entry>
+<entry>index.txt</entry>
+</row>
+<row>
+<entry>fn</entry>
+<entry>just the filename (no extension)</entry>
+<entry>index</entry>
+</row>
+<row>
+<entry>absolute_path</entry>
+<entry>the category/path of the entry</entry>
+<entry>weblogs/tools/pyblosxom</entry>
+</row>
+<row>
+<entry>body</entry>
+<entry>the text of the entry</entry>
+<entry>first post!</entry>
+</row>
+<row>
+<entry>tb_id</entry>
+<entry>the trackback id of the entry</entry>
+<entry>_index</entry>
+</row>
+<row>
+<entry>path</entry>
+<entry>the category/path of the entry</entry>
+<entry>weblogs/tools/pyblosxom</entry>
+</row>
+<row>
+<entry>yr</entry>
+<entry>the four digit year of the mtime of this entry</entry>
+<entry>2004</entry>
+</row>
+<row>
+<entry>mo</entry>
+<entry>the month abbreviation of the mtime of this entry</entry>
+<entry>Jan</entry>
+</row>
+<row>
+<entry>mo_num</entry>
+<entry>the month number of the mtime of this entry</entry>
+<entry>01</entry>
+</row>
+<row>
+<entry>ti</entry>
+<entry>the hour and minute of the mtime of this entry</entry>
+<entry>16:40</entry>
+</row>
+<row>
+<entry>date</entry>
+<entry>the date string of the mtime of this entry</entry>
+<entry>Sun, 23 May 2004</entry>
+</row>
+<row>
+<entry>fulltime</entry>
+<entry>another date string</entry>
+<entry>20040523164000</entry>
+</row>
+<row>
+<entry>timetuple</entry>
+<entry>the time tuple</entry>
+<entry>(2004, 5, 23, 16, 40, 0, 6, 144, 1)</entry>
+</row>
+<row>
+<entry>mtime</entry>
+<entry>seconds since the epoch</entry>
+<entry>1085348400.0</entry>
+</row>
+<row>
+<entry>dw</entry>
+<entry>the day of the week</entry>
+<entry>Sunday</entry>
+</row>
+<row>
+<entry>da</entry>
+<entry>the day of the month</entry>
+<entry>23</entry>
+</row>
+<row>
+<entry>w3cdate</entry>
+<entry>the w3c date</entry>
+<entry>2004-05-23T21:40:00Z</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect2>
+
+<sect2>
+<title>Template Variables From Plugins</title>
+<para>
+Additionally, many plugins will create additional variables.  Refer to the 
+plugin's documentation for what variables it creates, where the variables 
+are available, and what the variables do.
+</para>
+</sect2>
+</sect1>
+
+<sect1>
+<title>Invoking a Flavour</title>
+<para>
+The flavour for a given page is specified in the extension of the file 
+being requested.  For example:
+</para>
+
+<table>
+<title>Examples of request URIs</title>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>url</entry>
+<entry>what happens</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>http://some.blog.org/</entry>
+<entry>brings up the index in the default flavour which is "html"</entry>
+</row>
+<row>
+<entry>http://some.blog.org/index.html</entry>
+<entry>brings up the index in the "html" flavour</entry>
+</row>
+<row>
+<entry>http://some.blog.org/index.rss</entry>
+<entry>brings up the index in the "rss" flavour (which by default is RSS 0.9.1)</entry>
+</row>
+<row>
+<entry>http://some.blog.org/2004/05/index.joy</entry>
+<entry>brings up the index for May of 2004 in the "joy" flavour</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+<para>
+Additionally, you can specify the flavour by adding a <varname>flav</varname> 
+variable in the query-string.  Examples:
+</para>
+<table>
+<title>Specifying flavour using the querystring</title>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>uri</entry>
+<entry>what happens</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>http://some.blog.org/</entry>
+<entry>brings up the index in the default flavour which is "html"</entry>
+</row>
+<row>
+<entry>http://some.blog.org/?flav=rss</entry>
+<entry>-brings up the index in the "rss" flavour</entry>
+</row>
+<row>
+<entry>http://some.blog.org/2004/05/index?flav=joy</entry>
+<entry>brings up the index for May of 2004 in the "joy" flavour</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+<para>
+You can change the default flavour from <literal>html</literal> to some other 
+flavour in your <filename>config.py</filename> file with the 
+<varname>default_flavour</varname> property:
+</para>
+<programlisting role="python">
+py["default_flavour"] = "joy"
+</programlisting>
+<para>
+Doing this will set the default flavour to use when the URI the user has
+used doesn't specify which flavour to use.  For example, if you do the
+above, then the following URIs will use the default flavour:
+</para>
+<table>
+<title>Default flavour used</title>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>uri</entry>
+<entry>what happens</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>http://www.joe.com/cgi-bin/pyblosxom.cgi/2005/03</entry>
+<entry>uses the default flavour which is set to "joy"</entry>
+</row>
+<row>
+<entry>http://www.joe.com/cgi-bin/pyblosxom.cgi/2005/03/?flav=html</entry>
+<entry>uses the html flavour as specified by flav=</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect1>
+
+<sect1>
+<title>Overriding Flavour Templates by Category</title>
+<para>
+Some folks like having certain categories of their blog have a different 
+look and feel.  You can do this by placing flavour template files in that 
+category directory.  For example, your directory tree may look something 
+like this:
+</para>
+<programlisting role="filelisting">
+datadir/
+   |- content/
+      |- content_type.html         <- 1
+      |- head.html                 <- 1
+      |- story.html                <- 1
+      |- foot.html                 <- 1
+      |- DailyAffairs/
+      |- Travel/
+      |- Coding/
+         |- content_type.html      <- 2
+         |- head.html              <- 2
+         |- story.html             <- 2
+         |- foot.html              <- 2
+         |- Python/
+         |- C/
+</programlisting>
+<para>
+The default flavour for all your directories would be <literal>html</literal> 
+and would be taken from the flavour marked <literal>1</literal>.  However, 
+if the user is looking at entries in the <filename>Coding</filename> category 
+or any category under <filename>Coding</filename>, they'll see the 
+<literal>html</literal> flavour templates marked by <literal>2</literal>.
+</para>
+</sect1>
+
+<sect1>
+<title>Order of Operations to Figure Out Which Flavour to Use</title>
+<para>
+We know that you can specify the default flavour to use in the 
+<filename>config.py</filename> file with the <varname>default_flavour</varname> 
+property.  We know that the user can specify which flavour to use by the file 
+extension of the URI.  We also know that the user can specify which flavour 
+to use by using the <varname>flav</varname> variable in the query string.
+</para>
+<para>
+The order in which we figure out which flavour to use is this:
+</para>
+<orderedlist numeration="arabic">
+<listitem>
+  <para>
+    look at the URI extension: if the URI has one, then we use that.
+  </para>
+</listitem>
+<listitem>
+  <para>
+    look at the <varname>flav</varname> querystring variable: if there is one, 
+    then we use that.
+  </para>
+</listitem>
+<listitem>
+  <para>
+    look at the <varname>default_flavour</varname> property in the 
+    <filename>config.py</filename> file: if there is one, then we use that.
+  </para>
+</listitem>
+<listitem>
+  <para>
+    use the <literal>html</literal> flavour
+  </para>
+</listitem>
+</orderedlist>
+</sect1>
+
+<sect1>
+<title>Basic Set of Templates</title>
+<para>
+Here's a really basic set of templates for an html flavour.
+</para>
+
+<table>
+<title>Basic set of templates for an html flavour</title>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>template name</entry>
+<entry>content</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>content_type.html</entry>
+<entry>text/html</entry>
+</row>
+<row>
+<entry>head.html</entry>
+<entry>
+<programlisting role="html"><![CDATA[
+<html>
+<head>
+  <title>$blog_title $pi_da $pi_mo $pi_yr</title>
+</head>
+<body>
+<h1>$blog_title</h1>
+<p>$pi_da $pi_mo $pi_yr</p>
+]]></programlisting>
+</entry>
+</row>
+<row>
+<entry>date_head.html</entry>
+<entry>
+<programlisting role="html"><![CDATA[
+<div class="date">
+<h2>$date</h2>
+]]></programlisting>
+</entry>
+</row>
+<row>
+<entry>story.html</entry>
+<entry>
+<programlisting role="html"><![CDATA[
+<h3><a name="$fn">$title</a></h3>
+<div class="blosxomStory">
+$body
+<p>
+  posted at: $ti | 
+  path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | 
+  <a href="$base_url/$file_path.$flavour">permalink</a>
+</p>
+</div>
+]]></programlisting>
+</entry>
+</row>
+<row>
+<entry>date_foot.html</entry>
+<entry>
+<programlisting role="html"><![CDATA[
+</div>
+]]></programlisting>
+</entry>
+</row>
+<row>
+<entry>foot.html</entry>
+<entry>
+<programlisting role="html"><![CDATA[
+<p>
+  Made with PyBlosxom
+</p>
+</body>
+</html>
+]]></programlisting>
+</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect1>
+</chapter>

@@ -1,0 +1,207 @@
+<!--
+  CHAPTER ARCHITECTURE
+-->
+
+<chapter>
+<title>PyBlosxom Architecture</title>
+<para>
+The architecture for PyBlosxom has evolved over time. The mission is to 
+build an easily augmented blog server that uses the file system for data 
+storage. Using the file system allows PyBlosxom to fit in with other 
+applications rather than forcing PyBlosxom to solve all problems all by 
+itself.
+</para>
+
+<sect1>
+<title>Parts</title>
+<para>
+PyBlosxom is composed of a few different parts:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+<filename>pyblosxom.cgi</filename> - This is the CGI script that is executed 
+by your web-server, pulls in configuration variables from 
+<filename>config.py</filename> and then instantiates PyBlosxom objects to 
+handle the request.
+</para>
+</listitem>
+<listitem>
+<para>
+the Pyblosxom package - This is the Python package that holds the PyBlosxom 
+objects and utility functions that handle the request.
+</para>
+<itemizedlist>
+   <listitem>
+   <para>
+   the entries package - Handles the abstraction allowing PyBlosxom to use 
+   entries other than those solely found on the file system.
+   </para>
+   </listitem>
+   <listitem>
+   <para>
+   the renderers package - PyBlosxom can handle different renderers. The 
+   renderer gets a list of entries to be rendered and can render them using 
+   whatever means it so desires: blosxom templates, htmltmpl templates, 
+   Cheetah templates, hard-coded RSS 2.0 markup, ...
+   </para>
+   </listitem>
+   <listitem>
+   <para>
+   the cache package - PyBlosxom allows for entry-level caching. This helps 
+   in cases where your entries are stored in a format that requires a lot 
+   of processing to convert to HTML. 
+   </para>
+   </listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+
+<para>
+PyBlosxom's look'n'feel and behavior is then augmented by:
+</para>
+
+<itemizedlist>
+<listitem>
+<para>
+plugins - Plugins allow you to augment PyBlosxom's default behavior. These 
+you can get from the plugin registry or write yourself.
+</para>
+</listitem>
+<listitem>
+<para>
+flavour templates - Flavour templates allow you to create the look and feel 
+of your blog. These you can get from the flavour registry or write yourself. 
+</para>
+</listitem>
+</itemizedlist>
+</sect1>
+
+<sect1>
+<title>Lifecycle of a PyBlosxom Request</title>
+<para>
+This is the life cycle of a single PyBlosxom request. It involves the 
+following "entities":
+</para>
+<itemizedlist>
+<listitem>
+<para>
+pyblosxom.cgi - A script found in the web/ directory. This is the CGI 
+script that handles PyBlosxom requests.
+</para>
+</listitem>
+<listitem>
+<para>
+config.py - The configuration file that defines the behavior and properties 
+of your blog.
+</para>
+</listitem>
+<listitem>
+<para>
+PyBlosxom.pyblosxom - The pyblosxom module holds the default PyBlosxom 
+behavior functions. It also defines the Request class and the PyBlosxom class.
+</para>
+</listitem>
+<listitem>
+<para>
+Pyblosxom.pyblosxom.Request - The Request object holds the state of the 
+PyBlosxom request at any given time throughout the lifecycle of the request. 
+The Request is passed to most callbacks in the args dict as "request".
+</para>
+</listitem>
+<listitem>
+<para>
+Pyblosxom.pyblosxom.PyBlosxom - The PyBlosxom object holds a list of 
+registered plugins, what callbacks they're registered to, and the methods 
+that handle the the actual request. 
+</para>
+</listitem>
+</itemizedlist>
+
+<para>
+The PyBlosxom request lifecycle starts with the web-server executing 
+pyblosxom.cgi.
+</para>
+<programlisting role="lifecycle">
+
+1. pyblosxom.cgi: loads config.py
+2. pyblosxom.cgi: instantiates a Request object
+3. pyblosxom.cgi: instantiates a PyBlosxom object passing it the Request object
+4. pyblosxom.cgi: calls run() on the PyBlosxom instance
+      1. PyBlosxom instance, run method: calls initialize
+            1. PyBlosxom instance, initialize method: imports the plugins
+            2. PyBlosxom instance, initialize method: calls the entryparser callback to get a map of all the entry types we can handle 
+      2. PyBlosxom instance, run method: calls the start callback to allow plugins to do any initialization they need to do
+      3. PyBlosxom instance, run method: calls the handle callback allowing plugins to fully handle the request.
+         If a plugin handles the request, the plugin should return a 1 signifying it has done so. At that point, PyBlosxom will stop trying to find a plugin to handle the request.
+         If no plugin handles the request, then PyBlosxom will handle the request using the blosxom_handler PyBlosxom will handle the request using the blosxom_handler.
+      4. PyBlosxom instance, run method: calls the end callback to allow plugins to do any cleanup they need to do 
+</programlisting>
+</sect1>
+
+<sect1>
+<title>Lifecycle of the blosxom_handler</title>
+<para>
+This describes what the blosxom_handler does. This is the default handler 
+for PyBlosxom. It's called by the PyBlosxom instance in the run method if 
+none of the plugins have handled the request already.
+</para>
+<programlisting role="lifecycle">
+1. calls the renderer callback to get a renderer instance
+   If none of the plugins return a renderer instance, then we go check to see if config.py has the renderer property set and use that.
+   If there is no renderer property set, we use the blosxom renderer which is found in the pyblosxom.PyBlosxom.renderer package.
+2. calls the pathinfo callback which allows all the plugins to help figure out what to do with the HTTP URI/QUERYSTRING we've been given
+3. calls the filelist callback which returns a list of entries to render based on what the path info is
+4. calls the prepare callback which allows plugins to transform the entries and any other data in the Request object prior to rendering
+5. renders the entries 
+</programlisting>
+</sect1>
+
+<sect1>
+<title>Lifecycle of the blosxom Renderer</title>
+<para>
+The blosxom renderer renders the entries in a similar fashion to what 
+Blosxom does. The blosxom renderer uses flavour templates and template 
+variables. It also has a series of callbacks allowing plugins to modify 
+templates and entry data at the time of rendering that specific piece.
+</para>
+<programlisting role="lifecycle">
+1. renders the content_type template
+2. calls the head callback and renders the head template
+3. calls the date_head callback and renders the date_head template
+4. for each story:
+      1. if the mtime on this entry is different than the last entry, it calls the date_foot callback, renders the date_foot template, calls the date_head callback and renders the date_head template
+      2. calls the story callback and renders the story template 
+5. calls the date_foot callback and renders the date_foot template
+6. renders the foot template (calls the foot callback 
+</programlisting>
+</sect1>
+
+<sect1>
+<title>Callbacks</title>
+<para>
+FIXME
+</para>
+</sect1>
+
+<sect1>
+<title>Entry Parsers</title>
+<para>
+FIXME
+</para>
+</sect1>
+
+<sect1>
+<title>Pre-formatters and Post-formatters</title>
+<para>
+FIXME
+</para>
+</sect1>
+
+<sect1>
+<title>Renderers</title>
+<para>
+FIXME 
+</para>
+</sect1>
+</chapter>

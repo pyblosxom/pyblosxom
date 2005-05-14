@@ -1,0 +1,320 @@
+<!--
+  WRITING ENTRIES
+-->
+<chapter id="writingentries">
+<title>Writing Entries</title>
+<sect1>
+<title>Categories</title>
+<para>
+Writing entries in PyBlosxom is fairly straightforward.  Each entry
+is a single text file located somewhere in the directory tree of your
+datadir.  The directory that the entry is in is the category the entry
+is "filed under".  For example, if my datadir was <filename>/home/joe/datadir</filename>
+and I stored an entry named <filename>firstpost.txt</filename> in 
+<filename>/home/joe/datadir/content</filename> then the category for my entry 
+would be <literal>/content</literal>.
+</para>
+<para>
+Be careful when you create your categories--be sure to use characters
+that are appropriate in directory names in the file system.
+</para>
+<para>
+Don't worry about making sure you have all the categories you need up
+front--you can add them as you need them.
+</para>
+
+<warning>
+  <title>dates as categories</title>
+  <para>
+    If you have categories like "2002", "2002/02", and such in the form
+    yyyy/mm/dd, then PyBlosxom will get confused between its date-based
+    url handling and your categories.  It's best not to do categories
+    based on dates.
+  </para>
+</warning>
+</sect1>
+
+<sect1>
+<title>The Format of an Entry</title>
+<para>
+PyBlosxom entries consist of three parts: the title, the metadata, and
+then the body of the entry.  The first line is title of the entry.  Then
+comes the metadata of the entry (if any).  After the metadata comes the
+body of the entry.
+</para>
+<para>
+The title consists of a single line of plain text.  You can have whatever
+characters you like in the title of your entry.  The title doesn't have
+to be the same as the entry file name.
+</para>
+<para>
+The metadata section is between the title line and the body of the entry.
+It consists of a series of lines that start with the hash mark (#), then
+a metadata variable name, then the metadata variable value.
+</para>
+
+<warning>
+  <title>storing the mtime in metadata</title>
+  <para>
+    Unfortunately, you cannot store the mtime of your blog entry in the 
+    metadata of the entry itself.  The problem here is that we don't open
+    the file and parse it for every blog entry to figure out what to 
+    display.  By the time we've opened the file and parsed it to see the
+    metadata inside, we already know which blog entries to show and it's
+    too late to re-sort them.
+  </para>
+</warning>
+
+<para>
+The body of the entry is written in HTML and comprises the rest of the
+entry file.
+</para>
+<para>
+Here's an example first post entry:
+</para>
+<programlisting role="html"><![CDATA[
+This is my first post!
+<p>
+  This is the body of the first post to my blog.
+</p>
+]]></programlisting>
+<para>
+Here's a more complex example:
+</para>
+<programlisting role="html"><![CDATA[
+The rain in Spain....
+<p>
+  The rain
+</p>
+<p align="center">
+  in Spain
+</p>
+<p align="right">
+  is <font color="ff0000">mainly</font> on the plain.
+</p>
+]]></programlisting>
+<para>
+Here's an example of a post with metadata:
+</para>
+<programlisting role="html"><![CDATA[
+The rain in Spain....
+#mood bored
+#music The Doors - Greatest Hits Vol 1
+<p>
+  The rain
+</p>
+<p align="center">
+  in Spain
+</p>
+<p align="right">
+  is <font color="ff0000">mainly</font> on the plain.
+</p>
+]]></programlisting>
+<para>
+The metadata variables here would be available in your story template.  So for the
+above example, the template variable <varname>$mood</varname> would be filled in 
+with <literal>bored</literal> and <varname>$music</varname> would be filled in with 
+<literal>The Doors - Greatest Hits Vol 1</literal>.
+</para>
+</sect1>
+
+<sect1>
+<title>Posting Date</title>
+<para>
+The posting date of the entry file is the modification time (also known as
+mtime) on the file itself as stored by your file system.  Every time you 
+go to edit an entry, it changes the modification time.  You can see this
+in the following example of output:
+</para>
+<programlisting role="shell"><![CDATA[
+willg ~/blogdata/blosxom/site: vi testpost.txt                            [1]
+willg ~/blogdata/blosxom/site: ls -l
+total 16
+-rw-r--r--  1 willg willg 764 Jul 20  2003 minoradjustments.txt
+-rw-r--r--  1 willg willg 524 Jul 24  2003 moreminoradjustments.txt
+-rw-r--r--  1 willg willg 284 Aug 15  2004 nomorecalendar.txt
+-rw-r--r--  1 willg willg  59 Mar 21 16:30 testpost.txt                   [2]
+willg ~/blogdata/blosxom/site: vi testpost.txt                            [3]
+willg ~/blogdata/blosxom/site: ls -l
+total 16
+-rw-r--r--  1 willg willg 764 Jul 20  2003 minoradjustments.txt
+-rw-r--r--  1 willg willg 524 Jul 24  2003 moreminoradjustments.txt
+-rw-r--r--  1 willg willg 284 Aug 15  2004 nomorecalendar.txt
+-rw-r--r--  1 willg willg  59 Mar 21 16:34 testpost.txt                   [4]
+]]></programlisting>
+<para>
+[1] I create the blog entry <filename>testpost.txt</filename> using 
+<command>vi</command> (a text editor).  The mtime of the file will be the 
+time I last save the file and exit out of vi.
+</para>
+<para>
+[2] See the mtime on the file is <literal>Mar 21 16:30</literal>.  That's when 
+I last saved the blog entry and exited out of vi.
+</para>
+<para>
+[3] I discover that I made a spelling mistake in my entry...  So I edit
+it again in vi and fix the mistake.  The mtime of the entry has now changed...
+</para>
+<para>
+[4] Now the mtime of the file is <literal>Mar 21 16:34</literal>.  This is 
+the time that will show up in my blog as the posting date.
+</para>
+
+<note>
+  <title>issues with using mtime</title>
+  <para>
+    There are some issues with this method for storing the posting date.  First,
+    if you ever change the blog entry, the mtime will change as well.  That
+    makes updating blog entries very difficult down the line.
+  </para>
+  <para>
+    There's a utility that comes with the contributed plugins pack called 
+    <filename>editfile.py</filename>.  This will note the mtime of the file, 
+    open up your favorite editor to edit the file, and when you're done, it'll 
+    reset the mtime of the file back to what it was.
+  </para>
+</note>
+</sect1>
+
+<sect1>
+<title>Beyond Editors</title>
+<para>
+There's no reason that all your entries have to come from editing blog entry
+text files in your datadir.  You could rig up procmail to look for emails
+that meet a certain description and convert those emails into blog entries.
+</para>
+
+<sect2>
+<title>weblog-add</title>
+<para>
+You can find the weblog-add CGI script in the Plugin Registry at
+http://pyblosxom.sourceforge.net/ .  This script allows you to create
+entries using a webform.  It doesn't allow you to edit entries after
+the fact and it's pretty basic.  However, it does work and it does allow
+you to create entries when you don't have access to the filesystem.
+</para>
+<para>
+To setup the weblog-add script, do the following:
+</para>
+<orderedlist numeration="arabic">
+<listitem>
+<para>
+copy the <filename>weblog-add.py</filename> file into your CGI root
+</para>
+</listitem>
+<listitem>
+<para>
+open up the <filename>weblog-add.py</filename> file in your favorite text editor 
+and change the line for <varname>blog_root</varname> to your datadir
+</para>
+</listitem>
+<listitem>
+<para>
+set up your cgi directory so that the web-server forces the user to
+authenticate
+</para>
+<para>
+FIXME - how do you do that?
+</para>
+</listitem>
+<listitem>
+<para>
+make sure the weblog-add.py file has the correct permissions so that it 
+will run as a CGI script
+</para>
+</listitem>
+</orderedlist>
+<para>
+When you're using the <filename>weblog-add.py</filename> script, make sure 
+you use unique file names.  That gets a bit hard as your blog gets so big 
+that you don't remember what file names exist and what don't.
+</para>
+</sect2>
+
+<sect2>
+<title>Using w.bloggar</title>
+<para>
+PyBlosxom works with w.bloggar (http://www.wbloggar.com/).  In order to use w.bloggar
+you have to do the following:
+</para>
+
+<orderedlist numeration="arabic">
+<listitem>
+<para>
+  install the xmlrpc plugin found at http://pyblosxom.sourceforge.net/ in the
+  plugin registry
+</para>
+</listitem>
+<listitem>
+<para>
+  install the xmlrpc_bloggar plugin found at http://pyblosxom.sourceforge.net/ in the
+  plugin registry
+</para>
+</listitem>
+<listitem>
+<para>
+  in the Content Management System section of the w.bloggar account settings 
+  dialog, set:
+</para>
+<itemizedlist>
+  <listitem><para>"Blog Tool" to "Custom"</para></listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<para>
+  in the API Server tab section of the w.bloggar account settings dialog, set:
+</para>
+<itemizedlist>
+  <listitem><para>"Host" to the name of your server</para></listitem>
+  <listitem>
+    <para>"Page" to the url of your blog with /RPC at the end--
+    For example, mine might be "/~joe/cgi-bin/pyblosxom.cgi/RPC"</para>
+  </listitem>
+</itemizedlist> 
+</listitem>
+<listitem>
+<para>
+  in the Custom tab section of the w.bloggar account settings dialog, set:
+</para>
+<itemizedlist>
+  <listitem><para>"Posts" to "Blogger API"</para></listitem>
+  <listitem><para>"Categories" to "Not supported"</para></listitem>
+  <listitem><para>"Templates" to "Not supported"</para></listitem>
+  <listitem><para>"Title Tags" should be blank</para></listitem>
+  <listitem><para>"Category Tags" should be blank</para></listitem>
+</itemizedlist>
+</listitem>
+</orderedlist>
+<para>
+When you go to write a new entry, leave the title field blank and do your entire 
+post in the data section with the first line being the title (just like blosxom 
+entries).
+</para>
+<para>
+One thing you should note is that pyblosxom will take the first line and use that 
+to generate the file name of the entry. So if the title of the entry is 
+<literal>How to use w.bloggar with pyblosxom</literal>, the file name ends up being 
+<filename>How_to_use_w_bloggar_with_pyblosxom.txt</filename> which may get a little
+annoying.
+</para>
+<para>
+FIXME - Does this still work?
+</para>
+</sect2>
+
+<sect2>
+<title>Using Ecto</title>
+<para>
+FIXME - I need instructions for this
+</para>
+</sect2>
+
+<sect2>
+<title>Other blog tools?</title>
+<para>
+Does PyBlosxom work with other blog tools?
+</para>
+</sect2>
+
+</sect1>
+</chapter>

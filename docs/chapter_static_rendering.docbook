@@ -1,0 +1,176 @@
+<!--
+  CHAPTER STATIC RENDERING
+-->
+
+<chapter id="staticrendering">
+<title>Static Rendering</title>
+<para>
+Static rendering made its first appearance in PyBlosxom 1.0. It fills the 
+functionality gap for people who want to use PyBlosxom, but don't have a 
+web-server with CGI installed, don't have CGI access, or can't run PyBlosxom 
+for one of a myriad of other reasons. Static rendering allows these people 
+to run PyBlosxom on their local machine, write blog entries, render their 
+entire site into HTML, and then use ftp or some other file copy method to 
+move the pages up to their static web-site.
+</para>
+<para>
+PyBlosxom's static rendering allows for incremental building.  It can scan 
+your entries, figure out what's changed, and render only the pages that 
+need re-rendering.
+</para>
+<para>
+Beyond that, it's not particularly sophisticated.
+</para>
+
+<sect1>
+<title>Configuring Static Rendering</title>
+<para>
+These are the instructions for configuring static rendering in PyBlosxom.
+</para>
+
+<orderedlist numeration="arabic">
+<listitem>
+<para>
+Install PyBlosxom. When you're copying the <filename>pyblosxom.cgi</filename> 
+and <filename>config.py</filename> files, you don't have to put them in a 
+CGI directory--you can put them in any directory you have permissions in. 
+For example, I created a directory <filename>/home/joe/pyblosxom/</filename> 
+and put both files in there.
+</para>
+</listitem>
+<listitem>
+<para>
+Add <varname>static_dir</varname> to your <filename>config.py</filename> file. 
+This is the directory we will save all the static output. The value of 
+<varname>static_dir</varname> should be a string representing the absolute 
+path of the output directory for static rendering.
+</para>
+</listitem>
+<listitem>
+<para>
+Add <varname>static_flavours</varname> to your <filename>config.py</filename> file. 
+The value of <varname>static_flavours</varname> should be a list of strings 
+representing all the flavours that should be rendered.  This defaults to 
+<literal>[ "html" ]</literal>.
+</para>
+</listitem>
+<listitem>
+<para>
+Add <varname>static_monthnames</varname> to your <filename>config.py</filename> file. 
+The value (either <literal>1</literal> or <literal>0</literal>) will determine if 
+you want month names (such as <literal>April</literal>) in the static pages. 
+</para>
+</listitem>
+<listitem>
+<para>
+Add <varname>static_monthnumbers</varname> to your <filename>config.py</filename> 
+file. The value (either <literal>1</literal> or <literal>0</literal>) will 
+determine if you want month numbers (such as <literal>04</literal> for 
+<literal>April</literal>) in the static pages.
+</para>
+</listitem>
+<listitem>
+<para>
+Set <varname>base_url</varname> in your <filename>config.py</filename> file 
+to the base url your blog will have.  For example, if your <varname>static_dir</varname> 
+were set to <literal>/home/joe/public_html</literal> and the url for that directory 
+were http://www.joe.com/~joe/ , then you probably want your <varname>base_url</varname> 
+to be http://www.joe.com/~joe/ . 
+</para>
+</listitem>
+</orderedlist>
+</sect1>
+
+<sect1>
+<title>Running Static Rendering</title>
+
+<sect2>
+<title>Render Everything</title>
+<para>
+Now you can run static rendering:
+</para>
+<programlisting role="shell">
+% cd directory-with-pyblosxom.cgi-in-it 
+% ./pyblosxom.cgi --static 
+</programlisting>
+<para>
+Lots of output will appear as it figures out all the urls that need to 
+be rendered and then renders them all one by one.
+</para>
+</sect2>
+
+<sect2>
+<title>Incremental Rendering</title>
+<para>
+We have incremental rendering which will go find all the entries that have 
+changed since we rendered them and then re-render them. It does this by 
+comparing the mtime on the entry file with the mtime on the rendered file.
+</para>
+<para>
+It works like this:
+</para>
+<programlisting role="shell">
+% cd directory-with-pyblosxom.cgi-in-it 
+% ./pyblosxom.cgi --static --incremental 
+</programlisting>
+</sect2>
+</sect1>
+
+<sect1>
+<title>Rendering Other URIs</title>
+<para>
+Some plugins provide other URIs that are part of your site, but not 
+really part of your blog since they're not related to entries. Examples 
+of this include the plugininfo plugin which provides information about 
+the plugins that you're running. You can set the static_urls property 
+in config.py to a list of all the urls that need to be rendered every time. 
+This list could include:
+</para>
+
+<itemizedlist>
+<listitem><para>RSS, FOAF, OPML, ATOM or any other kind of feeds</para></listitem>
+<listitem><para>urls for plugins that aren't related to entries (plugininfo, pystaticfile, booklist, ...)</para></listitem>
+</itemizedlist>
+
+<para>
+<varname>static_urls</varname> takes a list of strings where each string is a 
+url to be rendered. For example if I wanted to render the booklist page and the 
+RSS feed for my main page, I would set it like this:
+</para>
+
+<programlisting role="python">
+py["static_urls"] = ["/booklist/index.html", "/index.xml"]
+</programlisting>
+</sect1>
+
+<sect1>
+<title>Additional Thoughts</title>
+<para>
+Static rendering is pretty simplistic. We use the 
+<function>tools.render_url</function> function to render each url. Plugins that 
+need to re-render the entry pages because something has changed (e.g. comments, 
+pingbacks, ...), should call this function.
+</para>
+<para>
+If you want to statically render your blog every night, you could write 
+a shell script like this:
+</para>
+<programlisting role="shell">
+#!/bin/bash 
+ 
+cd directory-with-pyblosxom.cgi
+./pyblosxom.cgi --static 
+find static_dir-directory -mmin +30 -exec 'rm' '{}' ';' 
+</programlisting>
+<para>
+That'll re-render everything, then delete any files in your static 
+dir that are older than 30 minutes (in case you moved entries from 
+one category to another or deleted an entry or whatever). 
+</para>
+<para>
+If your web-site requires more files than just the ones that are rendered by 
+PyBlosxom (images, CSS, ...), then you should copy those over with your 
+shell script as well.
+</para>
+</sect1>
+</chapter>
