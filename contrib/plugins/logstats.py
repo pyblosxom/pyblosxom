@@ -1,5 +1,23 @@
 """
-Copyright (c) 2003-2005 Ted Leung
+Keep statistics based on HTTP Log information
+
+At the moment it computes a list of referrrers
+Generate a string containing the last 15 referrers, marked up with HTML
+<a> tag.  If the string is longer than 40 characters, truncate by displaying ...
+You can access the list of referrers as the variable $referrers
+
+You can control the number of referrers displayed in config.py::
+    py['num_referrers'] = n  
+
+You can control the length of the referrer string in config.py::
+    py['referrer_length'] = l
+
+You can prevent some referrers from showing up in the list with the
+refer_blacklist property in config.py:
+
+    py['refer_blacklist'] = "bluesock.org,sauria.com"
+
+
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -20,23 +38,8 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Keep statistics based on HTTP Log information
+Copyright (c) 2003-2005 Ted Leung
 
-At the moment it computes a list of referrrers
-Generate a string containing the last 15 referrers, marked up with HTML
-<a> tag.  If the string is longer than 40 characters, truncate by displaying ...
-You can access the list of referrers as the variable $referrers
-
-You can control the number of referrers displayed in config.py::
-    py['num_referrers'] = n  
-
-You can control the length of the referrer string in config.py::
-    py['referrer_length'] = l
-
-You can prevent some referrers from showing up in the list with the
-refer_blacklist property in config.py:
-
-    py['refer_blacklist'] = "bluesock.org,sauria.com"
 
 TODO:
 Compute some additional statistics
