@@ -198,6 +198,10 @@ class BlosxomRenderer(RendererBase):
         @param header: whether (1) or not (0) to render the HTTP headers
         @type  header: boolean
         """
+        # if we've already rendered, then we don't want to do so again
+        if self.rendered == 1:
+            return
+
         data = self._request.getData()
         config = self._request.getConfiguration()
 
