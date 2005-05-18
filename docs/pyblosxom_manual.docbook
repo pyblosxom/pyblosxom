@@ -9,6 +9,7 @@
 <!ENTITY chapter_writing_entries SYSTEM "chapter_writing_entries.docbook">
 <!ENTITY chapter_static_rendering SYSTEM "chapter_static_rendering.docbook">
 <!ENTITY chapter_architecture SYSTEM "chapter_architecture.docbook">
+<!ENTITY chapter_writing_plugins SYSTEM "chapter_writing_plugins.docbook">
 
 <!ENTITY appendix_config_variables SYSTEM "appendix_config_variables.docbook">
 <!ENTITY appendix_gfdl SYSTEM "appendix_gfdl.docbook">
@@ -111,6 +112,7 @@ Details on the mailing list are on the web-site at http://pyblosxom.sourceforge.
 &chapter_writing_entries;
 &chapter_static_rendering;
 &chapter_architecture;
+&chapter_writing_plugins;
 
 &appendix_config_variables;
 &appendix_gfdl;
