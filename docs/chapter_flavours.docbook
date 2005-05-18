@@ -561,26 +561,16 @@ The order in which we figure out which flavour to use is this:
 <sect1>
 <title>Basic Set of Templates</title>
 <para>
-Here's a really basic set of templates for an html flavour.
+Here's a really basic set of templates for an html flavour:
 </para>
 
-<table>
-<title>Basic set of templates for an html flavour</title>
-<tgroup cols="2">
-<thead>
-<row>
-<entry>template name</entry>
-<entry>content</entry>
-</row>
-</thead>
-<tbody>
-<row>
-<entry>content_type.html</entry>
-<entry>text/html</entry>
-</row>
-<row>
-<entry>head.html</entry>
-<entry>
+<example>
+  <title>example of content_type.html template</title>
+  <programlisting role="html">text/html</programlisting>
+</example>
+
+<example>
+  <title>example of head.html template</title>
 <programlisting role="html"><![CDATA[
 <html>
 <head>
@@ -590,20 +580,18 @@ Here's a really basic set of templates for an html flavour.
 <h1>$blog_title</h1>
 <p>$pi_da $pi_mo $pi_yr</p>
 ]]></programlisting>
-</entry>
-</row>
-<row>
-<entry>date_head.html</entry>
-<entry>
+</example>
+
+<example>
+  <title>example of date_head.html</title>
 <programlisting role="html"><![CDATA[
 <div class="date">
 <h2>$date</h2>
 ]]></programlisting>
-</entry>
-</row>
-<row>
-<entry>story.html</entry>
-<entry>
+</example>
+
+<example>
+  <title>example of story.html</title>
 <programlisting role="html"><![CDATA[
 <h3><a name="$fn">$title</a></h3>
 <div class="blosxomStory">
@@ -615,19 +603,17 @@ $body
 </p>
 </div>
 ]]></programlisting>
-</entry>
-</row>
-<row>
-<entry>date_foot.html</entry>
-<entry>
+</example>
+
+<example>
+  <title>example of date_foot.html</title>
 <programlisting role="html"><![CDATA[
 </div>
 ]]></programlisting>
-</entry>
-</row>
-<row>
-<entry>foot.html</entry>
-<entry>
+</example>
+
+<example>
+  <title>example of foot.html</title>
 <programlisting role="html"><![CDATA[
 <p>
   Made with PyBlosxom
@@ -635,10 +621,6 @@ $body
 </body>
 </html>
 ]]></programlisting>
-</entry>
-</row>
-</tbody>
-</tgroup>
-</table>
+</example>
 </sect1>
 </chapter>
