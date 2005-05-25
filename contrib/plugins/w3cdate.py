@@ -1,5 +1,18 @@
 """
-Copyright (c) 2003-2005 Ted Leung
+Adds a 'w3cdate' variable to every entry which has the mtime of the entry
+in ISO8601 format
+
+Adds a 'w3cdate' variable to the head and foot templates which has the mtime
+of the first entry in the entrylist being displayed (this is often the
+youngest/most-recent entry).
+
+
+WARNING: you must have PyXML installed as part of your python installation 
+in order for this plugin to work
+
+Place this plugin early in your load_plugins list, so that the w3cdate will
+be available to subsequent plugins
+
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -20,28 +33,60 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Add a 'w3cdate' key to every entry -- this contains the date in ISO8601 format
-
-WARNING: you must have PyXML installed as part of your python installation 
-in order for this plugin to work
-
-Place this plugin early in your load_plugins list, so that the w3cdate will
-be available to subsequent plugins
+Copyright (c) 2003-2005 Ted Leung
 """
 __author__ = "Ted Leung <twl@sauria.com>"
-__version__ = "$Id:"
-__copyright__ = "Copyright (c) 2003 Ted Leung"
+__version__ = "$Id$"
+__copyright__ = "Copyright (c) 2003-2005 Ted Leung"
 __license__ = "Python"
 
 import xml.utils.iso8601
 import time
 from Pyblosxom import tools
 
-def cb_story(args):
-    entry = args['entry']
+def get_formatted_date(entry):
+    if not entry:
+        return ""
+
     time_tuple = entry['timetuple']
     tzoffset = time.timezone
-		# if is_dst flag set, adjust for daylight savings time
+
+    # if is_dst flag set, adjust for daylight savings time
     if time_tuple[8] == 1:
         tzoffset = time.altzone
-    entry['w3cdate'] = xml.utils.iso8601.tostring(time.mktime(time_tuple),tzoffset)    
+    return xml.utils.iso8601.tostring(time.mktime(time_tuple),tzoffset)    
+
+
+def cb_head(args):
+    entry = args["entry"]
+
+    req = args["request"]
+    data = req.getData()
+    config = req.getConfiguration()
+
+    entrylist = data.get("entry_list", None)
+    if not entrylist:
+        return args
+
+    entry["w3cdate"] = get_formatted_date(entrylist[0])
+    return args
+
+
+def cb_story(args):
+    entry = args['entry']
+    entry["w3cdate"] = get_formatted_date(entry)
+
+
+def cb_foot(args):
+    entry = args["entry"]
+
+    req = args["request"]
+    data = req.getData()
+    config = req.getConfiguration()
+
+    entrylist = data.get("entry_list", None)
+    if not entrylist:
+        return args
+
+    entry["w3cdate"] = get_formatted_date(entrylist[0])
+    return args
