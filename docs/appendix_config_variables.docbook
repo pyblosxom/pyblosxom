@@ -5,16 +5,18 @@ Here is a non-comprehensive list of configuration variables:
 </para>
 
 <variablelist><title>configuration variables</title>
-<varlistentry><term><varname>blog_title</varname></term>
+
+<varlistentry><term><varname>blog_author</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
-<member>REQUIRED:</member><member>yes</member>
+<member>REQUIRED:</member><member>no</member>
 <member>DATATYPE:</member><member>string</member>
-<member>DEFAULT VALUE:</member><member>N/A</member>
+<member>DEFAULT VALUE:</member><member>""</member>
 </simplelist>
-<para>This is the title of your blog.</para>
+<para>This is the name of the author that you want to appear 
+on your blog.</para>
 <programlisting role="python"><![CDATA[
-py["blog_title"] = "Will's Blog of Unusual Stuff"
+py["blog_author"] = "Will"
 ]]></programlisting>
 </listitem>
 </varlistentry>
@@ -34,21 +36,6 @@ py["blog_description"] = "Blog of thoughts, comments, " + \
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>blog_author</varname></term>
-<listitem>
-<simplelist columns="2" type="horiz">
-<member>REQUIRED:</member><member>no</member>
-<member>DATATYPE:</member><member>string</member>
-<member>DEFAULT VALUE:</member><member>""</member>
-</simplelist>
-<para>This is the name of the author that you want to appear 
-on your blog.</para>
-<programlisting role="python"><![CDATA[
-py["blog_author"] = "Will"
-]]></programlisting>
-</listitem>
-</varlistentry>
-
 <varlistentry><term><varname>blog_email</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
@@ -60,6 +47,20 @@ py["blog_author"] = "Will"
 blog.</para>
 <programlisting role="python"><![CDATA[
 py["blog_email"] = "joe@example.com"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>blog_encoding</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>yes</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>This is the encoding of your blog. iso-8859-1, utf-8, ...</para>
+<programlisting role="python"><![CDATA[
+py["blog_encoding"] = "iso-8859-1"
 ]]></programlisting>
 </listitem>
 </varlistentry>
@@ -79,16 +80,16 @@ py["blog_language"] = "en"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>blog_encoding</varname></term>
+<varlistentry><term><varname>blog_title</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>yes</member>
 <member>DATATYPE:</member><member>string</member>
 <member>DEFAULT VALUE:</member><member>N/A</member>
 </simplelist>
-<para>This is the encoding of your blog. iso-8859-1, utf-8, ...</para>
+<para>This is the title of your blog.</para>
 <programlisting role="python"><![CDATA[
-py["blog_encoding"] = "iso-8859-1"
+py["blog_title"] = "Will's Blog of Unusual Stuff"
 ]]></programlisting>
 </listitem>
 </varlistentry>
@@ -111,6 +112,61 @@ py["datadir"] = "/blogdata/datadir/"
 py["datadir"] = "e:/blogdata/datadir/"
 ]]></programlisting>
 <para>If you're using Windows, don't use \ in the datadir path.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>default_flavour</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member><literal>html</literal></member>
+</simplelist>
+<para>This specifies what the default flavour should be if the URI doesn't 
+specify a flavour.</para>
+<programlisting role="python"><![CDATA[
+py["default_flavour"] = "joy"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>ignore_directories</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>list of strings</member>
+<member>DEFAULT VALUE:</member><member><literal>[ ]</literal> (empty list)</member>
+</simplelist>
+<para>This allows you to ignore directories in your datadir.  For example,
+if you use CVS to manage your datadir, then you would want to ignore
+all CVS directories.  You would set your ignore_directories like
+this:</para>
+<programlisting role="python"><![CDATA[
+py["ignore_directories"] = [ "CVS" ]
+]]></programlisting>
+<para>If you wanted to store drafts of entries you need to think about some
+more in a single directory (kind of like a postponed-msgs folder),
+then you would create a directory in your datadir and set your
+ignore_directories like this:</para>
+<programlisting role="python"><![CDATA[
+py["ignore_directories"] = [ "draft" ]
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>load_plugins</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>list of strings</member>
+<member>DEFAULT VALUE:</member><member><literal>[ ]</literal> (an empty list)</member>
+</simplelist>
+<para>If this is not set, then PyBlosxom will load all the plugins in the plugin 
+dirs you specified in alphabetical order. If this is set, then PyBlosxom will 
+only load the plugins specified.</para>
+<programlisting role="python"><![CDATA[
+py["load_plugins"] = ["pycalendar", "rss2renderer"]
+]]></programlisting>
 </listitem>
 </varlistentry>
 
@@ -151,48 +207,6 @@ py["num_entries"] = 20
 </listitem>
 </varlistentry>
 
-
-<varlistentry><term><varname>default_flavour</varname></term>
-<listitem>
-<simplelist columns="2" type="horiz">
-<member>REQUIRED:</member><member>no</member>
-<member>DATATYPE:</member><member>string</member>
-<member>DEFAULT VALUE:</member><member><literal>html</literal></member>
-</simplelist>
-<para>This specifies what the default flavour should be if the URI doesn't 
-specify a flavour.</para>
-<programlisting role="python"><![CDATA[
-py["default_flavour"] = "joy"
-]]></programlisting>
-</listitem>
-</varlistentry>
-
-
-<varlistentry><term><varname>ignore_directories</varname></term>
-<listitem>
-<simplelist columns="2" type="horiz">
-<member>REQUIRED:</member><member>no</member>
-<member>DATATYPE:</member><member>list of strings</member>
-<member>DEFAULT VALUE:</member><member><literal>[ ]</literal> (empty list)</member>
-</simplelist>
-<para>This allows you to ignore directories in your datadir.  For example,
-if you use CVS to manage your datadir, then you would want to ignore
-all CVS directories.  You would set your ignore_directories like
-this:</para>
-<programlisting role="python"><![CDATA[
-py["ignore_directories"] = [ "CVS" ]
-]]></programlisting>
-<para>If you wanted to store drafts of entries you need to think about some
-more in a single directory (kind of like a postponed-msgs folder),
-then you would create a directory in your datadir and set your
-ignore_directories like this:</para>
-<programlisting role="python"><![CDATA[
-py["ignore_directories"] = [ "draft" ]
-]]></programlisting>
-</listitem>
-</varlistentry>
-
-
 <varlistentry><term><varname>plugin_dirs</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
@@ -203,23 +217,6 @@ py["ignore_directories"] = [ "draft" ]
 <para>The list of directories your plugins are stored in.</para>
 <programlisting role="python"><![CDATA[
 py["plugin_dirs"] = ["/home/will/pyblosxom/plugins/"]
-]]></programlisting>
-</listitem>
-</varlistentry>
-
-
-<varlistentry><term><varname>load_plugins</varname></term>
-<listitem>
-<simplelist columns="2" type="horiz">
-<member>REQUIRED:</member><member>no</member>
-<member>DATATYPE:</member><member>list of strings</member>
-<member>DEFAULT VALUE:</member><member><literal>[ ]</literal> (an empty list)</member>
-</simplelist>
-<para>If this is not set, then PyBlosxom will load all the plugins in the plugin 
-dirs you specified in alphabetical order. If this is set, then PyBlosxom will 
-only load the plugins specified.</para>
-<programlisting role="python"><![CDATA[
-py["load_plugins"] = ["pycalendar", "rss2renderer"]
 ]]></programlisting>
 </listitem>
 </varlistentry>
