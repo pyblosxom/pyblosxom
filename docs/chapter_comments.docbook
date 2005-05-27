@@ -1,0 +1,158 @@
+<!--
+  CHAPTER COMMENTS
+-->
+<chapter id="comments">
+<title>Comments</title>
+<para>
+This chapter briefly walks you through installing the comments plugin.
+</para>
+
+<sect1>
+<title>Summary</title>
+<para>
+PyBlosxom does not come with comments functionality built-in.  Instead,
+comments is implemented as a plugin which people who are interested in
+in having comments can install and everyone else can ignore.
+</para>
+<para>
+You can get the comments plugin via a couple of different methods:
+</para>
+<orderedlist numeration="arabic">
+<listitem>
+<para>
+You can get it via CVS--there are instructions on the project page
+of our web-site.  FIXME - link?
+</para>
+</listitem>
+<listitem>
+<para>
+You can get it in a contributed plugins pack.  These are on the
+download section of our web-site.  FIXME - link?
+</para>
+</listitem>
+<listitem>
+<para>
+You can ask on the pyblosxom-users mailing list to see if anyone has
+a version of the comments plugin that meets your specific needs.
+</para>
+</listitem>
+</orderedlist>
+</sect1>
+
+<sect1>
+<title>Installing the comments plugin</title>
+<para>
+FIXME - add stuff here
+</para>
+</sect1>
+
+<sect1>
+<title>Configuring the comments plugin</title>
+<para>
+FIXME - add stuff here
+</para>
+</sect1>
+
+<sect1>
+<title>Writing comments plugin templates</title>
+<para>
+This should explain which flavour templates are in charge of what
+using an example.
+</para>
+<programlisting role="ascii"><![CDATA[
+<div class="news">           <- story.html
+<h2>$title</h2>               |
+<div class="content">         |
+...                           |
+</div>                        |
+links                         |
+</div>                       <-
+<div class="comments">       <- comment-story.html
+<div class="comment">        <- comment.html
+Posted by $blah at $blah      |
+$blah                         |
+</div>                       <-
+<div class="comment">        <- comment.html
+Posted by $blah at $blah      |
+$blah                         |
+</div>                       <-
+<div class="commentform">    <- comment-form.html
+form stuff here.              |
+</div>                        |
+</div>                       <-
+]]></programlisting>
+</sect1>
+
+
+<sect1>
+<title>Dealing with comment spam</title>
+<para>
+Expect it to happen.  Some folks get comment spam trickling in and others
+get a torrential downpour.  It's best to deal with it from the start.
+</para>
+<para>
+As of contributed plugins pack 1.2, the comments plugin has a "comment_reject"
+callback which allows other plugins to examine the comment and reject it
+according to their individual heuristics.
+</para>
+<para>
+Also, you can run multiple comment rejection plugins.  The comments plugin
+calls them one after another until one has rejected the plugin or all have
+said it's ok.
+</para>
+
+<sect2>
+<title>wbgcomment_blacklist</title>
+<para>
+I wrote a simple comment rejector which rejects based on whether certain
+words show up in the comment.  I noticed that "casino", "blackjack", and
+"pharmacy" show up with reckless abandon and yet none of my posts talks
+about anything related to these terms.
+</para>
+<para>
+To get it running, make sure the comments plugin is installed and working
+first.  Then get the wbgcomment_blacklist plugin from my web-site.  Then
+set the <varname>comment_rejected_words</varname> property in your
+<filename>config.py</filename> file like this:
+</para>
+
+<programlisting role="python"><![CDATA[
+py["comment_rejected_words"] = ["poker", "casino", "gambling"]
+]]></programlisting>
+
+<note>
+<title>note: good blacklists</title>
+<para>
+Each blog covers different topics and thus your word list will almost 
+certainly differ from mine.  I figured my word list out mostly by waiting
+for my blog to get comment spam and then picking out specific words in
+the spam to use for signifying automatic rejection.
+</para>
+<para>
+Every month or so, make sure the list of rejected words still makes sense.
+For example, if I started talking about sleazy poker nights, then I should 
+probably remove most of the poker-related words.
+</para>
+</note>
+</sect2>
+
+<sect2>
+<title>nospam plugin</title>
+<para>
+FIXME
+</para>
+</sect2>
+
+<sect2>
+<title>rolling your own</title>
+<para>
+It's not hard to roll your own comment rejection plugin.  First figure
+out what the heuristics involved would be.  Then write a plugin with
+a <function>cb_comment_reject</function> function in it.  In that
+function, look at the data provided and reject the plugin if it seems
+appropriate to do so.
+</para>
+</sect2>
+</sect1>
+
+</chapter>

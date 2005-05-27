@@ -8,6 +8,8 @@
 <!ENTITY chapter_entryparsers SYSTEM "chapter_entryparsers.docbook">
 <!ENTITY chapter_writing_entries SYSTEM "chapter_writing_entries.docbook">
 <!ENTITY chapter_static_rendering SYSTEM "chapter_static_rendering.docbook">
+<!ENTITY chapter_comments SYSTEM "chapter_comments.docbook">
+<!ENTITY chapter_syndication SYSTEM "chapter_syndication.docbook">
 <!ENTITY chapter_architecture SYSTEM "chapter_architecture.docbook">
 <!ENTITY chapter_writing_plugins SYSTEM "chapter_writing_plugins.docbook">
 
@@ -111,6 +113,8 @@ Details on the mailing list are on the web-site at http://pyblosxom.sourceforge.
 &chapter_entryparsers;
 &chapter_writing_entries;
 &chapter_static_rendering;
+&chapter_comments;
+&chapter_syndication;
 &chapter_architecture;
 &chapter_writing_plugins;
 
