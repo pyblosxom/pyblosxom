@@ -155,6 +155,7 @@ pingbacks, ...), should call this function.
 If you want to statically render your blog every night, you could write 
 a shell script like this:
 </para>
+<example><title>Static rendering shell script</title>
 <programlisting role="shell">
 #!/bin/bash 
  
@@ -162,15 +163,19 @@ cd directory-with-pyblosxom.cgi
 ./pyblosxom.cgi --static 
 find static_dir-directory -mmin +30 -exec 'rm' '{}' ';' 
 </programlisting>
+</example>
 <para>
 That'll re-render everything, then delete any files in your static 
 dir that are older than 30 minutes (in case you moved entries from 
 one category to another or deleted an entry or whatever). 
 </para>
+
+<note><title>note: Other files</title>
 <para>
 If your web-site requires more files than just the ones that are rendered by 
 PyBlosxom (images, CSS, ...), then you should copy those over with your 
 shell script as well.
 </para>
+</note>
 </sect1>
 </chapter>
