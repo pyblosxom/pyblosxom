@@ -99,7 +99,8 @@ and with a twist of lemon&lt;/description&gt;
 &lt;title&gt;pyblosxom manual&lt;/title&gt;
 &lt;guid isPermaLink="false"&gt;dev/pyblosxom/pyblosxommanual&lt;/guid&gt;
 &lt;link&gt;http://www.bluesock.org/~willg/blog/dev/pyblosxom/pyblosxommanual&lt;/link&gt;
-&lt;description&gt;I'm almost done the next version of the PyBlosxom manual. At the suggestion of Steven, I converted the manual thus ...&lt;/description&gt;
+&lt;description&gt;I'm almost done the next version of the PyBlosxom manual. At 
+the suggestion of Steven, I converted the manual thus ...&lt;/description&gt;
 &lt;content:encoded&gt;&lt;![CDATA[&lt;p&gt;
   I'm almost done the next version of the PyBlosxom manual.  At the suggestion
   of Steven, I converted the manual thus far from html to docbook.  I still
