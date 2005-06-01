@@ -4,10 +4,11 @@
 <chapter id="comments">
 <title>Comments</title>
 <para>
-This chapter briefly walks you through installing the comments plugin.
+This chapter briefly walks you through installing the comments, trackback,
+pingback, and CommentAPI plugins.
 </para>
 <para>
-FIXME - this chapter still needs some serious work.
+FIXME - this chapter needs some serious work.
 </para>
 
 <sect1>
@@ -262,6 +263,9 @@ appropriate to do so.
 <sect1>
 <title>Installing trackback</title>
 <para>
+FIXME - this text probably needs fixing.
+</para>
+<para>
 If you want trackbacks, copy 
 <filename>contrib/plugins/comments/plugins/trackback.py</filename> to your plugins 
 directory.  Then add <literal>"trackback"</literal> to the 
@@ -318,6 +322,9 @@ matter where you put it.
 <sect1>
 <title>Installing pingback</title>
 <para>
+FIXME - this text probably needs fixing.
+</para>
+<para>
 This requires Mark Pilgrim's rssfinder and rssparser modules to be installed 
 (available from http://diveintomark.org/projects ).  It also requires the 
 <filename>xmlrpc</filename> plugin to be installed.
@@ -335,7 +342,7 @@ property in your <filename>config.py</filename> file.
 <sect1>
 <title>Installing the CommentAPI</title>
 <para>
-FIXME - This probably needs a lot of work.
+FIXME - this text probably needs fixing.
 </para>
 <para>
 If you want support for the CommentAPI, copy 
