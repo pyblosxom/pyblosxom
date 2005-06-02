@@ -66,6 +66,9 @@ elif platform == "nix":
     # in here.
     pydf.append( [os.path.join('share', PVER, 'web'),
                   [os.path.normpath("web/pyblosxom.cgi"), 
+                   os.path.normpath("web/pyblosxom.tac"), 
+                   os.path.normpath("web/pyblosxom_wsgi.cgi"), 
+                   os.path.normpath("web/wsgi_app.py"), 
                    os.path.normpath("web/config.py")]])
 
 else:
@@ -122,3 +125,4 @@ your entries.
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content"
         ],
     )
+
