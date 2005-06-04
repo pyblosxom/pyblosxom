@@ -9,12 +9,13 @@ Contributors:
   Robert Wall
   Bill Mill
   Roberto De Almeida
+  David Geller
 
 If you make any changes to this plugin, please a send a patch with your
 changes to twl+pyblosxom@sauria.com so that we can incorporate your changes.
 Thanks!
 
-This plugin requires the pyXML module.
+This plugin requires the PyXML module.
 
 This module supports the following config parameters (they are not
 required):
@@ -590,6 +591,24 @@ def decode_form(d, encoding):
     for key in d:
         d[key].value = d[key].value.decode(encoding)
 
+def cb_pathinfo(args):
+    request = args['request']
+    data = request.getData()
+    pyhttp = request.getHttp()
+    qstr = pyhttp.get('QUERY_STRING', None)
+
+    data['display_comment_default'] = 0        
+
+    if qstr == None:
+        return None
+
+    parsed_qs = cgi.parse_qs(qstr)
+    if parsed_qs.has_key('showcomments'):
+        if parsed_qs['showcomments'][0] == 'yes':
+            data['display_comment_default'] = 1
+                
+    return None
+
 
 def cb_head(args):
     renderer = args['renderer']
@@ -612,10 +631,12 @@ def cb_story(args):
     entry = args['entry']
     template = args['template']
     request = args["request"]
+    data = request.getData()
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 \
             and renderer.flavour.has_key('comment-story') \
-            and not entry.has_key("nocomments"):
+            and not entry.has_key("nocomments") \
+            and data['display_comment_default'] == 1:
         template = renderer.flavour.get('comment-story','')
         args['template'] = args['template'] + template
 
@@ -657,11 +678,13 @@ def cb_story_end(args):
     entry = args['entry']
     template = args['template']
     request = args["request"]
+    data = request.getData()
     form = request.getHttp()['form']
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 \
             and renderer.flavour.has_key('comment-story') \
-            and not entry.has_key("nocomments"):
+            and not entry.has_key("nocomments") \
+            and data['display_comment_default'] == 1:
         output = []
         entry['comments'] = readComments(entry, config)
         if entry.has_key('comments'):        
