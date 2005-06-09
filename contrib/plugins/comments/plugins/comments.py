@@ -307,6 +307,7 @@ def writeComment(request, config, data, comment, encoding):
     cdir = os.path.normpath(cdir)
     if not os.path.isdir(cdir):
         os.makedirs(cdir)
+
     cfn = os.path.join(cdir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_draft_ext'])
      
     argdict = { "request": request, "comment": comment }
@@ -315,26 +316,28 @@ def writeComment(request, config, data, comment, encoding):
                                 donefunc=lambda x:x)
     if reject == 1:
         return "Comment rejected."
+   
+    def makeXMLField(name, field):
+        return "<"+name+">" + cgi.escape(field.get(name, "")) + "</"+name+">\n";
+
+    filedata = '<?xml version="1.0" encoding="%s"?>\n' % encoding
+    filedata += "<item>\n"
+    filedata += makeXMLField('title', comment)
+    filedata += makeXMLField('author', comment)
+    filedata += makeXMLField('link', comment)
+    filedata += makeXMLField('email', comment)
+    filedata += makeXMLField('source', comment)
+    filedata += makeXMLField('pubDate', comment)
+    filedata += makeXMLField('description', comment)
+    filedata += "</item>\n"
 
     try :
         cfile = codecs.open(cfn, "w", encoding)
     except IOError:
         # tools.log("Couldn't open comment file %s for writing" % cfn)
-        return
-    
-    def makeXMLField(name, field):
-        return "<"+name+">"+cgi.escape(field[name])+"</"+name+">\n";
-    
-    cfile.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
-    cfile.write("<item>\n")
-    cfile.write(makeXMLField('title',comment))
-    cfile.write(makeXMLField('author',comment))
-    cfile.write(makeXMLField('link',comment))
-    cfile.write(makeXMLField('email',comment))
-    cfile.write(makeXMLField('source',comment))
-    cfile.write(makeXMLField('pubDate',comment))
-    cfile.write(makeXMLField('description',comment))
-    cfile.write("</item>\n")
+        return "Comments plugin is not set up correctly."
+ 
+    cfile.write(filedata)
     cfile.close()
  
     #write latest pickle
@@ -359,13 +362,12 @@ def writeComment(request, config, data, comment, encoding):
 
     ret = ""
     
-    if config.has_key('comment_smtp_server') and \
-       config.has_key('comment_smtp_to'):
+    if config.has_key('comment_smtp_server') and config.has_key('comment_smtp_to'):
         ret = send_email(config, entry, comment, cdir, cfn)
 
     # figure out if the comment was submitted as a draft
     if config["comment_ext"] != config["comment_draft_ext"]:
-       return ret + "Comment was submitted for approval.  Thanks!"
+        return ret + "Comment was submitted for approval.  Thanks!"
 
     return ret + "Comment submitted.  Thanks!"
 
@@ -401,6 +403,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         email = comment['email']
     else:
         email = config['comment_smtp_from']
+
     try:
         server = smtplib.SMTP(config['comment_smtp_server'])
         curl = config['base_url']+'/'+entry['file_path']
@@ -417,6 +420,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
                         to_addrs=config['comment_smtp_to'], 
                         msg="\n".join(message))
         server.quit()
+
     except Exception, e:
         # tools.log("Error sending mail: %s" % e)
         return "Error sending mail: %s" % e
