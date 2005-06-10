@@ -335,7 +335,7 @@ def writeComment(request, config, data, comment, encoding):
         cfile = codecs.open(cfn, "w", encoding)
     except IOError:
         # tools.log("Couldn't open comment file %s for writing" % cfn)
-        return "Comments plugin is not set up correctly."
+        return "Internal error: Your comment could not be saved."
  
     cfile.write(filedata)
     cfile.close()
@@ -358,18 +358,19 @@ def writeComment(request, config, data, comment, encoding):
         # should log or e-mail
         if latest:
             latest.close()
-        return "Unable to dump latest comment pickle."
+        return "Internal error: Your comment may not have been saved."
 
-    ret = ""
-    
-    if config.has_key('comment_smtp_server') and config.has_key('comment_smtp_to'):
-        ret = send_email(config, entry, comment, cdir, cfn)
+    if config.has_key('comment_smtp_server') and \
+       config.has_key('comment_smtp_to'):
+        # FIXME - removed grabbing send_email's return error message
+        # so there's no way to know if email is getting sent or not.
+        send_email(config, entry, comment, cdir, cfn)
 
     # figure out if the comment was submitted as a draft
     if config["comment_ext"] != config["comment_draft_ext"]:
-        return ret + "Comment was submitted for approval.  Thanks!"
+       return "Comment was submitted for approval.  Thanks!"
 
-    return ret + "Comment submitted.  Thanks!"
+    return "Comment submitted.  Thanks!"
 
 def send_email(config, entry, comment, comment_dir, comment_filename):
     """Send an email to the blog owner on a new comment
@@ -420,12 +421,10 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
                         to_addrs=config['comment_smtp_to'], 
                         msg="\n".join(message))
         server.quit()
-
     except Exception, e:
         # tools.log("Error sending mail: %s" % e)
-        return "Error sending mail: %s" % e
-
-    return ""
+        # FIXME - if we error out, no one will know.
+        pass
 
 def clean_author(s):
     """
