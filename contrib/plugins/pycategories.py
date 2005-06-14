@@ -191,7 +191,7 @@ class PyblCategories:
 
             indent = len(itemlist)
 
-        output.append(end_t)
+        output.append(end_t * indent)
         output.append(finish_t)
 
         # then we join the list and that's the final string
