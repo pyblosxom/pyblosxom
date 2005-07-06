@@ -185,6 +185,8 @@ class PyblCategories:
                   "flavour":      flavour,
                   "count":        num,
                   "indent":       tab }
+            if item == "":
+                d["fullcategory"] = item
 
             # and we toss it in the thing
             output.append(item_t % d)
