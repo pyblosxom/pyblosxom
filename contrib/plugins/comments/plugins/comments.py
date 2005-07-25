@@ -46,13 +46,27 @@ formatted item.
 
 Comments now follow the blog_encoding variable specified in config.py
 
+Comments will be shown for a given page if one of the following is
+true:
+
+ 1. the page has only one blog entry on it and the request is for a
+    specific blog entry as opposed to a category with only one entry
+    in it
+
+ 2. if "showcomments=yes" is in the querystring then comments will
+    be shown
+
+
 Each entry has to have the following properties in order to work with
 comments:
 
- 1. absolute_path - the category of the entry.  ex. "dev/pyblosxom"
+ 1. absolute_path - the category of the entry.  
+    ex. "dev/pyblosxom"
  2. fn - the filename of the entry without the file extension and without
-    the directory.  ex. "staticrendering"
- 3. file_path - the absolute_path plus the fn.  ex. "dev/pyblosxom/staticrendering"
+    the directory.  
+    ex. "staticrendering"
+ 3. file_path - the absolute_path plus the fn.  
+    ex. "dev/pyblosxom/staticrendering"
 
 Also, for any entry that you don't want to have comments, just add
 "nocomments" to the properties of the entry.
@@ -82,7 +96,6 @@ If you would like comment previews, you need to do 2 things.
 This plugin implements Google's nofollow support for links in the body of the 
 comment. If you display the link of the comment poster in your HTML template 
 then you must add the rel="nofollow" attribute to your template as well
-
 
 
 Copyright (c) 2003-2005 Ted Leung
@@ -556,7 +569,28 @@ def cb_prepare(args):
     form = request.getHttp()['form']
     config = request.getConfiguration()
     data = request.getData()
-    
+    pyhttp = request.getHttp()
+
+    # first we check to see if we're going to print out comments
+
+    # the default is not to show comments
+    data['display_comment_default'] = 0        
+
+    # check to see if they have "showcomments=yes" in the querystring
+    qstr = pyhttp.get('QUERY_STRING', None)
+    if qstr != None:
+        parsed_qs = cgi.parse_qs(qstr)
+        if parsed_qs.has_key('showcomments'):
+            if parsed_qs['showcomments'][0] == 'yes':
+                data['display_comment_default'] = 1
+
+    # check to see if the bl_type is "file"
+    if data.has_key("bl_type") and data["bl_type"] == "file":
+        data["bl_type_file"] = "yes"
+        data['display_comment_default'] = 1
+ 
+    # second, we check to see if they're posting a comment and we
+    # need to write the comment to disk.
     if form.has_key("title") and form.has_key("author") and \
         form.has_key("body") and not form.has_key("preview"):
 
@@ -593,25 +627,6 @@ def escape_link(linkstring):
 def decode_form(d, encoding):
     for key in d:
         d[key].value = d[key].value.decode(encoding)
-
-def cb_pathinfo(args):
-    request = args['request']
-    data = request.getData()
-    pyhttp = request.getHttp()
-    qstr = pyhttp.get('QUERY_STRING', None)
-
-    data['display_comment_default'] = 0        
-
-    if qstr == None:
-        return None
-
-    parsed_qs = cgi.parse_qs(qstr)
-    if parsed_qs.has_key('showcomments'):
-        if parsed_qs['showcomments'][0] == 'yes':
-            data['display_comment_default'] = 1
-                
-    return None
-
 
 def cb_head(args):
     renderer = args['renderer']
@@ -692,7 +707,7 @@ def cb_story_end(args):
         entry['comments'] = readComments(entry, config)
         if entry.has_key('comments'):        
             for comment in entry['comments']:
-                renderer.outputTemplate(output, comment, 'comment')
+               renderer.outputTemplate(output, comment, 'comment')
             if form.has_key('preview')\
                 and renderer.flavour.has_key('comment-preview'):
                 com = build_preview_comment(form, entry)
