@@ -625,7 +625,7 @@ def escape_link(linkstring):
     return linkstring
 
 def decode_form(d, encoding):
-    for key in d:
+    for key in d.keys():
         d[key].value = d[key].value.decode(encoding)
 
 def cb_head(args):
@@ -682,10 +682,10 @@ def build_preview_comment(form, entry):
     except KeyError, e:
         c['cmt_error'] = 'Missing value: %s' % e
 
-    #optional fields
-    if 'url' in form:
+    # optional fields
+    if form.has_key("url"):
         c['cmt_link'] = form['url'].value
-    if 'email' in form:
+    if form.has_key("email"):
         c['cmt_email'] = form['email'].value
     for key in c: entry[key] = c[key]
 
