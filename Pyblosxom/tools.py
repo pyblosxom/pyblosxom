@@ -208,8 +208,7 @@ def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
     ignore = request.getConfiguration().get("ignore_directories", None)
     if type(ignore) == type(""): ignore = [ignore]
     if ignore:
-        for i in range(0, len(ignore)):
-            ignore[i] = re.escape(ignore[i])
+        ignore = map(re.escape, ignore)
         ignorere = re.compile(r'.*?(' + '|'.join(ignore) + r')$')
     else:
         ignorere = None
