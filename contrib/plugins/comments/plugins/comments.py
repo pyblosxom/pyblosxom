@@ -57,19 +57,8 @@ true:
     be shown
 
 
-Each entry has to have the following properties in order to work with
-comments:
-
- 1. absolute_path - the category of the entry.  
-    ex. "dev/pyblosxom"
- 2. fn - the filename of the entry without the file extension and without
-    the directory.  
-    ex. "staticrendering"
- 3. file_path - the absolute_path plus the fn.  
-    ex. "dev/pyblosxom/staticrendering"
-
-Also, for any entry that you don't want to have comments, just add
-"nocomments" to the properties of the entry.
+IMPLEMENTING COMMENT PREVIEW
+============================
 
 If you would like comment previews, you need to do 2 things.
 
@@ -93,9 +82,31 @@ If you would like comment previews, you need to do 2 things.
     the available variables from the comment template are available for
     this template.
 
+
+NOFOLLOW SUPPORT
+================
+
 This plugin implements Google's nofollow support for links in the body of the 
 comment. If you display the link of the comment poster in your HTML template 
 then you must add the rel="nofollow" attribute to your template as well
+
+
+NOTE TO DEVELOPERS WHO ARE WRITING PLUGINS THAT CREATE COMMENTS
+===============================================================
+
+Each entry has to have the following properties in order to work with
+comments:
+
+ 1. absolute_path - the category of the entry.  
+    ex. "dev/pyblosxom"
+ 2. fn - the filename of the entry without the file extension and without
+    the directory.  
+    ex. "staticrendering"
+ 3. file_path - the absolute_path plus the fn.  
+    ex. "dev/pyblosxom/staticrendering"
+
+Also, if you don't want comments for an entry, add "nocomments" = 1
+to the properties for the entry.
 
 
 Copyright (c) 2003-2005 Ted Leung
@@ -122,6 +133,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 __author__ = "Ted Leung"
 __version__ = "$Id$"
+__url__ = "http://pyblosxom.sourceforge.net/"
+__description__ = "Allows for comments on each blog entry."
 
 import cgi, glob, os.path, re, time, cPickle, os, codecs
 from xml.sax.saxutils import escape
