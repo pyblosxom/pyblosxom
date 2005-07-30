@@ -244,7 +244,17 @@ probably remove most of the poker-related words.
 <sect2>
 <title>nospam plugin</title>
 <para>
-FIXME
+The <filename>nospam</filename> plugin was written by Steven
+Armstrong.  It uses PIL (Python Imaging Library) to create
+images of 5 digit numbers.  The person writing the comment
+has to type in the number they see in the box for the comment
+to go through.
+</para>
+<para>
+As of this writing, there are more details here: 
+http://pyblosxom.sourceforge.net/blog/registry/input/nospam
+and
+http://www.c-area.ch/code/pyblosxom/plugins/nospam.py
 </para>
 </sect2>
 
@@ -257,6 +267,43 @@ a <function>cb_comment_reject</function> function in it.  In that
 function, look at the data provided and reject the plugin if it seems
 appropriate to do so.
 </para>
+<para> 
+A basic template for writing a plugin to reject comments is as 
+follows:
+</para>
+<example><title>Template for plugin for rejecting comments</title>
+<programlisting role="python"><![CDATA[
+"""
+FIXME - Documentation for what your plugin does and how to set it up
+goes here.
+
+FIXME - License information goes here.
+
+FIXME - Copyright information goes here.
+"""
+__author__      = "FIXME - your name and email address"
+__version__     = "FIXME - version number and date released"
+__url__         = "FIXME - url where this plugin can be found"
+__description__ = "FIXME - one-line description of plugin"
+
+def verify_installation(request):
+    # FIXME - code to verify that this plugin is installed correctly 
+    # here.
+
+    return 1
+
+
+def cb_comment_reject(args):
+    req = args["request"]
+    comment = args["comment"]
+
+    blog_config = req.getConfiguration()
+
+    # FIXME - code for figuring out whether this comment should
+    # be rejected or not goes here.  If you want to reject the
+    # comment, return 1.  Otherwise return 0.
+]]></programlisting>
+</example>
 </sect2>
 </sect1>
 
