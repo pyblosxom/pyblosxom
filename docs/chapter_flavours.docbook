@@ -441,7 +441,7 @@ variable in the query-string.  Examples:
 </row>
 <row>
 <entry>http://some.blog.org/?flav=rss</entry>
-<entry>-brings up the index in the "rss" flavour</entry>
+<entry>brings up the index in the "rss" flavour</entry>
 </row>
 <row>
 <entry>http://some.blog.org/2004/05/index?flav=joy</entry>
