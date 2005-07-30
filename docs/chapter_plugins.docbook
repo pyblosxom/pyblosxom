@@ -98,16 +98,17 @@ in the plugin itself to meet your specific needs.
   <title>note: Apache, no suexec, .pyc files, and problems</title>
   <para>
     If you're not running suexec, then Apache may not be able to generate
-    the .pyc files for your plugins.  This may result in your plugins
-    failing to load.
+    the <filename>.pyc</filename> files for your plugins.  This may result in 
+    your plugins failing to load.
   </para>
   <para>
-    If that happens, you can run "./pyblosxom.cgi" in your shell and
-    generate the .pyc files yourself.
+    If that happens, you can run <command>./pyblosxom.cgi</command> in your shell 
+    and generate the <filename>.pyc</filename> files yourself.
   </para>
   <para>
     Every time you install a new plugin or change an existing plugin,
-    you'll need to remove the .pyc files and re-generate them.
+    you'll need to remove the <filename>.pyc</filename> files and re-generate 
+    them.
   </para>
 </note>
 </sect1>
