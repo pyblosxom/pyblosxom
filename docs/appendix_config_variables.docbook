@@ -6,6 +6,21 @@ Here is a non-comprehensive list of configuration variables:
 
 <variablelist><title>configuration variables</title>
 
+<varlistentry><term><varname>base_url</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>Gets calculated based on HTTP server variables</member>
+</simplelist>
+<para>This is the base url for your blog.  If you use mod_rewrite rules,
+then you'll likely want to set this.</para>
+<programlisting role="python"><![CDATA[
+py["base_url"] = "http://pyblosxom.sourceforge.net/blog"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
 <varlistentry><term><varname>blog_author</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
