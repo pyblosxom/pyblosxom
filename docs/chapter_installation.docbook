@@ -16,12 +16,13 @@ to behave as well as what webserver you're installing Pyblosxom on top of.
 This installation assumes you have some understanding of CGI, Apache 
 configuration, and know how to manipulate files and directories. If this 
 doesn't sound like you, maybe you should get a friend to help out or ask 
-for help on the pyblosxom-users mailing list.
+for help on the pyblosxom-users mailing list.  Details of the mailing
+list are on our web-site at http://pyblosxom.sourceforge.net/ .
 </para>
 <para>
 If you are upgrading your version of PyBlosxom, follow the instructions 
-here and also read the README that comes with your PyBlosxom tarball for 
-differences between this version and the previous versions.
+here and also read the <filename>README</filename> that comes with your PyBlosxom 
+tarball for differences between this version and the previous versions.
 </para>
 
 <sect1>
