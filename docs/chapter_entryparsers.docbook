@@ -1,0 +1,47 @@
+<!--
+  ENTRY PARSERS
+-->
+<chapter id="entryparsers">
+<title>Entry Parsers</title>
+<para>
+PyBlosxom supports only one format for entry files by default.  This format
+is the same format that blosxom uses.  The extension for this format is 
+<filename>.txt</filename>.  The first line of the file is in plain text and 
+forms the title of the entry.  The second line through the end of the file is 
+in HTML and is the body of the entry.
+</para>
+<para>
+A sample blog entry could look like this:
+</para>
+<programlisting role="text"><![CDATA[
+First post
+<p>
+  Here's the body of my first post.
+</p>
+]]></programlisting>
+
+<para>
+Some people really detest writing in HTML which is valid.  Other 
+people use their entries in other places, so they need a markup format 
+that's less web-oriented.  Some folks write a lot of material in a non-HTML 
+markup format and would like to use that same format for blog entries.  
+These are all very valid reasons to want to use other markup formats.
+</para>
+<para>
+PyBlosxom allows you to install entry parser plugins which are PyBlosxom 
+plugins that implement an entry parser.  These entry parser plugins allow 
+you to use other markup formats.  Check the Plugin Registry at 
+http://pyblosxom.sourceforge.net/ for which entry parsers are available.
+</para>
+<para>
+In general, we only have entry parsers written by people who really 
+wanted that markup format.  If you don't see your favorite markup format 
+represented, try looking at the code for other entry parsers and implement 
+it yourself.  If you need help, talk to us on the pyblosxom-users or 
+pyblosxom-devel mailing lists.
+</para>
+<para>
+Details on the various entry parsers should be at the top of the entry
+parser plugin itself in the Python doc-string.
+</para>
+</chapter>

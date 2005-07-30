@@ -1,0 +1,159 @@
+<!--
+  CHAPTER SYNDICATION
+-->
+
+<chapter id="syndication">
+<title>Syndication</title>
+<para>
+Most newsreaders read most of the syndication formats.  So you shouldn't
+feel that you have to implement each one of them in your blog--you can most
+assuredly get away with implementing RSS 2.0 or ATOM and be just fine.
+</para>
+
+<sect1>
+<title>RSS</title>
+<para>
+There are a variety of different versions of RSS and they're not all backwards
+compatible with each other.
+</para>
+
+<sect2>
+<title>RSS 0.9.1</title>
+<para>
+PyBlosxom comes with an rss flavour that produces RSS 0.9.1 output.  Here's a
+sample of what it produces:
+</para>
+<programlisting role="rss"><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<!-- name="generator" content="pyblosxom/1.2 3/25/2005" -->
+<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"
+"http://my.netscape.com/publish/formats/rss-0.91.dtd">
+
+<rss version="0.91">
+<channel>
+<title>My Blog</title>
+<link>http://www.joe.com/blog/index.rss</link>
+<description>This is my blog about trivial things</description>
+<language>en</language>
+<item>
+    <title>Example of an entry post</title>
+
+    <link>http://www.joe.com/blog/entries/example1.html</link>
+    <description>&lt;p&gt;
+  Here's an example of an entry in my blog.  This is the body of the entry.
+&lt;/p&gt;
+</description>
+  </item>
+</channel>
+</rss>
+]]></programlisting>
+<para>
+This example only has one entry in it.  The number of entries the rss flavour
+will display is determined by the <varname>num_entries</varname> property in 
+your <filename>config.py</filename> file.
+</para>
+<para>
+RSS 0.9.1 format lacks dates in the data for the items.  Unless you include the 
+date for the entry somewhere in the description block, people looking at your 
+RSS 0.9.1 feed won't know what the date the entry was created on was.  Thus
+I prefer to use RSS 2.0.
+</para>
+</sect2>
+
+<sect2>
+<title>RSS 2.0</title>
+<para>
+RSS 2.0 does not come with the PyBlosxom core.  It's also impossible to set up
+a valid RSS 2.0 feed using the templating system due to RSS 2.0 requiring 
+date formats taht aren't available in the various entries.  However, there is 
+an rss2renderer plugin in the plugin registry which produces valid RSS 2.0 output.
+</para>
+<para>
+I highly recommend you use this renderer for valid RSS 2.0 feeds.
+</para>
+<!--
+  Have to do this without the CDATA because the RSS has a CDATA
+  in it and we can't nest CDATA in a CDATA.
+-->
+<programlisting role="rss">
+&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;rss version="2.0" xmlns:admin="http://webns.net/mvcb/" 
+xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+xmlns:creativeCommons="http://backend.userland.com/creativeCommonsRssModule" 
+xmlns:dc="http://purl.org/dc/elements/1.1/" 
+xmlns:html="http://www.w3.org/1999/html" 
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+xmlns:slash="http://purl.org/rss/1.0/modules/slash/"&gt;
+&lt;channel&gt;
+&lt;title&gt;Will's Blog&lt;/title&gt;
+&lt;link&gt;http://www.bluesock.org/~willg/blog&lt;/link&gt;
+&lt;description&gt;will's blog of Python, Linux, random content, Stringbean, 
+PyBlosxom, Lyntin and other projects mixed in ther ad hoc, half-baked
+and with a twist of lemon&lt;/description&gt;
+&lt;language&gt;en&lt;/language&gt;
+&lt;ttl&gt;60&lt;/ttl&gt;
+&lt;dc:creator&gt;Will Guaraldi (willg at bluesock dot org)&lt;/dc:creator&gt;
+&lt;admin:generatorAgent rdf:resource="http://roughingit.subtlehints.net/pyblosxom"/&gt;
+&lt;admin:errorReportsTo rdf:resource="mailto:willg@bluesock.org"/&gt;
+&lt;item&gt;
+&lt;title&gt;pyblosxom manual&lt;/title&gt;
+&lt;guid isPermaLink="false"&gt;dev/pyblosxom/pyblosxommanual&lt;/guid&gt;
+&lt;link&gt;http://www.bluesock.org/~willg/blog/dev/pyblosxom/pyblosxommanual&lt;/link&gt;
+&lt;description&gt;I'm almost done the next version of the PyBlosxom manual. At 
+the suggestion of Steven, I converted the manual thus ...&lt;/description&gt;
+&lt;content:encoded&gt;&lt;![CDATA[&lt;p&gt;
+  I'm almost done the next version of the PyBlosxom manual.  At the suggestion
+  of Steven, I converted the manual thus far from html to docbook.  I still
+  need to do a lot of work in terms of indexing and adding warnings and notes
+  and various other indicators like that.  I'm busy re-writing chapters to
+  reflect issues people are having on the pyblosxom-users list.
+&lt;/p&gt;
+&lt;p&gt;
+  I think I've worked between 20 and 30 hours on it over the last week 
+  and a half--it's almost like another part time job.
+&lt;/p&gt;
+]]&gt;&lt;/content:encoded&gt;
+&lt;category domain="http://www.bluesock.org"&gt;dev/pyblosxom&lt;/category&gt;
+&lt;dc:date&gt;2005-03-22T15:46:02Z&lt;/dc:date&gt;
+&lt;/item&gt;
+</programlisting>
+</sect2>
+
+<sect2>
+<title>Other RSS formats?</title>
+<para>
+FIXME - talk about other RSS formats here
+</para>
+</sect2>
+</sect1>
+
+<sect1>
+<title>Atom</title>
+<para>
+FIXME - do we have an atom renderer anywhere?  (No.)
+</para>
+<para>
+If you want to build an Atom flavour, then you'll need the 
+<filename>w3cdate</filename> plugin from the contributed plugins pack.
+</para>
+</sect1>
+
+<sect1>
+<title>Other Formats</title>
+<para>
+FIXME - Other formats? 
+</para>
+</sect1>
+
+<sect1>
+<title>Debugging your feeds</title>
+<para>
+There's a feed validator which is a hugely useful tool for figuring out
+whether your feed is valid and fixing bugs in your feed.
+</para>
+<para>
+http://feedvalidator.org/
+</para>
+</sect1>
+
+</chapter>
