@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
 "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd" [
+<!ENTITY chapter_pyblosxom SYSTEM "chapter_pyblosxom.docbook">
 <!ENTITY chapter_installation  SYSTEM "chapter_installation.docbook">
 <!ENTITY chapter_advanced_installation SYSTEM "chapter_advanced_installation.docbook">
 <!ENTITY chapter_flavours SYSTEM "chapter_flavours.docbook">
@@ -99,13 +100,15 @@ examples that are erroneous, or anything else, let us know on the pyblosxom-deve
 mailing list.
 </para>
 <para>
-Details on the mailing list are on the web-site at http://pyblosxom.sourceforge.net/ .
+Details of mailing lists and other contact information are on our web-site 
+at http://pyblosxom.sourceforge.net/ .
 </para>
 </sect1>
 </preface>
 
 
 
+&chapter_pyblosxom;
 &chapter_installation;
 &chapter_advanced_installation;
 &chapter_flavours;
