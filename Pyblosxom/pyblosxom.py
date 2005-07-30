@@ -707,6 +707,9 @@ def blosxom_handler(request):
 
     data['renderer'] = r
 
+    # generate the timezone variable
+    data["timezone"] = time.tzname[time.localtime()[8]]
+
     # process the path info to determine what kind of blog entry(ies) 
     # this is
     tools.run_callback("pathinfo",
