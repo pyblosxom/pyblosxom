@@ -7,6 +7,13 @@
 # Uncomment this if something goes wrong (for debugging)
 #import cgitb; cgitb.enable()
 
+import os, sys
+
+# this allows for a config.py override
+script = os.environ.get('SCRIPT_FILENAME', None)
+if script is not None:
+    sys.path.insert(0, os.path.dirname(script))
+
 # Settings are now in config.py, you should disable access to it by htaccess
 # (make it executable or deny access)
 from config import py as cfg
