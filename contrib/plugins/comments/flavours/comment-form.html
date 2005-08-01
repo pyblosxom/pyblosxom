@@ -1,28 +1,27 @@
-  </div>
-  <br/>
-  <div class="blosxomCommentForm">
-   <form method="post" action="$base_url/$file_path" name="comments_form">
-   <input type="hidden" name="secretToken" value="pleaseDontSpam" />
-   <input name="parent" type="hidden" value="$file_path" />
-   <input name="title" type="hidden" value="$title" />
-   Name:<br />
-   <input maxlength="50" name="author" size="50" type="text" value="" /><br />
-    <br />
-   E-mail:<br />
-   <input maxlength="75" name="email" size="50" type="text" value="" /><br />
-   <br />
-   URL:<br />
+<a name="comment_anchor>
+<p>
+  <b>$comment_message</b>
+</p>
+</a>
+<div class="blosxomCommentForm">
+<form method="post" action="$base_url/$file_path#comment_anchor" name="comments_form">
+<input type="hidden" name="secretToken" value="pleaseDontSpam" />
+<input name="parent" type="hidden" value="$file_path" />
+<input name="title" type="hidden" value="$title" />
+Name:<br />
+<input maxlength="50" name="author" size="50" type="text" value="" /><br />
+<br />
+E-mail:<br />
+<input maxlength="75" name="email" size="50" type="text" value="" /><br />
+<br />
+URL:<br />
+<input maxlength="100" name="url" size="50" type="text" value="" /><br />
+<br />
+Comment:<br />
+<textarea cols="50" name="body" rows="12"></textarea><br />
+<br />
+<input name="Submit" type="submit" value="Submit" />
+</form>
+</div> <!-- ends blosxomCommentForm div -->
 
-   <input maxlength="100" name="url" size="50" type="text" value="" /><br />
-   <br />
-   Comment:<br />
-   <textarea cols="50" name="body" rows="12"></textarea><br />
-   <br />
-   <input name="Submit" type="submit" value="Submit" />
-<!--   <input name="preview" type="submit" value="Preview" /> 
-   <input type="button" onclick="forgetMe(this.form)" value="Clear Info" /> 
-   <input type="checkbox" name="bakecookie" />Remember info?</input> -->
-   </form>
-   </div>
-
-   </div>
+</div> <!-- ends blosxomComments div -->
