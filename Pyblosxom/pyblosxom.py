@@ -93,13 +93,13 @@ class PyBlosxom:
         This should be called when Pyblosxom has done all its work.
         Right before exiting.
         """
-        # log some usefull stuff for debugging
+        # log some useful stuff for debugging
         # this will only be logged if the log_level is "debug"
         log = tools.getLogger()
         response = self.getResponse()
-        log.debug("status = %s", response.status)
-        log.debug("headers = %s", response.headers)
-        
+        log.debug("status = %s" % response.status)
+        log.debug("headers = %s" % response.headers)
+
         tools.cleanup()
 
     def getRequest(self):
@@ -153,12 +153,11 @@ class PyBlosxom:
 
         # do end callback
         tools.run_callback("end", {'request': self._request})
-        
+
         # we're done, clean up.
         # only call this if we're not in static rendering mode.
         if static == False:
             self.cleanup()
-
 
     def runCallback(self, callback="help"):
         """
@@ -331,12 +330,10 @@ class PyBlosxom:
         # we're done, clean up
         self.cleanup()
 
-
     def testInstallation(self):
         tools.initialize(self._config)
         test_installation(self._request)
         tools.cleanup()
-
 
 class EnvDict(dict):
     """
@@ -735,6 +732,9 @@ def blosxom_handler(request):
         r = r.Renderer(request, config.get("stdoutput", sys.stdout))
 
     data['renderer'] = r
+
+    # generate the timezone variable
+    data["timezone"] = time.tzname[time.localtime()[8]]
 
     # process the path info to determine what kind of blog entry(ies) 
     # this is
