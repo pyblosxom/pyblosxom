@@ -6,10 +6,6 @@ blosxom renderer.
 from Pyblosxom import tools
 from Pyblosxom.renderers.base import RendererBase
 import re, os, sys, codecs
-try:
-    from xml.sax.saxutils import escape
-except ImportError:
-    from cgi import escape
 
 # Ugly default templates, have to though :(
 HTML = {'content_type' : 'text/html',
@@ -21,7 +17,7 @@ HTML = {'content_type' : 'text/html',
 
 RSS = {'content_type' : 'text/xml',
        'head' : """<?xml version="1.0" encoding="$blog_encoding"?>\n<!-- name="generator" content="$pyblosxom_name/$pyblosxom_version" -->\n<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n<rss version="0.91">\n<channel>\n<title>$blog_title $pi_da $pi_mo $pi_yr</title>\n<link>$url</link>\n<description>$blog_description</description>\n<language>$blog_language</language>\n""",
-       'story' : """<item>\n    <title>$title</title>\n    <link>$base_url/$file_path.html</link>\n    <description>$body</description>\n  </item>\n""",
+       'story' : """<item>\n    <title>$title_escaped</title>\n    <link>$base_url/$file_path.html</link>\n    <description>$body_escaped</description>\n  </item>\n""",
        'foot' : '   </channel>\n</rss>'}
 
 ERROR = {'content_type' : 'text/plain',
@@ -125,12 +121,7 @@ class BlosxomRenderer(RendererBase):
 
         output = []
 
-        if data["content-type"].endswith("xml"):
-            quotes = {"'": "&apos;", '"': "&quot;"}
-            entry['title'] = escape(entry['title'],quotes)
-            entry.setData(escape(entry.getData(),quotes))
-
-        elif data['content-type'] == 'text/plain':
+        if data['content-type'] == 'text/plain':
             s = tools.Stripper()
             s.feed(entry.getData())
             s.close()
@@ -198,7 +189,7 @@ class BlosxomRenderer(RendererBase):
         @param header: whether (1) or not (0) to render the HTTP headers
         @type  header: boolean
         """
-        # this helps us not render things twice
+        # if we've already rendered, then we don't want to do so again
         if self.rendered == 1:
             return
 
