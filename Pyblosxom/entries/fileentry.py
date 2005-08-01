@@ -106,11 +106,14 @@ class FileEntry(base.EntryBase):
         absolute_path = absolute_path.replace(file_basename, '')
         absolute_path = absolute_path[1:][:-1]
 
+        if absolute_path and absolute_path[-1] == "/":
+            absolute_path = absolute_path[0:-1]
+
         fn, ext = os.path.splitext(file_basename)
         if absolute_path == '':
             file_path = fn
         else:
-            file_path = '/'.join((absolute_path.rstrip('/'), fn))
+            file_path = '/'.join((absolute_path, fn))
 
         tb_id = '%s/%s' % (absolute_path, fn)
         tb_id = re.sub(r'[^A-Za-z0-9]', '_', tb_id)
