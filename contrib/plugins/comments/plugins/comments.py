@@ -3,18 +3,19 @@ This module contains an extension to Blosxom file entries to support
 comments.
 
 Contributors:
-Ted Leung
-Will Guaraldi
-Wari Wahab
-Robert Wall
-Bill Mill
-Roberto De Almeida
+  Ted Leung
+  Will Guaraldi
+  Wari Wahab
+  Robert Wall
+  Bill Mill
+  Roberto De Almeida
+  David Geller
 
 If you make any changes to this plugin, please a send a patch with your
 changes to twl+pyblosxom@sauria.com so that we can incorporate your changes.
 Thanks!
 
-This plugin requires the pyXML module.
+This plugin requires the PyXML module.
 
 This module supports the following config parameters (they are not
 required):
@@ -33,9 +34,6 @@ required):
                         If you omit this, the from address will be the
                         e-mail address as input in the comment form
     comment_smtp_to - the person to send comment notifications to.
-    comment_rejected_words - the list of words that will cause automatic
-                             rejection of the comment--this is a very
-                             poor man's spam reducer.
     comment_nofollow - set this to 1 to add rel="nofollow" attributes to
                   links in the description -- these attributes are embedded
                   in the stored representation.
@@ -48,16 +46,19 @@ formatted item.
 
 Comments now follow the blog_encoding variable specified in config.py
 
-Each entry has to have the following properties in order to work with
-comments:
+Comments will be shown for a given page if one of the following is
+true:
 
- 1. absolute_path - the category of the entry.  ex. "dev/pyblosxom"
- 2. fn - the filename of the entry without the file extension and without
-    the directory.  ex. "staticrendering"
- 3. file_path - the absolute_path plus the fn.  ex. "dev/pyblosxom/staticrendering"
+ 1. the page has only one blog entry on it and the request is for a
+    specific blog entry as opposed to a category with only one entry
+    in it
 
-Also, for any entry that you don't want to have comments, just add
-"nocomments" to the properties of the entry.
+ 2. if "showcomments=yes" is in the querystring then comments will
+    be shown
+
+
+IMPLEMENTING COMMENT PREVIEW
+============================
 
 If you would like comment previews, you need to do 2 things.
 
@@ -81,12 +82,59 @@ If you would like comment previews, you need to do 2 things.
     the available variables from the comment template are available for
     this template.
 
+
+NOFOLLOW SUPPORT
+================
+
 This plugin implements Google's nofollow support for links in the body of the 
 comment. If you display the link of the comment poster in your HTML template 
 then you must add the rel="nofollow" attribute to your template as well
+
+
+NOTE TO DEVELOPERS WHO ARE WRITING PLUGINS THAT CREATE COMMENTS
+===============================================================
+
+Each entry has to have the following properties in order to work with
+comments:
+
+ 1. absolute_path - the category of the entry.  
+    ex. "dev/pyblosxom"
+ 2. fn - the filename of the entry without the file extension and without
+    the directory.  
+    ex. "staticrendering"
+ 3. file_path - the absolute_path plus the fn.  
+    ex. "dev/pyblosxom/staticrendering"
+
+Also, if you don't want comments for an entry, add "nocomments" = 1
+to the properties for the entry.
+
+
+Copyright (c) 2003-2005 Ted Leung
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 """
 __author__ = "Ted Leung"
 __version__ = "$Id$"
+__url__ = "http://pyblosxom.sourceforge.net/"
+__description__ = "Allows for comments on each blog entry."
 
 import cgi, glob, os.path, re, time, cPickle, os, codecs
 from xml.sax.saxutils import escape
@@ -98,8 +146,8 @@ def cb_start(args):
     config = request.getConfiguration()
     logdir = config.get("logdir", "/tmp/")
 
-    logfile = os.path.normpath(logdir + os.sep + "comments.log")
-    tools.make_logger(logfile)
+    # logfile = os.path.normpath(logdir + os.sep + "comments.log")
+    # tools.make_logger(logfile)
 
     if not config.has_key('comment_dir'):
         config['comment_dir'] = os.path.join(config['datadir'],'comments')
@@ -261,7 +309,8 @@ def readComment(filename, encoding):
         cmt['cmt_pubDate'] = time.ctime(float(cmt['cmt_pubDate'])) #pretty time
         return cmt
     except: #don't error out on a bad comment
-        tools.log('bad comment file: %s' % filename)
+        # tools.log('bad comment file: %s' % filename)
+        pass
 
 def writeComment(request, config, data, comment, encoding):
     """
@@ -284,7 +333,8 @@ def writeComment(request, config, data, comment, encoding):
     cdir = os.path.normpath(cdir)
     if not os.path.isdir(cdir):
         os.makedirs(cdir)
-    cfn = os.path.join(cdir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_ext'])
+
+    cfn = os.path.join(cdir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_draft_ext'])
      
     argdict = { "request": request, "comment": comment }
     reject = tools.run_callback("comment_reject",
@@ -292,25 +342,28 @@ def writeComment(request, config, data, comment, encoding):
                                 donefunc=lambda x:x)
     if reject == 1:
         return "Comment rejected."
+   
+    def makeXMLField(name, field):
+        return "<"+name+">" + cgi.escape(field.get(name, "")) + "</"+name+">\n";
+
+    filedata = '<?xml version="1.0" encoding="%s"?>\n' % encoding
+    filedata += "<item>\n"
+    filedata += makeXMLField('title', comment)
+    filedata += makeXMLField('author', comment)
+    filedata += makeXMLField('link', comment)
+    filedata += makeXMLField('email', comment)
+    filedata += makeXMLField('source', comment)
+    filedata += makeXMLField('pubDate', comment)
+    filedata += makeXMLField('description', comment)
+    filedata += "</item>\n"
 
     try :
         cfile = codecs.open(cfn, "w", encoding)
     except IOError:
-        tools.log("Couldn't open comment file %s for writing" % cfn)
-        return
-    
-    def makeXMLField(name, field):
-        return "<"+name+">"+cgi.escape(field[name])+"</"+name+">\n";
-    
-    cfile.write('<?xml version="1.0" encoding="%s"?>\n' % encoding)
-    cfile.write("<item>\n")
-    cfile.write(makeXMLField('title',comment))
-    cfile.write(makeXMLField('author',comment))
-    cfile.write(makeXMLField('link',comment))
-    cfile.write(makeXMLField('source',comment))
-    cfile.write(makeXMLField('pubDate',comment))
-    cfile.write(makeXMLField('description',comment))
-    cfile.write("</item>\n")
+        # tools.log("Couldn't open comment file %s for writing" % cfn)
+        return "Internal error: Your comment could not be saved."
+ 
+    cfile.write(filedata)
     cfile.close()
  
     #write latest pickle
@@ -319,8 +372,8 @@ def writeComment(request, config, data, comment, encoding):
     try:
         latest = open(latestFilename,"w")
     except IOError:
-        tools.log("Couldn't open latest comment pickle for writing")
-        return
+        # tools.log("Couldn't open latest comment pickle for writing")
+        return "Couldn't open latest comment pickle for writing."
     else:
         modTime = float(comment['pubDate'])
 
@@ -331,11 +384,19 @@ def writeComment(request, config, data, comment, encoding):
         # should log or e-mail
         if latest:
             latest.close()
-        return
-    
+        return "Internal error: Your comment may not have been saved."
+
     if config.has_key('comment_smtp_server') and \
        config.has_key('comment_smtp_to'):
+        # FIXME - removed grabbing send_email's return error message
+        # so there's no way to know if email is getting sent or not.
         send_email(config, entry, comment, cdir, cfn)
+
+    # figure out if the comment was submitted as a draft
+    if config["comment_ext"] != config["comment_draft_ext"]:
+       return "Comment was submitted for approval.  Thanks!"
+
+    return "Comment submitted.  Thanks!"
 
 def send_email(config, entry, comment, comment_dir, comment_filename):
     """Send an email to the blog owner on a new comment
@@ -369,11 +430,11 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         email = comment['email']
     else:
         email = config['comment_smtp_from']
+
     try:
         server = smtplib.SMTP(config['comment_smtp_server'])
         curl = config['base_url']+'/'+entry['file_path']
         comment_dir = os.path.join(config['comment_dir'], entry['absolute_path'])
-        comment_filename = os.path.join(comment_dir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_draft_ext'])
 
         message = []
         message.append("From: %s" % email)
@@ -387,7 +448,9 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
                         msg="\n".join(message))
         server.quit()
     except Exception, e:
-        tools.log("Error sending mail: %s" % e)
+        # tools.log("Error sending mail: %s" % e)
+        # FIXME - if we error out, no one will know.
+        pass
 
 def clean_author(s):
     """
@@ -519,7 +582,28 @@ def cb_prepare(args):
     form = request.getHttp()['form']
     config = request.getConfiguration()
     data = request.getData()
-    
+    pyhttp = request.getHttp()
+
+    # first we check to see if we're going to print out comments
+
+    # the default is not to show comments
+    data['display_comment_default'] = 0        
+
+    # check to see if they have "showcomments=yes" in the querystring
+    qstr = pyhttp.get('QUERY_STRING', None)
+    if qstr != None:
+        parsed_qs = cgi.parse_qs(qstr)
+        if parsed_qs.has_key('showcomments'):
+            if parsed_qs['showcomments'][0] == 'yes':
+                data['display_comment_default'] = 1
+
+    # check to see if the bl_type is "file"
+    if data.has_key("bl_type") and data["bl_type"] == "file":
+        data["bl_type_file"] = "yes"
+        data['display_comment_default'] = 1
+ 
+    # second, we check to see if they're posting a comment and we
+    # need to write the comment to disk.
     if form.has_key("title") and form.has_key("author") and \
         form.has_key("body") and not form.has_key("preview"):
 
@@ -546,6 +630,7 @@ def cb_prepare(args):
 
         data["comment_message"] = writeComment(request, config, data, \
                                                 cdict, encoding)
+
 def escape_link(linkstring):
     """Don't allow html in the link string"""
     for c in "<>'\"":
@@ -553,9 +638,8 @@ def escape_link(linkstring):
     return linkstring
 
 def decode_form(d, encoding):
-    for key in d:
+    for key in d.keys():
         d[key].value = d[key].value.decode(encoding)
-
 
 def cb_head(args):
     renderer = args['renderer']
@@ -578,10 +662,12 @@ def cb_story(args):
     entry = args['entry']
     template = args['template']
     request = args["request"]
+    data = request.getData()
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 \
             and renderer.flavour.has_key('comment-story') \
-            and not entry.has_key("nocomments"):
+            and not entry.has_key("nocomments") \
+            and data['display_comment_default'] == 1:
         template = renderer.flavour.get('comment-story','')
         args['template'] = args['template'] + template
 
@@ -609,10 +695,10 @@ def build_preview_comment(form, entry):
     except KeyError, e:
         c['cmt_error'] = 'Missing value: %s' % e
 
-    #optional fields
-    if 'url' in form:
+    # optional fields
+    if form.has_key("url"):
         c['cmt_link'] = form['url'].value
-    if 'email' in form:
+    if form.has_key("email"):
         c['cmt_email'] = form['email'].value
     for key in c: entry[key] = c[key]
 
@@ -623,16 +709,18 @@ def cb_story_end(args):
     entry = args['entry']
     template = args['template']
     request = args["request"]
+    data = request.getData()
     form = request.getHttp()['form']
     config = request.getConfiguration()
     if len(renderer.getContent()) == 1 \
             and renderer.flavour.has_key('comment-story') \
-            and not entry.has_key("nocomments"):
+            and not entry.has_key("nocomments") \
+            and data['display_comment_default'] == 1:
         output = []
         entry['comments'] = readComments(entry, config)
         if entry.has_key('comments'):        
             for comment in entry['comments']:
-                renderer.outputTemplate(output, comment, 'comment')
+               renderer.outputTemplate(output, comment, 'comment')
             if form.has_key('preview')\
                 and renderer.flavour.has_key('comment-preview'):
                 com = build_preview_comment(form, entry)
