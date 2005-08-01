@@ -8,13 +8,21 @@ own EntryBase derivatives.
 This module also holds a generic generate_entry function which will generate
 a BaseEntry with data that you provide for it.
 """
-import time
+import time, urllib
 from Pyblosxom import tools
+
+try:
+    from xml.sax.saxutils import escape
+except ImportError:
+    from cgi import escape
 
 BIGNUM = 2000000000
 CONTENT_KEY = "body"
 DOESNOTEXIST = "THISKEYDOESNOTEXIST"
 DOESNOTEXIST2 = "THISKEYDOESNOTEXIST2"
+
+ESCAPABLE_PROPERTIES = ["title_escaped", "body_escaped"]
+URLENCODABLE_PROPERTIES = ["title_urlencoded"]
 
 class EntryBase:
     """
@@ -40,6 +48,16 @@ class EntryBase:
         rtype: string
         """
         return "<Entry instance: %s>\n" % self.getId()
+
+    def __escape(self, s):
+        """
+        Escapes the given string and returns it.
+
+        @returns: the escaped data as a string
+        @rtype: string
+        """
+        quotes = {"'": "&apos;", '"': "&quot;"}
+        return escape(s, quotes)
 
     def getId(self):
         """
@@ -199,8 +217,9 @@ class EntryBase:
     def __getitem__(self, key, default=None):
         """
         Retrieves an item from this dict based on the key given.  If 
-        the item does not exist, then we return the default.  If the 
-        item is CONTENT_KEY then we return the result from 
+        the item does not exist, then we return the default.
+
+        If the item is CONTENT_KEY then we return the result from 
         self.getData().
 
         This is just a convenience method for getData(...) and 
@@ -213,9 +232,30 @@ class EntryBase:
             self.getData()
         @rtype: varies
         """
+        escaped = 0
+        urlencoded = 0
+        if key in ESCAPABLE_PROPERTIES:
+            key = key[:-8]
+            escaped = 1
+
+        if key in URLENCODABLE_PROPERTIES:
+            key = key[:-11]
+            urlencoded = 1
+
+        s = ""
         if key == CONTENT_KEY:
-            return self.getData()
-        return self.getMetadata(key, default)
+            s = self.getData()
+        else:
+            s = self.getMetadata(key, default)
+
+        if escaped:
+            return self.__escape(s)
+
+        if urlencoded:
+            return urllib.quote(s)
+
+        return s
+
 
     def get(self, key, default=None):
         return self.__getitem__(key, default)
@@ -265,6 +305,12 @@ class EntryBase:
         @returns: whether (1) or not (0) the key exists
         @rtype: boolean
         """
+        if key in ESCAPABLE_PROPERTIES:
+            key = key[:-8]
+
+        if key in URLENCODABLE_PROPERTIES:
+            key = key[:-11]
+
         if key == CONTENT_KEY:
             return 1
 
