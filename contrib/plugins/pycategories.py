@@ -5,28 +5,35 @@ and how many entries are in each category.  It generates html with
 this information and stores it in the $categorylinks variable which
 you can use in your head or foot templates.
 
-You can format the output by setting the "category_begin", "category_item", and
-"category_end" properties.
+You can format the output by setting "category_begin", "category_item",
+"category_end" and properties.
 
-Categories exist in a hierarchy.  The "category_begin" property begins a 
-category group and the "category_end" property ends a category group.  The
-"category_item" property is the template for each category item.
+Categories exist in a hierarchy.  "category_start" starts the category listing
+and is only used at the very beginning.  The "category_begin" property begins a 
+new category group and the "category_end" property ends that category group.  The
+"category_item" property is the template for each category item.  Then
+after all the categories are printed, "category_finish" ends the category
+listing.
 
 For example, the following properties will use <ul> to open a category, </ul>
 to close a category and <li> for each item:
 
-py["category_begin"] = "<ul>"
+py["category_start"] = "<ul>"
+py["category_begin"] = "<li><ul>"
 py["category_item"] = r'<li><a href="%(base_url)s/%(category)sindex">%(category)s</a></li>'
-py["category_end"] = "</ul>"
+py["category_end"] = "</li></ul>"
+py["category_finish"] = "</ul>"
 
 
 Another example, the following properties don't have a begin or an end but
 instead use indentation for links and displays the number of entries in that
 category:
 
+py["category_start"] = ""
 py["category_begin"] = ""
 py["category_item"] = r'%(indent)s<a href="%(base_url)s/%(category)sindex">%(category)s</a> (%(count)d)<br />'
 py["category_end"] = ""
+py["category_finish"] = ""
 
 There are no variables available in the category_begin or category_end templates.
 
@@ -70,9 +77,11 @@ __description__ = "Builds a list of categories."
 from Pyblosxom import tools
 import re, os
 
-DEFAULT_BEGIN = r'<ul class="categorygroup">'
+DEFAULT_START = r'<ul class="categorygroup">'
+DEFAULT_BEGIN = r'<li><ul class="categorygroup">'
 DEFAULT_ITEM = r'<li><a href="%(base_url)s/%(fullcategory)sindex.%(flavour)s">%(category)s</a> (%(count)d)</li>'
-DEFAULT_END = "</ul>"
+DEFAULT_END = "</ul></li>"
+DEFAULT_FINISH = "</ul>"
 
 def verify_installation(request):
     config = request.getConfiguration()
@@ -98,9 +107,11 @@ class PyblCategories:
         config = self._request.getConfiguration()
         root = config["datadir"]
 
+        start_t = config.get("category_start", DEFAULT_START)
         begin_t = config.get("category_begin", DEFAULT_BEGIN)
         item_t = config.get("category_item", DEFAULT_ITEM)
         end_t = config.get("category_end", DEFAULT_END)
+        finish_t = config.get("category_start", DEFAULT_FINISH)
 
         self._baseurl = config.get("base_url", "")
 
@@ -144,6 +155,7 @@ class PyblCategories:
         output = []
         indent = 0
 
+        output.append(start_t)
         # then we generate each item in the list
         for item in clist:
             itemlist = item.split(os.sep)
@@ -173,13 +185,16 @@ class PyblCategories:
                   "flavour":      flavour,
                   "count":        num,
                   "indent":       tab }
+            if item == "":
+                d["fullcategory"] = item
 
             # and we toss it in the thing
             output.append(item_t % d)
 
             indent = len(itemlist)
 
-        output.append(end_t)
+        output.append(end_t * indent)
+        output.append(finish_t)
 
         # then we join the list and that's the final string
         self._categories = "\n".join(output)
