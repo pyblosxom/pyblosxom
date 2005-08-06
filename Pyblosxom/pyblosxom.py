@@ -436,10 +436,17 @@ class Request(object):
         functionallity as sys.stdin.
         """
         # TODO: tests on memory consumption when uploading huge files
-        input = self.getHttp()['wsgi.input']
-        self._in.write(input.read())
-        # rewind to start
-        self._in.seek(0)
+        pyhttp = self.getHttp()
+        input = pyhttp['wsgi.input']
+        method = pyhttp["REQUEST_METHOD"]
+
+        # there's no data on stdin for a GET request.  pyblosxom
+        # will block indefinitely on the read for a GET request with
+        # thttpd.
+        if method != "GET":
+            self._in.write(input.read())
+            # rewind to start
+            self._in.seek(0)
 
     def setResponse(self, response):
         """
