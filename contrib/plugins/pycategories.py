@@ -111,7 +111,7 @@ class PyblCategories:
         begin_t = config.get("category_begin", DEFAULT_BEGIN)
         item_t = config.get("category_item", DEFAULT_ITEM)
         end_t = config.get("category_end", DEFAULT_END)
-        finish_t = config.get("category_start", DEFAULT_FINISH)
+        finish_t = config.get("category_finish", DEFAULT_FINISH)
 
         self._baseurl = config.get("base_url", "")
 
