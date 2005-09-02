@@ -1,6 +1,6 @@
 """
-Emulate some of the Python2.3 logging module.
-Note: This will probably not work with Python <2.2.
+Emulates part of the Python2.3 logging module.
+Note: This will probably not work with Python < 2.2.
 """
 
 import os
@@ -77,12 +77,36 @@ def getLevelName(level):
 # repository of handlers (for flushing when shutdown is called)
 _handlers = {}  
 
-class StreamHandler(object):
+class Filterer(object):
+    """
+    A stripped down version of the logging.Filterer class.
+    See the logging module for documentation.
+    """
+    def __init__(self):
+        self.filters = []
+    def addFilter(self, filter):
+        if not (filter in self.filters):
+            self.filters.append(filter)
+
+    def removeFilter(self, filter):
+        if filter in self.filters:
+            self.filters.remove(filter)
+
+    def filter(self, record):
+        rv = 1
+        for f in self.filters:
+            if not f.filter(record):
+                rv = 0
+                break
+        return rv
+
+class StreamHandler(Filterer):
     """
     A stripped down version of the logging.StreamHandler class.
     See the logging module for documentation.
     """
     def __init__(self, strm=sys.stderr):
+        Filterer.__init__(self)
         #dump("StreamHandler.__init__: %s", strm)
         self.stream = strm
         self.formatter = None
@@ -116,7 +140,10 @@ class StreamHandler(object):
         del ei
 
     def handle(self, record):
-        self.emit(record)
+        rv = self.filter(record)
+        if rv:
+            self.emit(record)
+        return rv
 
     def setFormatter(self, formatter):
         self.formatter = formatter
@@ -227,12 +254,13 @@ class LogRecord:
         return msg
 
 
-class Logger:
+class Logger(Filterer):
     """
     A stripped down version of the logging.Logger class.
     See the logging module for documentation.
     """
     def __init__(self, name, level=NOTSET):
+        Filterer.__init__(self)
         self.name = name
         self.setLevel(level)
         self.handlers = []
