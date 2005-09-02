@@ -630,6 +630,20 @@ except ImportError:
 # Used to prevent multiple handlers from beeing added to the same logger.
 _loghandler_registry = {}
 
+
+class LogFilter(object):
+    """
+    Filters out messages from log-channels that are not listed in the
+    log_filter config variable.
+    """
+    def __init__(self, names=[]):
+        self.names = names
+
+    def filter(self, record):
+        if record.name in self.names:
+            return 1
+        return 0
+
 def getLogger(log_file=None):
     """
     Creates and retuns a log channel.
@@ -641,6 +655,7 @@ def getLogger(log_file=None):
     @return: a log channel (Logger instance)
     @rtype: L{logging.Logger} for Python >=2.3, L{Pyblosxom._logging.Logger} for Python <2.3
     """
+    custom_log_file = False
     if log_file == None:
         log_file = _config.get('log_file', 'stderr')
         f = sys._getframe(1)
@@ -650,15 +665,16 @@ def getLogger(log_file=None):
         log_name = ""
         for path in _config['plugin_dirs']:
             if filename.startswith(path):
-                # if it's a plugin use the module name as the log channels name
+                # if it's a plugin, use the module name as the log channels name
                 log_name = module
                 break
         # default to log level WARNING if it's not defined in config.py
         log_level = _config.get('log_level', 'warning')
     else:
         # handle custom log_file
-        # there's only a single log channel, so make that be the root logger
-        log_name = ""
+        custom_log_file = True
+        # figure out a name for the log channel
+        log_name = os.path.splitext(os.path.basename(log_file))[0]
         # assume log_level debug (show everything)
         log_level = "debug"
 
@@ -699,16 +715,13 @@ def getLogger(log_file=None):
         int_level = getattr(logging, log_level.upper())
         logger.setLevel(int_level)
 
-        # only log messages from plugins listed in log_filter.
-        # add 'root' to the log_filter list to still allow application level messages.
-        log_filter = _config.get('log_filter', None)
-        if log_filter:
-            orig_log = logger._log
-            def _log(self, level, msg, args, exc_info=None):
-                if log_name in log_filter or (log_name == "" and 'root' in log_filter):
-                    orig_log(level, msg, args, exc_info)
-            import new
-            logger._log = new.instancemethod(_log, logger, logger.__class__)
+        if not custom_log_file:
+            # only log messages from plugins listed in log_filter.
+            # add 'root' to the log_filter list to still allow application level messages.
+            log_filter = _config.get('log_filter', None)
+            if log_filter:
+                filter = LogFilter(log_filter)
+                logger.addFilter(filter)
 
         # remember that we've seen this handler
         _loghandler_registry[key] = True
