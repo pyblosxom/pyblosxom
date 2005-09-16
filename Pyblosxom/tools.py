@@ -663,7 +663,7 @@ def getLogger(log_file=None):
         module = f.f_globals["__name__"]
         # by default use the root logger
         log_name = ""
-        for path in _config['plugin_dirs']:
+        for path in _config.get('plugin_dirs', []):
             if filename.startswith(path):
                 # if it's a plugin, use the module name as the log channels name
                 log_name = module
