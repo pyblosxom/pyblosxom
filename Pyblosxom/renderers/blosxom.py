@@ -7,25 +7,9 @@ from Pyblosxom import tools
 from Pyblosxom.renderers.base import RendererBase
 import re, os, sys, codecs
 
-# Ugly default templates, have to though :(
-HTML = {'content_type' : 'text/html',
-        'head' : """<html><head><title>$blog_title_with_path $pi_da $pi_mo $pi_yr</title></head><body><h1>$blog_title</h1><p>$pi_da $pi_mo $pi_yr</p>""",
-        'date_head' : '<h2>$date</h2>',
-        'story' : """<h3><a name="$fn">$title</a></h3><div class="blosxomStory">$body<p>posted at: $ti | path: <a href="$base_url/$absolute_path" title="path">/$absolute_path</a> | <a href="$base_url/$file_path.$flavour">permanent link to this entry</a></p></div>\n""",
-        'date_foot' : '',
-        'foot' : """<p><a href="http://pyblosxom.sourceforge.net/"><img src="http://pyblosxom.sourceforge.net/images/pb_pyblosxom.gif" alt="Made with PyBlosxom" border="0" /></a></p></body></html>"""}
-
-RSS = {'content_type' : 'text/xml',
-       'head' : """<?xml version="1.0" encoding="$blog_encoding"?>\n<!-- name="generator" content="$pyblosxom_name/$pyblosxom_version" -->\n<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n<rss version="0.91">\n<channel>\n<title>$blog_title $pi_da $pi_mo $pi_yr</title>\n<link>$url</link>\n<description>$blog_description</description>\n<language>$blog_language</language>\n""",
-       'story' : """<item>\n    <title>$title_escaped</title>\n    <link>$base_url/$file_path.html</link>\n    <description>$body_escaped</description>\n  </item>\n""",
-       'foot' : '   </channel>\n</rss>'}
-
-ERROR = {'content_type' : 'text/plain',
-         'head' : """Error: I'm afraid this is the first I've heard of a "$flavour" flavoured pyblosxom.\n Try dropping the "?flav=$flavour" bit from the end of the URL.\n\n"""}
-
-DEFAULT_FLAVOURS = {'html' : HTML, 
-                    'rss' : RSS,
-                    'error' : ERROR}
+class NoSuchFlavourException(Exception):
+    def __init__(self, msg):
+        self._msg = msg
 
 class BlosxomRenderer(RendererBase):
     def __init__(self, request, stdoutput = sys.stdout):
@@ -38,6 +22,17 @@ class BlosxomRenderer(RendererBase):
         self._request = request
         self._encoding = config.get("blog_encoding", "iso-8859-1")
 
+    def _getIncludedFlavour(self, taste):
+        template_files = None
+
+        path = __file__[:__file__.rfind(os.sep)]
+        path = path[:path.rfind(os.sep)] + os.sep + "flavours" + os.sep
+        if os.path.isdir(path + taste):
+            template_files = os.listdir(path + taste)
+            template_files = [path + taste + os.sep + m for m in template_files]
+
+        return template_files
+
     def _getFlavour(self, taste='html'):
         """
         Flavours, or views, or templates, as some may call it, defaults are
@@ -46,48 +41,59 @@ class BlosxomRenderer(RendererBase):
         """
         data = self._request.getData()
         config = self._request.getConfiguration()
+        datadir = config["datadir"]
 
         pattern = re.compile(r'.+?\.(?<!config\.)' + taste + '$')
 
         template_files = {}
 
-        # first we try the flavourdir if they have one specified.
-        if config.has_key("flavourdir"):
-            template_files = tools.Walk(self._request, config["flavourdir"], 1, pattern)
+        # if they have flavourdir set, then we look there.  otherwise
+        # we look in the datadir
+        flavourdir = config.get("flavourdir", datadir)
 
-        # next we try the directory being requested and work our way
-        # back to the datadir.
+        # walk through the request looking in directory hierarchies
+        # until we find the templates we want.
+
+        dirname = data["root_datadir"]
+        if os.path.isfile(dirname):
+            dirname = os.path.dirname(dirname)
+
+        dirname = dirname[len(datadir):]
+
+        template_files = None
+        while len(dirname) > 0:
+            template_files = os.listdir(flavourdir + dirname)
+            template_files = [flavourdir + dirname + m for m in template_files if m.endswith("." + taste)]
+
+            if template_files:
+                break
+            dirname = os.path.split(dirname)[0]
+
+        # we haven't found the flavour files yet, so we try the root
         if not template_files:
-            datadir = config["datadir"]
+            template_files = os.listdir(flavourdir)
+            template_files = [flavourdir + os.sep + m for m in template_files if m.endswith("." + taste)]
 
-            dirname = data["root_datadir"]
-            if os.path.isfile(dirname):
-                dirname = os.path.dirname(dirname)
-
-            template_files = None
-            while len(dirname) >= len(datadir):
-                template_files = tools.Walk(self._request, dirname, 1, pattern)
-                if template_files: break
-                dirname = os.path.split(dirname)[0]
-
-        # hmm...  guess we'll try the datadir.
+        # if we haven't found the template files yet, we check our
+        # contributed flavours directory
         if not template_files:
-            template_files = tools.Walk(self._request, config['datadir'], 1, pattern)
+            template_files = self._getIncludedFlavour(taste)
+
+        # if we still haven't found our damned flavour files, we
+        # return the error flavour!
+        if not template_files:
+            raise NoSuchFlavourException("Flavour '" + taste + "' does not exist.")
 
         # we grab a copy of the templates for the taste we want
         flavour = {}
-        flavour.update(DEFAULT_FLAVOURS.get(taste, {}))
 
-        # we update the flavours dict with what we found
+        # we load the flavour templates into our flavour dict
         for filename in template_files:
             flavouring = os.path.basename(filename).split('.')
             flav_template = unicode(open(filename).read(), 
                     config.get('blog_encoding', 'iso-8859-1'))
 
             flavour[flavouring[0]] = flav_template
-
-        if not flavour:
-            return DEFAULT_FLAVOURS["error"]
 
         return flavour
 
@@ -174,8 +180,6 @@ class BlosxomRenderer(RendererBase):
             current_date = ''
 
             for entry in self._content:
-                # FIXME - commented this next line out
-                # data.update(entry)
                 output, current_date = self._processEntry(entry, current_date)
                 outputbuffer.append(output)
 
@@ -203,7 +207,13 @@ class BlosxomRenderer(RendererBase):
         for mem in data.keys():
             parsevars[mem] = data[mem]
 
-        self.flavour = self._getFlavour(data.get('flavour', 'html'))
+        try:
+            self.flavour = self._getFlavour(data.get('flavour', 'html'))
+        except NoSuchFlavourException, nsfe:
+            self.flavour = self._getFlavour("error")
+            self._content = { "title": "Flavour error", 
+                              "body": nsfe._msg }
+        
         data['content-type'] = self.flavour['content_type'].strip()
         if header:
             if self._needs_content_type and data['content-type'] !="":
