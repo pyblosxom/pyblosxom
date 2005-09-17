@@ -11,6 +11,47 @@ class NoSuchFlavourException(Exception):
     def __init__(self, msg):
         self._msg = msg
 
+def get_included_flavour(taste):
+    """
+    PyBlosxom comes with flavours in taste.flav directories in the flavours
+    subdirectory of the Pyblosxom package.  This method pulls the template
+    files for the associated taste (assuming it exists) or None if it
+    doesn't.
+
+    @param taste The name of the taste.  e.g. "html", "rss", ...
+    @type  taste string
+
+    @returns The list of template full filenames or None
+    @rtype list of strings or None
+    """
+    template_files = None
+
+    path = __file__[:__file__.rfind(os.sep)]
+    path = path[:path.rfind(os.sep)+1] + "flavours" + os.sep
+
+    path = path + taste + ".flav"
+
+    if os.path.isdir(path):
+        template_files = os.listdir(path)
+        template_files = [path + os.sep + m for m in template_files if m.endswith("." + taste)]
+
+    return template_files
+
+def get_flavour_from_dir(path, taste):
+    template_files = None
+    # if we have a taste.flav directory, we check there
+    if os.path.isdir(path + os.sep + taste + ".flav"):
+        newpath = path + os.sep + taste + ".flav"
+        template_files = os.listdir(newpath)
+        template_files = [newpath + os.sep + m for m in template_files if m.endswith("." + taste)]
+
+    # now we check the directory itself for flavour templates
+    if not template_files:
+        template_files = os.listdir(path)
+        template_files = [path + os.sep + m for m in template_files if m.endswith("." + taste)]
+
+    return template_files
+
 class BlosxomRenderer(RendererBase):
     def __init__(self, request, stdoutput = sys.stdout):
         RendererBase.__init__(self, request, stdoutput)
@@ -21,17 +62,6 @@ class BlosxomRenderer(RendererBase):
         self.dayFlag = 1
         self._request = request
         self._encoding = config.get("blog_encoding", "iso-8859-1")
-
-    def _getIncludedFlavour(self, taste):
-        template_files = None
-
-        path = __file__[:__file__.rfind(os.sep)]
-        path = path[:path.rfind(os.sep)] + os.sep + "flavours" + os.sep
-        if os.path.isdir(path + taste):
-            template_files = os.listdir(path + taste)
-            template_files = [path + taste + os.sep + m for m in template_files]
-
-        return template_files
 
     def _getFlavour(self, taste='html'):
         """
@@ -58,29 +88,38 @@ class BlosxomRenderer(RendererBase):
         if os.path.isfile(dirname):
             dirname = os.path.dirname(dirname)
 
+        # the dirname at this point is a complete file path.  so we need to
+        # pluck the datadir portion off the front reducing it to a category
         dirname = dirname[len(datadir):]
 
         template_files = None
         while len(dirname) > 0:
-            template_files = os.listdir(flavourdir + dirname)
-            template_files = [flavourdir + dirname + m for m in template_files if m.endswith("." + taste)]
+            path = flavourdir + dirname
 
-            if template_files:
+            template_files = get_flavour_from_dir(path, taste)
+
+            # if we found template files, then we break out and move along
+            if len(template_files) > 0:
                 break
-            dirname = os.path.split(dirname)[0]
+
+            # otherwise we peel off another piece of the category and continue
+            # looping
+            newdirname = os.path.split(dirname)[0]
+            if newdirname == dirname:
+                break
+            dirname = newdirname
 
         # we haven't found the flavour files yet, so we try the root
         if not template_files:
-            template_files = os.listdir(flavourdir)
-            template_files = [flavourdir + os.sep + m for m in template_files if m.endswith("." + taste)]
+            template_files = get_flavour_from_dir(flavourdir, taste)
 
         # if we haven't found the template files yet, we check our
-        # contributed flavours directory
+        # contributed flavours directory--these are always in taste.flav
+        # directories
         if not template_files:
-            template_files = self._getIncludedFlavour(taste)
+            template_files = get_included_flavour(taste)
 
-        # if we still haven't found our damned flavour files, we
-        # return the error flavour!
+        # if we still haven't found our flavour files, we raise an exception
         if not template_files:
             raise NoSuchFlavourException("Flavour '" + taste + "' does not exist.")
 
@@ -208,11 +247,18 @@ class BlosxomRenderer(RendererBase):
             parsevars[mem] = data[mem]
 
         try:
-            self.flavour = self._getFlavour(data.get('flavour', 'html'))
+            self.flavour = self._getFlavour(data.get("flavour", "html"))
+
         except NoSuchFlavourException, nsfe:
-            self.flavour = self._getFlavour("error")
+            error_msg = nsfe._msg
+            try:
+                self.flavour = self._getFlavour("error")
+            except NoSuchFlavourException, nsfe2:
+                self.flavour = get_included_flavour("error")
+                error_msg = error_msg + "And your error flavour doesn't exist."
+
             self._content = { "title": "Flavour error", 
-                              "body": nsfe._msg }
+                              "body": error_msg }
         
         data['content-type'] = self.flavour['content_type'].strip()
         if header:
@@ -328,6 +374,5 @@ class BlosxomRenderer(RendererBase):
         
 class Renderer(BlosxomRenderer):
     pass
-
 
 # vim: shiftwidth=4 tabstop=4 expandtab
