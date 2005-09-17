@@ -39,6 +39,9 @@ if __name__ == '__main__':
     else:
         env['wsgi.url_scheme'] = "http"
     
+
+    # if they executed pyblosxom.cgi from the command line, then
+    # there is no REQUEST_METHOD.
     if not os.environ.get("REQUEST_METHOD", ""):
         # install verification and static rendering
 
