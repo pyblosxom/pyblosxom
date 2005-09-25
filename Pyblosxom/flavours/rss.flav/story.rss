@@ -1,6 +1,6 @@
 <item>
   <title>$title_escaped</title>
-  <link>$base_url/$file_path.html</link>
+  <link>$base_url/$file_path_urlencoded.html</link>
   <description>$body_escaped</description>
 </item>
 
