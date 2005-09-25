@@ -22,7 +22,7 @@ DOESNOTEXIST = "THISKEYDOESNOTEXIST"
 DOESNOTEXIST2 = "THISKEYDOESNOTEXIST2"
 
 ESCAPABLE_PROPERTIES = ["title_escaped", "body_escaped"]
-URLENCODABLE_PROPERTIES = ["title_urlencoded"]
+URLENCODABLE_PROPERTIES = ["title_urlencoded", "file_path_urlencoded", "absolute_path_urlencoded"]
 
 class EntryBase:
     """
