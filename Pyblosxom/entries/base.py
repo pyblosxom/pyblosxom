@@ -11,18 +11,10 @@ a BaseEntry with data that you provide for it.
 import time, urllib
 from Pyblosxom import tools
 
-try:
-    from xml.sax.saxutils import escape
-except ImportError:
-    from cgi import escape
-
 BIGNUM = 2000000000
 CONTENT_KEY = "body"
 DOESNOTEXIST = "THISKEYDOESNOTEXIST"
 DOESNOTEXIST2 = "THISKEYDOESNOTEXIST2"
-
-ESCAPABLE_PROPERTIES = ["title_escaped", "body_escaped"]
-URLENCODABLE_PROPERTIES = ["title_urlencoded", "file_path_urlencoded", "absolute_path_urlencoded"]
 
 class EntryBase:
     """
@@ -34,7 +26,7 @@ class EntryBase:
     def __init__(self, request):
         global BIGNUM
         self._data = None
-        self._metadata = {}
+        self._metadata = tools.VariableDict()
         self._id = ""
         self._mtime = BIGNUM
         self._request = request
@@ -48,16 +40,6 @@ class EntryBase:
         rtype: string
         """
         return "<Entry instance: %s>\n" % self.getId()
-
-    def __escape(self, s):
-        """
-        Escapes the given string and returns it.
-
-        @returns: the escaped data as a string
-        @rtype: string
-        """
-        quotes = {"'": "&apos;", '"': "&quot;"}
-        return escape(s, quotes)
 
     def getId(self):
         """
@@ -232,30 +214,11 @@ class EntryBase:
             self.getData()
         @rtype: varies
         """
-        escaped = 0
-        urlencoded = 0
-        if key in ESCAPABLE_PROPERTIES:
-            key = key[:-8]
-            escaped = 1
-
-        if key in URLENCODABLE_PROPERTIES:
-            key = key[:-11]
-            urlencoded = 1
-
         s = ""
         if key == CONTENT_KEY:
-            s = self.getData()
-        else:
-            s = self.getMetadata(key, default)
+            return self.getData()
 
-        if escaped:
-            return self.__escape(s)
-
-        if urlencoded:
-            return urllib.quote(s)
-
-        return s
-
+        return self.getMetadata(key, default)
 
     def get(self, key, default=None):
         return self.__getitem__(key, default)
@@ -305,12 +268,6 @@ class EntryBase:
         @returns: whether (1) or not (0) the key exists
         @rtype: boolean
         """
-        if key in ESCAPABLE_PROPERTIES:
-            key = key[:-8]
-
-        if key in URLENCODABLE_PROPERTIES:
-            key = key[:-11]
-
         if key == CONTENT_KEY:
             return 1
 
