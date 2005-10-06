@@ -12,6 +12,12 @@ The swiss army knife for all things pyblosxom
 import plugin_utils
 import sgmllib, re, os, string, types, time, os.path, StringIO, sys
 
+try:
+    from xml.sax.saxutils import escape
+except ImportError:
+    from cgi import escape
+
+
 month2num = { 'nil' : '00',
               'Jan' : '01',
               'Feb' : '02',
@@ -70,7 +76,73 @@ def cleanup():
     except ValueError:
         pass
 
+def escape_text(s):
+    quotes = {"'": "&apos;", '"': "&quot;"}
+    return escape(s, quotes)
 
+def urlencode_text(s):
+    return urllib.quote(s)
+
+
+class VariableDict:
+    """
+    Wraps around a standard dict allowing for escaped and urlencoding
+    of internal data by tacking on a "_urlencoded" or a "_escaped"
+    to the end of the key name.
+    """
+    def __init__(self):
+        self._dict = {}
+
+    def __urlencode(self, s):
+        if s == None: return s
+        return urllib.quote(s)
+
+    def __escape(self, s):
+        if s == None: return s
+
+        quotes = {"'": "&apos;", '"': "&quot;"}
+        return escape(s, quotes)
+
+    def __getitem__(self, key, default=None):
+        if key.endswith("_escaped"):
+            key = key[:-8]
+            return self.__escape(self._dict.get(key, default))
+
+        if key.endswith("_urlencoded"):
+            return self.__urlencode(self._dict.get(key, default))
+
+        return self._dict.get(key, default)
+
+    def get(self, key, default=None):
+        return self._dict.get(key, default)
+
+    def __setitem__(self, key, value):
+        self._dict.__setitem__(key, value)
+
+    def update(self, newdict):
+        self._dict.update(newdict)
+
+    def has_key(self, key):
+        if key.endswith("_encoded"):
+            key = key[:-8]
+
+        if key.endswith("_urlencoded"):
+            key = key[:-11]
+
+        return self._dict.has_key(key)
+
+    def keys(self):
+        """
+        Returns a list of the keys that can be accessed through
+        __getitem__.
+
+        @returns: list of key names
+        @rtype: list of varies
+        """
+        return self._dict.keys()
+
+    def values(self):
+        return self._dict.values()
 
 class Stripper(sgmllib.SGMLParser):
     """
