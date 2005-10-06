@@ -7,7 +7,7 @@ functionality required by the other rendering system.
 For examples, look at the BlosxomRenderer and the Renderer in the debug
 module.
 """
-import sys
+import sys, time
 
 class RendererBase:
     """
@@ -31,6 +31,7 @@ class RendererBase:
         self._header = {}
         self._out = stdoutput
         self._content = None
+        self._content_mtime = None
         self._needs_content_type = 1
         self.rendered = None
 
@@ -108,6 +109,13 @@ class RendererBase:
             dict containing at least 'title' and 'body'
         """
         self._content = content
+        if type(self._content) == type({}):
+            mtime = self._content.get("mtime", time.time())
+        elif type(self._content) == type([]):
+            mtime = self._content[0].get("mtime", time.time())
+        else:
+            mtime = time.time()
+        self._content_mtime = mtime
 
     
     def needsContentType(self, flag):
