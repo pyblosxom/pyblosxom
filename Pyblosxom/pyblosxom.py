@@ -42,6 +42,15 @@ class PyBlosxom:
         """
         config['pyblosxom_name'] = "pyblosxom"
         config['pyblosxom_version'] = VERSION_DATE
+
+        # wbg 10/6/2005 - the plugin changes won't happen until
+        # PyBlosxom 1.4.  so i'm commenting this out until then.
+        # add the included plugins directory
+        # p = config.get("plugin_dirs", [])
+        # f = __file__[:__file__.rfind(os.sep)] + os.sep + "plugins"
+        # p.append(f)
+        # config['plugin_dirs'] = p
+
         self._config = config
         self._request = Request(config, environ, data)
 
@@ -386,7 +395,6 @@ class Request(object):
 
         # this holds HTTP/CGI oriented data specific to the request
         # and the environment in which the request was created
-        #self._http = environ
         self._http = EnvDict(self, environ)
 
         # this holds run-time data which gets created and transformed
@@ -400,6 +408,7 @@ class Request(object):
         # initialized for dynamic rendering in Pyblosxom.run.
         # for static rendering there is no input stream.
         self._in = StringIO()
+
         # copy methods to the Request object.
         self.__copy_members()
 
@@ -755,7 +764,18 @@ def blosxom_handler(request):
                                {"request": request},
                                donefunc=lambda x:x != None,
                                defaultfunc=blosxom_file_list_handler)
-    
+
+    # figure out the blog-level mtime which is the mtime of the head of
+    # the entry_list
+    entry_list = data["entry_list"]
+    if type(entry_list) == type([]):
+        mtime = entry_list[0].get("mtime", time.time())
+        mtime_tuple = time.localtime(mtime)
+        mtime_gmtuple = time.gmtime(mtime)
+
+        data["date"] = time.strftime('%a, %d %b %Y', mtime_tuple)
+        data["w3cdate"] = time.strftime('%Y-%m-%dT%H:%M:%SZ', mtime_gmtuple)
+
     # we pass the request with the entry_list through the prepare callback
     # giving everyone a chance to transform the data.  the request is
     # modified in place.
