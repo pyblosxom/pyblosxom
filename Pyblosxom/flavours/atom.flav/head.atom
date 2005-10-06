@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="$blog_encoding"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="$blog_language">
+<title type="text">$blog_title</title>
+<subtitle type="html"><![CDATA[
+$blog_description
+]]></subtitle>
+<id>$url</id>
+<link rel="alternate" type="text/html" href="$base_url" />
+<link rel="self" type="text/xml" href="$url?flav=atom" />
+
+<author>
+<name>$blog_author</name>
+<uri>$url</uri>
+<email>$blog_email</email>
+</author>
+<rights>$blog_rights</rights>
+<generator uri="http://pyblosxom.sourceforge.net/" version="$pyblosxom_version">
+pyBlosxom $pyblosxom_version
+</generator>
+
+<updated>$w3cdate</updated>
+<!-- icon?  logo?  -->
