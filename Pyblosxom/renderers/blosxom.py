@@ -239,12 +239,10 @@ class BlosxomRenderer(RendererBase):
         data = self._request.getData()
         config = self._request.getConfiguration()
 
-        parsevars = {}
-        for mem in config.keys():
-            parsevars[mem] = config[mem]
-
-        for mem in data.keys():
-            parsevars[mem] = data[mem]
+        # FIXME
+        parsevars = tools.VariableDict()
+        parsevars.update(config)
+        parsevars.update(data)
 
         try:
             self.flavour = self._getFlavour(data.get("flavour", "html"))
