@@ -26,6 +26,12 @@ py['blog_language'] = "en"
 # Encoding for output. Default is iso-8859-1.
 py['blog_encoding'] = "iso-8859-1"
 
+# These are the rights you give to others in regards to the content
+# on your blog.  Generally, this is the copyright information.
+# This is used in the Atom feeds.  Leaving this blank or not filling
+# it in correctly could result in a feed that doesn't validate.
+py["blog_rights"] = "Copyright 2005 Joe Bobb"
+
 # Where are this blog's entries kept?
 py['datadir'] = "/path/to/blog"
 
