@@ -135,12 +135,10 @@ class FileEntry(base.EntryBase):
             fileExt = os.path.splitext(self._filename)
             if fileExt:
                 fileExt = fileExt[1][1:]
-            try:
-                eparser = data['extensions'][fileExt]
-                entrydict = eparser(self._filename, self._request)
-                self.addToCache(self._filename, entrydict)
-            except IOError:
-                return None
+
+            eparser = data['extensions'][fileExt]
+            entrydict = eparser(self._filename, self._request)
+            self.addToCache(self._filename, entrydict)
 
         self.update(entrydict)
         self._populated_data = 1
