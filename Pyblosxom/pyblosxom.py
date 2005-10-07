@@ -768,7 +768,7 @@ def blosxom_handler(request):
     # figure out the blog-level mtime which is the mtime of the head of
     # the entry_list
     entry_list = data["entry_list"]
-    if type(entry_list) == type([]):
+    if isinstance(entry_list, list):
         mtime = entry_list[0].get("mtime", time.time())
         mtime_tuple = time.localtime(mtime)
         mtime_gmtuple = time.gmtime(mtime)
@@ -832,10 +832,7 @@ def blosxom_entry_parser(filename, request):
 
     entryData = {}
 
-    try:
-        story = open(filename).readlines()
-    except IOError:
-        raise IOError
+    story = open(filename).readlines()
 
     if len(story) > 0:
         entryData['title'] = story.pop(0).strip()
