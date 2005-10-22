@@ -7,7 +7,7 @@ $blog_description
 ]]></subtitle>
 <id>$url</id>
 <link rel="alternate" type="text/html" href="$base_url" />
-<link rel="self" type="text/xml" href="$url?flav=atom" />
+<link rel="self" type="text/xml" href="$url" />
 
 <author>
 <name>$blog_author</name>
