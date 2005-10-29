@@ -1,5 +1,44 @@
-Changes between contributed pack 1.2.1 and 1.2.2
+Changes between contributed pack 1.2.2 and 1.2.3
 ================================================
+
+General
+
+ * Added release dates to CHANGELOG.txt file.
+
+pycategories
+
+ * Fixed a cosmetic issue where an extra / was getting added to the
+   root url
+
+ * Fixed a problem where the finish template was incorrectly pulling
+   from the category_finish config property.  Thanks Rob!
+
+ * Fixed a problem where the totals weren't being counted correctly.
+   Thanks Rob!
+
+comments
+
+ * Adjusted the behavior so that comments are shown if "showcomments=yes" 
+   is in the querystring or if the pyblosxom request is for a specific 
+   blog entry (as opposed to a category with only one blog entry in it).  
+   In doing this, I moved the code from cb_pathinfo to cb_prepare. 
+   Thanks to Matt Weber for the idea!
+     
+ * Removed the "showcomments=yes" from the comment-form html code.
+
+ * Fixes to allow the comments plugin work with Python 2.2.  Thanks
+   Nathan!
+
+ * Adjusted the documentation text to make it clearer that the bit
+   about what properties each entry needs to have applies only to
+   developers.  Added __description__ and __url__ information.
+
+ * Fixed issues with rendering.  Also removed the "if this is rss,
+   then don't do stuff".
+
+
+Changes between contributed pack 1.2.1 and 1.2.2 (21 June, 2005)
+================================================================
 
 General
 
@@ -46,8 +85,8 @@ w3cdate
    longer requires PyXML.  Thanks to Steven and Matej!
 
 
-Changes between contributed pack 1.2 and 1.2.1
-==============================================
+Changes between contributed pack 1.2 and 1.2.1 (07 May, 2005)
+=============================================================
 
  * bunch of fixes to comments and trackback plugins.
 
