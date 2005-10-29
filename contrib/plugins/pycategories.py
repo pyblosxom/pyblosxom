@@ -162,7 +162,7 @@ class PyblCategories:
 
             num = 0
             for key in self._elistmap.keys():
-                if key.endswith(item) or key.endswith(item + os.sep):
+                if item == '' or key == item or key.startswith(item + os.sep):
                     num = num + self._elistmap[key]
 
             if not item:
