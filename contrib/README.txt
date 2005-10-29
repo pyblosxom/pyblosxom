@@ -68,8 +68,16 @@ and information on installation, usage, and ownership.
   xmlrpc_metaweblog.py - implements the metaweblog xmlrpc interface
 
 
-REQUIREMENTS FOR PLUGINS
-========================
+3. IF YOU HAVE PROBLEMS
+=======================
+
+All problems with the plugins in the contributed plugins pack should
+be reported to the pyblosxom-users list.  If you can fix the problem
+and supply a diff--that would be immensely helpful.
+
+
+4. REQUIREMENTS FOR PLUGINS
+===========================
 
 All plugins must have the following items in order to be included
 in the contributed package:
