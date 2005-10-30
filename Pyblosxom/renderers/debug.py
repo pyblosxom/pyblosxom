@@ -10,7 +10,7 @@ def E(s):
     if not s:
         return ""
 
-    if not type(s) == types.StringType:
+    if not isinstance(s, str):
         s = repr(s)
 
     return s.replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;")
@@ -66,14 +66,14 @@ class Renderer(RendererBase):
         printout("Entries to process:\n")
         printout("------------------------------------------------------\n")
         for content in self._content:
-            if type(content) != types.StringType:
+            if not isinstance(content, str):
                 printout("%s\n" % E(content.get('filename', 'No such file\n')))
 
         printout("------------------------------------------------------\n")
         printout("Entries processed:\n")
         printout("------------------------------------------------------\n")
         for content in self._content:
-            if type(content) != types.StringType:
+            if not isinstance(content, str):
                 printout("------------------------------------------------------\n")
                 printout("Items for %s:\n" % E(content.get('filename', 'No such file\n')))
                 printout("------------------------------------------------------\n")
@@ -84,7 +84,7 @@ class Renderer(RendererBase):
         printout("------------------------------------------------------\n")
         cache = tools.get_cache(self._request)
         for content in self._content:
-            if type(content) != types.StringType:
+            if not isinstance(content, str):
                 filename = content['filename']
             
                 if cache.has_key(filename):
@@ -95,7 +95,7 @@ class Renderer(RendererBase):
         printout("Cached Entry Bodies:\n")
         printout("------------------------------------------------------\n")
         for content in self._content:
-            if type(content) != types.StringType:
+            if not isinstance(content, str):
                 filename = content['filename']
                 if cache.has_key(filename):
                     printout("%s\n" % E(cache[filename]['title']))
