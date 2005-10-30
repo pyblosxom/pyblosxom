@@ -775,6 +775,7 @@ def blosxom_handler(request):
 
         data["date"] = time.strftime('%a, %d %b %Y', mtime_tuple)
         data["w3cdate"] = time.strftime('%Y-%m-%dT%H:%M:%SZ', mtime_gmtuple)
+        data['rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', mtime_gmtuple)
 
     # we pass the request with the entry_list through the prepare callback
     # giving everyone a chance to transform the data.  the request is
