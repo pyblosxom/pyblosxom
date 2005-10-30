@@ -20,7 +20,7 @@ to close a category and <li> for each item:
 
 py["category_start"] = "<ul>"
 py["category_begin"] = "<li><ul>"
-py["category_item"] = r'<li><a href="%(base_url)s/%(category)sindex">%(category)s</a></li>'
+py["category_item"] = r'<li><a href="%(base_url)s/%(category)sindex.%(flavour)s">%(category)s</a></li>'
 py["category_end"] = "</li></ul>"
 py["category_finish"] = "</ul>"
 
@@ -31,11 +31,12 @@ category:
 
 py["category_start"] = ""
 py["category_begin"] = ""
-py["category_item"] = r'%(indent)s<a href="%(base_url)s/%(category)sindex">%(category)s</a> (%(count)d)<br />'
+py["category_item"] = r'%(indent)s<a href="%(base_url)s/%(category)sindex.%(flavour)">%(category)s</a> (%(count)d)<br />'
 py["category_end"] = ""
 py["category_finish"] = ""
 
-There are no variables available in the category_begin or category_end templates.
+There are no variables available in the category_begin or category_end 
+templates.
 
 Available variables in the category_item template:
 
