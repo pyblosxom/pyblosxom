@@ -16,7 +16,7 @@ $blog_description
 </author>
 <rights>$blog_rights</rights>
 <generator uri="http://pyblosxom.sourceforge.net/" version="$pyblosxom_version">
-pyBlosxom $pyblosxom_version
+PyBlosxom http://pyblosxom.sourceforge.net/ $pyblosxom_version
 </generator>
 
 <updated>$w3cdate</updated>
