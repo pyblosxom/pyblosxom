@@ -1,0 +1,11 @@
+<item>
+   <title>$title</title>
+   <guid isPermaLink="false">$file_path</guid>
+   <link>$base_url/$file_path</link>
+   <description>$body</description>
+   <content:encoded><![CDATA[
+$body
+]]></content:encoded>
+   <category domain="$base_url">$path</category>
+   <pubDate>$rfc822date</pubDate>
+</item>

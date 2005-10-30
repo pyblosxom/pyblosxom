@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<rss version="2.0" 
+   xmlns:admin="http://webns.net/mvcb/" 
+   xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+   xmlns:creativeCommons="http://backend.userland.com/creativeCommonsRssModule" 
+   xmlns:dc="http://purl.org/dc/elements/1.1/" 
+   xmlns:html="http://www.w3.org/1999/html" 
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+   xmlns:slash="http://purl.org/rss/1.0/modules/slash/">
+<channel>
+   <title>$blog_title_urlencoded</title>
+   <link>$base_url</link>
+   <description>$blog_description</description>
+   <language>$blog_language</language>
+   <copyright>$blog_rights</copyright>
+   <ttl>60</ttl>
+   <pubDate>$rfc822date</pubDate>
+   <dc:creator>$blog_author</dc:creator>
+   <admin:generatorAgent rdf:resource="http://pyblosxom.sourceforge.net/" />
+   <admin:errorReportsTo rdf:resource="mailto:$blog_email" />
