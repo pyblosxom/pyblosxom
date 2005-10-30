@@ -2,10 +2,9 @@
    <title>$title</title>
    <guid isPermaLink="false">$file_path</guid>
    <link>$base_url/$file_path</link>
-   <description>$body</description>
-   <content:encoded><![CDATA[
+   <description><![CDATA[
 $body
-]]></content:encoded>
+]]></description>
    <category domain="$base_url">$path</category>
    <pubDate>$rfc822date</pubDate>
 </item>
