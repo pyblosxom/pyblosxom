@@ -5,17 +5,6 @@ General
 
  * Added release dates to CHANGELOG.txt file.
 
-pycategories
-
- * Fixed a cosmetic issue where an extra / was getting added to the
-   root url
-
- * Fixed a problem where the finish template was incorrectly pulling
-   from the category_finish config property.  Thanks Rob!
-
- * Fixed a problem where the totals weren't being counted correctly.
-   Thanks Rob!
-
 comments
 
  * Adjusted the behavior so that comments are shown if "showcomments=yes" 
@@ -35,6 +24,24 @@ comments
 
  * Fixed issues with rendering.  Also removed the "if this is rss,
    then don't do stuff".
+
+pycategories
+
+ * Fixed a cosmetic issue where an extra / was getting added to the
+   root url
+
+ * Fixed a problem where the finish template was incorrectly pulling
+   from the category_finish config property.  Thanks Rob!
+
+ * Fixed a problem where the totals weren't being counted correctly.
+   Thanks Rob!
+
+rst entryparser
+
+ * Added two configurable options to the rst entryparser.  The first 
+   sets the starting level for rendered heading elements.  The second 
+   enables and disables the promotion of a lone top-level section title 
+   to the document title.  Thanks Jan-Wijbrand!
 
 
 Changes between contributed pack 1.2.1 and 1.2.2 (21 June, 2005)
