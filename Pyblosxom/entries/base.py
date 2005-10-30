@@ -194,6 +194,7 @@ class EntryBase:
         self['fulltime'] = time.strftime('%Y%m%d%H%M%S', timeTuple)
         # YYYY-MM-DDThh:mm:ssZ
         self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', gmTimeTuple)
+        self['rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', gmTimeTuple)
         self['date'] = time.strftime('%a, %d %b %Y', timeTuple)
 
     def __getitem__(self, key, default=None):
