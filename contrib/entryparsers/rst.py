@@ -22,6 +22,18 @@ title of your blog::
     #parser reST
     My main story...
 
+There's two optional configuration parameter you can for additional control
+over the rendered HTML::
+
+  # To set the starting level for the rendered heading elements.
+  # 1 is the default.
+  py['reST_initial_header_level'] = 1
+  
+  # Enable or disable the promotion of a lone top-level section title to
+  # document title (and subsequent section title to document subtitle
+  # promotion); enabled by default.
+  py['reST_transform_doctitle'] = 1
+    
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
 files (the "Software"), to deal in the Software without restriction,
@@ -42,12 +54,12 @@ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Copyright 2003, 2004, 2005 Sean Bowman
+Copyright 2003-2005 Sean Bowman
 """
 __version__ = '$Id$'
 __author__ = 'Sean Bowman <sean dot bowman at acm dot org>'
 
-from docutils.core import publish_string
+from docutils.core import publish_parts
 from Pyblosxom import tools
 
 def cb_entryparser(args):
@@ -55,24 +67,28 @@ def cb_entryparser(args):
     return args
 
 def cb_preformat(args):
-    if args['parser'] == PREFORMATTER_ID:
-        return parse(''.join(args['story']))
-
-def parse(story):
-    html = publish_string(story, writer_name='html')
-    return html[html.find('<body>') + 6:html.find('</body>')]
+    if args.get("parser", None) == PREFORMATTER_ID:
+        return parse(''.join(args['story']), args['request'])
+    
+def parse(story, request):
+    config = request.getConfiguration()
+    initial_header_level = config.get('reST_initial_header_level', 1)
+    transform_doctitle = config.get('reST_transform_doctitle', 1)
+    settings = {
+        'initial_header_level': initial_header_level, 
+        'doctitle_xform': transform_doctitle
+        }
+    parts = publish_parts(
+        story, writer_name='html', settings_overrides=settings)
+    return parts['html_body']
 
 def readfile(filename, request):
     entryData = {}
-    d = open(filename).read()
-    title = d.split('\n')[0]
-    d = d[len(title):]
-    body = parse(d)
-    entryData = {'title': title,
-                 'body': body}
+    lines = open(filename).readlines()
+    title = lines.pop(0)
+    body = parse(''.join(lines), request)
+    entryData = {'title': title, 'body': body}
     # Call the postformat callbacks
-    tools.run_callback('postformat',
-            {'request': request,
-             'entry_data': entryData})
-    
+    tools.run_callback(
+        'postformat', {'request': request, 'entry_data': entryData})
     return entryData
