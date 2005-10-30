@@ -5,12 +5,12 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
    xmlns:slash="http://purl.org/rss/1.0/modules/slash/">
 <channel>
-   <title>$blog_title_urlencoded</title>
+   <title>$blog_title</title>
    <link>$base_url</link>
    <description>$blog_description</description>
    <language>$blog_language</language>
    <copyright>$blog_rights</copyright>
    <ttl>60</ttl>
    <pubDate>$rfc822date</pubDate>
-   <managingEditor>$blog_author</managingEditor>
+   <managingEditor>$blog_email</managingEditor>
    <generator>PyBlosxom http://pyblosxom.sourceforge.net/ $pyblosxom_version</generator>
