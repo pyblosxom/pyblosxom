@@ -130,6 +130,29 @@ py["datadir"] = "e:/blogdata/datadir/"
 </listitem>
 </varlistentry>
 
+<varlistentry><term><varname>flavourdir</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>This is the full path to where your PyBlosxom flavours are kept.</para>
+<para>If you don't set the flavourdir, then you can put your flavour files
+in the datadir with your entries.</para>
+<para>Example of flavours for unix/linux/osx:</para>
+<programlisting role="python"><![CDATA[
+py["flavourdir"] = "/home/will/blog/flavourdir/"
+]]></programlisting>
+<para>Examples of flavourdir for windows:</para>
+<programlisting role="python"><![CDATA[
+py["datadir"] = "/blogdata/flavourdir/"
+py["datadir"] = "e:/blogdata/flavourdir/"
+]]></programlisting>
+<para>If you're using Windows, don't use \ in the flavourdir path.</para>
+</listitem>
+</varlistentry>
+
 <varlistentry><term><varname>default_flavour</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
