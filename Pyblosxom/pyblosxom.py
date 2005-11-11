@@ -835,6 +835,11 @@ def blosxom_entry_parser(filename, request):
 
     lines = open(filename).readlines()
 
+    # the file has nothing in it...  so we're going to return
+    # a blank entry data object.
+    if len(lines) == 0:
+        return { "title": "", "body": "" }
+
     # NOTE: you can probably use the next bunch of lines verbatim
     # for all entryparser plugins.  this pulls the first line off as
     # the title, the next bunch of lines that start with # as 
@@ -843,8 +848,8 @@ def blosxom_entry_parser(filename, request):
     title = lines.pop(0)
     entryData['title'] = title
 
-    # absorb meta data
-    while lines[0].startswith("#"):
+    # absorb meta data lines which begin with a #
+    while lines and lines[0].startswith("#"):
         meta = lines.pop(0)
         meta = meta[1:].strip()     # remove the hash
         meta = meta.split(" ", 2)
