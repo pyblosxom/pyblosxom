@@ -833,34 +833,36 @@ def blosxom_entry_parser(filename, request):
 
     entryData = {}
 
-    story = open(filename).readlines()
+    lines = open(filename).readlines()
 
-    if len(story) > 0:
-        entryData['title'] = story.pop(0).strip()
+    # NOTE: you can probably use the next bunch of lines verbatim
+    # for all entryparser plugins.  this pulls the first line off as
+    # the title, the next bunch of lines that start with # as 
+    # metadata lines, and then everything after that is the body
+    # of the entry.
+    title = lines.pop(0)
+    entryData['title'] = title
 
-    # this handles properties of the entry that are between
-    # the title and the body and start with a #
-    while len(story) > 0:
-        match = re.match(r'^#(\w+)\s+(.*)', story[0])
-        if match:
-            story.pop(0)
-            entryData[match.groups()[0]] = match.groups()[1].strip()
-        else:
-            break
+    # absorb meta data
+    while lines[0].startswith("#"):
+        meta = lines.pop(0)
+        meta = meta[1:].strip()     # remove the hash
+        meta = meta.split(" ", 2)
+        entryData[meta[0]] = meta[1]
 
     # Call the preformat function
-    entryData['body'] = tools.run_callback('preformat',
-            {'parser': (entryData.get('parser', '') 
-                    or config.get('parser', 'plain')),
-             'story': story,
-             'request': request},
-            donefunc = lambda x:x != None,
-            defaultfunc = lambda x: ''.join(x['story']))
+    args = {'parser': entryData.get('parser', config.get('parser', 'plain')),
+            'story': lines,
+            'request': request}
+    entryData['body'] = tools.run_callback('preformat', 
+                                           args,
+                                           donefunc = lambda x:x != None,
+                                           defaultfunc = lambda x: ''.join(x['story']))
 
     # Call the postformat callbacks
     tools.run_callback('postformat',
-            {'request': request,
-             'entry_data': entryData})
+                      {'request': request,
+                       'entry_data': entryData})
         
     return entryData
 
