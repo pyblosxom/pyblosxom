@@ -453,7 +453,8 @@ class Request(object):
         # will block indefinitely on the read for a GET request with
         # thttpd.
         if method != "GET":
-            self._in.write(input.read())
+            length = int(pyhttp["CONTENT_LENGTH"])
+            self._in.write(input.read(length))
             # rewind to start
             self._in.seek(0)
 
@@ -845,7 +846,7 @@ def blosxom_entry_parser(filename, request):
     # the title, the next bunch of lines that start with # as 
     # metadata lines, and then everything after that is the body
     # of the entry.
-    title = lines.pop(0)
+    title = lines.pop(0).strip()
     entryData['title'] = title
 
     # absorb meta data lines which begin with a #
@@ -853,7 +854,7 @@ def blosxom_entry_parser(filename, request):
         meta = lines.pop(0)
         meta = meta[1:].strip()     # remove the hash
         meta = meta.split(" ", 2)
-        entryData[meta[0]] = meta[1]
+        entryData[meta[0].strip()] = meta[1].strip()
 
     # Call the preformat function
     args = {'parser': entryData.get('parser', config.get('parser', 'plain')),
