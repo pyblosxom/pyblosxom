@@ -10,7 +10,7 @@ The swiss army knife for all things pyblosxom
 @var VAR_REGEXP: Regular expression for detection and substituion of variables
 """
 import plugin_utils
-import sgmllib, re, os, string, types, time, os.path, StringIO, sys
+import sgmllib, re, os, string, types, time, os.path, StringIO, sys, urllib
 
 try:
     from xml.sax.saxutils import escape
@@ -109,12 +109,13 @@ class VariableDict:
             return self.__escape(self._dict.get(key, default))
 
         if key.endswith("_urlencoded"):
+            key = key[:-11]
             return self.__urlencode(self._dict.get(key, default))
 
         return self._dict.get(key, default)
 
     def get(self, key, default=None):
-        return self._dict.get(key, default)
+        return self.__getitem__(key, default)
 
     def __setitem__(self, key, value):
         self._dict.__setitem__(key, value)
