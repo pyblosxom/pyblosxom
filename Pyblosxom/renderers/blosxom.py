@@ -202,20 +202,19 @@ class BlosxomRenderer(RendererBase):
 
         outputbuffer = []
 
-        content_type = type(self._content)
         if callable(self._content):
             # if the content is a callable function, then we just spit out
             # whatever it returns as a string
             outputbuffer.append(self._content())
 
-        elif content_type is type({}):
+        elif isinstance(self._content, dict):
             # if the content is a dict, then we parse it as if it were an
             # entry--except it's distinctly not an EntryBase derivative
             self._content.update(data)
             output = tools.parse(self._request, self._encoding, self._content, self.flavour['story'])
             outputbuffer.append(output)
 
-        elif content_type is type([]):
+        elif isinstance(self._content, list):
             current_date = ''
 
             for entry in self._content:
