@@ -225,10 +225,10 @@ class Replacer:
                 else:
                     r = r()
 
-            if type(r) != types.StringType and type(r) != types.UnicodeType:
+            if not isinstance(r, str) and not isinstance(r, unicode):
                 r = str(r)
 
-            if type(r) != types.UnicodeType: 
+            if not isinstance(r, unicode):
                 # convert strings to unicode, assumes strings in iso-8859-1
                 r = unicode(r, self._encoding, 'replace')
 
@@ -259,7 +259,7 @@ def parse(request, encoding, var_dict, template):
     @returns: Substituted template
     @rtype: string
     """
-    if type(template) != types.UnicodeType: 
+    if not isinstance(template, unicode):
         # convert strings to unicode, assumes strings in iso-8859-1
         template = unicode(template, encoding, 'replace')
 
@@ -312,7 +312,9 @@ def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
         pattern = re.compile(r'.*\.(' + '|'.join(ext.keys()) + r')$')
 
     ignore = request.getConfiguration().get("ignore_directories", None)
-    if type(ignore) == type(""): ignore = [ignore]
+    if isinstance(ignore, str):
+        ignore = [ignore]
+
     if ignore:
         ignore = map(re.escape, ignore)
         ignorere = re.compile(r'.*?(' + '|'.join(ignore) + r')$')
