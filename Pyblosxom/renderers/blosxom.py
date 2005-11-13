@@ -21,11 +21,9 @@ def get_included_flavour(taste):
     @param taste The name of the taste.  e.g. "html", "rss", ...
     @type  taste string
 
-    @returns The list of template full filenames or None
-    @rtype list of strings or None
+    @returns A dict of template type to template file or None
+    @rtype dict or None
     """
-    template_files = None
-
     path = __file__[:__file__.rfind(os.sep)]
     path = path[:path.rfind(os.sep)+1] + "flavours" + os.sep
 
@@ -33,24 +31,39 @@ def get_included_flavour(taste):
 
     if os.path.isdir(path):
         template_files = os.listdir(path)
-        template_files = [path + os.sep + m for m in template_files if m.endswith("." + taste)]
+        template_d = {}
+        for mem in template_files:
+            if not mem.endswith("." + taste):
+                continue
+            template_d[os.path.splitext(mem)[0]] = path + os.sep + mem
+        return template_d
 
-    return template_files
+    return None
 
 def get_flavour_from_dir(path, taste):
-    template_files = None
+    template_d = {}
+
     # if we have a taste.flav directory, we check there
     if os.path.isdir(path + os.sep + taste + ".flav"):
         newpath = path + os.sep + taste + ".flav"
         template_files = os.listdir(newpath)
-        template_files = [newpath + os.sep + m for m in template_files if m.endswith("." + taste)]
+        for mem in template_files:
+            if not mem.endswith("." + taste):
+                continue
+            template_d[os.path.splitext(mem)[0]] = newpath + os.sep + mem
+        return template_d
 
     # now we check the directory itself for flavour templates
-    if not template_files:
-        template_files = os.listdir(path)
-        template_files = [path + os.sep + m for m in template_files if m.endswith("." + taste)]
+    template_files = os.listdir(path)
+    for mem in template_files:
+        if not mem.endswith("." + taste):
+            continue
+        template_d[os.path.splitext(mem)[0]] = path + os.sep + mem
 
-    return template_files
+    if template_d:
+        return template_d
+
+    return None
 
 class BlosxomRenderer(RendererBase):
     def __init__(self, request, stdoutput = sys.stdout):
@@ -73,68 +86,46 @@ class BlosxomRenderer(RendererBase):
         config = self._request.getConfiguration()
         datadir = config["datadir"]
 
-        pattern = re.compile(r'.+?\.(?<!config\.)' + taste + '$')
-
-        template_files = {}
-
         # if they have flavourdir set, then we look there.  otherwise
-        # we look in the datadir
+        # we look in the datadir.
         flavourdir = config.get("flavourdir", datadir)
 
-        # walk through the request looking in directory hierarchies
-        # until we find the templates we want.
+        # first we grab the flavour files for the included flavour (if
+        # we have one).
+        template_d = get_included_flavour(taste)
 
-        dirname = data["root_datadir"]
-        if os.path.isfile(dirname):
-            dirname = os.path.dirname(dirname)
+        pathinfo = list(data["path_info"])
 
-        # the dirname at this point is a complete file path.  so we need to
-        # pluck the datadir portion off the front reducing it to a category
-        dirname = dirname[len(datadir):]
+        # check the root of flavourdir for templates
+        new_files = get_flavour_from_dir(flavourdir, taste)
+        if new_files:
+            template_d.update(new_files)
 
-        template_files = None
-        while len(dirname) > 0:
-            path = flavourdir + dirname
-
-            template_files = get_flavour_from_dir(path, taste)
-
-            # if we found template files, then we break out and move along
-            if len(template_files) > 0:
+        # go through all the directories from the flavourdir all
+        # the way up to the root_datadir.  this way template files
+        # can override template files in parent directories.
+        while len(pathinfo) > 0:
+            flavourdir = os.path.join(flavourdir, pathinfo.pop(0))
+            if os.path.isfile(flavourdir):
                 break
 
-            # otherwise we peel off another piece of the category and continue
-            # looping
-            newdirname = os.path.split(dirname)[0]
-            if newdirname == dirname:
+            if not os.path.isdir(flavourdir):
                 break
-            dirname = newdirname
 
-        # we haven't found the flavour files yet, so we try the root
-        if not template_files:
-            template_files = get_flavour_from_dir(flavourdir, taste)
-
-        # if we haven't found the template files yet, we check our
-        # contributed flavours directory--these are always in taste.flav
-        # directories
-        if not template_files:
-            template_files = get_included_flavour(taste)
+            new_files = get_flavour_from_dir(flavourdir, taste)
+            if new_files:
+                template_d.update(new_files)
 
         # if we still haven't found our flavour files, we raise an exception
-        if not template_files:
+        if not template_d:
             raise NoSuchFlavourException("Flavour '" + taste + "' does not exist.")
 
-        # we grab a copy of the templates for the taste we want
-        flavour = {}
-
-        # we load the flavour templates into our flavour dict
-        for filename in template_files:
-            flavouring = os.path.basename(filename).split('.')
-            flav_template = unicode(open(filename).read(), 
+        for k in template_d.keys():
+            flav_template = unicode(open(template_d[k]).read(), 
                     config.get('blog_encoding', 'iso-8859-1'))
+            template_d[k] = flav_template
 
-            flavour[flavouring[0]] = flav_template
-
-        return flavour
+        return template_d
 
     def _printTemplate(self, entry, template):
         """
@@ -172,7 +163,7 @@ class BlosxomRenderer(RendererBase):
             s.close()
             p = ['  ' + line for line in s.gettext().split('\n')]
             entry.setData('\n'.join(p))
-            
+
         entry.update(data)
         entry.update(config)
 
