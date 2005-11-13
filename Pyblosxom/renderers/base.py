@@ -109,9 +109,9 @@ class RendererBase:
             dict containing at least 'title' and 'body'
         """
         self._content = content
-        if type(self._content) == type({}):
+        if isinstance(self._content, dict):
             mtime = self._content.get("mtime", time.time())
-        elif type(self._content) == type([]):
+        elif isinstance(self._content, list):
             mtime = self._content[0].get("mtime", time.time())
         else:
             mtime = time.time()
