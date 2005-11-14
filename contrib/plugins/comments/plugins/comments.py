@@ -15,7 +15,7 @@ If you make any changes to this plugin, please a send a patch with your
 changes to twl+pyblosxom@sauria.com so that we can incorporate your changes.
 Thanks!
 
-This plugin requires the PyXML module.
+Note: This plugin requires the PyXML module.
 
 This module supports the following config parameters (they are not
 required):
@@ -44,7 +44,9 @@ entry, plus the creation time of the comment as a float, plus the
 comment extension.  The contents of the comment file is an RSS 2.0
 formatted item.
 
-Comments now follow the blog_encoding variable specified in config.py
+Comments now follow the blog_encoding variable specified in config.py .
+If you don't include a blog_encoding variable, this will default to
+iso-8859-1.
 
 Comments will be shown for a given page if one of the following is
 true:
@@ -349,6 +351,7 @@ def writeComment(request, config, data, comment, encoding):
     filedata = '<?xml version="1.0" encoding="%s"?>\n' % encoding
     filedata += "<item>\n"
     filedata += makeXMLField('title', comment)
+    filedata += makeXMLField('ipaddress', comment)
     filedata += makeXMLField('author', comment)
     filedata += makeXMLField('link', comment)
     filedata += makeXMLField('email', comment)
@@ -426,6 +429,8 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
 
     author = escape_SMTP_commands(clean_author(comment['author']))
     description = escape_SMTP_commands(comment['description'])
+    ipaddress = escape_SMTP_commands(comment.get('ipaddress', '?'))
+
     if comment.has_key('email'):
         email = comment['email']
     else:
@@ -442,7 +447,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         message.append("Date: %s" % formatdate(float(comment['pubDate'])))
         message.append("Subject: write back by %s" % author)
         message.append("")
-        message.append("%s\n%s\n%s\n" % (description, comment_filename, curl))
+        message.append("%s\n%s\n%s\n%s\n" % (description, ipaddress, comment_filename, curl))
         server.sendmail(from_addr=email,
                         to_addrs=config['comment_smtp_to'], 
                         msg="\n".join(message))
@@ -607,7 +612,7 @@ def cb_prepare(args):
     if form.has_key("title") and form.has_key("author") and \
         form.has_key("body") and not form.has_key("preview"):
 
-        encoding = config['blog_encoding']
+        encoding = config.get('blog_encoding', 'iso-8859-1')
         decode_form(form, encoding)
 
         body = form['body'].value
@@ -625,9 +630,11 @@ def cb_prepare(args):
                  'link' : escape_link(url), \
                  'source' : '', \
                  'description' : add_dont_follow(body, config) }
+
         if form.has_key('email'):
             cdict['email'] = form['email'].value
 
+        cdict['ipaddress'] = pyhttp.get('REMOTE_ADDR', '')
         data["comment_message"] = writeComment(request, config, data, \
                                                 cdict, encoding)
 
