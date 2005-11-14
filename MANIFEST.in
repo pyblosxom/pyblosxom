@@ -5,3 +5,4 @@ include docs/LICENSE.portalocker
 include docs/ReadMeForPlugins.py
 recursive-include Pyblosxom *.py
 recursive-include web *
+recursive-include Pyblosxom/flavours *
