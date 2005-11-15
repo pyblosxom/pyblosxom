@@ -11,6 +11,6 @@
    <language>$blog_language</language>
    <copyright>$blog_rights</copyright>
    <ttl>60</ttl>
-   <pubDate>$rfc822date</pubDate>
+   <pubDate>$latest_rfc822date</pubDate>
    <managingEditor>$blog_email</managingEditor>
    <generator>PyBlosxom http://pyblosxom.sourceforge.net/ $pyblosxom_version</generator>

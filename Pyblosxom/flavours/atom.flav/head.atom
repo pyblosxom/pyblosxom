@@ -19,5 +19,5 @@ $blog_description
 PyBlosxom http://pyblosxom.sourceforge.net/ $pyblosxom_version
 </generator>
 
-<updated>$w3cdate</updated>
+<updated>$latest_w3cdate</updated>
 <!-- icon?  logo?  -->
