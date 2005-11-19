@@ -1,3 +1,30 @@
+Changes between 1.2 and 1.3
+===========================
+
+Pertinent to users:
+-------------------
+
+1. We added a "blog_rights" property.  This holds a textual description
+   of the rights you give to others who read your blog.  Leaving this
+   blank or not filling it in will affect the RSS 2.0 and ATOM 1.0
+   feeds.
+
+2. If you set "flavourdir" in your config.py file, you have to put
+   your flavour files in that directory tree.  If you don't set
+   "flavourdir", then PyBlosxom expects to find your flavour files
+   in your "datadir".
+
+   Generally speaking, the flavour overhaul shouldn't affect you
+   aversely.  It should be backwards compatible with existing
+   PyBlosxom installations and configurations.
+
+
+Pertinent to developers and plugin developers:
+----------------------------------------------
+
+Nothing that I know of.
+
+
 Changes between 1.1 and 1.2
 ===========================
 
