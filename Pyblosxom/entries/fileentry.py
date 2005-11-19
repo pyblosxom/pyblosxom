@@ -51,7 +51,13 @@ class FileEntry(base.EntryBase):
         return "<fileentry f'%s' r'%s'>" % (self._filename, self._root)
 
     def setTimeLazy(self, timetuple):
-        """set the time without populating the entry"""
+        """
+        Set the time without populating the entry.
+
+        @param timetuple: the mtime of the file (same as returned by 
+                          time.localtime(...))   
+        @type  timetuple: tuple of 9 ints     
+        """
         self._timetuple = timetuple
         self._mtime = time.mktime(timetuple)
         self._fulltime = time.strftime("%Y%m%d%H%M%S", timetuple)
@@ -60,6 +66,9 @@ class FileEntry(base.EntryBase):
         """
         Returns the id for this content item--in this case, it's the
         filename.
+
+        @returns: the id of the fileentry (the filename)
+        @rtype: string
         """
         return self._filename
 
@@ -79,8 +88,21 @@ class FileEntry(base.EntryBase):
 
     def getMetadata(self, key, default=None):
         """
-        We populate our metadata lazily--only when it's requested.
+        This overrides the L{base.EntryBase} getMetadata method.
+
+        Note: We populate our metadata lazily--only when it's requested.
         This delays parsing of the file as long as we can.
+
+        @param key: the key being sought
+        @type  key: varies
+
+        @param default: the default to return if the key does not
+            exist
+        @type  default: varies
+
+        @return: either the default (if the key did not exist) or the
+            value of the key in the metadata dict
+        @rtype: varies
         """
         if self._populated_data == 0:
             self.__populateData()

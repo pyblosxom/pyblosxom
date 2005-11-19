@@ -211,6 +211,13 @@ class EntryBase:
         There's no reason to override this--override getData and
         getMetadata instead.
 
+        @param key: the key being sought
+        @type  key: varies
+
+        @param default: the default to return if the key does not
+            exist
+        @type  default: varies
+
         @returns: the value of self._metadata.get(key, default) or 
             self.getData()
         @rtype: varies
@@ -222,6 +229,26 @@ class EntryBase:
         return self.getMetadata(key, default)
 
     def get(self, key, default=None):
+        """
+        Retrieves an item from the internal dict based on the key
+        given.
+
+        All this does is turn aroun and call __getitem__.
+
+        There's no reason to override this--override getData and
+        getMetadata instead.
+
+        @param key: the key being sought
+        @type  key: varies
+
+        @param default: the default to return if the key does not
+            exist
+        @type  default: varies
+
+        @returns: the value of self._metadata.get(key, default) or 
+            self.getData() (through __getitem__)
+        @rtype: varies
+        """
         return self.__getitem__(key, default)
 
     def __setitem__(self, key, value):
