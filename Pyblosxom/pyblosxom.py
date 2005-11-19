@@ -340,6 +340,13 @@ class PyBlosxom:
         self.cleanup()
 
     def testInstallation(self):
+        """
+        Goes through and runs some basic tests of the installation
+        to make sure things are working.
+
+        FIXME - This could probably use some work.  Maybe make this like
+        MoinMoin's SystemInfo page?
+        """
         tools.initialize(self._config)
         test_installation(self._request)
         tools.cleanup()
@@ -610,7 +617,6 @@ class Response(object):
     This class is basically a wrapper arround a StringIO instance.
     It also provides methods for managing http headers.
     """
-
     def __init__(self, request):
         """
         Sets the L{Request} object that leaded to this response.
@@ -725,6 +731,23 @@ class Response(object):
 def blosxom_handler(request):
     """
     This is the default blosxom handler.
+
+    It calls the renderer callback to get a renderer.  If there is 
+    no renderer, it uses the blosxom renderer.
+
+    It calls the pathinfo callback to process the path_info http
+    variable.
+
+    It calls the filelist callback to build a list of entries to
+    display.
+
+    It calls the prepare callback to do any additional preparation
+    before rendering the entries.
+
+    Then it tells the renderer to render the entries.
+
+    @param request: A standard request object
+    @type request: L{Pyblosxom.pyblosxom.Request} object
     """
 
     config = request.getConfiguration()
