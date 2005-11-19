@@ -1,13 +1,17 @@
 """
-This is the default renderer.  It tries to match the behavior of the
-blosxom renderer.
+This is the default blosxom renderer.  It tries to match the behavior 
+of the blosxom renderer.
 """
 
 from Pyblosxom import tools
 from Pyblosxom.renderers.base import RendererBase
-import re, os, sys, codecs
+import os, sys, codecs
 
 class NoSuchFlavourException(Exception):
+    """
+    This exception gets thrown when the flavour requested is not
+    available in this blog.
+    """
     def __init__(self, msg):
         self._msg = msg
 
@@ -41,6 +45,21 @@ def get_included_flavour(taste):
     return None
 
 def get_flavour_from_dir(path, taste):
+    """
+    Tries to get the template files for the flavour of a certain
+    taste (html, rss, atom10, ...) in a directory.  The files could
+    be in the directory or in a taste.flav subdirectory.
+
+    @param path: the path of the directory to look for the flavour
+                 templates in
+    @type  path: string
+
+    @param taste: the flavour files to look for (e.g. html, rss, atom10, ...)
+    @type  taste: string
+
+    @returns: the map of template name to template file path
+    @rtype: map
+    """
     template_d = {}
 
     # if we have a taste.flav directory, we check there
@@ -66,6 +85,10 @@ def get_flavour_from_dir(path, taste):
     return None
 
 class BlosxomRenderer(RendererBase):
+    """
+    This is the default blosxom renderer.  It tries to match the behavior 
+    of the blosxom renderer.
+    """
     def __init__(self, request, stdoutput = sys.stdout):
         RendererBase.__init__(self, request, stdoutput)
         config = request.getConfiguration()
@@ -78,9 +101,36 @@ class BlosxomRenderer(RendererBase):
 
     def _getFlavour(self, taste='html'):
         """
-        Flavours, or views, or templates, as some may call it, defaults are
-        given, but can be overidden with files on the datadir. Don't like the
-        default html templates, add your own, head.html, story.html etc.
+        This retrieves all the template files for a given flavour taste.
+        This will first pull the templates for the default flavour
+        of this taste if there are any.  Then it looks at EITHER
+        the configured datadir OR the flavourdir (if configured).  It'll
+        go through directories overriding the template files it has
+        already picked up descending the category path of the PyBlosxom
+        request.
+
+        For example, if the user requested the "html" flavour and is
+        looking at an entry in the category "dev/pyblosxom", then
+        _getFlavour will:
+
+        1. pick up the flavour files in the default html flavour
+        2. start in EITHER datadir OR flavourdir (if configured)
+        3. override the default html flavour files with html flavour
+           files in this directory or in html.flav/ subdirectory
+        4. override the html flavour files it's picked up so far
+           with html files in dev/ or dev/html.flav/
+        5. override the html flavour files it's picked up so far
+           with html files in dev/pyblosxom/ or 
+           dev/pyblosxom/html.flav/
+
+        If it doesn't find any flavour files at all, then it returns
+        None which indicates the flavour doesn't exist in this blog.
+
+        @param taste: the taste to retrieve flavour files for.
+        @type  taste: string
+
+        @returns: mapping of template name to template file data
+        @rtype: map
         """
         data = self._request.getData()
         config = self._request.getConfiguration()
@@ -151,6 +201,12 @@ class BlosxomRenderer(RendererBase):
 
         @param entry: either a dict or an Entry object
         @type  entry: dict or Entry object
+
+        @param current_date: the date of entries we're looking at
+        @type  string
+
+        @returns: the output string and the new current date
+        @rtype: (string, string)
         """
         data = self._request.getData()
         config = self._request.getConfiguration()
@@ -267,11 +323,6 @@ class BlosxomRenderer(RendererBase):
         
         self.rendered = 1
 
-        # FIXME - we might want to do this at a later point?
-        cache = tools.get_cache(self._request)
-        if cache:
-            cache.close()
-                
     def _outputFlavour(self, entry, template_name):
         """
         Find the flavour template for template_name, run any blosxom callbacks, 
