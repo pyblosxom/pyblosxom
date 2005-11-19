@@ -10,10 +10,12 @@ import string
 try: from cStringIO import StringIO
 except ImportError: from StringIO import StringIO
 
-# Utility function to log stuff while working on the _logging module.
 _devlogfile = "/tmp/dev-log.log"
 _log = None
 def dump(msg, *args):
+    """
+    Utility function to log stuff while working on the _logging module.
+    """
     global _log
     if _log == None or _log.closed:
         _log = open(_devlogfile, "a")
@@ -84,6 +86,7 @@ class Filterer(object):
     """
     def __init__(self):
         self.filters = []
+
     def addFilter(self, filter):
         if not (filter in self.filters):
             self.filters.append(filter)
@@ -362,7 +365,3 @@ def shutdown():
         h.close()
     _handlers = {}
     _logger_registry = {}
-
-
-
-
