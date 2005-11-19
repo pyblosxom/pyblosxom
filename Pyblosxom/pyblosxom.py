@@ -838,6 +838,10 @@ def blosxom_handler(request):
         output = config.get('stdoutput', sys.stdout)
         output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
 
+    cache = tools.get_cache(request)
+    if cache:
+        cache.close()
+
 
 def blosxom_entry_parser(filename, request):
     """
