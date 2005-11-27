@@ -976,6 +976,11 @@ def blosxom_process_path_info(args):
     pyhttp = request.getHttp()
 
     form = request.getForm()
+
+    # figure out which flavour to use.  the flavour is determined
+    # by looking at the "flav" post-data variable, the "flav"
+    # query string variable, the "default_flavour" setting in the
+    # config.py file, or "html"
     data['flavour'] = (form.has_key('flav') and form['flav'].value or 
             config.get('default_flavour', 'html'))
 
@@ -996,50 +1001,50 @@ def blosxom_process_path_info(args):
         if not path_data:
             continue
         elif tools.is_year(path_data):
-            # We got a hot date here guys :)
+            # we got a hot date here guys :)
             got_date = 1
             break
         else:
             data['pi_bl'] = os.path.join(data['pi_bl'], path_data)
 
     if got_date:
-        # Get messy with dates
+        # get messy with dates
         while not (len(path_info[0]) == 4 and path_info[0].isdigit()):
             path_info.pop(0)
-        # Year
-        data['pi_yr'] = path_info.pop(0)
-        # Month
-        if path_info and path_info[0] in tools.MONTHS:
-            data['pi_mo'] = path_info.pop(0)
-            # Day
-            if path_info and re.match("^([0-2][0-9]|3[0-1])", path_info[0]):
-                # Potential day here
-                data['pi_da'] = path_info.pop(0)
 
+        # year....
+        data['pi_yr'] = path_info.pop(0)
+
+        # month....
         if path_info and path_info[0]:
-            # Potential flavour after date
-            filename, ext = os.path.splitext(path_info[0])
-            if filename == 'index':
-                data['flavour'] = ext[1:]
+            if path_info[0] in tools.MONTHS:
+                data['pi_mo'] = path_info.pop(0)
+
+                # test for day
+                if path_info and re.match("^([0-2][0-9]|3[0-1])", path_info[0]):
+                    # Potential day here
+                    data['pi_da'] = path_info.pop(0)
+
+            else:
+                # potential flavour after date
+                filename, ext = os.path.splitext(path_info[0])
+
+                # if the filename is "index", the flavour is the extension
+                # afterwards.
+                if filename == 'index':
+                    data['flavour'] = ext[1:]
 
     blog_result = os.path.join(config['datadir'], data['pi_bl'])
     
     data['bl_type'] = ''
 
-    if data['pi_bl'] != '':
-        data['blog_title_with_path'] = '%s : %s' % (config['blog_title'], data['pi_bl'])
-    else:
-        data['blog_title_with_path'] = config["blog_title"]
-
-    # If all we've got is a directory, things are simple
+    # check to see if this is a directory....
     if os.path.isdir(blog_result):
         data['root_datadir'] = blog_result
         data['bl_type'] = 'dir'
 
-    # Else we may have a file
+    # check to see if it's a file....
     if not data['bl_type']:
-        # Try for file
-
         ext = tools.what_ext(data["extensions"].keys(), blog_result)
         if ext:
             data['bl_type'] = 'file'
@@ -1052,19 +1057,27 @@ def blosxom_process_path_info(args):
             dirname = os.path.dirname(filename)
 
             if fileext:
+                # the flavour is the extension of the file named here.
                 data['flavour'] = ext[1:]
                 data['root_datadir'] = filename + '.' + fileext
                 data['bl_type'] = 'file'
 
             elif (os.path.basename(filename) == 'index' and os.path.isdir(dirname)):
-                # blanket flavours?
+                # the flavour is the extension of the file named here.
                 data['flavour'] = ext[1:]
-                if os.path.dirname(data['pi_bl']) != '':
-                    config['blog_title'] = '%s : %s' % (config['blog_title'], os.path.dirname(data['pi_bl']))
+
                 data['root_datadir'] = dirname
                 data['bl_type'] = 'dir'
-                
-    # Construct our final URL
+
+    # figure out the blog_title_with_path data variable
+    blog_title = config["blog_title"]
+
+    if data['pi_bl'] != '':
+        data['blog_title_with_path'] = '%s : %s' % (blog_title, data['pi_bl'])
+    else:
+        data['blog_title_with_path'] = blog_title
+
+    # construct our final URL
     data['url'] = '%s/%s' % (config['base_url'], data['pi_bl'])
 
 
