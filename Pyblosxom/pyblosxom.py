@@ -460,10 +460,11 @@ class Request(object):
         # will block indefinitely on the read for a GET request with
         # thttpd.
         if method != "GET":
-            length = int(pyhttp["CONTENT_LENGTH"])
-            self._in.write(input.read(length))
-            # rewind to start
-            self._in.seek(0)
+            length = int(pyhttp.get("CONTENT_LENGTH", 0))
+            if length > 0:
+                self._in.write(input.read(length))
+                # rewind to start
+                self._in.seek(0)
 
     def setResponse(self, response):
         """
