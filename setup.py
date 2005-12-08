@@ -108,6 +108,7 @@ setup(name="pyblosxom",
     author_email="pyblosxom-devel@lists.sourceforge.net",
     url="http://roughingit.subtlehints.net/pyblosxom",
     packages=['Pyblosxom', 'Pyblosxom.cache', 'Pyblosxom.entries', 'Pyblosxom.renderers'],
+    package_data={'Pyblosxom': ['flavours/*.flav/*.*']},
     license = 'MIT',
     long_description =
 """Pyblosxom is a weblog engine that uses the filesystem as the database of
