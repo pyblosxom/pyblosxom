@@ -67,7 +67,6 @@ elif platform == "nix":
     pydf.append( [os.path.join('share', PVER, 'web'),
                   [os.path.normpath("web/pyblosxom.cgi"), 
                    os.path.normpath("web/pyblosxom.tac"), 
-                   os.path.normpath("web/pyblosxom_wsgi.cgi"), 
                    os.path.normpath("web/wsgi_app.py"), 
                    os.path.normpath("web/config.py")]])
 
