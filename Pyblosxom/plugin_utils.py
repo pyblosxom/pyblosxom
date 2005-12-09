@@ -7,10 +7,14 @@ for which callbacks are available and what their behavior is.
 import os, glob, sys
 import os.path
 
+__revision__ = "$Id$"
+
+# FIXME - we should store the plugins list in the Request object.
 plugins = []
 
 # this holds a list of callbacks (any function that begins with cp_) and the
 # list of function instances that support that callback.
+# FIXME - we should store the callbacks list in the Request object.
 callbacks = {}
 
 def catalogue_plugin(plugin_module):
@@ -24,7 +28,7 @@ def catalogue_plugin(plugin_module):
     global callbacks
     listing = dir(plugin_module)
 
-    listing = [m for m in listing if m.startswith("cb_")]
+    listing = [item for item in listing if item.startswith("cb_")]
 
     for mem in listing:
         func = getattr(plugin_module, mem)
@@ -73,7 +77,8 @@ def initialize_plugins(plugin_dirs, plugin_list):
         if os.path.isdir(mem):
             sys.path.append(mem)
         else:
-            raise Exception("Plugin directory '%s' does not exist.  Please check your config file." % mem)
+            raise Exception("Plugin directory '%s' does not exist.  " \
+                            "Please check your config file." % mem)
 
     plugin_list = get_plugin_list(plugin_list, plugin_dirs)
 
@@ -102,6 +107,20 @@ def get_plugin_by_name(name):
                 return mem
     return None
 
+def get_module_name(filename):
+    """
+    Takes a filename and returns the module name from the filename.
+
+    Example: passing in "/blah/blah/blah/module.ext" returns "module"
+
+    @param file_name: the filename in question (with a full path)
+    @type  file_name: string
+
+    @returns: the filename without path or extension
+    @rtype: string
+    """
+    return os.path.splitext(os.path.split(filename)[1])[0]
+
 def get_plugin_list(plugin_list, plugin_dirs):    
     """
     This handles the situation where the user has provided a series of
@@ -122,13 +141,14 @@ def get_plugin_list(plugin_list, plugin_dirs):
         plugin_list = []
         for mem in plugin_dirs:
             file_list = glob.glob(os.path.join(mem, "*.py"))
-            # get basename - py extension
-            file_list = [p[p.rfind(os.sep)+1:p.rfind(".")] for p in file_list]
+
+            file_list = [get_module_name(filename) for filename in file_list]
+
             # remove plugins that start with a _
-            file_list = [p for p in file_list if not p.startswith('_')]
+            file_list = [plugin for plugin in file_list \
+                         if not plugin.startswith('_')]
             plugin_list += file_list
 
         plugin_list.sort()
 
     return plugin_list
-
