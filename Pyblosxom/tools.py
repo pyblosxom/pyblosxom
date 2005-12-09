@@ -1,4 +1,3 @@
-# vim: tabstop=4 shiftwidth=4 expandtab
 """
 Tools module
 
@@ -10,7 +9,9 @@ The swiss army knife for all things pyblosxom
 @var VAR_REGEXP: Regular expression for detection and substituion of variables
 """
 import plugin_utils
-import sgmllib, re, os, string, types, time, os.path, StringIO, sys, urllib
+import sgmllib, re, os, types, time, os.path, sys, urllib
+
+__revision__ = "$Id$"
 
 try:
     from xml.sax.saxutils import escape
@@ -35,9 +36,9 @@ month2num = { 'nil' : '00',
 # This is not python 2.1 compatible (Nifty though)
 # num2month = dict(zip(month2num.itervalues(), month2num))
 num2month = {}
-for k,v in month2num.items():
-    num2month[v] = k
-    num2month[int(v)] = k
+for month_abbr, month_num in month2num.items():
+    num2month[month_num] = month_abbr
+    num2month[int(month_num)] = month_abbr
 
 # all the valid month possibilities
 MONTHS = num2month.keys() + month2num.keys()
@@ -154,13 +155,18 @@ class Stripper(sgmllib.SGMLParser):
     def __init__(self):
         self.data = []
         sgmllib.SGMLParser.__init__(self)
-    def unknown_starttag(self, tag, attrs): self.data.append(" ")
-    def unknown_endtag(self, tag): self.data.append(" ")
-    def handle_data(self, data): self.data.append(data)
-    def gettext(self):
-        text = string.join(self.data, "")
-        #return string.join(string.split(text)) # normalize whitespace
-        return text # non - normalized whitespace
+
+    def unknown_starttag(self, tag, attrs): 
+        self.data.append(" ")
+
+    def unknown_endtag(self, tag): 
+        self.data.append(" ")
+
+    def handle_data(self, data): 
+        self.data.append(data)
+
+    def gettext(self): 
+        return "".join(self.data)
 
 
 class Replacer:
@@ -475,7 +481,7 @@ def generateRandStr(minlen=5, maxlen=10):
     @returns: A string containing random characters
     @rtype: string
     """
-    import random
+    import random, string
     chars = string.letters + string.digits
     randStr = ""
     randStr_size = random.randint(minlen, maxlen)
@@ -540,9 +546,9 @@ def run_callback(chain, input,
 
     output = None
 
-    for mem in chain:
+    for func in chain:
         # we call the function with the input dict it returns an output.
-        output = mem(input)
+        output = func(input)
 
         # we fun the output through our donefunc to see if we should stop
         # iterating through the loop.  the donefunc should return a 1
@@ -585,11 +591,11 @@ def get_cache(request):
     if not mycache:
         config = request.getConfiguration()
 
-        cacheDriverConfig = config.get('cacheDriver', 'base')
-        cacheConfig = config.get('cacheConfig', '')
+        cache_driver_config = config.get('cacheDriver', 'base')
+        cache_config = config.get('cacheConfig', '')
 
-        cache_driver = importName('Pyblosxom.cache', cacheDriverConfig)
-        mycache = cache_driver.BlosxomCache(request, cacheConfig)
+        cache_driver = importName('Pyblosxom.cache', cache_driver_config)
+        mycache = cache_driver.BlosxomCache(request, cache_config)
 
         data["data_cache"] = mycache
 
@@ -623,7 +629,7 @@ def update_static_entry(cdict, entry_filename):
     renderme = []
     for mem in staticflavours:
         renderme.append( "/index" + "." + mem, "" )
-        renderme.append( entry_filepath + "." + mem, "" )
+        renderme.append( entry_filename + "." + mem, "" )
     
     for mem in renderme:
         render_url(cdict, mem[0], mem[1])
