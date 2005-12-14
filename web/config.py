@@ -35,18 +35,15 @@ py["blog_rights"] = "Copyright 2005 Joe Bobb"
 # Where are this blog's entries kept?
 py['datadir'] = "/path/to/blog"
 
-# Where should PyBlosxom log files be kept?
-py['logdir'] = "/path/to/logdir"
-
 # Where should the application log to?
 # If set to "NONE" log messages are silently ignored.
 # Falls back to sys.stderr if the file can't be opened for writing.
-py['log_file'] = "/path/to/pyblosxom.log"
+# py['log_file'] = "/path/to/pyblosxom.log"
 
 # At what level should we log to log_file?
 # One of: critical, error, warning, info, debug
 # For production 'warning' or 'error' is recommended.
-py['log_level'] = "warning"
+# py['log_level'] = "warning"
 
 # Let's you specify which channels should be logged.
 # If specified, only messages from the listed channels are logged.
@@ -54,7 +51,7 @@ py['log_level'] = "warning"
 # Application level messages are logged to a channel named 'root'.
 # If you use log_filter and ommit the 'root' channel here, app level messages 
 # are not logged! log_filter is mainly interesting to debug a specific plugin.
-#py['log_filter'] = ['root', 'plugin1', 'plugin2']
+# py['log_filter'] = ['root', 'plugin1', 'plugin2']
 
 # List of strings with directories that should be ignored (e.g. "CVS")
 # ex: py['ignore_directories'] = ["CVS", "temp"]
