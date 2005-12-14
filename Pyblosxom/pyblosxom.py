@@ -965,11 +965,11 @@ def blosxom_process_path_info(args):
     data dict accordingly
     
     The paths specification looks like this:
+        - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
         - C{/cat} - category
         - C{/2002} - year
         - C{/2002/Feb} (or 02) - Year and Month
         - C{/cat/2002/Feb/31} - year and month day in category.
-        - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
     To simplify checking, four digits directory name is not allowed.
 
     @param args: dict containing the incoming Request object
@@ -980,99 +980,124 @@ def blosxom_process_path_info(args):
     data = request.getData()
     pyhttp = request.getHttp()
 
+    logger = tools.getLogger()
+
     form = request.getForm()
 
     # figure out which flavour to use.  the flavour is determined
     # by looking at the "flav" post-data variable, the "flav"
     # query string variable, the "default_flavour" setting in the
     # config.py file, or "html"
-    data['flavour'] = (form.has_key('flav') and form['flav'].value or 
-            config.get('default_flavour', 'html'))
+    flav = config.get("default_flavour", "html")
+    if form.has_key("flav"):
+        flav = form["flav"].value
 
-    path_info = []
+    data['flavour'] = flav
+
     data['pi_yr'] = ''
     data['pi_mo'] = ''
     data['pi_da'] = ''
     
-    if pyhttp.get('PATH_INFO', ''):
-        path_info = pyhttp['PATH_INFO'].split('/')
-    path_info = [x for x in path_info if x != '']
+    path_info = pyhttp.get("PATH_INFO", "")
 
     data['path_info'] = list(path_info)
     data['root_datadir'] = config['datadir']
 
-    got_date = 0
-    for path_data in path_info:
-        if not path_data:
-            continue
-        elif tools.is_year(path_data):
-            # we got a hot date here guys :)
-            got_date = 1
-            break
-        else:
-            data['pi_bl'] = os.path.join(data['pi_bl'], path_data)
+    data["pi_bl"] = path_info
 
-    if got_date:
-        # get messy with dates
-        while not (len(path_info[0]) == 4 and path_info[0].isdigit()):
-            path_info.pop(0)
+    # first we check to see if there's a flavour extension
+    newpath, ext = os.path.splitext(path_info)
+    if ext:
+        # there is a flavour-like thing, so that's our new flavour
+        # and we adjust the path_info to the new filename
+        flav = ext[1:]
+        data["flavour"] = flav
+        path_info = newpath
 
-        # year....
-        data['pi_yr'] = path_info.pop(0)
+    if path_info.startswith("/"):
+        path_info = path_info[1:]
 
-        # month....
-        if path_info and path_info[0]:
-            if path_info[0] in tools.MONTHS:
-                data['pi_mo'] = path_info.pop(0)
+    absolute_path = os.path.join(config["datadir"], path_info)
 
-                # test for day
-                if path_info and re.match("^([0-2][0-9]|3[0-1])", path_info[0]):
-                    # Potential day here
-                    data['pi_da'] = path_info.pop(0)
+    if os.path.isdir(absolute_path):
 
-            else:
-                # potential flavour after date
-                filename, ext = os.path.splitext(path_info[0])
+        # this is an absolute path
 
-                # if the filename is "index", the flavour is the extension
-                # afterwards.
-                if filename == 'index':
-                    data['flavour'] = ext[1:]
-
-    blog_result = os.path.join(config['datadir'], data['pi_bl'])
-    
-    data['bl_type'] = ''
-
-    # check to see if this is a directory....
-    if os.path.isdir(blog_result):
-        data['root_datadir'] = blog_result
+        data['root_datadir'] = absolute_path
         data['bl_type'] = 'dir'
 
-    # check to see if it's a file....
-    if not data['bl_type']:
-        ext = tools.what_ext(data["extensions"].keys(), blog_result)
+    elif absolute_path.endswith("/index") and \
+            os.path.isdir(absolute_path[:-6]):
+
+        # this is an absolute path with /index at the end of it
+
+        data['root_datadir'] = absolute_path[:-6]
+        data['bl_type'] = 'dir'
+
+    else:
+
+        # this is either a file or a date
+
+        ext = tools.what_ext(data["extensions"].keys(), absolute_path)
         if ext:
-            data['bl_type'] = 'file'
-            data['root_datadir'] = blog_result + '.' + ext
+            # this is a file
+            data["bl_type"] = "file"
+            data["root_datadir"] = absolute_path + "." + ext
 
         else:
-            # We may have flavour embedded here
-            filename, ext = os.path.splitext(blog_result)
-            fileext = tools.what_ext(data["extensions"].keys(), filename)
-            dirname = os.path.dirname(filename)
+            data["bl_type"] = "dir"
 
-            if fileext:
-                # the flavour is the extension of the file named here.
-                data['flavour'] = ext[1:]
-                data['root_datadir'] = filename + '.' + fileext
-                data['bl_type'] = 'file'
+            path_info = path_info.split("/")
 
-            elif (os.path.basename(filename) == 'index' and os.path.isdir(dirname)):
-                # the flavour is the extension of the file named here.
-                data['flavour'] = ext[1:]
+            # it's possible to have category/category/year/month/day
+            # (or something like that) so we pluck off the categories
+            # here.
+            pi_bl = ""
+            while not (len(path_info[0]) == 4 and path_info[0].isdigit()):
+                pi_bl = os.path.join(pi_bl, path_info.pop(0))
 
-                data['root_datadir'] = dirname
-                data['bl_type'] = 'dir'
+            # handle the case where we do in fact have a category
+            # preceeding the date.
+            if pi_bl:
+                data["pi_bl"] = pi_bl
+                data["root_datadir"] = os.path.join(config["datadir"], pi_bl)
+
+            if len(path_info) > 0:
+                item = path_info.pop(0)
+                # handle a year token
+                if len(item) == 4 and item.isdigit():
+                    data['pi_yr'] = item
+                    item = ""
+
+                    if (len(path_info) > 0):
+                        item = path_info.pop(0)
+                        # handle a month token
+                        if item in tools.MONTHS:
+                            data['pi_mo'] = item
+                            item = ""
+
+                            if (len(path_info) > 0):
+                                item = path_info.pop(0)
+                                # handle a day token
+                                if len(item) == 2 and item.isdigit():
+                                    data["pi_da"] = item
+                                    item = ""
+
+                                    if len(path_info) > 0:
+                                        item = path_info.pop(0)
+
+                # if the last item we picked up was "index", then we
+                # just ditch it because we don't need it.
+                if item == "index":
+                    item = ""
+
+                # if we picked off an item we don't recognize and/or
+                # there is still stuff in path_info to pluck out, then
+                # it's likely this wasn't a date.
+                if item or len(path_info) > 0:
+                    data["bl_type"] = "file"
+                    data["root_datadir"] = absolute_path
+
 
     # figure out the blog_title_with_path data variable
     blog_title = config["blog_title"]
