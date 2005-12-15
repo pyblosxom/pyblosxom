@@ -143,6 +143,8 @@ class BlosxomRenderer(RendererBase):
         # first we grab the flavour files for the included flavour (if
         # we have one).
         template_d = get_included_flavour(taste)
+        if not template_d:
+            template_d = {}
 
         pathinfo = list(data["path_info"])
 
