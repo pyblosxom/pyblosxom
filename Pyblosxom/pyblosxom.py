@@ -1078,6 +1078,7 @@ def blosxom_process_path_info(args):
             # handle the case where we do in fact have a category
             # preceeding the date.
             if pi_bl:
+                pi_bl = pi_bl.replace("\\", "/")
                 data["pi_bl"] = pi_bl
                 data["root_datadir"] = os.path.join(config["datadir"], pi_bl)
 
@@ -1127,7 +1128,7 @@ def blosxom_process_path_info(args):
         data['blog_title_with_path'] = blog_title
 
     # construct our final URL
-    data['url'] = '%s/%s' % (config['base_url'], data['pi_bl'])
+    data['url'] = '%s%s' % (config['base_url'], data['pi_bl'])
 
 
 def test_installation(request):
