@@ -727,10 +727,13 @@ class Response(object):
         @param out: File like object
         @type out: file
         """
-        #if not self._headers_sent:
-        #    self.sendHeaders(out)
         self.seek(0)
-        out.write(self.read())
+        try:
+            out.write(self.read())
+        except IOError:
+            # this is usually a Broken Pipe because the client dropped the
+            # connection.  so we skip it.
+            pass
 
 
 def blosxom_handler(request):
@@ -1000,18 +1003,18 @@ def blosxom_process_path_info(args):
     
     path_info = pyhttp.get("PATH_INFO", "")
 
-    data['path_info'] = list(path_info)
+    data['path_info'] = path_info
     data['root_datadir'] = config['datadir']
 
     data["pi_bl"] = path_info
 
-    # first we check to see if there's a flavour extension
+    # first we check to see if this is a request for an index and we can pluck
+    # the extension (which is certainly a flavour) right off.
     newpath, ext = os.path.splitext(path_info)
-    if ext:
+    if newpath.endswith("/index") and ext:
         # there is a flavour-like thing, so that's our new flavour
         # and we adjust the path_info to the new filename
-        flav = ext[1:]
-        data["flavour"] = flav
+        data["flavour"] = ext[1:]
         path_info = newpath
 
     if path_info.startswith("/"):
@@ -1039,7 +1042,22 @@ def blosxom_process_path_info(args):
         # this is either a file or a date
 
         ext = tools.what_ext(data["extensions"].keys(), absolute_path)
+        if not ext:
+            # it's possible we didn't find the file because it's got a flavour
+            # thing at the end--so try removing it and checking again.
+            newpath, flav = os.path.splitext(absolute_path)
+            if flav:
+                ext = tools.what_ext(data["extensions"].keys(), newpath)
+                if ext:
+                    # there is a flavour-like thing, so that's our new flavour
+                    # and we adjust the absolute_path and path_info to the new 
+                    # filename
+                    data["flavour"] = flav[1:]
+                    absolute_path = newpath
+                    path_info, flav = os.path.splitext(path_info)
+
         if ext:
+
             # this is a file
             data["bl_type"] = "file"
             data["root_datadir"] = absolute_path + "." + ext
@@ -1053,7 +1071,8 @@ def blosxom_process_path_info(args):
             # (or something like that) so we pluck off the categories
             # here.
             pi_bl = ""
-            while not (len(path_info[0]) == 4 and path_info[0].isdigit()):
+            while len(path_info) > 0 and \
+                    not (len(path_info[0]) == 4 and path_info[0].isdigit()):
                 pi_bl = os.path.join(pi_bl, path_info.pop(0))
 
             # handle the case where we do in fact have a category
