@@ -1114,7 +1114,7 @@ def blosxom_process_path_info(args):
                 # there is still stuff in path_info to pluck out, then
                 # it's likely this wasn't a date.
                 if item or len(path_info) > 0:
-                    data["bl_type"] = "file"
+                    data["bl_type"] = "dir"
                     data["root_datadir"] = absolute_path
 
 
