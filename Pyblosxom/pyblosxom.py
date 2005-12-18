@@ -1003,7 +1003,6 @@ def blosxom_process_path_info(args):
     
     path_info = pyhttp.get("PATH_INFO", "")
 
-    data['path_info'] = path_info
     data['root_datadir'] = config['datadir']
 
     data["pi_bl"] = path_info
@@ -1021,6 +1020,8 @@ def blosxom_process_path_info(args):
         path_info = path_info[1:]
 
     absolute_path = os.path.join(config["datadir"], path_info)
+
+    path_info = path_info.split("/")
 
     if os.path.isdir(absolute_path):
 
@@ -1054,7 +1055,8 @@ def blosxom_process_path_info(args):
                     # filename
                     data["flavour"] = flav[1:]
                     absolute_path = newpath
-                    path_info, flav = os.path.splitext(path_info)
+                    path_info, flav = os.path.splitext("/".join(path_info))
+                    path_info = path_info.split("/")
 
         if ext:
 
@@ -1064,8 +1066,6 @@ def blosxom_process_path_info(args):
 
         else:
             data["bl_type"] = "dir"
-
-            path_info = path_info.split("/")
 
             # it's possible to have category/category/year/month/day
             # (or something like that) so we pluck off the categories
@@ -1129,6 +1129,9 @@ def blosxom_process_path_info(args):
 
     # construct our final URL
     data['url'] = '%s%s' % (config['base_url'], data['pi_bl'])
+
+    # set path_info to our latest path_info
+    data['path_info'] = path_info
 
 
 def test_installation(request):
