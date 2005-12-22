@@ -2,6 +2,7 @@
 
 import os.path, sys, os
 from distutils.core import setup
+from distutils.sysconfig import get_python_lib
 
 # this affects the names of all the directories we do stuff with
 sys.path.insert(0, "./")
@@ -33,12 +34,10 @@ def Walk(root='.'):
         if os.path.isdir(fullname) and not os.path.islink(fullname):
             result.append(fullname)
             result = result + Walk(fullname)
-                
+
     return result
 
-doc_files = ["INSTALL", "LICENSE", 
-             os.path.normpath("docs/README.plugins"), 
-             os.path.normpath("docs/ReadMeForPlugins.py")]
+flavour_files = Walk("Pyblosxom/flavours")
 
 # FIXME - this doesn't account for a variety of platforms
 platform = sys.platform
@@ -55,12 +54,21 @@ for mem in matrix.keys():
         platform = matrix[mem]
         break
 
+pydf = []
+
+# first we put the flavour files in the right place with the rest
+# of the PyBlosxom package
+for mem in flavour_files:
+    f = os.listdir(mem)
+    f = [os.path.join(mem, m) for m in f if os.path.isfile(os.path.join(mem, m))]
+    pydf.append( (os.path.join(get_python_lib(), mem), f) )
+
+
+# now we deal with the web scripts.
 if platform == "win32":
-    pydf = []
     root = "c:\\Program Files\\" + PVER + "\\"
 
 elif platform == "nix":
-    pydf = []
 
     # we want to move the web script files as well, so we sneak them
     # in here.
@@ -75,7 +83,6 @@ else:
     # this message and hope they tell us.  it'd be nice if i
     # could find a listing of the possible platforms, but i suck.
     # (wbg 7/31/2003)
-    pydf = []
     print """
 NOTE: We want to install documentation and the web scripts to some 
 central location where you can access them.  However, we don't know 
@@ -106,9 +113,8 @@ setup(name="pyblosxom",
     description="pyblosxom weblog engine",
     author="Wari Wahab",
     author_email="pyblosxom-devel@lists.sourceforge.net",
-    url="http://roughingit.subtlehints.net/pyblosxom",
+    url="http://pyblosxom.sourceforge.net/",
     packages=['Pyblosxom', 'Pyblosxom.cache', 'Pyblosxom.entries', 'Pyblosxom.renderers'],
-    package_data={'Pyblosxom': ['flavours/*.flav/*.*']},
     license = 'MIT',
     long_description =
 """Pyblosxom is a weblog engine that uses the filesystem as the database of
