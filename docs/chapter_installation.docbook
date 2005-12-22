@@ -17,7 +17,7 @@ for help on the pyblosxom-users mailing list.  Details of the mailing
 list are on our web-site at http://pyblosxom.sourceforge.net/ .
 </para>
 <note>
-  <title>note: upgrading PyBlosxom</title>
+  <title>upgrading PyBlosxom</title>
   <para>
     If you are upgrading your version of PyBlosxom, follow the instructions 
     here and also read the <filename>README</filename> that comes with your 
@@ -64,7 +64,7 @@ chapters of this manual.
 Here are the steps you need to do to install PyBlosxom:
 </para>
 
-<itemizedlist>
+<orderedlist numeration="arabic">
 <listitem>
 <para>
 Download PyBlosxom: 
@@ -125,8 +125,7 @@ Write your first post and test:
 Open up the file <filename>firstpost.txt</filename> in the datadir
 directory in your favorite editor and copy the following text into it:
 </para>
-<programlisting role="text"><![CDATA[
-This is my first post
+<programlisting role="text"><![CDATA[This is my first post
 <p>
   This is my first post with PyBlosxom.
 </p>
@@ -143,8 +142,8 @@ Error.  In the latter case, check your web-server's error logs for more
 details.
 </para>
 </listitem>
-</itemizedlist>
-<sect1>
+</orderedlist>
+</sect1>
 
 
 <sect1>
@@ -197,7 +196,7 @@ place like <filename>/var/logs/apache</filename> or <filename>/var/logs/httpd</f
 </para>
 
 <note>
-  <title>note: make sure you read the installation chapter</title>
+  <title>make sure you read the installation chapter</title>
   <para>
     At this point, running <command>./pyblosxom.cgi</command> at the command 
     prompt should work fine.  If you haven't done that and you're busy 
@@ -215,8 +214,7 @@ Is it kicking up a Python stack trace?  If so, uncomment the line in
 <filename>pyblosxom.cgi</filename> (remove the # at the beginning of the line) that 
 looks like this:
 </para>
-<programlisting role="python">
-#import cgitb; cgitb.enable()
+<programlisting role="python">#import cgitb; cgitb.enable()
 </programlisting>
 <para>
 Then try looking at your blog again.  That should spit up a huge

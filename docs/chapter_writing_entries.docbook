@@ -9,10 +9,11 @@
 Writing entries in PyBlosxom is fairly straightforward.  Each entry
 is a single text file located somewhere in the directory tree of your
 datadir.  The directory that the entry is in is the category the entry
-is "filed under".  For example, if my datadir was <filename>/home/joe/datadir</filename>
+is "filed under".  For example, if my datadir was 
+<filename>/home/joe/myblog/entries</filename>
 and I stored an entry named <filename>firstpost.txt</filename> in 
-<filename>/home/joe/datadir/content</filename> then the category for my entry 
-would be <literal>/content</literal>.
+<filename>/home/joe/myblog/entries/status</filename> then the category for 
+my entry would be <literal>/status</literal>.
 </para>
 <para>
 Be careful when you create your categories--be sure to use characters
@@ -22,16 +23,6 @@ that are appropriate in directory names in the file system.
 Don't worry about making sure you have all the categories you need up
 front--you can add them as you need them.
 </para>
-
-<warning>
-  <title>warning: don't use dates as category names</title>
-  <para>
-    If you have categories like "2002", "2002/02", and such in the form
-    yyyy/mm/dd, then PyBlosxom will get confused between its date-based
-    url handling and your categories.  It's best not to do categories
-    based on dates.
-  </para>
-</warning>
 </sect1>
 
 <sect1>
@@ -54,7 +45,7 @@ a metadata variable name, then the metadata variable value.
 </para>
 
 <warning>
-  <title>warning: don't store the mtime in metadata</title>
+  <title>don't store the mtime in metadata</title>
   <para>
     Unfortunately, you cannot store the mtime of your blog entry in the 
     metadata of the entry itself.  The problem here is that we don't open
@@ -72,17 +63,18 @@ entry file.
 <para>
 Here's an example first post entry:
 </para>
-<programlisting role="html"><![CDATA[
-This is my first post!
+
+<programlisting role="html"><![CDATA[This is my first post!
 <p>
   This is the body of the first post to my blog.
 </p>
 ]]></programlisting>
+
 <para>
 Here's a more complex example:
 </para>
-<programlisting role="html"><![CDATA[
-The rain in Spain....
+
+<programlisting role="html"><![CDATA[The rain in Spain....
 <p>
   The rain
 </p>
@@ -93,11 +85,12 @@ The rain in Spain....
   is <font color="ff0000">mainly</font> on the plain.
 </p>
 ]]></programlisting>
+
 <para>
 Here's an example of a post with metadata:
 </para>
-<programlisting role="html"><![CDATA[
-The rain in Spain....
+
+<programlisting role="html"><![CDATA[The rain in Spain....
 #mood bored
 #music The Doors - Greatest Hits Vol 1
 <p>
@@ -110,11 +103,12 @@ The rain in Spain....
   is <font color="ff0000">mainly</font> on the plain.
 </p>
 ]]></programlisting>
+
 <para>
-The metadata variables here would be available in your story template.  So for the
-above example, the template variable <varname>$mood</varname> would be filled in 
-with <literal>bored</literal> and <varname>$music</varname> would be filled in with 
-<literal>The Doors - Greatest Hits Vol 1</literal>.
+The metadata variables here would be available in your story template.  
+So for the above example, the template variable <varname>$mood</varname> 
+would be filled in with <literal>bored</literal> and <varname>$music</varname> 
+would be filled in with <literal>The Doors - Greatest Hits Vol 1</literal>.
 </para>
 </sect1>
 
@@ -126,8 +120,8 @@ mtime) on the file itself as stored by your file system.  Every time you
 go to edit an entry, it changes the modification time.  You can see this
 in the following example of output:
 </para>
-<programlisting role="shell"><![CDATA[
-willg ~/blogdata/blosxom/site: vi testpost.txt                            [1]
+
+<programlisting role="shell"><![CDATA[willg ~/blogdata/blosxom/site: vi testpost.txt                            [1]
 willg ~/blogdata/blosxom/site: ls -l
 total 16
 -rw-r--r--  1 willg willg 764 Jul 20  2003 minoradjustments.txt
@@ -142,6 +136,7 @@ total 16
 -rw-r--r--  1 willg willg 284 Aug 15  2004 nomorecalendar.txt
 -rw-r--r--  1 willg willg  59 Mar 21 16:34 testpost.txt                   [4]
 ]]></programlisting>
+
 <para>
 [1] I create the blog entry <filename>testpost.txt</filename> using 
 <command>vi</command> (a text editor).  The mtime of the file will be the 
@@ -161,7 +156,7 @@ the time that will show up in my blog as the posting date.
 </para>
 
 <warning>
-  <title>warning: be careful with the mtimes</title>
+  <title>be careful with the mtimes</title>
   <para>
     There are some issues with this method for storing the posting date.  First,
     if you ever change the blog entry, the mtime will change as well.  That
@@ -174,6 +169,51 @@ the time that will show up in my blog as the posting date.
     reset the mtime of the file back to what it was.
   </para>
 </warning>
+</sect1>
+
+<sect1>
+<title>Entry Parsers</title>
+<para>
+PyBlosxom supports only one format for entry files by default.  This format
+is the same format that blosxom uses.  The extension for this format is 
+<filename>.txt</filename>.  The first line of the file is in plain text and 
+forms the title of the entry.  The second line through the end of the file is 
+in HTML and is the body of the entry.
+</para>
+<para>
+A sample blog entry could look like this:
+</para>
+
+<programlisting role="text"><![CDATA[First post
+<p>
+  Here's the body of my first post.
+</p>
+]]></programlisting>
+
+<para>
+Some people really detest writing in HTML which is valid.  Other 
+people use their entries in other places, so they need a markup format 
+that's less web-oriented.  Some folks write a lot of material in a non-HTML 
+markup format and would like to use that same format for blog entries.  
+These are all very valid reasons to want to use other markup formats.
+</para>
+<para>
+PyBlosxom allows you to install entry parser plugins which are PyBlosxom 
+plugins that implement an entry parser.  These entry parser plugins allow 
+you to use other markup formats.  Check the Plugin Registry at 
+http://pyblosxom.sourceforge.net/ for which entry parsers are available.
+</para>
+<para>
+In general, we only have entry parsers written by people who really 
+wanted that markup format.  If you don't see your favorite markup format 
+represented, try looking at the code for other entry parsers and implement 
+it yourself.  If you need help, talk to us on the pyblosxom-users or 
+pyblosxom-devel mailing lists.
+</para>
+<para>
+Details on the various entry parsers should be at the top of the entry
+parser plugin itself in the Python doc-string.
+</para>
 </sect1>
 
 <sect1>
@@ -204,8 +244,8 @@ copy the <filename>weblog-add.py</filename> file into your CGI root
 </listitem>
 <listitem>
 <para>
-open up the <filename>weblog-add.py</filename> file in your favorite text editor 
-and change the line for <varname>blog_root</varname> to your datadir
+open up the <filename>weblog-add.py</filename> file in your favorite text 
+editor and change the line for <varname>blog_root</varname> to your datadir
 </para>
 </listitem>
 <listitem>
@@ -234,8 +274,8 @@ that you don't remember what file names exist and what don't.
 <sect2>
 <title>Using w.bloggar</title>
 <para>
-PyBlosxom works with w.bloggar (http://www.wbloggar.com/).  In order to use w.bloggar
-you have to do the following:
+PyBlosxom works with w.bloggar (http://www.wbloggar.com/).  In order to use 
+w.bloggar you have to do the following:
 </para>
 
 <orderedlist numeration="arabic">
@@ -247,8 +287,8 @@ you have to do the following:
 </listitem>
 <listitem>
 <para>
-  install the xmlrpc_bloggar plugin found at http://pyblosxom.sourceforge.net/ in the
-  plugin registry
+  install the xmlrpc_bloggar plugin found at http://pyblosxom.sourceforge.net/ 
+  in the plugin registry
 </para>
 </listitem>
 <listitem>
@@ -286,16 +326,16 @@ you have to do the following:
 </listitem>
 </orderedlist>
 <para>
-When you go to write a new entry, leave the title field blank and do your entire 
-post in the data section with the first line being the title (just like blosxom 
-entries).
+When you go to write a new entry, leave the title field blank and do your 
+entire post in the data section with the first line being the title (just 
+like blosxom entries).
 </para>
 <para>
-One thing you should note is that pyblosxom will take the first line and use that 
-to generate the file name of the entry. So if the title of the entry is 
-<literal>How to use w.bloggar with pyblosxom</literal>, the file name ends up being 
-<filename>How_to_use_w_bloggar_with_pyblosxom.txt</filename> which may get a little
-annoying.
+One thing you should note is that pyblosxom will take the first line and use 
+that to generate the file name of the entry. So if the title of the entry is 
+<literal>How to use w.bloggar with pyblosxom</literal>, the file name ends 
+up being <filename>How_to_use_w_bloggar_with_pyblosxom.txt</filename> which 
+may get a little annoying.
 </para>
 <para>
 FIXME - Does this still work?

@@ -22,8 +22,8 @@ the behavior for loading plugins.
 The first one is the <varname>plugin_dirs</varname> property which is a list of 
 strings specifying all the directories you might have plugins.  For example:
 </para>
-<programlisting role="python">
-py["plugin_dirs"] = ["/home/will/pybloxsom/plugins"]
+
+<programlisting role="python">py["plugin_dirs"] = ["/home/will/pybloxsom/plugins"]
 </programlisting>
 
 <para>
@@ -47,8 +47,7 @@ specified.  The <varname>load_plugins</varname> property takes a list of strings
 For example:
 </para>
 
-<programlisting role="python">
-py["load_plugins"] = ["calendar", "category", "booklist"]
+<programlisting role="python">py["load_plugins"] = ["calendar", "category", "booklist"]
 </programlisting>
 
 <para>
@@ -95,15 +94,15 @@ in the plugin itself to meet your specific needs.
 </para>
 
 <note>
-  <title>note: Apache, no suexec, .pyc files, and problems</title>
+  <title>Apache, no suexec, .pyc files, and problems</title>
   <para>
     If you're not running suexec, then Apache may not be able to generate
     the <filename>.pyc</filename> files for your plugins.  This may result in 
     your plugins failing to load.
   </para>
   <para>
-    If that happens, you can run <command>./pyblosxom.cgi</command> in your shell 
-    and generate the <filename>.pyc</filename> files yourself.
+    If that happens, you can run <command>./pyblosxom.cgi</command> in your 
+    shell and generate the <filename>.pyc</filename> files yourself.
   </para>
   <para>
     Every time you install a new plugin or change an existing plugin,

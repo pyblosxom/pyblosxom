@@ -11,6 +11,14 @@ storage. Using the file system allows PyBlosxom to fit in with other
 applications rather than forcing PyBlosxom to solve all problems all by 
 itself.
 </para>
+,para>
+In general, this chapter is lacking pretty severely.  The code itself
+is fairly well documented and you should always consider the code to be
+an authority when the code and this manual are in disagreement.
+</para>
+<para>
+FIXME - rework this whole chapter.
+</para>
 
 <sect1>
 <title>Parts</title>

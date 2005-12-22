@@ -112,16 +112,16 @@ Variables that are available are:</para>
 <para>
 Available in the "story" and "comment-story" templates:
 </para>
-<programlisting role="ascii"><![CDATA[
-$num_comments - Contains an integer count of the number of comments
+
+<programlisting role="ascii"><![CDATA[$num_comments - Contains an integer count of the number of comments
                 associated with this entry
 ]]></programlisting>
    
 <para>
 Available in the "comment" template:
 </para>
-<programlisting role="ascii"><![CDATA[
-$cmt_title - the title of the comment
+
+<programlisting role="ascii"><![CDATA[$cmt_title - the title of the comment
 $cmt_description - the content of the comment or excerpt of the 
                    trackback/pingback
 $cmt_link - the pingback link referring to this entry
@@ -129,6 +129,7 @@ $cmt_author - the author of the comment or trackback
 $cmt_pubDate - the date and time of the comment/trackback/pingback
 $cmt_source - the source of the trackback
 ]]></programlisting>
+
 </listitem>
 </orderedlist>
 </sect1>
@@ -142,19 +143,21 @@ The comment system can notify you via e-mail when new
 comments/trackbacks/pingbacks are posted.  If you want to enable this 
 feature, add the following properties to your <filename>config.py</filename> file:
 </para>
-<programlisting role="ascii"><![CDATA[
-py['comment_smtp_server'] - your SMTP server
+
+<programlisting role="ascii"><![CDATA[py['comment_smtp_server'] - your SMTP server
 py['comment_smtp_from']   - the address sending the notification
 py['comment_smtp_to']     - the address receiving the notification
 ]]></programlisting>
+
 <para>
 For example:
 </para>
-<programlisting role="ascii"><![CDATA[
-py['comment_smtp_server'] = "localhost"
+
+<programlisting role="ascii"><![CDATA[py['comment_smtp_server'] = "localhost"
 py['comment_smtp_from']   = "joe@joe.com"
 py['comment_smtp_to']     = "joe@joe.com"
 ]]></programlisting>
+
 </sect2>
 </sect1>
 
@@ -165,8 +168,8 @@ py['comment_smtp_to']     = "joe@joe.com"
 This should explain which flavour templates are in charge of what
 using an example.
 </para>
-<programlisting role="ascii"><![CDATA[
-<div class="news">           <- story.html
+
+<programlisting role="ascii"><![CDATA[<div class="news">           <- story.html
 <h2>$title</h2>               |
 <div class="content">         |
 ...                           |
@@ -187,6 +190,7 @@ form stuff here.              |
 </div>                        |
 </div>                       <-
 ]]></programlisting>
+
 </sect1>
 
 <sect1>
@@ -221,23 +225,22 @@ set the <varname>comment_rejected_words</varname> property in your
 <filename>config.py</filename> file like this:
 </para>
 
-<programlisting role="python"><![CDATA[
-py["comment_rejected_words"] = ["poker", "casino", "gambling"]
+<programlisting role="python"><![CDATA[py["comment_rejected_words"] = ["poker", "casino", "gambling"]
 ]]></programlisting>
 
 <note>
-<title>note: good blacklists</title>
-<para>
-Each blog covers different topics and thus your word list will almost 
-certainly differ from mine.  I figured my word list out mostly by waiting
-for my blog to get comment spam and then picking out specific words in
-the spam to use for signifying automatic rejection.
-</para>
-<para>
-Every month or so, make sure the list of rejected words still makes sense.
-For example, if I started talking about sleazy poker nights, then I should 
-probably remove most of the poker-related words.
-</para>
+  <title>good blacklists</title>
+  <para>
+  Each blog covers different topics and thus your word list will almost 
+  certainly differ from mine.  I figured my word list out mostly by waiting
+  for my blog to get comment spam and then picking out specific words in
+  the spam to use for signifying automatic rejection.
+  </para>
+  <para>
+  Every month or so, make sure the list of rejected words still makes sense.
+  For example, if I started talking about sleazy poker nights, then I should 
+  probably remove most of the poker-related words.
+  </para>
 </note>
 </sect2>
 
@@ -256,6 +259,21 @@ http://pyblosxom.sourceforge.net/blog/registry/input/nospam
 and
 http://www.c-area.ch/code/pyblosxom/plugins/nospam.py
 </para>
+
+<note>
+  <title>a warning about captchas</title>
+  <para>
+  Captchas require that the user be able to see with their eyes
+  and recognize the text they need to type in.  As such, this is
+  prevents anyone who is using a web-browser that doesn't display
+  images or anyone who cannot see from leaving comments on your
+  site because they cannot perform the captcha.
+  </para>
+  <para>
+  If you want your site to be available to all people, don't
+  use captchas.
+  </para>
+</note>
 </sect2>
 
 <sect2>
@@ -272,8 +290,8 @@ A basic template for writing a plugin to reject comments is as
 follows:
 </para>
 <example><title>Template for plugin for rejecting comments</title>
-<programlisting role="python"><![CDATA[
-"""
+
+<programlisting role="python"><![CDATA["""
 FIXME - Documentation for what your plugin does and how to set it up
 goes here.
 
@@ -303,6 +321,7 @@ def cb_comment_reject(args):
     # be rejected or not goes here.  If you want to reject the
     # comment, return 1.  Otherwise return 0.
 ]]></programlisting>
+
 </example>
 </sect2>
 </sect1>
@@ -328,9 +347,10 @@ You advertise a manual trackback ping link.  You can do this by
 inserting the following HTML in story.html and comment-story.html
 files:
 </para>
-<programlisting role="html"><![CDATA[ 
-<a href="$base_url/trackback.cgi/$file_path" title="Trackback">TB</a> 
+
+<programlisting role="html"><![CDATA[<a href="$base_url/trackback.cgi/$file_path" title="Trackback">TB</a> 
 ]]></programlisting>
+
 <para>
 You may need to change the $base_url/trackback.cgi portion of the
 URL to match the way that you have configured your webserver / CGI 
@@ -340,8 +360,8 @@ scripts.
 <para>
 You can supply an embedded RDF description of the trackback ping:
 </para>
-<programlisting role="html"><![CDATA[
-<!--
+
+<programlisting role="html"><![CDATA[<!--
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
              xmlns:dc="http://purl.org/dc/elements/1.1/"
              xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
@@ -354,6 +374,7 @@ You can supply an embedded RDF description of the trackback ping:
     </rdf:RDF>
 -->
 ]]></programlisting>
+
 <para>
 You may need to change the $base_url/trackback.cgi portion of the
 trackback:ping attribute to match the way that you have configured
@@ -411,15 +432,17 @@ Then you must add the CommentAPI tags to your RSS 2.0 feed.  The best
 way to do this is to add an XML namespace declaration to the rss
 element:
 </para>
-<programlisting role="xml"><![CDATA[
-xmlns:wfw="http://wellformedweb.org/CommentAPI"
+
+<programlisting role="xml"><![CDATA[xmlns:wfw="http://wellformedweb.org/CommentAPI"
 ]]></programlisting> 
+
 <para>
 Then inside your RSS items you need to add a wfw:comment element:
 </para>
-<programlisting role="xml"><![CDATA[
-<wfw:comment>###commentAPI###/$file_path</wfw:comment>
+
+<programlisting role="xml"><![CDATA[<wfw:comment>###commentAPI###/$file_path</wfw:comment>
 ]]></programlisting>
+
 <para>    
 where ###commentAPI### is replaced by the URI that you mapped your
 CommentAPI.cgi to  At the moment, you need to map to a URI one level

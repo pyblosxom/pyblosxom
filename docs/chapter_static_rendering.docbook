@@ -89,10 +89,11 @@ to be http://www.joe.com/~joe/ .
 <para>
 Now you can run static rendering:
 </para>
-<programlisting role="shell">
-% cd directory-with-pyblosxom.cgi-in-it 
+
+<programlisting role="shell">% cd directory-with-pyblosxom.cgi-in-it 
 % ./pyblosxom.cgi --static 
 </programlisting>
+
 <para>
 Lots of output will appear as it figures out all the urls that need to 
 be rendered and then renders them all one by one.
@@ -109,10 +110,11 @@ comparing the mtime on the entry file with the mtime on the rendered file.
 <para>
 It works like this:
 </para>
-<programlisting role="shell">
-% cd directory-with-pyblosxom.cgi-in-it 
+
+<programlisting role="shell">% cd directory-with-pyblosxom.cgi-in-it 
 % ./pyblosxom.cgi --static --incremental 
 </programlisting>
+
 </sect2>
 </sect1>
 
@@ -138,9 +140,9 @@ url to be rendered. For example if I wanted to render the booklist page and the
 RSS feed for my main page, I would set it like this:
 </para>
 
-<programlisting role="python">
-py["static_urls"] = ["/booklist/index.html", "/index.xml"]
+<programlisting role="python">py["static_urls"] = ["/booklist/index.html", "/index.xml"]
 </programlisting>
+
 </sect1>
 
 <sect1>
@@ -156,13 +158,14 @@ If you want to statically render your blog every night, you could write
 a shell script like this:
 </para>
 <example><title>Static rendering shell script</title>
-<programlisting role="shell">
-#!/bin/bash 
+
+<programlisting role="shell">#!/bin/bash 
  
 cd directory-with-pyblosxom.cgi
 ./pyblosxom.cgi --static 
 find static_dir-directory -mmin +30 -exec 'rm' '{}' ';' 
 </programlisting>
+
 </example>
 <para>
 That'll re-render everything, then delete any files in your static 
@@ -170,7 +173,7 @@ dir that are older than 30 minutes (in case you moved entries from
 one category to another or deleted an entry or whatever). 
 </para>
 
-<note><title>note: Other files</title>
+<note><title>other files</title>
 <para>
 If your web-site requires more files than just the ones that are rendered by 
 PyBlosxom (images, CSS, ...), then you should copy those over with your 

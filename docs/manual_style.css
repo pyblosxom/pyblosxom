@@ -7,11 +7,11 @@ P, TD {
    font-size: 10pt;
 }
 
-TH {
-   font-size: 10pt;
-   background: #eeeeff;
-   font-weight: bold;
-}
+// TH {
+//    font-size: 10pt;
+//    background: #eeeeff;
+//    font-weight: bold;
+// }
 
 LI {
    font-size: 10pt;
@@ -32,3 +32,19 @@ LI {
 a.menulink:link    { color: #7777bb; text-decoration: none; }
 a.menulink:visited { color: #555577; text-decoration: none; }
 a.menulink:active  { color: #0000ff; text-decoration: underline; }
+
+table.warning {
+   background-color: #FFDDDD;
+   border-width: 1pt;
+   border-style: solid;
+   border-color: #999999;
+   padding: 5px;
+}
+
+table.note {
+   background-color: #DDFFDD;
+   border-width: 1pt;
+   border-style: solid;
+   border-color: #999999;
+   padding: 5px;
+}

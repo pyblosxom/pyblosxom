@@ -10,8 +10,7 @@ xml, or anything else--anything that you could get back from a CGI
 script or web application.  The default renderer can be set in your 
 config file like this:
 </para>
-<programlisting role="python">
-py["renderer"] = "blosxom"
+<programlisting role="python">py["renderer"] = "blosxom"
 </programlisting>
 
 <para>
@@ -63,8 +62,8 @@ these:
 <listitem><para>head - holds everything before all the entries</para></listitem>
 <listitem><para>story - holds a single entry</para></listitem>
 <listitem><para>foot - holds everything after all the entries</para></listitem>
-<listitem><para>date_head - shows at the start of a date (this only exists in PyBlosxom)</para></listitem>
-<listitem><para>date_foot - shows at the end of a date (this only exists in PyBlosxom)</para></listitem>
+<listitem><para>date_head - shows at the start of a date</para></listitem>
+<listitem><para>date_foot - shows at the end of a date</para></listitem>
 </itemizedlist>
 <para>
 You can have other templates as well.  Many plugins require additional
@@ -99,7 +98,7 @@ You can have as many flavours as you want in your blog.
 </para>
 
 <warning>
-  <title>warning: be careful with your flavour names</title>
+  <title>be careful with your flavour names</title>
   <para>
     The one thing to be aware of is creating a flavour where the name is 
     the same extension as file extensions of your blog entries.  For example,
@@ -128,12 +127,11 @@ created and submitted.
 <para>
 If you want to override the existing flavours, add new flavours, or
 develop your own flavours, you should set the <varname>flavourdir</varname>
-property of your <filename>config.py<filename> file.  I have this directory
+property of your <filename>config.py</filename> file.  I have this directory
 parallel to my datadir.  In my flavourdir, I have flavour directories--one
 for each flavour in my blog:
 </para>
-<programlisting role="ascii"><![CDATA[
-/home
+<programlisting role="ascii"><![CDATA[/home
  |-- willg/
     |-- myblog/
        |-- entries/        <-- my datadir
@@ -146,8 +144,7 @@ for each flavour in my blog:
           |-- xml.flav/       <-- defines the xml flavour
           |-- links/          <-- parallels the links category
              |-- html.flav/   <-- defines the html flavour for the links category
-]]>
-</programlisting>
+]]></programlisting>
 <para>
 In my flavourdir, I have two flavour directories <filename>html.flav</filename>
 and <filename>xml.flav</filename>.  The <filename>xml.flav</filename> is
@@ -194,7 +191,7 @@ This allows you to easily override specific templates in your blog
 at.
 </para>
 <note>
-  <title>note: backwards compatability</title>
+  <title>backwards compatability</title>
   <para>
     PyBlosxom is backwards compatible with previous versions of
     PyBlosxom.  You can put your flavour files in your datadir.  You
@@ -215,8 +212,7 @@ To get a complete list of what variables are available in your blog, use
 the debug renderer by changing the renderer property in your 
 <filename>config.py</filename> file to debug like this:
 </para>
-<programlisting role="python">
-py["renderer"] = "debug"
+<programlisting role="python">py["renderer"] = "debug"
 </programlisting>
 <para>
 That will tell you all kinds of stuff about the data structures involved 
@@ -281,8 +277,7 @@ are available in your templates.  If you wanted to create a
 <varname>blog_images</varname> variable holding the base url of the directory 
 with all your images:
 </para>
-<programlisting role="python">
-py["blog_images"] = "http://www.joe.com/~joe/images/"
+<programlisting role="python">py["blog_images"] = "http://www.joe.com/~joe/images/"
 </programlisting>
 <para>
 to your <filename>config.py</filename> file and it would be available in 
@@ -594,8 +589,7 @@ You can change the default flavour from <literal>html</literal> to some other
 flavour in your <filename>config.py</filename> file with the 
 <varname>default_flavour</varname> property:
 </para>
-<programlisting role="python">
-py["default_flavour"] = "joy"
+<programlisting role="python">py["default_flavour"] = "joy"
 </programlisting>
 <para>
 Doing this will set the default flavour to use when the URI the user has

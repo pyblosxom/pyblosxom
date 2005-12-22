@@ -6,7 +6,6 @@
 <!ENTITY chapter_advanced_installation SYSTEM "chapter_advanced_installation.docbook">
 <!ENTITY chapter_flavours SYSTEM "chapter_flavours.docbook">
 <!ENTITY chapter_plugins SYSTEM "chapter_plugins.docbook">
-<!ENTITY chapter_entryparsers SYSTEM "chapter_entryparsers.docbook">
 <!ENTITY chapter_writing_entries SYSTEM "chapter_writing_entries.docbook">
 <!ENTITY chapter_static_rendering SYSTEM "chapter_static_rendering.docbook">
 <!ENTITY chapter_comments SYSTEM "chapter_comments.docbook">
@@ -22,8 +21,8 @@
 
 <bookinfo>
 <title>PyBlosxom Manual</title>
-<subtitle>PyBlosxom Manual for PyBlosxom 1.2</subtitle>
-<edition>PyBlosxom Manual for PyBlosxom 1.2</edition>
+<subtitle>PyBlosxom Manual for PyBlosxom 1.3</subtitle>
+<edition>PyBlosxom Manual for PyBlosxom 1.3</edition>
 
 <!--
   If you do any editing on this document, add your name to the below
@@ -63,8 +62,8 @@ This manual will cover all aspects of using and developing for PyBlosxom.  It
 is a work in progress.
 </para>
 <para>
-This is release $Id$ of the version of the pyblosxom_manual.docbook file as of 
-$Date$.
+This is release $Id$ 
+of the version of the pyblosxom_manual.docbook file as of $Date$.
 </para>
 </abstract>
 
@@ -123,7 +122,6 @@ at http://pyblosxom.sourceforge.net/ .
 &chapter_advanced_installation;
 &chapter_flavours;
 &chapter_plugins;
-&chapter_entryparsers;
 &chapter_writing_entries;
 &chapter_static_rendering;
 &chapter_comments;

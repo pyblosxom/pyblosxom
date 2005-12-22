@@ -6,9 +6,9 @@
 
 <sect1><title>About PyBlosxom</title>
 <para>
-PyBlosxom is a lightweight weblog system.  It originally started out as a Python 
-clone of Blosxom but has since evolved into a beast of its own.  PyBlosxom focuses 
-on three things:
+PyBlosxom is a lightweight weblog system.  It originally started out 
+as a Python clone of Blosxom but has since evolved into a beast of its 
+own.  PyBlosxom focuses on three things:
 </para>
 <itemizedlist>
 <listitem>
@@ -26,9 +26,9 @@ Python to augment and change PyBlosxom's default behavior.
 </listitem>
 <listitem>
 <para>
-community - There are several hundred PyBlosxom users out there all of whom have 
-different needs.  PyBlosxom is used on a variety of operating systems in a variety 
-of environments.
+community - There are several hundred PyBlosxom users out there all of whom 
+have different needs.  PyBlosxom is used on a variety of operating systems 
+in a variety of environments.
 </para>
 </listitem>
 </itemizedlist>
@@ -49,6 +49,11 @@ our documentation will be eternally half-done, and it's likely you will run
 into problems eventually unless you want a bare-bones blog.
 </para>
 <para>
+PyBlosxom is a CGI program at its heart.  While there ahve been changes to
+make it work with WSGI and mod_python and other web-servers, it's still
+architected as a CGI program.  Using it in other ways may cause headaches.
+</para>
+<para>
 If this sort of thing infuriates you, we don't think you should use PyBlosxom.
 </para>
 <para>
@@ -66,8 +71,9 @@ you can find up-to-date documentation, manuals, project status and mailing list
 information.
 </para>
 <para>
-The pyblosxom-users mailing list is the place to go if you're having difficulties.
-Discussions from the mailing list affect the content of this manual.
+The pyblosxom-users mailing list is the place to go if you're having 
+difficulties.  Discussions from the mailing list affect the content of 
+this manual.
 </para>
 </sect1>
 

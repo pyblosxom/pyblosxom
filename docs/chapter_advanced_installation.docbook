@@ -42,11 +42,12 @@ In the default installation, the PyBlosxom script is named
 For a typical user on an Apache installation with user folders turned on, PyBlosxom
 URLs could look like this:
 </para>
-<programlisting role="text">
-http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi
+
+<programlisting role="text">http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi
 http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi/an_entry.html
 http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi/programming/another_entry.html 
 </programlisting>
+
 <para>
 That gets pretty long and it's not very good looking.  Telling your mother
 the URL over the phone would be difficult.  It would be nice if we could 
@@ -80,11 +81,12 @@ There's no reason that <filename>pyblosxom.cgi</filename> has to be named
 <filename>pyblosxom.cgi</filename> to <filename>blog</filename>.  Now our example 
 URLs look like this:
 </para>
-<programlisting role="text">
-http://www.joe.com/~joe/cgi-bin/blog
+
+<programlisting role="text">http://www.joe.com/~joe/cgi-bin/blog
 http://www.joe.com/~joe/cgi-bin/blog/an_entry.html
 http://www.joe.com/~joe/cgi-bin/blog/category1/another_entry.html 
 </programlisting>
+
 <para>
 That's better looking in the example.  In your specific circumstances, that
 may be all you need.
@@ -107,8 +109,8 @@ script even if it doesn't have a <filename>.cgi</filename> at the end of it.  If
 you can use <filename>.htaccess</filename> files to override Apache settings, you 
 might be able to do something like this:
 </para>
-<programlisting role="htaccess"><![CDATA[
-# this allows execution of CGI scripts in this directory
+
+<programlisting role="htaccess"><![CDATA[# this allows execution of CGI scripts in this directory
 Options ExecCGI 
  
 # if the user doesn't specify a file, then instead of doing the
@@ -123,6 +125,7 @@ ForceType application/cgi-script
 SetHandler cgi-script  
 </Files> 
 ]]></programlisting>
+
 <para>
 You may need to stop and restart Apache for your Apache changes to take effect.
 </para>
@@ -140,30 +143,32 @@ In our case, we want all incoming URLs pointing to <filename>blog</filename> to
 get rewritten to <filename>cgi-bin/pyblosxom.cgi</filename> so they can be handled 
 by PyBlosxom.  Then all our URLs will look like this:
 </para>
-<programlisting role="text">
-http://www.joe.com/~joe/blog
+
+<programlisting role="text">http://www.joe.com/~joe/blog
 http://www.joe.com/~joe/blog/an_entry.html
 http://www.joe.com/~joe/blog/category1/another_entry.html 
 </programlisting>
+
 <para>
 To do this, we create an .htaccess file (it has to be named exactly that)
 in our <filename>public_html</filename> directory (or wherever it is that /~joe/ 
 points to).  In that file we have the following code:
 </para>
-<programlisting role="htaccess">
-RewriteEngine on
+
+<programlisting role="htaccess">RewriteEngine on
 RewriteRule    ^blog?(.*)$      /~joe/cgi-bin/pyblosxom.cgi$1      [last]
 </programlisting>
+
 <para>
 The first line turns on the Apache mod_rewrite engine so that it will rewrite
 URLs.
 </para>
 <para>
-The second line has four parts.  The first part denotes the line as a RewriteRule.
-The second part states the regular expression that matches the part of the URL
-that we want to rewrite.  The third part denotes what we're rewriting the URL
-to.  The fourth part states that after this rule is applied, no future rewrite 
-rules should be applied.
+The second line has four parts.  The first part denotes the line as a 
+RewriteRule.  The second part states the regular expression that matches 
+the part of the URL that we want to rewrite.  The third part denotes what 
+we're rewriting the URL to.  The fourth part states that after this rule 
+is applied, no future rewrite rules should be applied.
 </para>
 <para>
 If you do URL rewriting, you may have to set the base_url property in your
