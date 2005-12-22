@@ -4,29 +4,32 @@
 <chapter id="installation">
 <title>Installing PyBlosxom</title>
 <para>
-There are many ways to install PyBlosxom. This particular installation 
-guide covers the typical installation for a single user on Apache with 
-PyBlosxom running as a CGI script.
-</para>
-<para>
-There are other ways to install Pyblosxom depending on how you want it 
-to behave as well as what webserver you're installing Pyblosxom on top of.
+While there are many ways to install PyBlosxom, the most common one is
+to install PyBlosxom as a CGI script for a single user.  This installation
+guide will cover that.  For other ways to install PyBlosxom, refer to
+the mailing lists and the web-site.
 </para>
 <para>
 This installation assumes you have some understanding of CGI, Apache 
-configuration, and know how to manipulate files and directories. If this 
+configuration, and know how to manipulate files and directories.  If this 
 doesn't sound like you, maybe you should get a friend to help out or ask 
 for help on the pyblosxom-users mailing list.  Details of the mailing
 list are on our web-site at http://pyblosxom.sourceforge.net/ .
 </para>
-<para>
-If you are upgrading your version of PyBlosxom, follow the instructions 
-here and also read the <filename>README</filename> that comes with your PyBlosxom 
-tarball for differences between this version and the previous versions.
-</para>
+<note>
+  <title>note: upgrading PyBlosxom</title>
+  <para>
+    If you are upgrading your version of PyBlosxom, follow the instructions 
+    here and also read the <filename>README</filename> that comes with your 
+    PyBlosxom tarball for differences between this version and the previous 
+    versions.  The <filename>README</filename> file contains instructions
+    on updating your config.py file, templates, and other parts of your
+    PyBlosxom installation which you will have to do by hand.
+  </para>
+</note>
 
 <sect1>
-<title>Pre-requisites</title>
+<title>Pre-requisites for installing PyBlosxom</title>
 <para>
 You will need:
 </para>
@@ -52,193 +55,97 @@ a text editor (notepad, vi, emacs, nano, ...)
 <sect1>
 <title>Installing PyBlosxom</title>
 <para>
-First you should download the PyBlosxom tar ball from 
-http://pyblosxom.sourceforge.net/ .  Then untar it.
+Installing PyBlosxom should take 5-10 minutes depending on what state
+your system is currently in.  The installation consists of seven steps.  
+Tweaking, styling, and adding content to your blog is covered in later 
+chapters of this manual.
 </para>
-
-<sect2>
-<title>Single-user Installation</title>
 <para>
-If you don't have administrative/root access, you just want to install 
-PyBlosxom for your user account, or you merely want to try PyBlosxom out, 
-do the following:
+Here are the steps you need to do to install PyBlosxom:
 </para>
 
-<orderedlist numeration="arabic">
+<itemizedlist>
 <listitem>
 <para>
-copy <filename>pyblosxom.cgi</filename> and <filename>config.py</filename> 
-from the <filename>web/</filename> directory into your cgi-bin directory
+Download PyBlosxom: 
+Go to http://pyblosxom.sourceforge.net/ , click on the Download link,
+and download the latest PyBlosxom .tar.gz file.
 </para>
 </listitem>
 <listitem>
 <para>
-using any text editor, edit your <filename>config.py</filename> file and 
-set the <varname>codebase</varname> property to the directory that PyBlosxom is in
-</para>
-<para>
-For example, if you untarred PyBlosxom into <filename>/home/joe/pyblosxom</filename>, 
-then set the <varname>codebase</varname> property like this:
-</para>
-<programlisting role="python">
-py["codebase"] = "/home/joe/pyblosxom/"
-</programlisting>
-<para>
-If you're using Windows, use an explicit path like this:
-</para>
-<programlisting role="python">
-py["codebase"] = "c:\\pyblosxom\\"
-</programlisting>
-</listitem>
-</orderedlist>
-</sect2>
-
-<sect2>
-<title>Multi-user Installation</title>
-<para>
-If you have administrative/root access and you want to install PyBlosxom so that all
-your users can use it from a centralized installation, do the following:
-</para>
-
-<orderedlist numeration="arabic">
-<listitem>
-<para>
-untar the pyblosxom tar file into a temporary directory
+Untar PyBlosxom: 
+Create a working temporary directory, move the PyBlosxom tar ball into it, 
+and then untar the tar ball (something like 
+<command>tar -xzvf pyblosxom.version.tar.gz</command>).
 </para>
 </listitem>
 <listitem>
 <para>
-switch over to a superuser such as root
+Copy the scripts: 
+Copy the <filename>pyblosxom.cgi</filename> and <filename>config.py</filename> 
+files from the <filename>web/</filename> directory into your cgi-bin directory.
 </para>
 </listitem>
 <listitem>
 <para>
-run the command <command>python setup.py install</command> to install the Pyblosxom 
-libraries in your python installation 
-</para>
-<para>
-when users go to setup PyBlosxom, they'll need the <filename>config.py</filename> and 
-<filename>pyblosxom.cgi</filename> files that will get copied to a directory in 
-<filename>/usr/share</filename> on Unix/Linux systems
-</para>
-<para>
-FIXME - where do these files go on Windows and OSX?
+Create the necessary directories: 
+Create a <filename>myblog</filename> directory and in that directory create
+the following subdirectories: <filename>entries</filename> (the datadir), 
+<filename>flavours</filename> (the flavourdir) and 
+<filename>plugins</filename> (the plugin dir).
 </para>
 </listitem>
-</orderedlist>
-</sect2>
-</sect1>
-
-<sect1>
-<title>Setting up PyBlosxom</title>
+<listitem>
 <para>
-After you've performed one of the installations in the previous section, 
-you're ready to set up PyBlosxom.  These steps set up PyBlosxom for a 
-single person.  For multiple, just do them again
-and again and again.
-</para>
-
-<sect2>
-<title>Create a datadir Directory</title>
-<para>
-PyBlosxom stores its entries in text files in your datadir.  The datadir 
-can contain directories each of which will be a category for PyBlosxom.  
-In general, it's good to use one-word names for directories that don't have 
-spaces or punctuation in them.
+Edit the config.py file:
+Open your <filename>config.py</filename> file up in your favorite editor.
+Go through and change the values of the configuration settings according
+to the instructions.
 </para>
 <para>
-Create a datadir somewhere on your machine.  For example, if you're a 
-single user on a Linux/Unix machine, you might create a subdirectory in 
-your home directory called <filename>datadir</filename> and use that.
+Make sure to set the datadir property to the datadir directory you created, 
+the flavourdir property to the flavourdir directory you created, the 
+plugins_dir property to the plugins directory you created, and the codebase 
+property to the directory you untarred PyBlosxom into.
 </para>
+</listitem>
+<listitem>
 <para>
-Your web-server needs read access to your datadir.  You may have to change 
-the permissions of your datadir accordingly.
+Verify your installation:
+Run <command>./pyblosxom.cgi</command> from the commandline.  That will
+do a first-blush run to make sure things are configured correctly and
+let you know if there are missing pieces in your 
+<filename>config.py</filename> file.
 </para>
-</sect2>
-
-<sect2>
-<title>Create a plugin Directory</title>
+</listitem>
+<listitem>
 <para>
-PyBlosxom allows you to change the default behavior by installing plugins.  
-Don't install or think about installing plugins yet--let's just get through
-installation first.
+Write your first post and test:
+Open up the file <filename>firstpost.txt</filename> in the datadir
+directory in your favorite editor and copy the following text into it:
 </para>
-<para>
-Your web-server needs read access to your plugin directory.  You may have 
-to change the permissions of your plugin directory accordingly.
-</para>
-</sect2>
-
-<sect2>
-<title>Configure PyBlosxom by Editing config.py</title>
-<para>
-The <filename>config.py</filename> file is a text file written in Python.  You 
-can use any text editor to edit it.  It has a series of comments in it that will 
-help guide you through setting the various properties you need to set.
-</para>
-<para>
-Plugins will require you to add new variables to your <filename>config.py</filename> 
-file in order to direct the plugin's behavior.  Additionally, you can add variables
-to your <filename>config.py</filename> and these variables will be available to you 
-in your flavour templates.
-</para>
-<para>
-Make sure you set the <varname>datadir</varname> property.
-</para>
-</sect2>
-
-<sect2>
-<title>Verify Your Installation</title>
-<para>
-When you're done editing your <filename>config.py</filename> file, run 
-<command>./pyblosxom.cgi</command>.  This will verify that 
-<filename>pyblosxom.cgi</filename> is pointing to a valid Python instance, your 
-configuration is correct, and that your datadir is there.
-</para>
-<para>
-Then, using any text editor, create a file called <filename>firstpost.txt</filename> 
-in your datadir and in that file write: 
-</para>
-<programlisting role="html"><![CDATA[
-First Post
+<programlisting role="text"><![CDATA[
+This is my first post
 <p>
-   This is the first post in my blog.
+  This is my first post with PyBlosxom.
 </p>
 ]]></programlisting>
 <para>
-The first line "First Post" becomes the title of the blog entry.  The date 
-of the blog entry is the mtime on the file.  The body of the blog entry 
-starts with the HTML paragraph tag in the second line and extends to the 
-end paragraph tag in the last line.
-</para>
-
-<note>
-  <title>note: using a different markup for blog entries</title>
-  <para>
-    If you want to use a different markup like reST or Textile or Moinmoin or
-    something like that, see the chapter on entry parsers for how to set it up.
-  </para>
-</note>
-
-<para>
-Now it's time to test your installation in a web-browser.
+Open up a web-browser and go to the URL
+<filename>http://your_server_here/path/to/cgi-bin/pyblosxom.cgi</filename>
 </para>
 <para>
-Assume that you're a user on a Linux machine running Apache with user 
-folders set up.  Then the url for your pyblosxom instance might be 
-something like this: http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi .
+If everything is configured correctly, you should see your first post
+rendered with the default HTML flavour.  If not, you'll either see
+a Python stack trace or a message along the lines of Internal Server
+Error.  In the latter case, check your web-server's error logs for more
+details.
 </para>
-</sect2>
-</sect1>
-
-
+</listitem>
+</itemizedlist>
 <sect1>
-<title>Setting up PyBlosxom as an ISP-like Installation</title>
-<para>
-This can be done (and has been done).  FIXME - need instructions for it. 
-</para>
-</sect1>
+
 
 <sect1>
 <title>Trouble-shooting</title>
@@ -292,9 +199,10 @@ place like <filename>/var/logs/apache</filename> or <filename>/var/logs/httpd</f
 <note>
   <title>note: make sure you read the installation chapter</title>
   <para>
-    At this point, running <command>./pyblosxom.cgi</command> at the command prompt 
-    should work fine.  If you haven't done that and you're busy trouble-shooting,
-    go back to the installation and make sure you did all the steps.
+    At this point, running <command>./pyblosxom.cgi</command> at the command 
+    prompt should work fine.  If you haven't done that and you're busy 
+    trouble-shooting, go back to the installation and make sure you did 
+    all the steps.
   </para>
 </note>
 
@@ -327,9 +235,9 @@ that only show up in certain situations.
 <para>
 Try changing the renderer for your blog to the debug renderer.  You can
 do this by setting the <varname>renderer</varname> property in your 
-<filename>config.py</filename> file to <literal>debug</literal>.  That will show 
-a lot more detail about what things get set to and may help you figure out 
-your issues.
+<filename>config.py</filename> file to <literal>debug</literal>.  That will 
+show a lot more detail about what things get set to and may help you figure 
+out your issues.
 </para>
 </sect2>
 
@@ -339,6 +247,7 @@ your issues.
 Read the chapter on flavours and templates to help you out.
 </para>
 </sect2>
+
 
 <sect2>
 <title>I hate writing in HTML!</title>
