@@ -890,7 +890,7 @@ def blosxom_entry_parser(filename, request):
     while lines and lines[0].startswith("#"):
         meta = lines.pop(0)
         meta = meta[1:].strip()     # remove the hash
-        meta = meta.split(" ", 2)
+        meta = meta.split(" ", 1)
         entryData[meta[0].strip()] = meta[1].strip()
 
     # Call the preformat function
