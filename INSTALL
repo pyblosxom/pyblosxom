@@ -1,14 +1,8 @@
 Installing PyBlosxom
 ====================
 
-There are many ways to install PyBlosxom.  This installation covers
-a basic single-user installation on Apache with PyBlosxom running as
-a CGI.
-
-For other situations (and up-to-date instructions), see the 
-Installing PyBlosxom chapter of the PyBlosxom manual at:
-
-   http://pyblosxom.sourceforge.net/
+This installation covers a basic single-user installation on Apache 
+with PyBlosxom running as a CGI.
 
 This installation assumes you have some understanding of CGI, Apache 
 configuration, and know how to manipulate files and directories.  If 
