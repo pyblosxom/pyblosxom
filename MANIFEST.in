@@ -1,8 +1,9 @@
 include setup.py
+include CHANGELOG
+include README
 include INSTALL
 include LICENSE
-include docs/LICENSE.portalocker
-include docs/ReadMeForPlugins.py
 recursive-include Pyblosxom *.py
 recursive-include web *
 recursive-include Pyblosxom/flavours *
+recursive-include docs *
