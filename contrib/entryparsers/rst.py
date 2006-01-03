@@ -1,5 +1,3 @@
-PREFORMATTER_ID = 'reST'
-FILE_EXT = 'rst'
 """
 A reStructuredText entry formatter for pyblosxom.  reStructuredText is 
 part of the docutils project (http://docutils.sourceforge.net/).  To 
@@ -62,6 +60,9 @@ __author__ = 'Sean Bowman <sean dot bowman at acm dot org>'
 from docutils.core import publish_parts
 from Pyblosxom import tools
 
+PREFORMATTER_ID = 'reST'
+FILE_EXT = 'rst'
+
 def cb_entryparser(args):
     args[FILE_EXT] = readfile
     return args
@@ -85,10 +86,24 @@ def parse(story, request):
 def readfile(filename, request):
     entryData = {}
     lines = open(filename).readlines()
+
+    if len(lines) == 0:
+        return {"title": "", "body": ""}
+
     title = lines.pop(0)
+
+    # absorb meta data
+    while lines and lines[0].startswith("#"):
+        meta = lines.pop(0)
+        meta = meta[1:].strip()     # remove the hash
+        meta = meta.split(" ", 1)
+        entryData[meta[0]] = meta[1]
+
     body = parse(''.join(lines), request)
-    entryData = {'title': title, 'body': body}
+    entryData[title] = title
+    entryData[body] = body
+
     # Call the postformat callbacks
-    tools.run_callback(
-        'postformat', {'request': request, 'entry_data': entryData})
+    tools.run_callback('postformat', {'request': request, 
+                                      'entry_data': entryData})
     return entryData
