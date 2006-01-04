@@ -75,10 +75,14 @@ class PyBlosxom:
         # Get our URL and configure the base_url param
         if pyhttp.has_key('SCRIPT_NAME'):
             if not config.has_key('base_url'):
-				# allow http and https
+                # allow http and https
                 config['base_url'] = '%s://%s%s' % (pyhttp['wsgi.url_scheme'], pyhttp['HTTP_HOST'], pyhttp['SCRIPT_NAME'])
         else:
             config['base_url'] = config.get('base_url', '')
+
+        # take off the trailing slash for base_url
+        if config['base_url'].endswith("/"):
+            config['base_url'] = config['base_url'][:-1]
 
         datadir = config["datadir"]
         if datadir.endswith("/") or datadir.endswith("\\"):
@@ -1129,6 +1133,12 @@ def blosxom_process_path_info(args):
 
     # construct our final URL
     data['url'] = '%s%s' % (config['base_url'], data['pi_bl'])
+    url = config['base_url']
+    if data['pi_bl'].startswith("/"):
+        url = url + data['pi_bl']
+    else:
+        url = url + "/" + data['pi_bl']
+    data['url'] = url
 
     # set path_info to our latest path_info
     data['path_info'] = path_info
