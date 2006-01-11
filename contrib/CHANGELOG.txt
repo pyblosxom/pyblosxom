@@ -25,6 +25,15 @@ comments
  * Fixed issues with rendering.  Also removed the "if this is rss,
    then don't do stuff".
 
+ * Fixed an issue where if the config.py file doesn't have blog_encoding
+   set, the comments plugin would die.
+
+ * Fixed a security problem where the url and author fields were not
+   getting sanitized.  (Thanks Tung Wai Yip!)
+
+ * Re-added the logging code that the comments plugin uses when things
+   go sour.
+
 pycategories
 
  * Fixed a cosmetic issue where an extra / was getting added to the
@@ -42,6 +51,8 @@ rst entryparser
    sets the starting level for rendered heading elements.  The second 
    enables and disables the promotion of a lone top-level section title 
    to the document title.  Thanks Jan-Wijbrand!
+
+ * Fixed the rst entryparser to handle metadata.  Thanks to spanezz!
 
 
 Changes between contributed pack 1.2.1 and 1.2.2 (21 June, 2005)
