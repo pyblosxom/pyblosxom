@@ -146,10 +146,6 @@ from Pyblosxom.entries.base import EntryBase
 def cb_start(args):
     request = args["request"]
     config = request.getConfiguration()
-    logdir = config.get("logdir", "/tmp/")
-
-    # logfile = os.path.normpath(logdir + os.sep + "comments.log")
-    # tools.make_logger(logfile)
 
     if not config.has_key('comment_dir'):
         config['comment_dir'] = os.path.join(config['datadir'],'comments')
@@ -311,8 +307,8 @@ def readComment(filename, encoding):
         cmt['cmt_pubDate'] = time.ctime(float(cmt['cmt_pubDate'])) #pretty time
         return cmt
     except: #don't error out on a bad comment
-        # tools.log('bad comment file: %s' % filename)
-        pass
+        logger = tools.getLogger()
+        logger.error("bad comment file: %s" % filename)
 
 def writeComment(request, config, data, comment, encoding):
     """
@@ -330,6 +326,10 @@ def writeComment(request, config, data, comment, encoding):
     @return: The success or failure of creating the comment.
     @rtype: string
     """
+    entry_list = data.get("entry_list", [])
+    if not entry_list:
+        return "No such entry exists."
+
     entry = data['entry_list'][0]
     cdir = os.path.join(config['comment_dir'],entry['absolute_path'])
     cdir = os.path.normpath(cdir)
@@ -363,7 +363,8 @@ def writeComment(request, config, data, comment, encoding):
     try :
         cfile = codecs.open(cfn, "w", encoding)
     except IOError:
-        # tools.log("Couldn't open comment file %s for writing" % cfn)
+        logger = tools.getLogger()
+        logger.error("couldn't open comment file '%s' for writing" % cfn)
         return "Internal error: Your comment could not be saved."
  
     cfile.write(filedata)
@@ -375,18 +376,21 @@ def writeComment(request, config, data, comment, encoding):
     try:
         latest = open(latestFilename,"w")
     except IOError:
-        # tools.log("Couldn't open latest comment pickle for writing")
+        logger = tools.getLogger()
+        logger.error("couldn't open latest comment pickle for writing")
         return "Couldn't open latest comment pickle for writing."
     else:
         modTime = float(comment['pubDate'])
 
     try:
-        cPickle.dump(modTime,latest)
+        cPickle.dump(modTime, latest)
         latest.close()
     except IOError:
-        # should log or e-mail
         if latest:
             latest.close()
+
+        logger = tools.getLogger()
+        logger.error("comment may not have been saved to pickle file.")
         return "Internal error: Your comment may not have been saved."
 
     if config.has_key('comment_smtp_server') and \
@@ -453,9 +457,8 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
                         msg="\n".join(message))
         server.quit()
     except Exception, e:
-        # tools.log("Error sending mail: %s" % e)
-        # FIXME - if we error out, no one will know.
-        pass
+        logger = tools.getLogger()
+        logger.error("error sending email: %s" % e)
 
 def clean_author(s):
     """
@@ -616,16 +619,19 @@ def cb_prepare(args):
         decode_form(form, encoding)
 
         body = form['body'].value
-        
-        body = sanitize(body)
-
-        # Check if the form has a URL
+        author = form['author'].value
         url = (form.has_key('url') and [form['url'].value] or [''])[0]
-        
-        #it doesn't make sense to add nofollow to link here, but we should
-        #escape it. If you don't like the link escaping, I'm not attached to it.
+
+        # sanitize incoming data
+        body = sanitize(body)
+        author = sanitize(author)
+        url = sanitize(url)
+
+        # it doesn't make sense to add nofollow to link here, but we should
+        # escape it. If you don't like the link escaping, I'm not attached 
+        # to it.
         cdict = {'title': form['title'].value, \
-                 'author' : form['author'].value, \
+                 'author' : author, \
                  'pubDate' : str(time.time()), \
                  'link' : escape_link(url), \
                  'source' : '', \
