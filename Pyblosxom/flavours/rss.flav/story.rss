@@ -1,6 +1,8 @@
 <item>
   <title>$title_escaped</title>
   <link>$base_url/$file_path_urlencoded.html</link>
-  <description>$body_escaped</description>
+  <description><![CDATA[
+$body
+]]></description>
 </item>
 
