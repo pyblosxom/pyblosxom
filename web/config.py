@@ -62,7 +62,9 @@ py['ignore_directories'] = []
 # 0 = infinite depth (aka grab everything), 1 = datadir only, n = n levels down
 py['depth'] = 0
 
-# How many entries should I show on the home page?
+# How many entries should I show on the home page and category pages?
+# This doesn't affect date-based archive pages.  If you put 0 here, 
+# then I will show all pages.
 py['num_entries'] = 40
 
 # What should the default flavour you want used be?

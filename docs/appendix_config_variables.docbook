@@ -237,8 +237,9 @@ py["logdir"] = "e:/blogdata/logs/"
 <member>DEFAULT VALUE:</member><member><literal>0</literal></member>
 </simplelist>
 <para>This dictates the maximum number of entries that will show up
-on a page.  It defaults to <literal>0</literal> which means "show all
-the entries".</para>
+on the home page and other category pages.  It doesn't affect the number
+of entries that show up on date-based archive pages.  It defaults to 
+<literal>0</literal> which means "show all the entries".</para>
 <programlisting role="python"><![CDATA[
 py["num_entries"] = 20
 ]]></programlisting>

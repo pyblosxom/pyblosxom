@@ -958,10 +958,13 @@ def blosxom_file_list_handler(args):
     else:
         valid_list = entrylist
 
-    # This is the maximum number of entries we can show (zero indicates show all entries)
+    # This is the maximum number of entries we can show on the front page
+    # (zero indicates show all entries)
     max = config.get("num_entries", 0)
-    if max:
+    if max and not data["pi_yr"]:
         valid_list = valid_list[:max]
+        data["debugme"] = "done"
+
     valid_list = [x[1] for x in valid_list]
 
     return valid_list
