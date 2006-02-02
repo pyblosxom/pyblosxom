@@ -40,13 +40,13 @@
 <releaseinfo>$Id$</releaseinfo>
 
 <copyright>
-  <year>2005</year>
-  <holder>PyBlosxom Development</holder>
+  <year>2005, 2006</year>
+  <holder>Will Guaraldi</holder>
 </copyright>
 
 <legalnotice>
 <para>
-Copyright (c) 2005 PyBlosxom Development.  Permission is granted to copy, 
+Copyright (c) 2005, 2006 Will Guaraldi.  Permission is granted to copy, 
 distribute and/or modify this document under the terms of the GNU Free 
 Documentation License, Version 1.1 or any later version published by the Free 
 Software Foundation; with the Invariant Sections being no Invariant Sections, 
@@ -62,8 +62,10 @@ This manual will cover all aspects of using and developing for PyBlosxom.  It
 is a work in progress.
 </para>
 <para>
-This is release $Id$ 
-of the version of the pyblosxom_manual.docbook file as of $Date$.
+This is release 
+$Id$ 
+of the version of the pyblosxom_manual.docbook file as of 
+$Date$.
 </para>
 </abstract>
 

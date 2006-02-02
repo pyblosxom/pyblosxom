@@ -206,7 +206,7 @@ at.
 <sect1>
 <title>Template Variables</title>
 <para>
-Here is the list of variables that are available to your templates.
+This is the list of variables that are available to your templates.
 Additionally, plugins that you are using will add additional variables.
 To get a complete list of what variables are available in your blog, use 
 the debug renderer by changing the renderer property in your 
@@ -218,6 +218,23 @@ the debug renderer by changing the renderer property in your
 That will tell you all kinds of stuff about the data structures involved 
 in the request.  Don't forget to change it back when you're done!
 </para>
+
+<sect2>
+<title>URL Encoding and Escaping of Template Variables</title>
+<para>
+PyBlosxom 1.3 allows you to escape and URL encode any variables by adding
+"_escaped" or "_urlencoded" to the end of the variable name.
+</para>
+<para>
+For example, <varname>title_escaped</varname> is an escaped form of
+the title with ' (single-quote) replaced with &apos; and " (double-quote)
+replaced with &quot;.
+</para>
+<para>
+<varname>title_urlencoded</varname> is a URL encoded form of the title
+which uses the Python urllib.
+</para>
+</sect2>
 
 <sect2>
 <title>Variables From config.py</title>
@@ -499,22 +516,6 @@ are available, and what the variables do.
 </para>
 </sect2>
 
-<sect2>
-<title>URL Encoding and Escaping of Template Variables</title>
-<para>
-PyBlosxom 1.3 allows you to escape and URL encode any variables by adding
-"_escaped" or "_urlencoded" to the end of the variable name.
-</para>
-<para>
-For example, <varname>title_escaped</varname> is an escaped form of
-the title with ' (single-quote) replaced with &apos; and " (double-quote)
-replaced with &quot;.
-</para>
-<para>
-<varname>title_urlencoded</varname> is a URL encoded form of the title
-which uses the Python urllib.
-</para>
-</sect2>
 </sect1>
 
 
