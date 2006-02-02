@@ -875,7 +875,9 @@ def blosxom_entry_parser(filename, request):
 
     entryData = {}
 
-    lines = open(filename).readlines()
+    f = open(filename, "r")
+    lines = f.readlines()
+    f.close()
 
     # the file has nothing in it...  so we're going to return
     # a blank entry data object.
