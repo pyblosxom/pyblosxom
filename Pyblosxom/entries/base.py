@@ -226,6 +226,9 @@ class EntryBase:
         if key == CONTENT_KEY:
             return self.getData()
 
+        if key == CONTENT_KEY + "_escaped":
+            return tools.escape_text(self.getData())
+
         return self.getMetadata(key, default)
 
     def get(self, key, default=None):
@@ -296,7 +299,7 @@ class EntryBase:
         @returns: whether (1) or not (0) the key exists
         @rtype: boolean
         """
-        if key == CONTENT_KEY:
+        if key == CONTENT_KEY or key == CONTENT_KEY + "_escaped":
             return 1
 
         value = self.getMetadata(key, DOESNOTEXIST)
@@ -318,6 +321,7 @@ class EntryBase:
         keys = self.getMetadataKeys()
         if CONTENT_KEY not in keys:
             keys.append(CONTENT_KEY)
+            keys.append(CONTENT_KEY + "_escaped")
         return keys
 
 
