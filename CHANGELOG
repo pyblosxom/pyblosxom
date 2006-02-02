@@ -1,3 +1,34 @@
+Changes between 1.3 and 1.3.1
+=============================
+
+Pertinent to users:
+-------------------
+
+1. The "num_entries" property now affects the home page and category
+   index pages.  It no longer affects archive index pages.
+
+2. Fixed the RSS 0.9.1 feed templates.  It has the correct link url
+   and shows the entry bodies.  Thanks Norbert!
+
+3. The version string is correct.
+
+4. Added support for $body_escaped .
+
+5. Fixed the blog encoding on the RSS 2.0 feed so that it uses the
+   value provided in the config.py $blog_encoding variable.
+
+6. Fixed the Atom 1.0 story flavour to use $body_escaped instead of
+   <![CDATA[ $body ]]>
+
+
+Pertinent to developers:
+------------------------
+
+If you have plugins that use the logger functions in PyBlosxom 1.2,
+you need to update those plugins to use the new logger functions in
+PyBlosxom 1.3.  Read through the API for details.
+
+
 Changes between 1.2 and 1.3
 ===========================
 
@@ -49,7 +80,9 @@ Pertinent to users:
 Pertinent to developers and plugin developers:
 ----------------------------------------------
 
-Nothing that I know of.  Everything should work pretty much the same.
+1. Plugins that used logging in 1.2 need to be changed to use the
+   new logging utilities in 1.3.  Until that happens, they won't
+   work.
 
 
 Changes between 1.1 and 1.2
