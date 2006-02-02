@@ -1,5 +1,16 @@
 """
-Copyright (c) 2003-2005 Ted Leung
+This plugin allows pyblosxom to process trackback
+<http://www.sixapart.com/pronet/docs/trackback_spec> pings.  You must have the 
+comments plugin installed as well, although you don't need to enable comments 
+on your blog in order for trackbacks to work
+
+%<---------------------------------------------------------
+py['trackback_urltrigger'] = "/trackback"
+%<---------------------------------------------------------
+
+For more detailed installation, read the README file that comes with
+the comments plugins.
+
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -20,15 +31,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-This plugin allows pyblosxom to process trackback
-<http://www.sixapart.com/pronet/docs/trackback_spec> pings.  You must have the 
-comments plugin installed as well, although you don't need to enable comments 
-on your blog in order for trackbacks to work
-
-%<---------------------------------------------------------
-py['trackback_urltrigger'] = "/trackback"
-%<---------------------------------------------------------
-
+Copyright (c) 2003-2005 Ted Leung
 """
 import cgi, os, os.path
 from Pyblosxom import tools
