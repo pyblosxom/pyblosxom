@@ -47,10 +47,6 @@ from Pyblosxom import tools
 def cb_start(args):
     request = args["request"]
     config = request.getConfiguration()
-    logdir = config.get("logdir", "/tmp")
-    logfile = os.path.normpath(logdir + os.sep + "commentAPI.log")
-
-    tools.make_logger(logfile)
 
 def verify_installation(request):
     config = request.getConfiguration()

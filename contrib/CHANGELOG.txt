@@ -1,9 +1,11 @@
-Changes between contributed pack 1.2.2 and 1.2.3
-================================================
+Changes between contributed pack 1.2.2 and 1.3
+==============================================
 
 General
 
  * Added release dates to CHANGELOG.txt file.
+
+ * Fixed all logging to use the new functions in PyBlosxom 1.3.
 
 comments
 

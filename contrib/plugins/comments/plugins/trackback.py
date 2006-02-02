@@ -50,8 +50,6 @@ def cb_start(args):
     logdir = config.get("logdir", "/tmp")
     logfile = os.path.normpath(logdir + os.sep + "trackback.log")
 
-    tools.make_logger(logfile)
-
 def verify_installation(request):
     config = request.getConfiguration()
     retval = 1
@@ -73,6 +71,8 @@ def cb_handle(args):
     config = request.getConfiguration()
 
     urltrigger = config.get('trackback_urltrigger','/trackback')
+
+    logger = tools.getLogger()
 
     path_info = pyhttp['PATH_INFO']
     if path_info.startswith(urltrigger):
@@ -111,11 +111,11 @@ def cb_handle(args):
                 print >> response, tb_good_response
             except OSError:
                 message = 'URI '+path_info+" doesn't exist"
-                tools.log(message)
+                logger.error(message)
                 print >> response, tb_bad_response % message
 
         else:
-            tools.log(message)
+            logger.error(message)
             print >> response, tb_bad_response % message
 
         # no further handling is needed

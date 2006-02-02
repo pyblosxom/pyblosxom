@@ -43,10 +43,7 @@ from Pyblosxom.entries.fileentry import FileEntry
 def cb_start(args):
     request = args["request"]
     config = request.getConfiguration()
-    logdir = config.get("logdir", "/tmp")
-    logfile = os.path.normpath(logdir + os.sep + "metaweblog.log")
 
-    tools.make_logger(logfile)
 
 #
 # Pyblosxom callback API functions
@@ -123,7 +120,9 @@ def metaWeblog_editPost(request, postid, username, password, struct, publish):
 
     @returns an xmlrpclib boolean -- true if the edit was successful, false otherwise
     """
-    # tools.log("editPost %s %s %s" % (postid, struct, publish))
+    logger = tools.getLogger()
+    logger.debug("editPost %s %s %s" % (postid, struct, publish))
+
     authenticate(request, username, password)
     config = request.getConfiguration()
     ping = config.get('xmlrpc_metaweblog_ping',0)
@@ -153,7 +152,8 @@ def metaWeblog_newPost(request, blogid, username, password, struct, publish):
     @param publish: to publish (true) or not
     @type  publish: boolean
     """
-    # tools.log("newPost %s %s %s" % (blogid, struct, publish))
+    logger = tools.getLogger()
+    logger.debug("newPost %s %s %s" % (blogid, struct, publish))
     authenticate(request, username, password)
     config = request.getConfiguration()
     ping = config.get('xmlrpc_metaweblog_ping',0)
@@ -187,11 +187,12 @@ def metaWeblog_getPost(request, postid, username, password):
     @returns the post whose id is postid
     @rtype dict
     """
-    # tools.log("getPost: postid: %s" % (postid,))
+    logger = tools.getLogger()
+    logger.debug("getPost: postid: %s" % (postid,))
     authenticate(request, username, password)
     config = request.getConfiguration()
 
-    # tools.log("datadir = %s, file = %s.txt" % (config['datadir'], postid))
+    logger.debug("datadir = %s, file = %s.txt" % (config['datadir'], postid))
     entry = FileEntry(request, os.path.join(config['datadir'],"%s.txt" % postid), config['datadir'])
     post = { 'permaLink': "%s/%s/%s/%s#%s" % (config['base_url'], entry['yr'],entry['mo_num'],entry['da'],entry['fn']),
              'title':entry['title'],
@@ -221,7 +222,8 @@ def metaWeblog_getCategories(request, blogid, username, password):
     @returns list of categories (each category is a string)
     @rtype list
     """
-    # tools.log("getCategories blogid: %s" % blogid)
+    logger = tools.getLogger()
+    logger.debug("getCategories blogid: %s" % blogid)
     authenticate(request, username, password)
     config = request.getConfiguration()
 
@@ -252,7 +254,8 @@ def metaWeblog_getRecentPosts(request, blogid, username, password, numberOfPosts
     @returns list of dicts, one per post
     @rtype list
     """
-    # tools.log("getRecentPosts blogid:%s count:%s" % (blogid, numberOfPosts))
+    logger = tools.getLogger()
+    logger.debug("getRecentPosts blogid:%s count:%s" % (blogid, numberOfPosts))
     authenticate(request, username, password)
     config = request.getConfiguration()
 
@@ -267,7 +270,7 @@ def metaWeblog_getRecentPosts(request, blogid, username, password, numberOfPosts
     try:
         numberOfPosts = int(numberOfPosts)
     except:
-        # tools.log("Couldn't convert numberOfPosts")
+        logger.error("Couldn't convert numberOfPosts")
         numberOfPosts = 5
     entryList = [ x[1] for x in entryList ][: numberOfPosts]
 
@@ -306,7 +309,8 @@ def metaWeblog_newMediaObject(request, blogid, username, password, struct):
     @param struct: the metaWeblog API struct
     @type  struct: dict
     """
-    # tools.log("newMediaObject")
+    logger = tools.getLogger()
+    logger.debug("newMediaObject")
     authenticate(request, username, password)
     config = request.getConfiguration()
 
@@ -317,7 +321,7 @@ def metaWeblog_newMediaObject(request, blogid, username, password, struct):
     root = config['xmlrpc_metaweblog_image_dir']
 
     path = os.path.join("%s/%s" % (root, name))
-    # tools.log("newMediaObject: %s,%s, %s, %s " % (name, path, mimeType, bits))
+    logger.debug("newMediaObject: %s,%s, %s, %s " % (name, path, mimeType, bits))
     f = None
     try:
         f = open(path, 'wb')
@@ -390,7 +394,8 @@ def _buildPostId(request, blogid, struct):
     else:
         postId = os.path.join("%d" % count)
 
-    # tools.log(postId)
+    logger = tools.getLogger()
+    logger.debug(postId)
     return postId
 
 def _getEntryCount(request):
@@ -471,7 +476,9 @@ def _writePost(config, username, postid, struct, publish=True, ping=False):
     """
     root = config['datadir']
     path = os.path.join(root,"%s.txt" % postid)
-    # tools.log("path = "+path)
+
+    logger = tools.getLogger()
+    logger.debug("path = "+path)
     if not publish:
         path += '-'
 
@@ -507,9 +514,9 @@ def _writePost(config, username, postid, struct, publish=True, ping=False):
             os.chdir(root)
             autoping.autoping("%s.txt" % postid)
         except OSError:
-            # tools.log("autoping failed for %s with OSError %" % postid)
+            logger.error("autoping failed for %s with OSError %" % postid)
             pass
         except:
-            # tools.log("autoping failed for %s" % path)
+            logger.error("autoping failed for %s" % path)
             pass
     return 1

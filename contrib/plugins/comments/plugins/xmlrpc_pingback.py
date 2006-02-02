@@ -98,7 +98,8 @@ def fileFor(req, uri):
 
             
 def pingback(request, source, target):
-    tools.log("pingback started")
+    logger = tools.getLogger()
+    logger.info("pingback started")
     source_file = urllib.urlopen(source.split('#')[0])
     if source_file.headers.get('error', '') == '404':
         raise Fault(0x0010, "Target %s not exists" % target)
@@ -158,8 +159,6 @@ def cb_xmlrpc_register(args):
 def cb_start(args):
     request = args["request"]
     config = request.getConfiguration()
-    logdir = config.get("logdir", "/tmp")
-    logfile = os.path.normpath(logdir + os.sep + "pingback.log")
 
-    tools.make_logger(logfile)
-    tools.log("finished config")
+    logger = tools.getLogger()
+    logger.info("finished config")

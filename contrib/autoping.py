@@ -37,7 +37,7 @@ import config
 
 logdir = config.get("logdir", "/tmp")
 logfile = os.path.normpath(logdir + os.sep + "autoping.log")
-tools.make_logger(logfile)
+logger = tools.getLogger()
 
 def excerpt(filename, title, body, blogname):
     """ filename,title,body => url,args
@@ -158,17 +158,17 @@ def trackback(parser):
 
     for url in parser.trackbacks:
         try:
-            tools.log("")
-            tools.log( "*** Trackback " + url)
-            tools.log(parser.args)
+            logger.info("")
+            logger.info("*** Trackback " + url)
+            logger.info(parser.args)
             if url.find('?tb_id=') >= 0:
                 file=urllib.urlopen(url + "&" + parser.args)
             else:
                 file=urllib.urlopen(url, parser.args)
-            tools.log(file.read())
+            logger.info(file.read())
             file.close()
         except Exception, e:
-            tools.log(e)
+            logger.error(e)
 
 
 def pingback(parser):
@@ -179,12 +179,12 @@ def pingback(parser):
 
     for target,server in parser.pingbacks:
         try:
-            tools.log("")
-            tools.log("*** Pingback " + server)
+            logger.info("")
+            logger.info("*** Pingback " + server)
             server=xmlrpclib.Server(server)
-            tools.log(server.pingback.ping(parser.url,target))
+            logger.info(server.pingback.ping(parser.url,target))
         except Exception, e:
-            tools.log(e)
+            logger.error(e)
 
 def autoping(name):
     request = Request()
@@ -205,14 +205,14 @@ def autoping(name):
             try:
                 entryData = blosxom_entry_parser(filename, request)
             except IOError, e:
-                tools.log(e)
+                logger.error(e)
         
         name = re.sub(config.py['datadir'],'',name)
         parser = link(name, entryData['title'].strip(), entryData['body'].strip(), config.py['blog_title'])
         trackback(parser)
         pingback(parser)
     except Exception, e:
-        tools.log(e)
+        logger.error(e)
     
 
 if __name__ == '__main__':
