@@ -10,8 +10,11 @@ xml, or anything else--anything that you could get back from a CGI
 script or web application.  The default renderer can be set in your 
 config file like this:
 </para>
+
+<example><title>renderer variable value</title>
 <programlisting role="python">py["renderer"] = "blosxom"
 </programlisting>
+</example>
 
 <para>
 PyBlosxom comes with two renderers: blosxom and debug.
@@ -294,8 +297,12 @@ are available in your templates.  If you wanted to create a
 <varname>blog_images</varname> variable holding the base url of the directory 
 with all your images:
 </para>
+
+<example><title>creating your own config.py variables</title>
 <programlisting role="python">py["blog_images"] = "http://www.joe.com/~joe/images/"
 </programlisting>
+</example>
+
 <para>
 to your <filename>config.py</filename> file and it would be available in 
 all your templates.
@@ -590,8 +597,10 @@ You can change the default flavour from <literal>html</literal> to some other
 flavour in your <filename>config.py</filename> file with the 
 <varname>default_flavour</varname> property:
 </para>
+<example><title>default_flavour variable value</title>
 <programlisting role="python">py["default_flavour"] = "joy"
 </programlisting>
+</example>
 <para>
 Doing this will set the default flavour to use when the URI the user has
 used doesn't specify which flavour to use.  For example, if you do the

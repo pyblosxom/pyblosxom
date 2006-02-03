@@ -62,10 +62,7 @@ This manual will cover all aspects of using and developing for PyBlosxom.  It
 is a work in progress.
 </para>
 <para>
-This is release 
-$Id$ 
-of the version of the pyblosxom_manual.docbook file as of 
-$Date$.
+Version: 1.3.1 
 </para>
 </abstract>
 
@@ -115,6 +112,20 @@ Details of mailing lists and other contact information are on our web-site
 at http://pyblosxom.sourceforge.net/ .
 </para>
 </sect1>
+
+<sect1>
+<title>Revision History</title>
+<para>
+1.3.1 - 2006-02-02 - wbg
+</para>
+<para>
+  Changed copyright information; added information on entryparsers; 
+  added callback documentation; moved section on _escaped and 
+  _urlencoded; added revhistory; changed document versioning; additional 
+  tweaks.
+</para>
+</sect1>
+
 </preface>
 
 

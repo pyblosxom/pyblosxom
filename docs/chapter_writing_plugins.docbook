@@ -141,8 +141,51 @@ __description__ = "Splits long indexes into multiple pages."
 
 <para>
 After that, you should have a verify_installation section that
-verifies that the plugin is configured correctly.  This is
-the one that Will has for his wbgpager plugin:
+verifies that the plugin is configured correctly.  As of PyBlosxom 0.9, 
+the pyblosxom.cgi is able to test your PyBlosxom installation.  It 
+verifies certain items in your config.py file and also loads all the 
+plugins and lets them verify their configuration as well.
+First it tells you your Python version, OS name, and then proceeds to verify
+your config properties (did you specify a valid datadir?  does it
+exist?...) and then initializes all your plugins and executes
+verify_installation(request) on every plugin you have installed that 
+has the function.
+</para>
+<para>
+As a plugin developer, you should add a verify_installation function
+to your plugin module.  Something like this (taken from pycategories)::
+</para>
+
+<programlisting role="python"><![CDATA[
+def verify_installation(request):
+    config = request.getConfiguration()
+
+    if not config.has_key("category_flavour"):
+        print "missing optional config property 'category_flavour' which allows "
+        print "you to specify the flavour for the category link.  refer to "
+        print "pycategory plugin documentation for more details."
+    return 1
+
+]]></programlisting>
+<para>
+This gives you (the plugin developer) the opportunity to walk the user 
+through configuring your highly complex, quantum-charged, turbo plugin 
+in small baby steps without having to hunt for where their logs might be.
+</para>
+<para>
+So check the things you need to check, print out error messages
+(informative ones), and then return a 1 if the plugin is configured 
+correctly or a 0 if it's not configured correctly.
+</para>
+<para>
+This is not a substitute for the user to read the installation instructions.  
+It should be a really easy way to catch a lot of potential problems
+without involving the web server's error logs and debugging information
+being sent to a web-browser and things of that nature.
+</para>
+<para>
+Here's another example of verify_installation from Will's wbgpager
+plugin:
 </para>
 
 <programlisting role="python"><![CDATA[
@@ -211,6 +254,113 @@ def cb_filelist(args):
 
    data[STATE_KEY] = {}
    data[STATE_KEY]["blah"] = "blahblah"
+
+]]></programlisting>
+</sect1>
+
+<sect1>
+<title>How to implement a callback</title>
+<para>
+If you want to implement a callback, you add a function corresponding
+to the callback name to your plugin module.  For example, if you wanted
+to modify the Request object just before rendering, you'd implement
+cb_prepare like this:
+</para>
+
+<programlisting role="python"><![CDATA[
+def cb_prepare(args):
+    pass
+
+]]></programlisting>
+<para>
+We're not doing anything here, but when the user sends a request and
+PyBlosxom handles it, this function in your plugin will get called
+when PyBlosxom runs the prepare callback.
+</para>
+<para>
+Each callback passes in arguments through a single dictionary.  Each
+callback passes in different arguments and expects different return
+values.  Check the architecture chapter for a list of all the callbacks
+that are available, their arguments, and return values.
+</para>
+
+</sect1>
+
+<sect1>
+<title>Writing an entryparser</title>
+<para>
+Entry parsing functions take in a filename and the Request object.
+They then open the file and parse it out.  The can call cb_preformat
+and cb_postformat as they see fit.  They should return a dict
+containing at least "title" and "story" keys.  The "title"
+should be a single string.  The "story" should be a list of 
+strings (with \n at the end).
+</para>
+<para>
+Here's an example code that reads *.plain files which have the
+title as the first line, metadata lines that start with # and then
+after all the metadata the body of the entry:
+</para>
+
+<programlisting role="python"><![CDATA[
+import os
+def cb_entryparser(entryparsingdict):
+    """
+    Register self as plain file handler
+    """
+    entryparsingdict['plain'] = parse
+    return entryparsingdict
+
+def parse(filename, request):
+    """
+    We just read everything off the file here, using the filename as
+    title
+    """
+    entrydata = {}
+
+    f = open(filename, "r")
+    lines = f.readlines()
+    f.close()
+
+    # strip off the first line and use that as the title.
+    title = lines.pop(0).strip()
+    entrydata['title'] = title
+
+    # absorb meta data lines which begin with a # and consist
+    # of a name and a value
+    while lines and lines[0].startswith("#"):
+        meta = lines.pop(0)
+        meta = meta[1:].strip()     # remove the hash
+        meta = meta.split(" ", 1)
+        entrydata[meta[0].strip()] = meta[1].strip()
+
+    # join the rest of the lines as the story
+    story = ''.join(lines)
+    entrydata["story"] = "".join(lines)
+
+    return entrydata
+
+]]></programlisting>
+</sect1>
+
+<sect1>
+<title>Writing a preformatter plugin</title>
+<para>
+FIXME - need more about preformatters here
+</para>
+<para>
+A typical preformatter plugin looks like this:
+</para>
+<programlisting role="python"><![CDATA[
+def cb_preformat(args):
+    if args['parser'] == 'linebreaks':
+        return parse(''.join(args['story']))
+
+def parse(text):
+    # A preformatter to convert linebreak to its HTML counterpart
+    text = re.sub('\\n\\n+','</p><p>',text)
+    text = re.sub('\\n','<br />',text)
+    return '<p>%s</p>' % text
 
 ]]></programlisting>
 </sect1>

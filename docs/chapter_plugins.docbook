@@ -23,8 +23,10 @@ The first one is the <varname>plugin_dirs</varname> property which is a list of
 strings specifying all the directories you might have plugins.  For example:
 </para>
 
+<example><title>plugin_dirs variable value</title>
 <programlisting role="python">py["plugin_dirs"] = ["/home/will/pybloxsom/plugins"]
 </programlisting>
+</example>
 
 <para>
 This will cause PyBlosxom to look in this specific directory for plugins.
@@ -47,8 +49,10 @@ specified.  The <varname>load_plugins</varname> property takes a list of strings
 For example:
 </para>
 
+<example><title>load_plugins variable value</title>
 <programlisting role="python">py["load_plugins"] = ["calendar", "category", "booklist"]
 </programlisting>
+</example>
 
 <para>
 This will load the plugins whose filenames are <filename>calendar.py</filename>, 

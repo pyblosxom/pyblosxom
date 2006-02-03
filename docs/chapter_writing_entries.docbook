@@ -64,16 +64,19 @@ entry file.
 Here's an example first post entry:
 </para>
 
+<example><title>first post</title>
 <programlisting role="html"><![CDATA[This is my first post!
 <p>
   This is the body of the first post to my blog.
 </p>
 ]]></programlisting>
+</example>
 
 <para>
 Here's a more complex example:
 </para>
 
+<example><title>more complex first post</title>
 <programlisting role="html"><![CDATA[The rain in Spain....
 <p>
   The rain
@@ -85,11 +88,13 @@ Here's a more complex example:
   is <font color="ff0000">mainly</font> on the plain.
 </p>
 ]]></programlisting>
+</example>
 
 <para>
 Here's an example of a post with metadata:
 </para>
 
+<example><title>first post with metadata</title>
 <programlisting role="html"><![CDATA[The rain in Spain....
 #mood bored
 #music The Doors - Greatest Hits Vol 1
@@ -103,6 +108,7 @@ Here's an example of a post with metadata:
   is <font color="ff0000">mainly</font> on the plain.
 </p>
 ]]></programlisting>
+</example>
 
 <para>
 The metadata variables here would be available in your story template.  

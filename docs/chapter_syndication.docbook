@@ -11,10 +11,9 @@ assuredly get away with implementing RSS 2.0 or ATOM and be just fine.
 </para>
 
 <sect1>
-<title>RSS</title>
+<title>Feed formats that come with PyBlosxom</title>
 <para>
-There are a variety of different versions of RSS and they're not all backwards
-compatible with each other.
+PyBlosxom comes with a few default flavours, three of which are feeds.
 </para>
 
 <sect2>
@@ -23,6 +22,8 @@ compatible with each other.
 PyBlosxom comes with an rss flavour that produces RSS 0.9.1 output.  Here's a
 sample of what it produces:
 </para>
+
+<example><title>example of RSS 0.9.1 feed</title>
 <programlisting role="rss"><![CDATA[
 <?xml version="1.0" encoding="utf-8"?>
 <!-- name="generator" content="pyblosxom/1.2 3/25/2005" -->
@@ -47,6 +48,8 @@ sample of what it produces:
 </channel>
 </rss>
 ]]></programlisting>
+</example>
+
 <para>
 This example only has one entry in it.  The number of entries the rss flavour
 will display is determined by the <varname>num_entries</varname> property in 
@@ -67,6 +70,10 @@ your <filename>config.py</filename> file.
   with PyBlosxom.
   </para>
 </note>
+<para>
+The standard for RSS 0.9.1 is at: 
+http://my.netscape.com/publish/formats/rss-spec-0.91.html
+</para>
 </sect2>
 
 <sect2>
@@ -76,6 +83,10 @@ PyBlosxom 1.3 comes with an RSS 2.0 flavour called "rss20".  If it's missing
 features that you want (for example, some folks are doing podcasting with
 their blog), then override the individual templates you need to adjust.
 </para>
+<para>
+The standard for RSS 2.0 is at:
+http://blogs.law.harvard.edu/tech/rss
+</para>
 </sect2>
 
 <sect2>
@@ -84,6 +95,10 @@ their blog), then override the individual templates you need to adjust.
 PyBlosxom 1.3 comes with an Atom 1.0 flavour called "atom".  If it's
 missing features that you want, then override the individual templates
 you need to adjust.
+</para>
+<para>
+The standard for Atom 1.0 is at:
+http://atomenabled.org/
 </para>
 </sect2>
 </sect1>

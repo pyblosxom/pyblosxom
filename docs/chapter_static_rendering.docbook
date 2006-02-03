@@ -90,9 +90,11 @@ to be http://www.joe.com/~joe/ .
 Now you can run static rendering:
 </para>
 
+<example><title>running static rendering at the command line</title>
 <programlisting role="shell">% cd directory-with-pyblosxom.cgi-in-it 
 % ./pyblosxom.cgi --static 
 </programlisting>
+</example>
 
 <para>
 Lots of output will appear as it figures out all the urls that need to 
@@ -111,9 +113,11 @@ comparing the mtime on the entry file with the mtime on the rendered file.
 It works like this:
 </para>
 
+<example><title>running static rendering incrementally</title>
 <programlisting role="shell">% cd directory-with-pyblosxom.cgi-in-it 
 % ./pyblosxom.cgi --static --incremental 
 </programlisting>
+</example>
 
 </sect2>
 </sect1>
@@ -140,8 +144,10 @@ url to be rendered. For example if I wanted to render the booklist page and the
 RSS feed for my main page, I would set it like this:
 </para>
 
+<example><title>static_urls variable value</title>
 <programlisting role="python">py["static_urls"] = ["/booklist/index.html", "/index.xml"]
 </programlisting>
+</example>
 
 </sect1>
 
@@ -157,16 +163,16 @@ pingbacks, ...), should call this function.
 If you want to statically render your blog every night, you could write 
 a shell script like this:
 </para>
-<example><title>Static rendering shell script</title>
 
+<example><title>static rendering shell script</title>
 <programlisting role="shell">#!/bin/bash 
  
 cd directory-with-pyblosxom.cgi
 ./pyblosxom.cgi --static 
 find static_dir-directory -mmin +30 -exec 'rm' '{}' ';' 
 </programlisting>
-
 </example>
+
 <para>
 That'll re-render everything, then delete any files in your static 
 dir that are older than 30 minutes (in case you moved entries from 

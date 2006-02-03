@@ -125,11 +125,13 @@ Write your first post and test:
 Open up the file <filename>firstpost.txt</filename> in the datadir
 directory in your favorite editor and copy the following text into it:
 </para>
+<example><title>first post</title>
 <programlisting role="text"><![CDATA[This is my first post
 <p>
   This is my first post with PyBlosxom.
 </p>
 ]]></programlisting>
+</example>
 <para>
 Open up a web-browser and go to the URL
 <filename>http://your_server_here/path/to/cgi-bin/pyblosxom.cgi</filename>

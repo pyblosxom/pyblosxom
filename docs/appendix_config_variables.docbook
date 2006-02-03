@@ -208,24 +208,61 @@ py["load_plugins"] = ["pycalendar", "rss2renderer"]
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>logdir</varname></term>
+<varlistentry><term><varname>log_file</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
-<member>REQUIRED:</member><member>yes</member>
+<member>REQUIRED:</member><member>no</member>
 <member>DATATYPE:</member><member>string</member>
 <member>DEFAULT VALUE:</member><member>N/A</member>
 </simplelist>
-<para>This is the full path to the directory for logs.</para>
-<para>Example of logdir for unix/linux/osx:</para>
+<para>
+Where should the application log to?
+If set to "NONE" log messages are silently ignored.
+Falls back to sys.stderr if the file can't be opened for writing.
+</para>
 <programlisting role="python"><![CDATA[
-py["logdir"] = "/home/will/blog/logs/"
+py['log_file'] = "/blogdata/logs/pyblosxom.log"
+py['log_file'] = "c:/blogdata/logs/pyblosxom.log"
 ]]></programlisting>
-<para>Examples of logdir for windows:</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>log_level</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>
+At what level should we log to log_file?
+One of: "critical", "error", "warning", "info", "debug"
+For production "warning" or "error" is recommended.
+</para>
 <programlisting role="python"><![CDATA[
-py["logdir"] = "/blogdata/logs/"
-py["logdir"] = "e:/blogdata/logs/"
+py['log_level'] = "warning"
 ]]></programlisting>
-<para>If you're using Windows, don't use \ in the logdir path.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>log_filter</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>
+Let's you specify which channels should be logged.
+If specified, only messages from the listed channels are logged.
+Each plugin logs to it's own channel, therefore channelname == pluginname.
+Application level messages are logged to a channel named "root".
+If you use log_filter and ommit the "root" channel here, app level messages 
+are not logged! log_filter is mainly interesting to debug a specific plugin.
+</para>
+<programlisting role="python"><![CDATA[
+py['log_filter'] = ['root', 'plugin1', 'plugin2']
+]]></programlisting>
 </listitem>
 </varlistentry>
 

@@ -49,7 +49,7 @@ our documentation will be eternally half-done, and it's likely you will run
 into problems eventually unless you want a bare-bones blog.
 </para>
 <para>
-PyBlosxom is a CGI program at its heart.  While there ahve been changes to
+PyBlosxom is a CGI program at its heart.  While there have been changes to
 make it work with WSGI and mod_python and other web-servers, it's still
 architected as a CGI program.  Using it in other ways may cause headaches.
 </para>

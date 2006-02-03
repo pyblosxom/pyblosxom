@@ -362,14 +362,14 @@ You can supply an embedded RDF description of the trackback ping:
 </para>
 
 <programlisting role="html"><![CDATA[<!--
-    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-             xmlns:dc="http://purl.org/dc/elements/1.1/"
-             xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
-     <rdf:Description
-      about="$base_url/$file_path"
-      dc:title="$title"
-      dc:identifier="$base_url/$file_path"
-      trackback:ping="$base_url/trackback.cgi/$file_path"
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+           xmlns:dc="http://purl.org/dc/elements/1.1/"
+           xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+  <rdf:Description
+    about="$base_url/$file_path"
+    dc:title="$title"
+    dc:identifier="$base_url/$file_path"
+    trackback:ping="$base_url/trackback.cgi/$file_path"
  />
     </rdf:RDF>
 -->
