@@ -79,6 +79,17 @@ to be http://www.joe.com/~joe/ .
 </para>
 </listitem>
 </orderedlist>
+
+<example><title>static rendering configuration</title>
+<programlisting role="python"><![CDATA[
+py["static_dir"] = "/home/joe/public_html/static/"
+py["static_flavours"] = ["html"]
+py["static_monthnames"] = 0     # i do not want month names
+py["static_monthnumbers"] = 1   # i do want month numbers
+]]></programlisting>
+
+</example>
+
 </sect1>
 
 <sect1>
