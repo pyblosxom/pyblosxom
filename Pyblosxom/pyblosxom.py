@@ -143,8 +143,9 @@ class PyBlosxom:
         """
         self.initialize()
 
-        # buffer the input stream in a StringIO instance if dynamic rendering is used.
-        # This is done to have a known/consistent way of accessing incomming data.
+        # buffer the input stream in a StringIO instance if dynamic rendering 
+        # is used.  This is done to have a known/consistent way of accessing 
+        # incomming data.
         if static == False:
             self.getRequest().buffer_input_stream()
 
@@ -292,6 +293,12 @@ class PyBlosxom:
         categories = categories.keys()
         categories.sort()
 
+        # if they have stuff in their root category, it'll add a "/"
+        # to the category list and we want to remove that because it's
+        # a duplicate of "".
+        if "/" in categories:
+            categories.remove("/")
+
         print "rendering %d category indexes." % len(categories)
 
         for mem in categories:
@@ -302,6 +309,8 @@ class PyBlosxom:
         # now we handle dates
         dates = dates.keys()
         dates.sort()
+
+        dates = ["/" + d for d in dates]
 
         print "rendering %d date indexes." % len(dates)
 
