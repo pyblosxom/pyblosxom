@@ -27,9 +27,11 @@ Pertinent to users:
 Pertinent to developers:
 ------------------------
 
-If you have plugins that use the logger functions in PyBlosxom 1.2,
-you need to update those plugins to use the new logger functions in
-PyBlosxom 1.3.  Read through the API for details.
+1. If you have plugins that use the logger functions in PyBlosxom 1.2,
+   you need to update those plugins to use the new logger functions in
+   PyBlosxom 1.3.  Read through the API for details.
+
+2. Moved documentation in ReadMeForPlugins.py over to the manual.
 
 
 Changes between 1.2 and 1.3
