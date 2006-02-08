@@ -20,6 +20,9 @@ Pertinent to users:
 6. Fixed the Atom 1.0 story flavour to use $body_escaped instead of
    <![CDATA[ $body ]]>
 
+7. Fixed a problem with static rendering where we'd render "/index.html"
+   and "//index.html" if the user had entries in their root category.
+
 
 Pertinent to developers:
 ------------------------
