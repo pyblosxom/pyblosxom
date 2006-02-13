@@ -1034,7 +1034,7 @@ def blosxom_process_path_info(args):
         data["flavour"] = ext[1:]
         path_info = newpath
 
-    if path_info.startswith("/"):
+    while path_info and path_info.startswith("/"):
         path_info = path_info[1:]
 
     absolute_path = os.path.join(config["datadir"], path_info)
