@@ -1,3 +1,15 @@
+Changes between 1.3.1 and 1.3.2
+===============================
+
+Pertinent to users:
+-------------------
+
+1. Fixes a security issue where the path_info can come in with multiple
+   / at the beginning.  Whether this happens or not depends on the 
+   web-server you're using and possibly other things.  Some people have
+   the issue and some don't.  If you're in doubt, upgrade.
+
+
 Changes between 1.3 and 1.3.1
 =============================
 
