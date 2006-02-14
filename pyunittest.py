@@ -8,7 +8,7 @@ import sys, unittest
 # sys.path.insert(0, "./")
 
 from Pyblosxom import tools
-from Pyblosxom.Request import Request
+from Pyblosxom.pyblosxom import Request
 
 class TestLocking(unittest.TestCase):
     def testLocking(self):
