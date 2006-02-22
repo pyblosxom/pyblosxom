@@ -625,7 +625,6 @@ def cb_prepare(args):
         # sanitize incoming data
         body = sanitize(body)
         author = sanitize(author)
-        url = sanitize(url)
 
         # it doesn't make sense to add nofollow to link here, but we should
         # escape it. If you don't like the link escaping, I'm not attached 
