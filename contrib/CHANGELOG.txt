@@ -33,6 +33,9 @@ comments
  * Fixed a security problem where the url and author fields were not
    getting sanitized.  (Thanks Tung Wai Yip!)
 
+ * Unfixed the url not getting sanitized--we already remove html from
+   it and sanitize unnecessarily adds an <a href...> </a> to it.
+
  * Re-added the logging code that the comments plugin uses when things
    go sour.
 
