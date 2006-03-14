@@ -46,6 +46,11 @@ http://cvs.sourceforge.net/viewcvs.py/pyblosxom/pyblosxom/contrib/plugins/commen
 </para>
 </listitem>
 </orderedlist>
+<para>
+The comments plugin has a README file that holds information on installing
+comments, traceback, pingback, and the commentAPI.  This is the README file
+listed at the above url.
+</para>
 </sect1>
 
 <sect1>
