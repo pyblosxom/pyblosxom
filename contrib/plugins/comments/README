@@ -60,7 +60,7 @@ INSTRUCTIONS
    the directory where the comment directory tree will stored, and the
    suffix used for comment files.  You need to make sure that this
    directory is writable by the pyblosxom CGI scripts.
-	 
+
    Set py['comment_dir'] to the directory (in your data directory)
    where you want the comments to be stored.  The default value is a
    directory named 'comments' in your data directory.
@@ -149,6 +149,16 @@ INSTRUCTIONS
        comment-story.html.  Since it is in an HTML comment, it doesn't
        matter where you put it.
 
+8. Edit your story template and add a link to the comments.  There
+   are two ways to do this.  
+
+     1. have "showcomments=yes" in the query string
+     2. have the comments link be the same as the permalink
+
+   Comments are shown for a given blog entry either if the showcomments=yes
+   is in the querystring of the HTTP request or if the story is the
+   only story being displayed.
+  
 
 That should be about it!
 
