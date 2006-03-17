@@ -10,6 +10,7 @@ Contributors:
   Bill Mill
   Roberto De Almeida
   David Geller
+  David Pashley
 
 If you make any changes to this plugin, please a send a patch with your
 changes to twl+pyblosxom@sauria.com so that we can incorporate your changes.
@@ -109,6 +110,18 @@ comments:
 
 Also, if you don't want comments for an entry, add "nocomments" = 1
 to the properties for the entry.
+
+
+WHERE TO FIND ADDITIONAL MATERIAL
+=================================
+
+There is a README file that comes with the contributed plugins pack
+in contrib/plugins/comments/ which has more information on installing
+the comments plugin.
+
+Additionally, there is a chapter in the PyBlosxom manual that
+covers installing and configuring the comments plugin.  The manual
+is on the PyBlosxom web-site: http://pyblosxom.sourceforge.net/
 
 
 Copyright (c) 2003-2005 Ted Leung
@@ -436,7 +449,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
     ipaddress = escape_SMTP_commands(comment.get('ipaddress', '?'))
 
     if comment.has_key('email'):
-        email = comment['email']
+        email = escape_SMTP_commands(clean_author(comment['email']))
     else:
         email = config['comment_smtp_from']
 
