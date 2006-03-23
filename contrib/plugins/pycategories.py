@@ -10,8 +10,8 @@ You can format the output by setting "category_begin", "category_item",
 
 Categories exist in a hierarchy.  "category_start" starts the category listing
 and is only used at the very beginning.  The "category_begin" property begins a 
-new category group and the "category_end" property ends that category group.  The
-"category_item" property is the template for each category item.  Then
+new category group and the "category_end" property ends that category group.  
+The "category_item" property is the template for each category item.  Then
 after all the categories are printed, "category_finish" ends the category
 listing.
 
@@ -20,7 +20,7 @@ to close a category and <li> for each item:
 
 py["category_start"] = "<ul>"
 py["category_begin"] = "<li><ul>"
-py["category_item"] = r'<li><a href="%(base_url)s/%(category)sindex.%(flavour)s">%(category)s</a></li>'
+py["category_item"] = r'<li><a href="%(base_url)s/%(category_urlencoded)sindex">%(category)s</a></li>'
 py["category_end"] = "</li></ul>"
 py["category_finish"] = "</ul>"
 
@@ -31,7 +31,7 @@ category:
 
 py["category_start"] = ""
 py["category_begin"] = ""
-py["category_item"] = r'%(indent)s<a href="%(base_url)s/%(category)sindex.%(flavour)">%(category)s</a> (%(count)d)<br />'
+py["category_item"] = r'%(indent)s<a href="%(base_url)s/%(category_urlencoded)sindex">%(category)s</a> (%(count)d)<br />'
 py["category_end"] = ""
 py["category_finish"] = ""
 
@@ -40,12 +40,16 @@ templates.
 
 Available variables in the category_item template:
 
-  base_url      (this is set in your config.py file)   string
-  fullcategory  'dev/pyblosxom/status/'                string
-  category      'status/'                              string
-  flavour       'html'                                 string
-  count         70                                     int
-  indent        '&nbsp;&nbsp;&nbsp;&nbsp;'             string
+  variable                 example                      datatype
+  ========                 =======                      ========
+  base_url                 http://joe.com/blog/         string
+  fullcategory_urlencoded  'dev/pyblosxom/status/'      string
+  fullcategory             'dev/pyblosxom/status/'      string (urlencoded)
+  category                 'status/'                    string
+  category_urlencoded      'status/'                    string (urlencoed)
+  flavour                  'html'                       string
+  count                    70                           int
+  indent                   '&nbsp;&nbsp;&nbsp;&nbsp;'   string
 
 
 Permission is hereby granted, free of charge, to any person
@@ -68,7 +72,7 @@ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Copyright 2004, 2005 Will Guaraldi
+Copyright 2004, 2005, 2006 Will Guaraldi
 """
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
@@ -80,7 +84,7 @@ import re, os
 
 DEFAULT_START = r'<ul class="categorygroup">'
 DEFAULT_BEGIN = r'<li><ul class="categorygroup">'
-DEFAULT_ITEM = r'<li><a href="%(base_url)s/%(fullcategory)sindex.%(flavour)s">%(category)s</a> (%(count)d)</li>'
+DEFAULT_ITEM = r'<li><a href="%(base_url)s/%(fullcategory_urlencoded)sindex.%(flavour)s">%(category)s</a> (%(count)d)</li>'
 DEFAULT_END = "</ul></li>"
 DEFAULT_FINISH = "</ul>"
 
@@ -186,9 +190,10 @@ class PyblCategories:
                   "flavour":      flavour,
                   "count":        num,
                   "indent":       tab }
-            if item == "":
-                d["fullcategory"] = item
 
+            d["fullcategory_urlencoded"] = tools.urlencode_text(d["fullcategory"])
+            d["category_urlencoded"] = tools.urlencode_text(d["category"])
+            
             # and we toss it in the thing
             output.append(item_t % d)
 
