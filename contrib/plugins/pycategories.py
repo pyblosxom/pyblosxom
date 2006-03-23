@@ -191,6 +191,11 @@ class PyblCategories:
                   "count":        num,
                   "indent":       tab }
 
+            # this prevents a double / in the root category url
+            if item == "":
+                d["fullcategory"] = item
+
+            # this adds urlencoded versions
             d["fullcategory_urlencoded"] = tools.urlencode_text(d["fullcategory"])
             d["category_urlencoded"] = tools.urlencode_text(d["category"])
             
