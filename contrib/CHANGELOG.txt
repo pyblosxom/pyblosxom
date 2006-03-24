@@ -52,6 +52,9 @@ pycategories
  * Fixed a problem where the totals weren't being counted correctly.
    (Thanks Rob!)
 
+ * Added "_urlencoded" versions of the category variables.  (Thanks
+   Petteri!)
+
 rst entryparser
 
  * Added two configurable options to the rst entryparser.  The first 
