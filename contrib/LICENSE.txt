@@ -1,2 +1,0 @@
-Licenses of each plugin can be found in the plugin file itself at the 
-top.
