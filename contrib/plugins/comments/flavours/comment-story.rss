@@ -1,7 +1,0 @@
-	    <item>
-      <title>$title</title>
-      <link>$url/$file_path</link>
-      <description>$body</description>
-      <category domain="http://www.sauria.com">$absolute_path</category>
-      <dc:date>$w3cdate</dc:date>
-    </item>
