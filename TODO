@@ -1,0 +1,134 @@
+PyBlosxom TODO
+==============
+
+VERSION = $Id$
+
+This is a really high-level todo list.  Nothing here is written
+in stone--this is mostly just a collection of thoughts.  As such, not
+everything in here will make sense to implement.  Each item really
+needs fleshing out before decisions on implementation should be made.
+
+If you're inspired by any of these tasks, let us know on the
+pyblosxom-devel mailing list.
+
+If there are items not mentioned here, let us know on the
+pyblosxom-devel mailing list.
+
+Thanks!
+
+
+PROJECT INFRASTRUCTURE
+======================
+
+UNIT TESTING
+
+ - We need a unit testing framework and unit tests.  Seriously.
+
+MANUAL
+
+ - Need to add information on migrating entries from other blog systems
+   (Drupal?  WordPress?  LiveJournal? ...) to PyBlosxom.
+ - Need to take out a lot of the blah blah blah content and clean up
+   the language so it's clearer with more examples.
+ - Need to add installation instructions for PyBlosxom for IIS.
+ - Need to add installation instructions for PyBlosxom with SCGI/FCGI with
+   flup.
+ - Need to add installation instructions for PyBlosxom as WSGI 
+   middleware.
+
+
+PYBLOSXOM
+=========
+
+WINDOWS
+
+ - Does PyBlosxom currently work in Windows?
+
+MAC OSX
+
+ - Does PyBlosxom currently work in Mac OSX?
+
+PYTHON VERSIONS
+
+ - Which versions of Python do PyBlosxom work in?
+
+CONFIGURATION
+
+ - the Debian package (it might not do this anymore) assumes that
+   config.py is a site-wide configuration file rather than a user-specific
+   configuration file.  MoinMoin has both a site-wide configuration file
+   and a user-specific (well...  wiki-specific) configuration file.
+
+   Need to look into how they did their stuff and look into changing our
+   configuration system to do something similar.
+
+PASTE/WSGI
+
+ - It'd be way cool if we could continue honing PyBlosxom so that it
+   can slide into a WSGI-based system as a piece of middleware.  If
+   we did that, then PyBlosxom could more nicely hang out with other
+   frameworks.
+ - Also, it'd be way cool if we could do:
+
+     paster serve myblog.ini
+
+   and have Paste serve it.  Paste and WSGI are definitely the way
+   forward.  If we fix PyBlosxom to be friendly with Paste and WSGI, 
+   then PyBlosxom is a lot more useful to a lot more people.
+
+TEMPLATES
+
+ - Flavours are specific to the blosxom rendering engine that PyBlosxom
+   has.  It's about time we add other rendering engines.  For example,
+   Myghty, Cheetah, ...  This might make it easier/more-useful for
+   using PyBlosxom inside of a TurboGears or a Pylons application.
+
+FLAVOUR FILES
+
+ - We still have one problem with making flavour files really cool:
+   resources.  If a flavour file requires a .css file or images or
+   something like that, it needs to be handled outside of PyBlosxom
+   by the web-server.  That makes documentation a mild pain in the ass
+   and makes it harder to explain in a generic sense how to install
+   flavour files.  It'd be cool if there was a way to specify whether
+   a given resource belonged to a specific flavour and if so allow
+   PyBlosxom to serve that resource (with the correct mime-type) from
+   the flavour's flavour directory.
+
+I18N
+
+ - Are we internationalization friendly?  I think parts of the PyBlosxom
+   system are, but we've got an awful lot of English strings in there.
+   We should look at Internationalizing the error messages and other
+   messages as well.  This might include internationalizing the flavour
+   files--but I'm not entirely sure how that would work.
+
+TAGS
+
+ - There are a series of tags/folksonomy kinds of plugins now.  All of
+   these (at least, last time I looked) suffer the problem that tags
+   get stored inside the entry file and we don't open up and read the
+   entry file until after we know we're going to render it.
+ - This might be something we want to address inside of PyBlosxom.
+
+STORAGE
+
+ - Walk sucks.  We really need to split it into a couple of more specific
+   functions.  This makes the API easier to use with respects to
+   entries and it'll allow us to optimize the functions using caching
+   and such.
+ - how many plugins use Walk?  for what purposes?
+
+
+CONTRIBUTED PLUGINS
+===================
+
+COMMENTS
+
+ - Allow the user to specify which fields should be saved and which
+   ones are transient.
+ - Add a callback for commiting a comment or something like that?
+   Then move the SMTP code there?
+ - Fix the plugin so it's easier to configure.
+ - Fix the installation.
+ - Should we fold in tracebacks, pingbacks, and all that?
