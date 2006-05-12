@@ -40,6 +40,14 @@ MANUAL
 PYBLOSXOM
 =========
 
+PATH AND ABSOLUTE PATH
+
+ - For each entry, we calculate $path and $absolute_path.  Why do
+   we have both of them?  Are there inherent differences between the
+   two?  What does blosxom do?
+   Regardless, it looks like $path behaves differently in 1.3 than
+   in previous versions.
+
 WINDOWS
 
  - Does PyBlosxom currently work in Windows?
