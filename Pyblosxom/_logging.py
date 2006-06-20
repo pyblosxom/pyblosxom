@@ -1,5 +1,6 @@
 """
 Emulates part of the Python2.3 logging module.
+
 Note: This will probably not work with Python < 2.2.
 """
 
@@ -12,6 +13,7 @@ except ImportError: from StringIO import StringIO
 
 _devlogfile = "/tmp/dev-log.log"
 _log = None
+
 def dump(msg, *args):
     """
     Utility function to log stuff while working on the _logging module.
