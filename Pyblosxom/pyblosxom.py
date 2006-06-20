@@ -102,9 +102,11 @@ class PyBlosxom:
 
     def cleanup(self):
         """
-        Cleanup everything.
-        This should be called when Pyblosxom has done all its work.
-        Right before exiting.
+        This cleans up PyBlosxom after a run.  Mostly it calls
+        tools.cleanup which in turn shuts down the logging.
+
+        This should be called when Pyblosxom has done all its work
+        right before exiting.
         """
         # log some useful stuff for debugging
         # this will only be logged if the log_level is "debug"
@@ -117,7 +119,7 @@ class PyBlosxom:
 
     def getRequest(self):
         """
-        Returns the L{Request} object.
+        Returns the L{Request} object for this PyBlosxom instance.
         
         @returns: the request object 
         @rtype: L{Request}
@@ -127,9 +129,10 @@ class PyBlosxom:
     def getResponse(self):
         """
         Returns the L{Response} object which handles all output 
-        related functionality.
+        related functionality for this PyBlosxom instance.
         
         @see: L{Response}
+
         @returns: the reponse object 
         @rtype: L{Response}
         """
@@ -137,9 +140,13 @@ class PyBlosxom:
 
     def run(self, static=False):
         """
-        Main loop for pyblosxom.  This method will run the handle callback
-        to allow registered handlers to handle the request.  If nothing
-        handles the request, then we use the default_blosxom_handler.
+        This is the main loop for PyBlosxom.  This method will run the 
+        handle callback to allow registered handlers to handle the request.  
+        If nothing handles the request, then we use the default_blosxom_handler.
+
+        @param static: True if we should execute in "static rendering mode" and
+            False otherwise
+        @type  static: boolean
         """
         self.initialize()
 
@@ -175,7 +182,13 @@ class PyBlosxom:
 
     def runCallback(self, callback="help"):
         """
-        Generic method to run the engine for a specific callback
+        This method executes the start callback (initializing plugins),
+        executes the requested callback, and then executes the end
+        callback.  This is useful for scripts outside of PyBlosxom that
+        need to do things inside of the PyBlosxom framework.
+
+        @param callback: the callback to execute
+        @type  callback: string
         """
         self.initialize()
 
@@ -364,13 +377,17 @@ class PyBlosxom:
         test_installation(self._request)
         tools.cleanup()
 
+
 class EnvDict(dict):
     """
     Wrapper arround a dict to provide a backwards compatible way
     to get the L{form<cgi.FieldStorage>} with syntax as:
-    request.getHttp()['form'] 
+
+        request.getHttp()['form'] 
+
     instead of:
-    request.getForm()
+
+        request.getForm()
     """
     def __init__(self, request, env):
         self._request = request
@@ -453,6 +470,7 @@ class Request(object):
         Can't copy the __iter__ method over from the StringIO instance cause
         iter looks for the method in the class instead of the instance.
         So can't do this with __copy_members, have to define it seperatly.
+
         See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
         """
         return self._in
@@ -500,6 +518,7 @@ class Request(object):
         related functionality.
         
         @returns: L{Response}
+        @rtype: object
         """
         return self._response
 
@@ -509,6 +528,7 @@ class Request(object):
         Rewinds the input buffer after calling cgi.FieldStorage.
 
         @returns: L{cgi.FieldStorage}
+        @rtype: object
         """        
         form = cgi.FieldStorage(fp=self._in, environ=self._http, keep_blank_values=0)
         # rewind the input buffer
@@ -523,6 +543,7 @@ class Request(object):
         consumption of the input stream.
 
         @returns: L{cgi.FieldStorage}
+        @rtype: object
         """
         if self._form == None:
             self._form = self.__getForm()
@@ -536,7 +557,8 @@ class Request(object):
         Modifying the contents of the dict will affect all downstream 
         processing.
 
-        @returns: dict
+        @returns: the configuration dict
+        @rtype: dict
         """
         return self._configuration
 
@@ -548,7 +570,8 @@ class Request(object):
         Modifying the contents of the dict will affect all downstream 
         processing. 
 
-        @returns: dict
+        @returns: the http environment dict
+        @rtype: dict
         """
         return self._http
 
@@ -560,15 +583,24 @@ class Request(object):
         Modifying the contents of the dict will affect all downstream 
         processing. 
 
-        @returns: dict
+        @returns: the run-time data dict
+        @rtype: dict
         """
         return self._data
 
-    def dumpRequest(self):
-        # some dumping method here?  pprint?
-        pass
-
     def __populateDict(self, currdict, newdict):
+        """
+        Internal helper method for populating an existing dict with
+        data from the new dict.
+
+        FIXME - why don't we use update?
+
+        @param currdict: the existing dict to update
+        @type currdict: dict
+
+        @param newdict: the new dict with values to update with
+        @type newdict: dict
+        """
         for mem in newdict.keys():
             currdict[mem] = newdict[mem]
 
@@ -654,9 +686,8 @@ class Response(object):
         """
         Copies methods from the underlying output buffer to the response object.
         """
-        props = ['close', 'flush', 
-            'read', 'readline', 'readlines', 'seek', 'tell',
-            'write', 'writelines']
+        props = ['close', 'flush', 'read', 'readline', 'readlines', 'seek', 
+                 'tell', 'write', 'writelines']
         for prop in props:
             setattr(self, prop, getattr(self._out, prop))
 
@@ -665,6 +696,7 @@ class Response(object):
         Can't copy the __iter__ method over from the StringIO instance cause
         iter looks for the method in the class instead of the instance.
         So can't do this with __copy_members, have to define it seperatly.
+
         See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
         """
         return self._out
@@ -770,7 +802,6 @@ def blosxom_handler(request):
     @param request: A standard request object
     @type request: L{Pyblosxom.pyblosxom.Request} object
     """
-
     config = request.getConfiguration()
     data = request.getData()
 
@@ -821,8 +852,10 @@ def blosxom_handler(request):
     mtime_gmtuple = time.gmtime(mtime)
 
     data["latest_date"] = time.strftime('%a, %d %b %Y', mtime_tuple)
-    data["latest_w3cdate"] = time.strftime('%Y-%m-%dT%H:%M:%SZ', mtime_gmtuple)
-    data['latest_rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', mtime_gmtuple)
+    data["latest_w3cdate"] = time.strftime('%Y-%m-%dT%H:%M:%SZ', 
+                                           mtime_gmtuple)
+    data['latest_rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', 
+                                              mtime_gmtuple)
 
     # we pass the request with the entry_list through the prepare callback
     # giving everyone a chance to transform the data.  the request is
@@ -857,7 +890,10 @@ def blosxom_handler(request):
 
     elif not renderer:
         output = config.get('stdoutput', sys.stdout)
-        output.write("Content-Type: text/plain\n\nThere is something wrong with your setup.\n  Check your config files and verify that your configuration is correct.\n")
+        output.write("Content-Type: text/plain\n\n" + \
+                     "There is something wrong with your setup.\n" + \
+                     "Check your config files and verify that your " + \
+                     "configuration is correct.\n")
 
     cache = tools.get_cache(request)
     if cache:
@@ -933,7 +969,7 @@ def blosxom_file_list_handler(args):
     EntryBase subclass objects which it returns.
 
     @param args: dict containing the incoming Request object
-    @type args: L{Pyblosxom.pyblosxom.Request}
+    @type args: object
 
     @returns: the content we want to render
     @rtype: list of EntryBase objects
@@ -983,18 +1019,18 @@ def blosxom_file_list_handler(args):
 def blosxom_process_path_info(args):
     """ 
     Process HTTP PATH_INFO for URI according to path specifications, fill in
-    data dict accordingly
+    data dict accordingly.
     
     The paths specification looks like this:
         - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
         - C{/cat} - category
+        - C{/2002} - category
         - C{/2002} - year
         - C{/2002/Feb} (or 02) - Year and Month
         - C{/cat/2002/Feb/31} - year and month day in category.
-    To simplify checking, four digits directory name is not allowed.
 
     @param args: dict containing the incoming Request object
-    @type args: L{Pyblosxom.pyblosxom.Request}
+    @type args: object
     """
     request = args['request']
     config = request.getConfiguration()
@@ -1057,7 +1093,6 @@ def blosxom_process_path_info(args):
         data['bl_type'] = 'dir'
 
     else:
-
         # this is either a file or a date
 
         ext = tools.what_ext(data["extensions"].keys(), absolute_path)
@@ -1077,7 +1112,6 @@ def blosxom_process_path_info(args):
                     path_info = path_info.split("/")
 
         if ext:
-
             # this is a file
             data["bl_type"] = "file"
             data["root_datadir"] = absolute_path + "." + ext
@@ -1179,6 +1213,9 @@ def test_installation(request):
     This is designed to make it much much much easier for a user to
     verify their PyBlosxom installation is working and also to install
     new plugins and verify that their configuration is correct.
+
+    @param request: the Request object
+    @type request: object
     """
     import sys, os, os.path
     from Pyblosxom import pyblosxom
