@@ -1,8 +1,7 @@
-# vim: shiftwidth=4 tabstop=4 expandtab
 """
 Holds a series of utility functions for cataloguing, retrieving, and
 manipulating callback functions and chains.  Refer to the documentation
-for which callbacks are available and what their behavior is.
+for which callbacks are available and their behavior.
 """
 import os, glob, sys
 import os.path
@@ -152,3 +151,5 @@ def get_plugin_list(plugin_list, plugin_dirs):
         plugin_list.sort()
 
     return plugin_list
+
+# vim: shiftwidth=4 tabstop=4 expandtab
