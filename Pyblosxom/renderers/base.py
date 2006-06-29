@@ -1,3 +1,13 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 The is the base renderer module.  If you were to dislike the blosxom
 renderer and wanted to build a renderer that used a different templating

@@ -1,3 +1,13 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 The end of the PyBlosxom request lifecycle involves rendering the 
 entries we've decided we want to render.  This is the job of the

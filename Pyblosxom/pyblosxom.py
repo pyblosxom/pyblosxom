@@ -1,3 +1,13 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 This is the main module for PyBlosxom functionality.  PyBlosxom's setup 
 and default handlers are defined here.

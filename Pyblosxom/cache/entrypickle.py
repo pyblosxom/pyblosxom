@@ -1,4 +1,13 @@
-# vim: tabstop=4 shiftwidth=4 expandtab
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 This cache driver creates pickled data as cache in a directory.
 
@@ -84,3 +93,5 @@ class BlosxomCache(BlosxomCacheBase):
         dpath = normpath(dirname(path))
         if not exists(dpath): makedirs(dpath)
         return normpath(abspath(path))
+
+# vim: tabstop=4 shiftwidth=4 expandtab

@@ -1,4 +1,13 @@
-# vim: tabstop=4 shiftwidth=4 expandtab
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 A basic driver, used by default in pyblosxom, does not do anything at all
 """
@@ -136,3 +145,5 @@ class BlosxomCache(BlosxomCacheBase):
     A Null cache
     """
     pass
+
+# vim: tabstop=4 shiftwidth=4 expandtab

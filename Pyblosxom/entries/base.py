@@ -1,4 +1,13 @@
-# vim: tabstop=4 shiftwidth=4
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 This module contains the base class for all the Entry classes.  The
 EntryBase class is essentially the API for entries in PyBlosxom.  Reading
@@ -352,3 +361,5 @@ def generate_entry(request, properties, data, mtime):
     else:
         entry.setTime(time.localtime())
     return entry
+
+# vim: tabstop=4 shiftwidth=4

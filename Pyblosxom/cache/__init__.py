@@ -1,3 +1,13 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 PyBlosxom works by pulling data from the file system, passing it through
 a series of filters and transformations, and then rendering it.  Some

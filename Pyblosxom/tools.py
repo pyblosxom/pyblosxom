@@ -1,3 +1,13 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 Tools module
 
@@ -10,8 +20,6 @@ The swiss army knife for all things pyblosxom
 """
 import plugin_utils
 import sgmllib, re, os, types, time, os.path, sys, urllib
-
-__revision__ = "$Id$"
 
 try:
     from xml.sax.saxutils import escape

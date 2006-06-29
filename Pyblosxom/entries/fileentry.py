@@ -1,4 +1,13 @@
-# vim: tabstop=4 shiftwidth=4
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 This module contains FileEntry class which is used to retrieve entries 
 from a file system.  Since pulling data from the file system and parsing 
@@ -164,3 +173,5 @@ class FileEntry(base.EntryBase):
 
         self.update(entrydict)
         self._populated_data = 1
+
+# vim: tabstop=4 shiftwidth=4

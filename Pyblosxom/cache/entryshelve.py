@@ -1,4 +1,13 @@
-# vim: tabstop=4 shiftwidth=4 expandtab
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 This cache driver creates shelved data as cache in a dbm file.
 
@@ -69,3 +78,5 @@ class BlosxomCache(BlosxomCacheBase):
     def close(self):
         self._db.close()
         self._db = None
+
+# vim: tabstop=4 shiftwidth=4 expandtab
