@@ -1,0 +1,124 @@
+#!/usr/bin/env python
+
+#!/path/to/python -u
+# -u turns off character translation to allow transmission
+# of gzip compressed content on Windows and OS/2
+
+import os, sys
+
+# this allows for a config.py override
+script = os.environ.get('SCRIPT_FILENAME', None)
+if script is not None:
+    sys.path.insert(0, os.path.dirname(script))
+
+sys.path.insert(0, os.getcwd())
+
+# Settings are now in config.py
+from config import py as cfg
+
+# If the user defined a "codebase" property in their config file,
+# then we insert that into our sys.path because that's where the
+# PyBlosxom installation is.
+if cfg.has_key("codebase"):
+    sys.path.insert(0, cfg["codebase"])
+
+def parse_args(args):
+    """
+    Takes in a list of args and parses it out into a hashmap of arg-name 
+    to value(s).
+
+    @param args: the list of command-line arguments
+    @type  args: list of strings
+
+    @return: list of tuples of (arg, value) pairings
+    @rtype: list of tuples of (string, string)
+    """
+    i = 0
+    optlist = []
+    while (i < len(args)):
+        if args[i].startswith("-"):
+            if (i+1 < len(args)):
+                if not args[i+1].startswith("-"):
+                    optlist.append((args[i], args[i+1]))
+                    i = i + 1
+                else:
+                    optlist.append((args[i], ""))
+            else:
+                optlist.append((args[i], ""))
+
+        else:
+            optlist.append(("", args[i]))
+
+        i = i + 1
+    return optlist
+
+from Pyblosxom.pyblosxom import PyBlosxom
+from Pyblosxom.pyblosxom import VERSION_DATE
+
+PYBL_VERSION = "PyBlosxom: pyblcmd: " + VERSION_DATE + "\n"
+
+HELP = """Syntax: pyblcmd [args]
+
+-v, --version
+
+    Prints the version
+
+-h, --help
+
+    Prints this help text
+
+-s, --static [incremental]
+
+    Statically renders your blog.  Use "incremental" to do an
+    incremental rendering.
+
+-t, --test
+
+    Tests your installation.  This can also be done with
+    "./pyblosxom.cgi".
+
+Additional flags and options may be available through plugins that
+you have installed.  Refer to plugin documentation (usually found
+at the top of the plugin file) for more information.
+"""
+
+
+if __name__ == '__main__':
+
+    print PYBL_VERSION
+
+    if len(sys.argv) == 1:
+        print HELP
+        sys.exit(0)
+    
+    env = {}
+    # names taken from wsgi instead of inventing something new
+    env['wsgi.input'] = sys.stdin
+    env['wsgi.errors'] = sys.stderr
+
+    # setup url_scheme for static rendering
+    if 'base_url' in cfg.keys():
+        env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
+    else:
+        env['wsgi.url_scheme'] = "http"
+    
+    p = PyBlosxom(cfg, env)
+
+    optlist =parse_args(sys.argv[1:])
+
+    for mem in optlist:
+        if mem[0] in ["-v", "--version"]:
+            pass
+
+        elif mem[0] in ["-h", "--help"]: 
+            print HELP
+
+        elif mem[0] in ["--static", "-s"]:
+            if mem[1] == "incremental":
+                incremental = 1
+            else:
+                incremental = 0
+            p.runStaticRenderer(incremental)
+
+        elif mem[0] in ["--test", "-t"]:
+            p.testInstallation()

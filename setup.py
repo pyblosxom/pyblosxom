@@ -114,6 +114,7 @@ setup(name="pyblosxom",
     author="Wari Wahab",
     author_email="pyblosxom-devel@lists.sourceforge.net",
     url="http://pyblosxom.sourceforge.net/",
+    scripts=["bin/pyblcmd"],
     packages=['Pyblosxom', 'Pyblosxom.cache', 'Pyblosxom.entries', 'Pyblosxom.renderers'],
     license = 'MIT',
     long_description =
