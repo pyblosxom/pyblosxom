@@ -1,7 +1,7 @@
 <item>
    <title>$title</title>
    <guid isPermaLink="false">$file_path</guid>
-   <link>$base_url/$file_path.$default_flavour</link>
+   <link>$base_url/$file_path</link>
    <description><![CDATA[
 $body
 ]]></description>
