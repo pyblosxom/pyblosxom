@@ -1,7 +1,7 @@
 PyBlosxom TODO
 ==============
 
-VERSION = $Id$
+VERSION = $Revision$
 
 This is a really high-level todo list.  Nothing here is written
 in stone--this is mostly just a collection of thoughts.  As such, not
@@ -25,6 +25,8 @@ PROJECT INFRASTRUCTURE
 UNIT TESTING
 
  - We need a unit testing framework and unit tests.  Seriously.
+   (Will - I'm using cheesecake and modelling the test system on things they
+   suggest.  Right now I'm writing unit tests using nose as the framework.)
 
 MANUAL
 
@@ -41,6 +43,13 @@ MANUAL
 
 PYBLOSXOM
 =========
+
+CONFIGURATION DEFAULTS
+
+ - These should be centralized somewhere if they aren't already.  Any
+   required configuration elements should be set here.  It might be
+   interesting to get it to the point where you could run PyBlosxom
+   with no config.py file at all.
 
 PATH AND ABSOLUTE PATH
 
