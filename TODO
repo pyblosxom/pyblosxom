@@ -8,7 +8,8 @@ in stone--this is mostly just a collection of thoughts.  As such, not
 everything in here will make sense to implement.  Each item really
 needs fleshing out before decisions on implementation should be made.
 
-Before launching into anything, check the website.
+Before launching into anything, check the SVN repository which has 
+the latest version of this TODO list.
 
 If you're inspired by any of these tasks, let us know on the
 pyblosxom-devel mailing list.
@@ -43,6 +44,11 @@ MANUAL
 
 PYBLOSXOM
 =========
+
+DATA CACHING
+
+ - build a global caching mechanism that dumps old data?  look at 
+   memcache?
 
 CONFIGURATION DEFAULTS
 
@@ -80,6 +86,13 @@ CONFIGURATION
 
    Need to look into how they did their stuff and look into changing our
    configuration system to do something similar.
+
+MTIMES
+
+ - pyblcmd should go through the datadir and export the mtimes for
+   all files (by calling cb_filestat) into a file index
+ - adjust pyblosxom so that it looks for the file index cache before
+   the default of stating the file
 
 PASTE/WSGI
 
