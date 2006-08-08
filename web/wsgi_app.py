@@ -1,37 +1,38 @@
 """
 WSGI application launcher for Pyblosxom.
 
-
 Dependencies:
-    - Pyblosxom 1.2+
-    - wsgiref library from http://cvs.eby-sarna.com/wsgiref/
-    - for mod_python: mp_wsgi_handler.py (mod_python wsgi wrapper)
-        from http://www.c-area.ch/code/
-    - for twisted: twisted_wsgi.py (twisted wsgi wrapper)
-        from http://svn.webwareforpython.org/WSGIKit/trunk/wsgikit/
-
+  - Pyblosxom 1.2+
+  - wsgiref library from http://cvs.eby-sarna.com/wsgiref/
+  - for mod_python: mp_wsgi_handler.py (mod_python wsgi wrapper)
+    from http://www.c-area.ch/code/
+  - for twisted: twisted_wsgi.py (twisted wsgi wrapper)
+    from http://svn.webwareforpython.org/WSGIKit/trunk/wsgikit/
 
 Configuration:
-    - put this file in your weblog folder (where pyblosxom.cgi is)
-    - mod_python:
-        Note: If you have a folder in your document root that has the same name as the 
-          Location used below, the SCRIPT_NAME and PATH_INFO variables will be broken.
-          You should keep your blog's files outside your document root.
-        <Location /weblog>
-            PythonDebug Off
-            SetHandler python-program
-            # set PythonPath to the folders containing the files.
-            PythonPath "['/path/to/mp_wsgi_handler', '/path/to/wsgi_app']+sys.path"
-            PythonHandler mp_wsgi_handler::wsgi_handler
-            # This should be the same as the Location above
-            PythonOption ApplicationPath /weblog
-            PythonOption application wsgi_app::application
-        </Location>
-        
+  - put this file in your weblog folder (where pyblosxom.cgi is)
+  - mod_python:
+    Note: If you have a folder in your document root that has the 
+    same name as the Location used below, the SCRIPT_NAME and 
+    PATH_INFO variables will be broken.  You should keep your blog's 
+    files outside your document root.
 
+    <Location /weblog>
+       PythonDebug Off
+       SetHandler python-program
+       # set PythonPath to the folders containing the files.
+       PythonPath "['/path/to/mp_wsgi_handler', '/path/to/wsgi_app']+sys.path"
+       PythonHandler mp_wsgi_handler::wsgi_handler
+       # This should be the same as the Location above
+       PythonOption ApplicationPath /weblog
+       PythonOption application wsgi_app::application
+    </Location>
+        
 Todo:
-    - example configuration for twisted
-    - more documentation
+  - can this work with paster?
+  - example configuration for FCGI (flup)
+  - example configuration for twisted
+  - more documentation
 
 $Id$
 """
@@ -63,31 +64,32 @@ def _getExcInfo():
     exc_string = exc_file.getvalue()
     return exc_string
 
+"""
+Build the WSGI application which takes in an env and a start_response
+and returns a result list.
+
+See http://www.python.org/dev/peps/pep-0333/#specification-details
+"""
 def application(env, start_response):
-
-    try: # regular application code here
-
-        # ensure that PATH_INFO exists. a few plugins break if this is missing.
+    try:
+        # ensure that PATH_INFO exists. a few plugins break if this is 
+        # missing.
         if not 'PATH_INFO' in env:
             env['PATH_INFO'] = ""
 
         p = PyBlosxom(cfg, env)
         p.run()
     
-        response = p.getResponse()
+        pyresponse = p.getResponse()
 
-        write = start_response(response.status, list(response.headers.items()))
-        response.seek(0)
-    
-        # FIXME: somehow Firefox doesn't like this. using mod_python tables and CSS get messed up. why?
-        #return response
-        
-        # so do it like this, which works nicely
-        return [response.read()]
+        start_response(pyresponse.status, list(pyresponse.headers.items()))
+
+        pyresponse.seek(0)
+        return [pyresponse.read()]
 
     except:
-        # FIXME: it would be cool if we could catch a PyblosxomError or something here
-        #  and let the server handle other exceptions.
+        # FIXME: it would be cool if we could catch a PyblosxomError 
+        # or something here and let the server handle other exceptions.
         tools.log_exception()
         status = "500 Oops"
         response_headers = [("content-type","text/plain")]
@@ -97,6 +99,5 @@ def application(env, start_response):
             result.append("\n")
             result.append(_getExcInfo())
         return result
-
 
 # vim: shiftwidth=4 tabstop=4 expandtab
