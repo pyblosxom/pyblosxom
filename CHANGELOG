@@ -1,3 +1,22 @@
+Changes between 1.3.2 and 1.4
+=============================
+
+Pertinent to users:
+-------------------
+
+1. Added a pyblcmd command line program for PyBlosxom command line
+   things.
+
+2. The RSS2.0 story template no longer includes $default_flavour in the
+   link.  (Thanks Martin!)
+
+
+Pertinent to developers:
+------------------------
+
+1. Lots of code clean-up, documentation, and some refactoring.
+
+
 Changes between 1.3.1 and 1.3.2
 ===============================
 
