@@ -1,0 +1,302 @@
+<appendix>
+<title>Appendix: listing of config.py variables</title>
+<para>
+Here is a non-comprehensive list of configuration variables:
+</para>
+
+<variablelist><title>configuration variables</title>
+
+<varlistentry><term><varname>base_url</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>Gets calculated based on HTTP server variables</member>
+</simplelist>
+<para>This is the base url for your blog.  If you use mod_rewrite rules,
+then you'll likely want to set this.</para>
+<programlisting role="python"><![CDATA[
+py["base_url"] = "http://pyblosxom.sourceforge.net/blog"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>blog_author</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>""</member>
+</simplelist>
+<para>This is the name of the author that you want to appear 
+on your blog.</para>
+<programlisting role="python"><![CDATA[
+py["blog_author"] = "Will"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>blog_description</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>""</member>
+</simplelist>
+<para>This is the description of your blog.</para>
+<programlisting role="python"><![CDATA[
+py["blog_description"] = "Blog of thoughts, comments, " + \
+                         "code examples, and such."
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>blog_email</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>""</member>
+</simplelist>
+<para>This is the email address you want associated with your
+blog.</para>
+<programlisting role="python"><![CDATA[
+py["blog_email"] = "joe@example.com"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>blog_encoding</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>yes</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>This is the encoding of your blog. iso-8859-1, utf-8, ...</para>
+<programlisting role="python"><![CDATA[
+py["blog_encoding"] = "iso-8859-1"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>blog_language</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>yes</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>This is the primary language code of your blog.
+English users should use <literal>en</literal></para>
+<programlisting role="python"><![CDATA[
+py["blog_language"] = "en"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>blog_title</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>yes</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>This is the title of your blog.</para>
+<programlisting role="python"><![CDATA[
+py["blog_title"] = "Will's Blog of Unusual Stuff"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>datadir</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>yes</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>This is the full path to where your PyBlosxom entries are kept.</para>
+<para>Example of datadir for unix/linux/osx:</para>
+<programlisting role="python"><![CDATA[
+py["datadir"] = "/home/will/blog/datadir/"
+]]></programlisting>
+<para>Examples of datadir for windows:</para>
+<programlisting role="python"><![CDATA[
+py["datadir"] = "/blogdata/datadir/"
+py["datadir"] = "e:/blogdata/datadir/"
+]]></programlisting>
+<para>If you're using Windows, don't use \ in the datadir path.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>flavourdir</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>This is the full path to where your PyBlosxom flavours are kept.</para>
+<para>If you don't set the flavourdir, then you can put your flavour files
+in the datadir with your entries.</para>
+<para>Example of flavours for unix/linux/osx:</para>
+<programlisting role="python"><![CDATA[
+py["flavourdir"] = "/home/will/blog/flavourdir/"
+]]></programlisting>
+<para>Examples of flavourdir for windows:</para>
+<programlisting role="python"><![CDATA[
+py["datadir"] = "/blogdata/flavourdir/"
+py["datadir"] = "e:/blogdata/flavourdir/"
+]]></programlisting>
+<para>If you're using Windows, don't use \ in the flavourdir path.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>default_flavour</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member><literal>html</literal></member>
+</simplelist>
+<para>This specifies what the default flavour should be if the URI doesn't 
+specify a flavour.</para>
+<programlisting role="python"><![CDATA[
+py["default_flavour"] = "joy"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>ignore_directories</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>list of strings</member>
+<member>DEFAULT VALUE:</member><member><literal>[ ]</literal> (empty list)</member>
+</simplelist>
+<para>This allows you to ignore directories in your datadir.  For example,
+if you use CVS to manage your datadir, then you would want to ignore
+all CVS directories.  You would set your ignore_directories like
+this:</para>
+<programlisting role="python"><![CDATA[
+py["ignore_directories"] = [ "CVS" ]
+]]></programlisting>
+<para>If you wanted to store drafts of entries you need to think about some
+more in a single directory (kind of like a postponed-msgs folder),
+then you would create a directory in your datadir and set your
+ignore_directories like this:</para>
+<programlisting role="python"><![CDATA[
+py["ignore_directories"] = [ "draft" ]
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>load_plugins</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>list of strings</member>
+<member>DEFAULT VALUE:</member><member><literal>[ ]</literal> (an empty list)</member>
+</simplelist>
+<para>If this is not set, then PyBlosxom will load all the plugins in the plugin 
+dirs you specified in alphabetical order. If this is set, then PyBlosxom will 
+only load the plugins specified.</para>
+<programlisting role="python"><![CDATA[
+py["load_plugins"] = ["pycalendar", "rss2renderer"]
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>log_file</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>
+Where should the application log to?
+If set to "NONE" log messages are silently ignored.
+Falls back to sys.stderr if the file can't be opened for writing.
+</para>
+<programlisting role="python"><![CDATA[
+py['log_file'] = "/blogdata/logs/pyblosxom.log"
+py['log_file'] = "c:/blogdata/logs/pyblosxom.log"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>log_level</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>
+At what level should we log to log_file?
+One of: "critical", "error", "warning", "info", "debug"
+For production "warning" or "error" is recommended.
+</para>
+<programlisting role="python"><![CDATA[
+py['log_level'] = "warning"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>log_filter</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>
+Let's you specify which channels should be logged.
+If specified, only messages from the listed channels are logged.
+Each plugin logs to it's own channel, therefore channelname == pluginname.
+Application level messages are logged to a channel named "root".
+If you use log_filter and ommit the "root" channel here, app level messages 
+are not logged! log_filter is mainly interesting to debug a specific plugin.
+</para>
+<programlisting role="python"><![CDATA[
+py['log_filter'] = ['root', 'plugin1', 'plugin2']
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>num_entries</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>int</member>
+<member>DEFAULT VALUE:</member><member><literal>0</literal></member>
+</simplelist>
+<para>This dictates the maximum number of entries that will show up
+on the home page and other category pages.  It doesn't affect the number
+of entries that show up on date-based archive pages.  It defaults to 
+<literal>0</literal> which means "show all the entries".</para>
+<programlisting role="python"><![CDATA[
+py["num_entries"] = 20
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>plugin_dirs</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>list of strings</member>
+<member>DEFAULT VALUE:</member><member><literal>[ ]</literal> (an empty list)</member>
+</simplelist>
+<para>The list of directories your plugins are stored in.</para>
+<programlisting role="python"><![CDATA[
+py["plugin_dirs"] = ["/home/will/pyblosxom/plugins/"]
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</appendix>

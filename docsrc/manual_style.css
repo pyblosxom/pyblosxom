@@ -1,0 +1,50 @@
+BODY {
+   color: black; 
+   font-size: 10pt;
+}
+
+P, TD {
+   font-size: 10pt;
+}
+
+// TH {
+//    font-size: 10pt;
+//    background: #eeeeff;
+//    font-weight: bold;
+// }
+
+LI {
+   font-size: 10pt;
+}
+
+.programlisting {
+   margin-top: 8pt;
+   margin-bottom: 8pt;
+   background-color: #FFFFEE;
+   white-space:pre;
+   border-style:solid;
+   border-width:1pt;
+   border-color:#999999;
+   color:#111111;
+   padding:5px;
+}
+
+a.menulink:link    { color: #7777bb; text-decoration: none; }
+a.menulink:visited { color: #555577; text-decoration: none; }
+a.menulink:active  { color: #0000ff; text-decoration: underline; }
+
+table.warning {
+   background-color: #FFDDDD;
+   border-width: 1pt;
+   border-style: solid;
+   border-color: #999999;
+   padding: 5px;
+}
+
+table.note {
+   background-color: #DDFFDD;
+   border-width: 1pt;
+   border-style: solid;
+   border-color: #999999;
+   padding: 5px;
+}

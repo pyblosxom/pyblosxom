@@ -1,0 +1,138 @@
+<!--
+  CHAPTER PLUGINS
+-->
+
+<chapter id="plugins">
+<title>Plugins</title>
+<para>
+PyBlosxom allows you to extend and augment its base functionality using 
+PyBlosxom plugins.  Plugins allow you to create additional variables; provide
+additional entry parsers, renderers, post-formatters, and pre-formatters;
+create new output data types; pull information from other non-blog sources;
+create images; and a variety of other things.
+</para>
+
+<sect1>
+<title>Setting PyBloxsom up to Use Plugins</title>
+<para>
+There are two properties in your <filename>config.py</filename> file that affect 
+the behavior for loading plugins.
+</para>
+<para>
+The first one is the <varname>plugin_dirs</varname> property which is a list of 
+strings specifying all the directories you might have plugins.  For example:
+</para>
+
+<example><title>plugin_dirs variable value</title>
+<programlisting role="python">py["plugin_dirs"] = ["/home/will/pybloxsom/plugins"]
+</programlisting>
+</example>
+
+<para>
+This will cause PyBlosxom to look in this specific directory for plugins.
+</para>
+
+<para>
+The other property is the <varname>load_plugins</varname> property. If you don't 
+have this set at all (i.e. it's either not in the <filename>config.py</filename> 
+file or the line is commented out), PyBlosxom will load all plugins it finds 
+in the plugin directories you've specified and load them. It will look in 
+each directory in order as you've specified. It will load the plugins in 
+each directory in alphabetical order by filename.
+</para>
+
+<para>
+The other way to load plugins is by specifying the plugins explicitly by 
+setting the <varname>load_plugins</varname> property.  PyBlosxom will load 
+only the plugins you've specified and will load them in the order you've 
+specified.  The <varname>load_plugins</varname> property takes a list of strings. 
+For example:
+</para>
+
+<example><title>load_plugins variable value</title>
+<programlisting role="python">py["load_plugins"] = ["calendar", "category", "booklist"]
+</programlisting>
+</example>
+
+<para>
+This will load the plugins whose filenames are <filename>calendar.py</filename>, 
+<filename>category.py</filename>, and <filename>booklist.py</filename>. It will 
+only load those plugins even if other plugins are in the directory and it will 
+load them in that order.
+</para>
+</sect1>
+
+<sect1>
+<title>Finding Plugins</title>
+<para>
+You can find plugins in the plugin registry at 
+http://pyblosxom.sourceforge.net/ .
+</para>
+<para>
+Additionally, some people write plugins, but never register with the plugin 
+registry. Sometimes this is because the author doesn't feel the plugin is 
+finished for public consumption. Even so, it might meet your needs. The best 
+way to find these plugins is to ask on the pyblosxom-users mailing list for 
+a plugin that has the functionality you desire.
+</para>
+</sect1>
+
+<sect1>
+<title>Installing Plugins</title>
+<para>
+When you're installing a plugin, refer to its documentation. The documentation 
+could be in a <filename>README</filename> file, but more commonly it's in the 
+plugin code itself at the top of the file. This documentation should tell you 
+how to install the plugin, what template variables the plugin exposes, how to 
+invoke the plugin, how to get in touch with the author should you find bugs 
+or need help, and any additional things you should know about.
+</para>
+<para>
+Most plugins should have a pretty easy installation method. You should be 
+able to copy the plugin into the directory defined in your 
+<filename>config.py</filename> file in the <varname>plugin_dirs</varname> property. 
+Then there might be some additional properties you'll have to set in your 
+<filename>config.py</filename> file to define the plugin's behavior. 
+That should be about it.  On some occasions, you may have to change the code 
+in the plugin itself to meet your specific needs.
+</para>
+
+<note>
+  <title>Apache, no suexec, .pyc files, and problems</title>
+  <para>
+    If you're not running suexec, then Apache may not be able to generate
+    the <filename>.pyc</filename> files for your plugins.  This may result in 
+    your plugins failing to load.
+  </para>
+  <para>
+    If that happens, you can run <command>./pyblosxom.cgi</command> in your 
+    shell and generate the <filename>.pyc</filename> files yourself.
+  </para>
+  <para>
+    Every time you install a new plugin or change an existing plugin,
+    you'll need to remove the <filename>.pyc</filename> files and re-generate 
+    them.
+  </para>
+</note>
+</sect1>
+
+<sect1>
+<title>Writing Your Own Plugins</title>
+<para>
+You may find that you desire functionality and there is no plugin that anyone 
+knows about that performs that functionality. It's probably best at this 
+point for you to either pay someone to write the plugin you need or write 
+it yourself.
+</para>
+<para>
+Plugins are pretty easy to write and can cover a lot of really different 
+functionality. The best way to learn how to write PyBlosxom plugins is to 
+read through the plugins in the plugin registry. Many of them are well 
+written and may provide insight as to how to solve your specific problem.
+</para>
+<para>
+Additionally, feel free to ask for help on the pyblosxom-users and 
+pyblosxom-devel mailing lists. 
+</para>
+</sect1>
+</chapter>
