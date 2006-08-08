@@ -1,15 +1,29 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id$
+#######################################################################
 """
 Emulates part of the Python2.3 logging module.
 
 Note: This will probably not work with Python < 2.2.
 """
 
+__revision__ = "$Revision$"
+
 import os
 import sys
 import time
 import string
-try: from cStringIO import StringIO
-except ImportError: from StringIO import StringIO
+try: 
+    from cStringIO import StringIO
+except ImportError: 
+    from StringIO import StringIO
 
 _devlogfile = "/tmp/dev-log.log"
 _log = None
@@ -39,7 +53,8 @@ DEBUG = 10
 NOTSET = 0
 
 # order matters!
-_names = ['FATAL', 'CRITICAL', 'ERROR', 'WARN', 'WARNING', 'INFO', 'DEBUG', 'NOTSET']
+_names = ['FATAL', 'CRITICAL', 'ERROR', 'WARN', 'WARNING', \
+          'INFO', 'DEBUG', 'NOTSET']
 _levels = {}
 _level_names = {}
 
@@ -72,6 +87,7 @@ def getLevelName(level):
     
     @param level: Numeric representation of a logging level
     @type level: C{int}
+
     @return: Texutal representation of the logging level
     @rtype: C{str}
     """
@@ -246,8 +262,8 @@ class LogRecord:
             self.process = None
 
     def __str__(self):
-        return '<LogRecord: %s, %s, %s, %s, "%s">'%(self.name, self.levelno,
-            self.pathname, self.lineno, self.msg)
+        return '<LogRecord: %s, %s, %s, %s, "%s">' % \
+               (self.name, self.levelno, self.pathname, self.lineno, self.msg)
 
     def getMessage(self):
         try:
@@ -281,7 +297,8 @@ class Logger(Filterer):
             fn, lno = "<unknown file>", 0
         if exc_info:
             exc_info = sys.exc_info()
-        record = self.__makeRecord(self.name, level, fn, lno, msg, args, exc_info)
+        record = self.__makeRecord(self.name, level, fn, lno, \
+                                   msg, args, exc_info)
         self.__callHandlers(record)
 
     def __findCaller(self):
@@ -335,8 +352,6 @@ class Logger(Filterer):
     def removeHandler(self, hdlr):
         if hdlr in self.handlers:
             self.handlers.remove(hdlr)
-
-
 
 
 # A dict to keep track of created loggers.

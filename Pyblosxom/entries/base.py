@@ -17,7 +17,10 @@ own EntryBase derivatives.
 This module also holds a generic generate_entry function which will generate
 a BaseEntry with data that you provide for it.
 """
-import time, urllib
+
+__revision__ = "$Revision$"
+
+import time
 from Pyblosxom import tools
 
 BIGNUM = 2000000000
@@ -33,7 +36,6 @@ class EntryBase:
     the InterWeeb.
     """
     def __init__(self, request):
-        global BIGNUM
         self._data = None
         self._metadata = tools.VariableDict()
         self._id = ""
@@ -138,73 +140,75 @@ class EntryBase:
         """
         return self._metadata.keys()
 
-    def getFromCache(self, id):
+    def getFromCache(self, entryid):
         """
         Retrieves information from the cache that pertains to this
-        specific id.
+        specific entryid.
 
         This is a helper method--call this to get data from the cache.
         Do not override it.
 
-        @param id: a unique key for the information you're retrieving
-        @type  id: string
+        @param entryid: a unique key for the information you're retrieving
+        @type  entryid: string
 
         @returns: dict with the values or None if there's nothing for that
-            id
+            entryid
         @rtype: dict or None
         """
         cache = tools.get_cache(self._request)
 
         # cache.__getitem__ returns None if the id isn't there
-        if cache.has_key(id):
-            return cache[id]
+        if cache.has_key(entryid):
+            return cache[entryid]
 
         return None
 
-    def addToCache(self, id, data):
+    def addToCache(self, entryid, data):
         """
-        Over-writes the cached dict for key id with the data dict.
+        Over-writes the cached dict for key entryid with the data dict.
 
         This is a helper method--call this to add data to the cache.
         Do not override it.
 
-        @param id: a unique key for the information you're storing
-        @type  id: string
+        @param entryid: a unique key for the information you're storing
+        @type  entryid: string
 
         @param data: the data to store--this should probably be a dict
         @type  data: dict
         """
         mycache = tools.get_cache(self._request)
         if mycache:
-            mycache[id] = data
+            mycache[entryid] = data
 
     # everything below this point involves convenience functions
     # that work with the above functions.
 
-    def setTime(self, timeTuple):
+    def setTime(self, timetuple):
         """
         This takes in a given time tuple and sets all the magic metadata
         variables we have according to the items in the time tuple.
 
-        @param timeTuple: the timetuple to use to set the data with--this
+        @param timetuple: the timetuple to use to set the data with--this
             is the same thing as the mtime/atime portions of an os.stat.
-        @type  timeTuple: tuple of ints
+        @type  timetuple: tuple of ints
         """
-        self['timetuple'] = timeTuple
-        self._mtime = time.mktime(timeTuple)
-        gmTimeTuple = time.gmtime(self._mtime)
+        self['timetuple'] = timetuple
+        self._mtime = time.mktime(timetuple)
+        gmtimetuple = time.gmtime(self._mtime)
         self['mtime'] = self._mtime
-        self['ti'] = time.strftime('%H:%M', timeTuple)
-        self['mo'] = time.strftime('%b', timeTuple)
-        self['mo_num'] = time.strftime('%m', timeTuple)
-        self['da'] = time.strftime('%d', timeTuple)
-        self['dw'] = time.strftime('%A', timeTuple)
-        self['yr'] = time.strftime('%Y', timeTuple)
-        self['fulltime'] = time.strftime('%Y%m%d%H%M%S', timeTuple)
+        self['ti'] = time.strftime('%H:%M', timetuple)
+        self['mo'] = time.strftime('%b', timetuple)
+        self['mo_num'] = time.strftime('%m', timetuple)
+        self['da'] = time.strftime('%d', timetuple)
+        self['dw'] = time.strftime('%A', timetuple)
+        self['yr'] = time.strftime('%Y', timetuple)
+        self['fulltime'] = time.strftime('%Y%m%d%H%M%S', timetuple)
+
         # YYYY-MM-DDThh:mm:ssZ
-        self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', gmTimeTuple)
-        self['rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', gmTimeTuple)
-        self['date'] = time.strftime('%a, %d %b %Y', timeTuple)
+        self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', gmtimetuple)
+        self['rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', \
+                                           gmtimetuple)
+        self['date'] = time.strftime('%a, %d %b %Y', timetuple)
 
     def __getitem__(self, key, default=None):
         """
@@ -231,7 +235,6 @@ class EntryBase:
             self.getData()
         @rtype: varies
         """
-        s = ""
         if key == CONTENT_KEY:
             return self.getData()
 
@@ -292,10 +295,10 @@ class EntryBase:
         @type newdict: dict
         """
         for mem in newdict.keys():
-           if mem == CONTENT_KEY:
-               self.setData(newdict[mem])
-           else:
-               self.setMetadata(mem, newdict[mem])
+            if mem == CONTENT_KEY:
+                self.setData(newdict[mem])
+            else:
+                self.setMetadata(mem, newdict[mem])
 
     def has_key(self, key):
         """

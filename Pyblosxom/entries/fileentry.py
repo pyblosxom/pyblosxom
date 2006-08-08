@@ -17,9 +17,14 @@ fetching data until it's demanded.
 The FileEntry calls EntryBase methods addToCache and getFromCache
 to handle caching.
 """
-import time, os, re
+
+__revision__ = "$Revision$"
+
+import time
+import os
+import re
 from Pyblosxom import tools
-import base
+from Pyblosxom.entries import base
 
 class FileEntry(base.EntryBase):
     """
@@ -57,6 +62,10 @@ class FileEntry(base.EntryBase):
         self._populated_data = 0
 
     def __repr__(self):
+        """
+        Returns a representation of this instance with the filename
+        and root.
+        """
         return "<fileentry f'%s' r'%s'>" % (self._filename, self._root)
 
     def setTimeLazy(self, timetuple):
@@ -92,7 +101,7 @@ class FileEntry(base.EntryBase):
         @rtype: string
         """
         if self._populated_data == 0:
-            self.__populateData()
+            self.__populatedata()
         return self._data
 
     def getMetadata(self, key, default=None):
@@ -114,11 +123,11 @@ class FileEntry(base.EntryBase):
         @rtype: varies
         """
         if self._populated_data == 0:
-            self.__populateData()
+            self.__populatedata()
 
         return self._metadata.get(key, default)
         
-    def __populateData(self):
+    def __populatedata(self):
         """
         Fills the metadata dict with metadata about the given file.  This
         metadata consists of things we pick up from an os.stat call as
@@ -140,34 +149,34 @@ class FileEntry(base.EntryBase):
         if absolute_path and absolute_path[-1] == "/":
             absolute_path = absolute_path[0:-1]
 
-        fn, ext = os.path.splitext(file_basename)
+        filenamenoext = os.path.splitext(file_basename)[0]
         if absolute_path == '':
-            file_path = fn
+            file_path = filenamenoext
         else:
-            file_path = '/'.join((absolute_path, fn))
+            file_path = '/'.join((absolute_path, filenamenoext))
 
-        tb_id = '%s/%s' % (absolute_path, fn)
+        tb_id = '%s/%s' % (absolute_path, filenamenoext)
         tb_id = re.sub(r'[^A-Za-z0-9]', '_', tb_id)
 
         self['path'] = path
         self['tb_id'] = tb_id
         self['absolute_path'] = absolute_path
         self['file_path'] = file_path
-        self['fn'] = fn
+        self['fn'] = filenamenoext
         self['filename'] = self._filename
 
-        #timetuple is set at __init__ time or by setTimeLazy
+        # timetuple is set at __init__ time or by setTimeLazy
         self.setTime(self._timetuple)
 
         data = self._request.getData()
 
         entrydict = self.getFromCache(self._filename)
         if not entrydict:
-            fileExt = os.path.splitext(self._filename)
-            if fileExt:
-                fileExt = fileExt[1][1:]
+            fileext = os.path.splitext(self._filename)
+            if fileext:
+                fileext = fileext[1][1:]
 
-            eparser = data['extensions'][fileExt]
+            eparser = data['extensions'][fileext]
             entrydict = eparser(self._filename, self._request)
             self.addToCache(self._filename, entrydict)
 

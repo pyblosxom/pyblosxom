@@ -19,4 +19,5 @@ The purpose of an Entry object is to encapsulate the metadata and data
 of the entry for later filtering and rendering by the other components 
 of Pyblosxom.
 """
-pass
+
+__revision__ = "$Revision$"

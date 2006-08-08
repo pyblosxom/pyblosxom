@@ -13,17 +13,23 @@ Holds a series of utility functions for cataloguing, retrieving, and
 manipulating callback functions and chains.  Refer to the documentation
 for which callbacks are available and their behavior.
 """
-import os, glob, sys
+
+__revision__ = "$Revision$"
+
+import os
+import glob
+import sys
 import os.path
 
-__revision__ = "$Id$"
-
-# FIXME - we should store the plugins list in the Request object.
+# this holds the list of plugins that have been loaded.  if you're running
+# PyBlosxom as a long-running process, this only gets cleared when the
+# process is restarted.
 plugins = []
 
 # this holds a list of callbacks (any function that begins with cp_) and the
 # list of function instances that support that callback.
-# FIXME - we should store the callbacks list in the Request object.
+# if you're running PyBlosxom as a long-running process, this only
+# gets cleared when the process is restarted.
 callbacks = {}
 
 def catalogue_plugin(plugin_module):
@@ -34,7 +40,6 @@ def catalogue_plugin(plugin_module):
     @param plugin_module: the module to catalogue
     @type  plugin_module: module
     """
-    global callbacks
     listing = dir(plugin_module)
 
     listing = [item for item in listing if item.startswith("cb_")]
@@ -53,7 +58,6 @@ def get_callback_chain(chain):
         empty list)
     @rtype: list of functions
     """
-    global callbacks
     return callbacks.get(chain, [])
 
 def initialize_plugins(plugin_dirs, plugin_list):
@@ -67,6 +71,9 @@ def initialize_plugins(plugin_dirs, plugin_list):
     load_plugins key does not exist, then we load all the plugins in the
     plugins directory using an alphanumeric sorting order.
 
+    NOTE: If PyBlosxom is part of a long-running process, you must
+    restart PyBlosxom in order to pick up any changes to your plugins.
+
     @param plugin_dirs: the list of directories to add to the sys.path
         because that's where our plugins are located.
     @type  plugin_dirs: list of strings
@@ -75,11 +82,11 @@ def initialize_plugins(plugin_dirs, plugin_list):
         load all the plugins we find in those dirs.
     @type  plugin_list: list of strings or None
     """
-    global plugins, callbacks
+    if plugins:
+        return
 
-    if len(plugins) > 0:
-        plugins = []
-        callbacks = {}
+    # we clear out the callbacks dict so we can rebuild them
+    callbacks.clear()
 
     # handle plugin_dirs here
     for mem in plugin_dirs:
@@ -109,7 +116,6 @@ def get_plugin_by_name(name):
     @returns: the Python module instance for the plugin or None
     @rtype: Python module
     """
-    global plugins
     if plugins:
         for mem in plugins:
             if mem.__name__ == name:

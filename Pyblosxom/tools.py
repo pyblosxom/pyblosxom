@@ -18,14 +18,26 @@ The swiss army knife for all things pyblosxom
 @var MONTHS: A list of valid literal and numeral months
 @var VAR_REGEXP: Regular expression for detection and substituion of variables
 """
-import plugin_utils
-import sgmllib, re, os, types, time, os.path, sys, urllib
+
+__revision__ = "$Revision$"
+
+# Python imports
+import sgmllib
+import re
+import os
+import time
+import os.path
+import sys
+import urllib
 
 try:
     from xml.sax.saxutils import escape
 except ImportError:
     from cgi import escape
 
+
+# Pyblosxom imports
+import plugin_utils
 
 month2num = { 'nil' : '00',
               'Jan' : '01',
@@ -73,23 +85,49 @@ def cleanup():
     This should be called from Pyblosxom.pyblosxom.PyBlosxom.cleanup.
     """
     global _loghandler_registry
-    try:
-        import logging
-        if _use_custom_logger:
-            raise ImportError, "whatever"
-    except ImportError:
-        import _logging as logging
+    # try:
+    #     import logging
+    #     if _use_custom_logger:
+    #         raise ImportError, "whatever"
+    # except ImportError:
+    #     import _logging as logging
+
     try:
         logging.shutdown()
         _loghandler_registry = {}
     except ValueError:
         pass
 
+QUOTES = {"'": "&apos;", '"': "&quot;"}
+
 def escape_text(s):
-    quotes = {"'": "&apos;", '"': "&quot;"}
-    return escape(s, quotes)
+    """
+    Takes in a string and escapes ' to &apos; and " to &quot;.
+    If s is None, then we return None.
+
+    @param s: the input string to escape
+    @type s: string
+
+    @returns: the escaped string
+    @rtype: string
+    """
+    if s == None:
+        return None
+    return escape(s, QUOTES)
 
 def urlencode_text(s):
+    """
+    Calls urllib.quote on the string.  If is None, then we return
+    None.
+
+    @param s: the string to be urlencoded.
+    @type s:  string
+
+    @returns: the urlencoded string
+    @rtype: string
+    """
+    if s == None:
+        return None
     return urllib.quote(s)
 
 
@@ -100,39 +138,89 @@ class VariableDict:
     to the end of the key name.
     """
     def __init__(self):
+        """
+        Initializes the internal dict.
+        """
         self._dict = {}
 
-    def __urlencode(self, s):
-        if s == None: return s
-        return urllib.quote(s)
-
-    def __escape(self, s):
-        if s == None: return s
-
-        quotes = {"'": "&apos;", '"': "&quot;"}
-        return escape(s, quotes)
-
     def __getitem__(self, key, default=None):
+        """
+        If the key ends with "_escaped", then this will retrieve
+        the value for the key and escape it.
+
+        If the key ends with "_urlencoded", then this will retrieve
+        the value for the key and urlencode it.
+
+        Otherwise, this calls get(key, default) on the wrapped
+        dict.
+
+        @param key: the key to retrieve
+        @type  key: string
+
+        @param default: the default value to use if the key doesn't
+                        exist.
+        @type  default: string
+
+        @returns: the value; escaped if the key ends in "_escaped";
+                  urlencoded if the key ends in "_urlencoded".
+        @rtype: string
+        """
         if key.endswith("_escaped"):
             key = key[:-8]
-            return self.__escape(self._dict.get(key, default))
+            return escape_text(self._dict.get(key, default))
 
         if key.endswith("_urlencoded"):
             key = key[:-11]
-            return self.__urlencode(self._dict.get(key, default))
+            return urlencode_text(self._dict.get(key, default))
 
         return self._dict.get(key, default)
 
     def get(self, key, default=None):
+        """
+        This turns around and calls __getitem__(key, default).
+
+        @param key: the key to retrieve
+        @type  key: string
+
+        @param default: the default value to use if the key doesn't exist.
+        @type  default: string
+
+        @returns: __getitem__(key, default)
+        @rtype: string
+        """
         return self.__getitem__(key, default)
 
     def __setitem__(self, key, value):
+        """
+        This calls __setitem__(key, value) on the wrapped dict.
+
+        @param key: the key
+        @type  key: string
+
+        @param value: the value
+        @type  value: string
+        """
         self._dict.__setitem__(key, value)
 
     def update(self, newdict):
+        """
+        This calls update(newdict) on the wrapped dict.
+        """
         self._dict.update(newdict)
 
     def has_key(self, key):
+        """
+        If the key ends with _encoded or _urlencoded, we strip that off
+        and then check the wrapped dict to see if it has the adjusted key.
+
+        Otherwise we call has_key(key) on the wrapped dict.
+
+        @param key: the key to check for
+        @type  key: string
+
+        @returns: 1 if the key exists, 0 if not
+        @rtype: boolean
+        """
         if key.endswith("_encoded"):
             key = key[:-8]
 
@@ -146,34 +234,56 @@ class VariableDict:
         Returns a list of the keys that can be accessed through
         __getitem__.
 
+        Note: this does not include the _encoded and _urlencoded
+        versions of these keys.
+
         @returns: list of key names
         @rtype: list of varies
         """
         return self._dict.keys()
 
     def values(self):
+        """
+        Returns a list of the values in this dict.
+
+        @returns: list of values
+        @rtype: list of strings
+        """
         return self._dict.values()
 
 class Stripper(sgmllib.SGMLParser):
     """
-    Strips HTML
-    
-    An C{SGMLParser} subclass to strip away HTMLs
+    SGMLParser that removes HTML formatting code.
     """
     def __init__(self):
+        """
+        Initializes the instance.
+        """
         self.data = []
         sgmllib.SGMLParser.__init__(self)
 
     def unknown_starttag(self, tag, attrs): 
+        """
+        Implements unknown_starttag.  Appends a " " to the buffer.
+        """
         self.data.append(" ")
 
     def unknown_endtag(self, tag): 
+        """
+        Implements unknown_endtag.  Appends a " " to the buffer.
+        """
         self.data.append(" ")
 
     def handle_data(self, data): 
+        """
+        Implements handle_data.  Appends data to the buffer.
+        """
         self.data.append(data)
 
     def gettext(self): 
+        """
+        Returns the buffer.
+        """
         return "".join(self.data)
 
 
@@ -277,7 +387,8 @@ def parse(request, encoding, var_dict, template):
         # convert strings to unicode, assumes strings in iso-8859-1
         template = unicode(template, encoding, 'replace')
 
-    return u'' + VAR_REGEXP.sub(Replacer(request, encoding, var_dict).replace, template)
+    return u'' + VAR_REGEXP.sub(Replacer(request, encoding, var_dict).replace, 
+                                template)
 
 
 def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
@@ -337,13 +448,17 @@ def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
 
     # must have at least root folder
     try:
-        names = os.listdir(root)
+        os.listdir(root)
     except os.error:
         return []
 
     return __walk_internal(root, recurse, pattern, ignorere, return_folders)
 
 def __walk_internal( root, recurse, pattern, ignorere, return_folders ):
+    """
+    Note: This is an internal function--don't use it and don't expect it to
+    stay the same between PyBlosxom releases.
+    """
     # initialize
     result = []
 
@@ -428,32 +543,33 @@ def what_ext(extensions, filepath):
     return None
 
 
-def is_year(s):
+def is_year(checks):
     """
-    Checks s to see if it's likely to be a year or not.  In order to be
-    considered to be a year, it must pass the following criteria:
+    Checks to see if the string is likely to be a year or not.  In order to 
+    be considered to be a year, it must pass the following criteria:
 
-     1. four digits
-     2. first two digits are either 19 or 20.
+      1. four digits
+      2. first two digits are either 19 or 20.
 
-    @param s: the string to check for "year-hood"
-    @type  s: string
+    @param checks: the string to check for "year-hood"
+    @type  checks: string
 
-    @return: 1 if s is likely to be a year or 0 if it is not
+    @return: 1 if checks is likely to be a year or 0 if it is not
     @rtype: boolean
     """
-    if not s: return 0
+    if not checks:
+        return 0
 
-    if len(s) == 4 and s.isdigit() and (s.startswith("19") or s.startswith("20")):
+    if len(checks) == 4 and checks.isdigit() and \
+            (checks.startswith("19") or checks.startswith("20")):
         return 1
     return 0
 
 
-def importName(modulename, name):
+def importname(modulename, name):
     """
-    Module importer
-    
-    For modules that can only be determined during runtime
+    Imports modules for modules that can only be determined during 
+    runtime.
 
     @param modulename: The base name of the module to import from
     @type modulename: string
@@ -491,11 +607,13 @@ def generateRandStr(minlen=5, maxlen=10):
     """
     import random, string
     chars = string.letters + string.digits
-    randStr = ""
-    randStr_size = random.randint(minlen, maxlen)
-    for x in range(randStr_size):
-        randStr += random.choice(chars)
-    return randStr
+    randstr = []
+    randstr_size = random.randint(minlen, maxlen)
+    x = 0
+    while x < randstr_size:
+        randstr.append(random.choice(chars))
+        x += 1
+    return "".join(randstr)
 
 
 def run_callback(chain, input, 
@@ -602,7 +720,7 @@ def get_cache(request):
         cache_driver_config = config.get('cacheDriver', 'base')
         cache_config = config.get('cacheConfig', '')
 
-        cache_driver = importName('Pyblosxom.cache', cache_driver_config)
+        cache_driver = importname('Pyblosxom.cache', cache_driver_config)
         mycache = cache_driver.BlosxomCache(request, cache_config)
 
         data["data_cache"] = mycache
@@ -665,7 +783,7 @@ def render_url(cdict, pathinfo, querystring=""):
     if not staticdir:
         raise Exception("You must set static_dir in your config file.")
 
-    from Pyblosxom.pyblosxom import PyBlosxom
+    from pyblosxom import PyBlosxom
 
     env = {
         "HTTP_USER_AGENT": "static renderer",
@@ -725,7 +843,16 @@ class LogFilter(object):
     Filters out messages from log-channels that are not listed in the
     log_filter config variable.
     """
-    def __init__(self, names=[]):
+    def __init__(self, names=None):
+        """
+        Initializes the filter to the list provided by the names
+        argument (or [] if names is None).
+
+        @param names: list of name strings to filter out
+        @type  names: list of strings
+        """
+        if names == None:
+            names = []
         self.names = names
 
     def filter(self, record):
@@ -741,8 +868,10 @@ def getLogger(log_file=None):
 
     @param log_file: optional, the file to log to.
     @type log_file: C{str}
+
     @return: a log channel (Logger instance)
-    @rtype: L{logging.Logger} for Python >=2.3, L{Pyblosxom._logging.Logger} for Python <2.3
+    @rtype: L{logging.Logger} for Python >=2.3, 
+            L{Pyblosxom._logging.Logger} for Python <2.3
     """
     custom_log_file = False
     if log_file == None:
@@ -754,7 +883,8 @@ def getLogger(log_file=None):
         log_name = ""
         for path in _config.get('plugin_dirs', []):
             if filename.startswith(path):
-                # if it's a plugin, use the module name as the log channels name
+                # if it's a plugin, use the module name as the log channels 
+                # name
                 log_name = module
                 break
         # default to log level WARNING if it's not defined in config.py
@@ -795,10 +925,12 @@ def getLogger(log_file=None):
                 hdlr = logging.StreamHandler(sys.stderr)
 
         # create and set the formatter
-        if log_name: # plugin
-            hdlr.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s'))
+        if log_name:
+            fmtr_s = '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
         else: # root logger
-            hdlr.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s'))
+            fmtr_s = '%(asctime)s [%(levelname)s]: %(message)s'
+
+        hdlr.setFormatter(logging.Formatter(fmtr_s))
 
         logger.addHandler(hdlr)
         int_level = getattr(logging, log_level.upper())
@@ -806,11 +938,12 @@ def getLogger(log_file=None):
 
         if not custom_log_file:
             # only log messages from plugins listed in log_filter.
-            # add 'root' to the log_filter list to still allow application level messages.
+            # add 'root' to the log_filter list to still allow application 
+            # level messages.
             log_filter = _config.get('log_filter', None)
             if log_filter:
-                filter = LogFilter(log_filter)
-                logger.addFilter(filter)
+                lfilter = LogFilter(log_filter)
+                logger.addFilter(lfilter)
 
         # remember that we've seen this handler
         _loghandler_registry[key] = True
@@ -821,7 +954,8 @@ def getLogger(log_file=None):
 def log_exception(log_file=None):
     """
     Logs an exception to the given file.
-    Uses the system-wide log_file as defined in config.py if none is given here.
+    Uses the system-wide log_file as defined in config.py if none 
+    is given here.
 
     @param log_file: optional, the file to log to
     @type log_file: C{str}
@@ -833,7 +967,8 @@ def log_exception(log_file=None):
 def log_caller(frame_num=1, log_file=None):
     """
     Logs some info about the calling function/method.
-    Usefull for debugging.
+    Useful for debugging.
+
     Usage:
         import tools
         tools.log_caller() # logs frame 1
@@ -842,6 +977,7 @@ def log_caller(frame_num=1, log_file=None):
 
     @param frame_num: optional, index of the frame
     @type frame_num: C{int}
+
     @param log_file: optional, the file to log to
     @type log_file: C{str}
     """

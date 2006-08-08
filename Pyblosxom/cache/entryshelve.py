@@ -19,28 +19,43 @@ py['cacheConfig'] = '/path/to/a/cache/dbm/file'
 If successful, you will see the cache file. Be sure that you have write access
 to the cache file.
 """
-from Pyblosxom import tools
+
+__revision__ = "$Revision$"
+
 from Pyblosxom.cache.base import BlosxomCacheBase
 import shelve
 import os
 
 class BlosxomCache(BlosxomCacheBase):
+    """
+    This stores entries in shelves in a .dbm file.
+    """
     def __init__(self, req, config):
+        """
+        Initializes BlosxomCacheBase.__init__ and also opens the
+        shelf file.
+        """
         BlosxomCacheBase.__init__(self, req, config)
         self._db = shelve.open(self._config)
 
     def load(self, entryid):
+        """
+        Loads a specific entryid.
+        """
         BlosxomCacheBase.load(self, entryid)
 
     def getEntry(self):
         """
-        Get data from shelve
+        Get an entry from the shelf.
         """
         data = self._db.get(self._entryid, {})
         return data.get('entrydata', {})
-        
 
     def isCached(self):
+        """
+        Returns true if the entry is cached and the cached version is
+        not stale.  Returns false otherwise.
+        """
         data = self._db.get(self._entryid, {'mtime':0})
         if os.path.isfile(self._entryid):
             return data['mtime'] == os.stat(self._entryid)[8]
@@ -50,7 +65,7 @@ class BlosxomCache(BlosxomCacheBase):
 
     def saveEntry(self, entrydata):
         """
-        Save data in the pickled file
+        Save data in the pickled file.
         """
         payload = {}
         payload['mtime'] = os.stat(self._entryid)[8]
@@ -60,10 +75,19 @@ class BlosxomCache(BlosxomCacheBase):
 
 
     def rmEntry(self):
+        """
+        Removes an entry from the shelf.
+        """
         if self._db.has_key(self._entryid):
             del self._db[self._entryid]
 
     def keys(self):
+        """
+        Returns a list of entries that are cached in the shelf.
+
+        @returns: list of entry paths
+        @rtype: list of strings
+        """
         ret = []
         for key in self._db.keys():
             self.load(key)
@@ -76,6 +100,9 @@ class BlosxomCache(BlosxomCacheBase):
     
 
     def close(self):
+        """
+        Closes the db file.
+        """
         self._db.close()
         self._db = None
 

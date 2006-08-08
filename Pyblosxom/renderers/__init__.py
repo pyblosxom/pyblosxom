@@ -18,4 +18,5 @@ formatting entries into stories, and then outputting it to stdout
 Creating a new renderer involves dropping a new module in this
 directory and adjusting your config file to use your new module.
 """
-pass
+
+__revision__ = "$Revision$"

@@ -8,4 +8,8 @@
 #
 # $Id$
 #######################################################################
-pass
+"""
+This package holds PyBlosxom modules.
+"""
+
+__revision__ = "$Revision$"

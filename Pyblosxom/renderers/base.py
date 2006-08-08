@@ -17,7 +17,11 @@ functionality required by the other rendering system.
 For examples, look at the BlosxomRenderer and the Renderer in the debug
 module.
 """
-import sys, time
+
+__revision__ = "$Revision$"
+
+import sys
+import time
 
 class RendererBase:
     """
@@ -145,8 +149,8 @@ class RendererBase:
         This is just for backwards compatibility.
         """
         response = self._request.getResponse()
-        for k,v in self._header.items():
-            response.addHeader(k,v)
+        for k, v in self._header.items():
+            response.addHeader(k, v)
 
 
     def render(self, header = 1):
@@ -168,4 +172,7 @@ class RendererBase:
         self.rendered = 1
 
 class Renderer(RendererBase):
+    """
+    This is a null renderer.
+    """
     pass

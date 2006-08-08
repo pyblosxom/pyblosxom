@@ -13,17 +13,25 @@ This is the main module for PyBlosxom functionality.  PyBlosxom's setup
 and default handlers are defined here.
 """
 
+__revision__ = "$Revision$"
+
 # Python imports
 from __future__ import nested_scopes, generators
-import os, time, re, sys
+import os
+import time
+import re
+import sys
+import os.path
 import cgi
-try: from cStringIO import StringIO
-except ImportError: from StringIO import StringIO
+try: 
+    from cStringIO import StringIO
+except ImportError: 
+    from StringIO import StringIO
 
 # Pyblosxom imports
 import tools
+import plugin_utils
 from entries.fileentry import FileEntry
-
 
 VERSION = "1.4"
 VERSION_DATE = VERSION + " dev"
@@ -70,8 +78,6 @@ class PyBlosxom:
         additional information in the _data dict, registering plugins,
         and entryparsers.
         """
-        global VERSION_DATE
-
         data = self._request.getData()
         pyhttp = self._request.getHttp()
         config = self._request.getConfiguration()
@@ -86,7 +92,9 @@ class PyBlosxom:
         if pyhttp.has_key('SCRIPT_NAME'):
             if not config.has_key('base_url'):
                 # allow http and https
-                config['base_url'] = '%s://%s%s' % (pyhttp['wsgi.url_scheme'], pyhttp['HTTP_HOST'], pyhttp['SCRIPT_NAME'])
+                config['base_url'] = '%s://%s%s' % (pyhttp['wsgi.url_scheme'], 
+                                                    pyhttp['HTTP_HOST'], 
+                                                    pyhttp['SCRIPT_NAME'])
         else:
             config['base_url'] = config.get('base_url', '')
 
@@ -100,8 +108,8 @@ class PyBlosxom:
             config['datadir'] = datadir
 
         # import and initialize plugins
-        import plugin_utils
-        plugin_utils.initialize_plugins(config.get("plugin_dirs", []), config.get("load_plugins", None))
+        plugin_utils.initialize_plugins(config.get("plugin_dirs", []), 
+                                        config.get("load_plugins", None))
 
         # entryparser callback is run here first to allow other plugins
         # register what file extensions can be used
@@ -169,10 +177,6 @@ class PyBlosxom:
         # run the start callback
         tools.run_callback("start", {'request': self._request})
 
-        data = self._request.getData()
-        pyhttp = self._request.getHttp()
-        config = self._request.getConfiguration()
-
         # allow anyone else to handle the request at this point
         handled = tools.run_callback("handle", 
                         {'request': self._request},
@@ -199,14 +203,14 @@ class PyBlosxom:
 
         @param callback: the callback to execute
         @type  callback: string
+
+        @returns: the result of calling the callback
+        @rtype: varies
         """
         self.initialize()
 
         # run the start callback
         tools.run_callback("start", {'request': self._request})
-
-        config = self._request.getConfig()
-        data = self._request.getData()
 
         # invoke all callbacks for the 'callback'
         handled = tools.run_callback(callback,
@@ -215,8 +219,9 @@ class PyBlosxom:
                         donefunc=lambda x:x)
 
         # do end callback
-        tools.run_callback("end", {'request': request})
+        tools.run_callback("end", {'request': self._request})
 
+        return handled
 
     def runStaticRenderer(self, incremental=0):
         """
@@ -360,10 +365,10 @@ class PyBlosxom:
         # via cb_staticrender_filelist and they can add to the filelist
         # any ( url, query ) tuples they want rendered.
         print "(before) building %s files." % len(renderme)
-        handled = tools.run_callback("staticrender_filelist",
-                        {'request': self._request, 
-                         'filelist': renderme,
-                         'flavours': flavours})
+        tools.run_callback("staticrender_filelist",
+                           {'request': self._request, 
+                            'filelist': renderme,
+                            'flavours': flavours})
 
         print "building %s files." % len(renderme)
 
@@ -400,11 +405,31 @@ class EnvDict(dict):
         request.getForm()
     """
     def __init__(self, request, env):
+        """
+        Wraps an environment (which is a dict) and a request.
+
+        @param request: the Request object for this request
+        @type  request: Request
+
+        @param env: the environment for this request
+        @type  env: dict
+        """
+        dict.__init__(self)
         self._request = request
-        for key in env:
-            self[key] = env[key]
+        self.update(env)
 
     def __getitem__(self, key):
+        """
+        If the key argument is "form", we return the _request.getForm().
+        Otherwise this returns the item for that key in the wrapped
+        dict.
+
+        @param key: the key requested
+        @type  key: string
+
+        @returns: varies
+        @rtype:  varies
+        """
         if key == "form":
             return self._request.getForm()
         else:
@@ -457,29 +482,25 @@ class Request(object):
         self._in = StringIO()
 
         # copy methods to the Request object.
-        self.__copy_members()
+        self.read = self._in.read
+        self.readline = self._in.readline
+        self.readlines = self._in.readlines
+        self.seek = self._in.seek
+        self.tell = self._in.tell
 
         # this holds the FieldStorage instance.
         # initialized when request.getForm is called the first time
         self._form = None
+
+        self._response = None
         
         # create and set the Response
         self.setResponse(Response(self))
-
-
-    def __copy_members(self):
-        """
-        Copies methods from the underlying input stream to the request object.
-        """
-        props = ['read', 'readline', 'readlines', 'seek', 'tell']
-        for prop in props:
-            setattr(self, prop, getattr(self._in, prop))
 
     def __iter__(self):
         """
         Can't copy the __iter__ method over from the StringIO instance cause
         iter looks for the method in the class instead of the instance.
-        So can't do this with __copy_members, have to define it seperatly.
 
         See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
         """
@@ -488,13 +509,13 @@ class Request(object):
     def buffer_input_stream(self):
         """
         Buffer the input stream in a StringIO instance.
-        This is done to have a known/consistent way of accessing incomming data.
-        For example the input stream passed by mod_python does not offer the same 
-        functionallity as sys.stdin.
+        This is done to have a known/consistent way of accessing incomming 
+        data.  For example the input stream passed by mod_python does not 
+        offer the same functionallity as sys.stdin.
         """
         # TODO: tests on memory consumption when uploading huge files
         pyhttp = self.getHttp()
-        input = pyhttp['wsgi.input']
+        winput = pyhttp['wsgi.input']
         method = pyhttp["REQUEST_METHOD"]
 
         # there's no data on stdin for a GET request.  pyblosxom
@@ -507,7 +528,7 @@ class Request(object):
                 length = 0
 
             if length > 0:
-                self._in.write(input.read(length))
+                self._in.write(winput.read(length))
                 # rewind to start
                 self._in.seek(0)
 
@@ -532,7 +553,7 @@ class Request(object):
         """
         return self._response
 
-    def __getForm(self):
+    def __getform(self):
         """
         Parses and returns the form data submitted by the client.
         Rewinds the input buffer after calling cgi.FieldStorage.
@@ -540,7 +561,9 @@ class Request(object):
         @returns: L{cgi.FieldStorage}
         @rtype: object
         """        
-        form = cgi.FieldStorage(fp=self._in, environ=self._http, keep_blank_values=0)
+        form = cgi.FieldStorage(fp=self._in, 
+                                environ=self._http, 
+                                keep_blank_values=0)
         # rewind the input buffer
         self._in.seek(0)
         return form
@@ -556,7 +579,7 @@ class Request(object):
         @rtype: object
         """
         if self._form == None:
-            self._form = self.__getForm()
+            self._form = self.__getform()
         return self._form
 
     def getConfiguration(self):
@@ -598,12 +621,10 @@ class Request(object):
         """
         return self._data
 
-    def __populateDict(self, currdict, newdict):
+    def __populatedict(self, currdict, newdict):
         """
         Internal helper method for populating an existing dict with
         data from the new dict.
-
-        FIXME - why don't we use update?
 
         @param currdict: the existing dict to update
         @type currdict: dict
@@ -611,8 +632,7 @@ class Request(object):
         @param newdict: the new dict with values to update with
         @type newdict: dict
         """
-        for mem in newdict.keys():
-            currdict[mem] = newdict[mem]
+        currdict.update(newdict)
 
     def addHttp(self, d):
         """
@@ -622,7 +642,7 @@ class Request(object):
         @param d: the dict with the new keys/values to add
         @type  d: dict
         """
-        self.__populateDict(self._http, d)
+        self.__populatedict(self._http, d)
 
     def addData(self, d):
         """
@@ -632,17 +652,17 @@ class Request(object):
         @param d: the dict with the new keys/values to add
         @type  d: dict
         """
-        self.__populateDict(self._data, d)
+        self.__populatedict(self._data, d)
 
-    def addConfiguration(self, d):
+    def addConfiguration(self, newdict):
         """
         Takes in a dict and adds/overrides values in the existing
         configuration dict with the new values.
 
-        @param d: the dict with the new keys/values to add
-        @type  d: dict
+        @param newdict: the dict with the new keys/values to add
+        @type  newdict: dict
         """
-        self.__populateDict(self._configuration, d)
+        self.__populatedict(self._configuration, newdict)
 
     def __getattr__(self, name, default=None):
         """
@@ -667,6 +687,12 @@ class Request(object):
         return default
 
     def __repr__(self):
+        """
+        Returns a representation of this request which is "Request".
+
+        @returns: "Request"
+        @rtype: string
+        """
         return "Request"
 
 
@@ -690,22 +716,21 @@ class Response(object):
         self._headers_sent = False
         self.headers = {}
         self.status = "200 OK"
-        self.__copy_members()
-    
-    def __copy_members(self):
-        """
-        Copies methods from the underlying output buffer to the response object.
-        """
-        props = ['close', 'flush', 'read', 'readline', 'readlines', 'seek', 
-                 'tell', 'write', 'writelines']
-        for prop in props:
-            setattr(self, prop, getattr(self._out, prop))
 
+        self.close = self._out.close
+        self.flush = self._out.flush
+        self.read = self._out.read
+        self.readline = self._out.readline
+        self.readlines = self._out.readlines
+        self.seek = self._out.seek
+        self.tell = self._out.tell
+        self.write = self._out.write
+        self.writelines = self._out.writelines
+    
     def __iter__(self):
         """
         Can't copy the __iter__ method over from the StringIO instance cause
         iter looks for the method in the class instead of the instance.
-        So can't do this with __copy_members, have to define it seperatly.
 
         See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
         """
@@ -770,8 +795,8 @@ class Response(object):
         @type out: file
         """
         out.write("Status: %s\n" % self.status)
-        out.write('\n'.join(['%s: %s' % (x, self.headers[x]) 
-                for x in self.headers.keys()]))
+        out.write('\n'.join(['%s: %s' % (hkey, self.headers[hkey]) 
+                for hkey in self.headers.keys()]))
         out.write('\n\n')
         self._headers_sent = True
 
@@ -818,22 +843,22 @@ def blosxom_handler(request):
     # go through the renderer callback to see if anyone else
     # wants to render.  this renderer gets stored in the data dict 
     # for downstream processing.
-    r = tools.run_callback('renderer', 
-                           {'request': request},
-                           donefunc = lambda x: x != None, 
-                           defaultfunc = lambda x: None)
+    rend = tools.run_callback('renderer', 
+                              {'request': request},
+                              donefunc = lambda x: x != None, 
+                              defaultfunc = lambda x: None)
 
-    if not r:
+    if not rend:
         # get the renderer we want to use
-        r = config.get("renderer", "blosxom")
+        rend = config.get("renderer", "blosxom")
 
         # import the renderer
-        r = tools.importName("Pyblosxom.renderers", r)
+        rend = tools.importname("Pyblosxom.renderers", rend)
 
         # get the renderer object
-        r = r.Renderer(request, config.get("stdoutput", sys.stdout))
+        rend = rend.Renderer(request, config.get("stdoutput", sys.stdout))
 
-    data['renderer'] = r
+    data['renderer'] = rend
 
     # generate the timezone variable
     data["timezone"] = time.tzname[time.localtime()[8]]
@@ -958,10 +983,11 @@ def blosxom_entry_parser(filename, request):
     args = {'parser': entryData.get('parser', config.get('parser', 'plain')),
             'story': lines,
             'request': request}
-    entryData['body'] = tools.run_callback('preformat', 
-                                           args,
-                                           donefunc = lambda x:x != None,
-                                           defaultfunc = lambda x: ''.join(x['story']))
+    otmp = tools.run_callback('preformat', 
+                              args,
+                              donefunc = lambda x:x != None,
+                              defaultfunc = lambda x: ''.join(x['story']))
+    entryData['body'] = otmp
 
     # Call the postformat callbacks
     tools.run_callback('postformat',
@@ -990,7 +1016,9 @@ def blosxom_file_list_handler(args):
     config = request.getConfiguration()
 
     if data['bl_type'] == 'dir':
-        filelist = tools.Walk(request, data['root_datadir'], int(config['depth']))
+        filelist = tools.Walk(request, 
+                              data['root_datadir'], 
+                              int(config['depth']))
     elif data['bl_type'] == 'file':
         filelist = [data['root_datadir']]
     else:
@@ -1008,18 +1036,22 @@ def blosxom_file_list_handler(args):
     
     # Match dates with files if applicable
     if data['pi_yr']:
-        # This is called when a date has been requested, e.g. /some/category/2004/Sep
-        month = (data['pi_mo'] in tools.month2num.keys() and tools.month2num[data['pi_mo']] or data['pi_mo'])
+        # This is called when a date has been requested, e.g. 
+        # /some/category/2004/Sep
+        month = (data['pi_mo'] in tools.month2num.keys() and \
+                      tools.month2num[data['pi_mo']] or \
+                      data['pi_mo'])
         matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
-        valid_list = [x for x in entrylist if re.match(matchstr, x[1]._fulltime)]
+        valid_list = [x for x in entrylist if re.match(matchstr, 
+                                                       x[1]._fulltime)]
     else:
         valid_list = entrylist
 
     # This is the maximum number of entries we can show on the front page
     # (zero indicates show all entries)
-    max = config.get("num_entries", 0)
-    if max and not data["pi_yr"]:
-        valid_list = valid_list[:max]
+    maxe = config.get("num_entries", 0)
+    if maxe and not data["pi_yr"]:
+        valid_list = valid_list[:maxe]
         data["debugme"] = "done"
 
     valid_list = [x[1] for x in valid_list]
@@ -1046,8 +1078,6 @@ def blosxom_process_path_info(args):
     config = request.getConfiguration()
     data = request.getData()
     pyhttp = request.getHttp()
-
-    logger = tools.getLogger()
 
     form = request.getForm()
 
@@ -1227,16 +1257,13 @@ def test_installation(request):
     @param request: the Request object
     @type request: object
     """
-    import sys, os, os.path
-    from Pyblosxom import pyblosxom
-
     config = request.getConfiguration()
 
     # BASE STUFF
     print "Welcome to PyBlosxom's installation verification system."
     print "------"
     print "]] printing diagnostics [["
-    print "pyblosxom:   %s" % pyblosxom.VERSION_DATE
+    print "pyblosxom:   %s" % VERSION_DATE
     print "sys.version: %s" % sys.version.replace("\n", " ")
     print "os.name:     %s" % os.name
     print "codebase:    %s" % config.get("codebase", "--default--")
@@ -1296,8 +1323,6 @@ def test_installation(request):
     print "Now we're going to verify your plugin configuration."
 
     if config.has_key("plugin_dirs"):
-
-        from Pyblosxom import plugin_utils
         plugin_utils.initialize_plugins(config["plugin_dirs"],
                                         config.get("load_plugins", None))
 
@@ -1322,11 +1347,14 @@ def test_installation(request):
                     print " FAIL!!! ", error_message
 
             else:
-                no_verification_support.append( "'%s' (%s)" % (mem.__name__, mem.__file__))
+                mn = mem.__name__
+                mf = mem.__file__
+                no_verification_support.append( "'%s' (%s)" % (mn, mf))
 
         if len(no_verification_support) > 0:
             print ""
-            print "The following plugins do not support installation verification:"
+            print "The following plugins do not support installation " + \
+                  "verification:"
             for mem in no_verification_support:
                 print "   %s" % mem
     else:

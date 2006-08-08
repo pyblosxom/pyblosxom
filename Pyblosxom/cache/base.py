@@ -9,8 +9,12 @@
 # $Id$
 #######################################################################
 """
-A basic driver, used by default in pyblosxom, does not do anything at all
+The cache base class.  Subclasses of this class provide caching for
+blog entry data in PyBlosxom.
 """
+
+__revision__ = "$Revision$"
+
 class BlosxomCacheBase:
     """
     Base Class for Caching stories in pyblosxom.
@@ -42,6 +46,8 @@ class BlosxomCacheBase:
         self._request = req
         self._config = config
 
+        self._entryid = ""
+        self._entrydata = {}
 
     def load(self, entryid):
         """
@@ -53,13 +59,11 @@ class BlosxomCacheBase:
         self._entryid = entryid # The filename of the entry
         self._entrydata = {}    # The data of the entry
 
-
     def getEntry(self):
         """
         Gets the data from the cache, returns a dict or an empty dict.
         """
         return self._entrydata
-
 
     def isCached(self):
         """
@@ -71,7 +75,6 @@ class BlosxomCacheBase:
         """
         return 0
 
-
     def saveEntry(self, entrydata):
         """
         Store entrydata in cache
@@ -81,31 +84,27 @@ class BlosxomCacheBase:
         """
         pass
 
-
     def rmEntry(self):
         """
         Remove cache entry: This is not used by pyblosxom, but used by
-        utilities
+        utilities.
         """
         pass
-
 
     def close(self):
         """
-        Close your cache if necessary.
+        Override this to close your cache if necessary.
         """
         pass
 
-
     def __getitem__(self, key):
         """
-        Convenience function to make this class look like a dict
+        Convenience function to make this class look like a dict.
         """
         self.load(key)
         if not self.has_key(key):
             raise KeyError
         return self.getEntry()
-
 
     def __setitem__(self, key, value):
         """
@@ -114,16 +113,19 @@ class BlosxomCacheBase:
         self.load(key)
         self.saveEntry(value)
 
-
     def __delitem__(self, key):
+        """
+        Convenience function to make this look more like a dict.
+        """
         self.load(key)
         self.rmEntry()
 
-
     def has_key(self, key):
+        """
+        Convenience function to make this look more like a dict.
+        """
         self.load(key)
         return self.isCached()
-
 
     def keys(self):
         """
@@ -132,8 +134,10 @@ class BlosxomCacheBase:
         """
         return []
 
-
     def get(self, key, default=None):
+        """
+        Convenience function to make this look more like a dict.
+        """
         try:
             return self.__getitem__(key)
         except KeyError:
@@ -142,7 +146,7 @@ class BlosxomCacheBase:
 
 class BlosxomCache(BlosxomCacheBase):
     """
-    A Null cache
+    A null cache.
     """
     pass
 

@@ -13,9 +13,14 @@ This is the default blosxom renderer.  It tries to match the behavior
 of the blosxom renderer.
 """
 
+__revision__ = "$Revision$"
+
+import os
+import sys
+import codecs
+
 from Pyblosxom import tools
 from Pyblosxom.renderers.base import RendererBase
-import os, sys, codecs
 
 class NoSuchFlavourException(Exception):
     """
@@ -23,6 +28,7 @@ class NoSuchFlavourException(Exception):
     available in this blog.
     """
     def __init__(self, msg):
+        Exception.__init__(self)
         self._msg = msg
 
 def get_included_flavour(taste):
@@ -102,14 +108,14 @@ class BlosxomRenderer(RendererBase):
     def __init__(self, request, stdoutput = sys.stdout):
         RendererBase.__init__(self, request, stdoutput)
         config = request.getConfiguration()
-        (e, d, sr, sw) = codecs.lookup(config.get('blog_encoding', 
-                'iso-8859-1'))
+        sw = codecs.lookup(config.get('blog_encoding', 'iso-8859-1'))[3]
         self._out = sw(self._out)
         self.dayFlag = 1
         self._request = request
         self._encoding = config.get("blog_encoding", "iso-8859-1")
+        self.flavour = None
 
-    def _getFlavour(self, taste='html'):
+    def _getflavour(self, taste='html'):
         """
         This retrieves all the template files for a given flavour taste.
         This will first pull the templates for the default flavour
@@ -121,7 +127,7 @@ class BlosxomRenderer(RendererBase):
 
         For example, if the user requested the "html" flavour and is
         looking at an entry in the category "dev/pyblosxom", then
-        _getFlavour will:
+        _getflavour will:
 
         1. pick up the flavour files in the default html flavour
         2. start in EITHER datadir OR flavourdir (if configured)
@@ -180,7 +186,7 @@ class BlosxomRenderer(RendererBase):
 
         # if we still haven't found our flavour files, we raise an exception
         if not template_d:
-            raise NoSuchFlavourException("Flavour '" + taste + "' does not exist.")
+            raise NoSuchFlavourException("Flavour '%s' does not exist." % taste)
 
         for k in template_d.keys():
             flav_template = unicode(open(template_d[k]).read(), 
@@ -202,7 +208,8 @@ class BlosxomRenderer(RendererBase):
         """
         if template:
             template = unicode(template)
-            finaltext = tools.parse(self._request, self._encoding, entry, template)
+            finaltext = tools.parse(self._request, self._encoding, 
+                                    entry, template)
             return finaltext.replace(r'\$', '$')
         return ""
 
@@ -245,7 +252,8 @@ class BlosxomRenderer(RendererBase):
         self.outputTemplate(output, entry, 'story', override=1)
 
         template = u""
-        args = self._run_callback("story_end", { "entry": entry, "template": template }) 
+        args = self._run_callback("story_end", 
+                                  { "entry": entry, "template": template }) 
             
         return "".join(output) + args['template'], current_date    
 
@@ -256,7 +264,6 @@ class BlosxomRenderer(RendererBase):
         @returns: the content string
         @rtype: string
         """
-        config = self._request.getConfiguration()
         data = self._request.getData()
 
         outputbuffer = []
@@ -270,7 +277,8 @@ class BlosxomRenderer(RendererBase):
             # if the content is a dict, then we parse it as if it were an
             # entry--except it's distinctly not an EntryBase derivative
             self._content.update(data)
-            output = tools.parse(self._request, self._encoding, self._content, self.flavour['story'])
+            output = tools.parse(self._request, self._encoding, 
+                                 self._content, self.flavour['story'])
             outputbuffer.append(output)
 
         elif isinstance(self._content, list):
@@ -282,7 +290,7 @@ class BlosxomRenderer(RendererBase):
 
         return self.write(u"".join(outputbuffer))
 
-    def render(self, header = 1):
+    def render(self, header=1):
         """
         Figures out flavours and such and then renders the content according
         to which flavour we're using.
@@ -297,18 +305,17 @@ class BlosxomRenderer(RendererBase):
         data = self._request.getData()
         config = self._request.getConfiguration()
 
-        # FIXME
         parsevars = tools.VariableDict()
         parsevars.update(config)
         parsevars.update(data)
 
         try:
-            self.flavour = self._getFlavour(data.get("flavour", "html"))
+            self.flavour = self._getflavour(data.get("flavour", "html"))
 
         except NoSuchFlavourException, nsfe:
             error_msg = nsfe._msg
             try:
-                self.flavour = self._getFlavour("error")
+                self.flavour = self._getflavour("error")
             except NoSuchFlavourException, nsfe2:
                 self.flavour = get_included_flavour("error")
                 error_msg = error_msg + "And your error flavour doesn't exist."
@@ -318,7 +325,7 @@ class BlosxomRenderer(RendererBase):
         
         data['content-type'] = self.flavour['content_type'].strip()
         if header:
-            if self._needs_content_type and data['content-type'] !="":
+            if self._needs_content_type and data['content-type'] != "":
                 self.addHeader('Content-type', '%(content-type)s' % data)
 
             self.showHeaders()
@@ -348,7 +355,8 @@ class BlosxomRenderer(RendererBase):
         """
         template = self.flavour[template_name]
 
-        args = self._run_callback(template_name, { "entry": entry, "template": template }) 
+        args = self._run_callback(template_name, 
+                                  { "entry": entry, "template": template }) 
         template = args["template"]
         entry = args["entry"]
 
@@ -388,7 +396,8 @@ class BlosxomRenderer(RendererBase):
             template = self.flavour.get(template_name, '')
 
         # we run this through the regular callbacks
-        args = self._run_callback(template_name, { "entry": entry, "template": template })
+        args = self._run_callback(template_name, 
+                                  { "entry": entry, "template": template })
 
         template = args["template"]
         entry = args["entry"]
@@ -424,6 +433,9 @@ class BlosxomRenderer(RendererBase):
         return self._content
         
 class Renderer(BlosxomRenderer):
+    """
+    This is a null renderer.
+    """
     pass
 
 # vim: shiftwidth=4 tabstop=4 expandtab
