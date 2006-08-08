@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 
-#!/path/to/python -u
-# -u turns off character translation to allow transmission
-# of gzip compressed content on Windows and OS/2
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# 
+# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# for distribution details.
+#
+# $Id: pyblosxom.py 913 2006-08-08 20:29:42Z willhelm $
+#######################################################################
 
 import os, sys
 
@@ -12,15 +19,6 @@ if script is not None:
     sys.path.insert(0, os.path.dirname(script))
 
 sys.path.insert(0, os.getcwd())
-
-# Settings are now in config.py
-from config import py as cfg
-
-# If the user defined a "codebase" property in their config file,
-# then we insert that into our sys.path because that's where the
-# PyBlosxom installation is.
-if cfg.has_key("codebase"):
-    sys.path.insert(0, cfg["codebase"])
 
 def parse_args(args):
     """
@@ -52,11 +50,6 @@ def parse_args(args):
         i = i + 1
     return optlist
 
-from Pyblosxom.pyblosxom import PyBlosxom
-from Pyblosxom.pyblosxom import VERSION_DATE
-
-PYBL_VERSION = "PyBlosxom: pyblcmd: " + VERSION_DATE + "\n"
-
 HELP = """Syntax: pyblcmd [args]
 
 -v, --version
@@ -84,27 +77,35 @@ at the top of the plugin file) for more information.
 
 
 if __name__ == '__main__':
+    # the configuration properties are in a dict named "py" in
+    # the config module
+    try:
+        from config import py as cfg
+    except:
+        print "Cannot find your config.py file.  Please execute pyblcmd"
+        print "in the directory with your config.py file in it."
+        sys.exit(0)
+
+    from Pyblosxom.pyblosxom import PyBlosxom
+    from Pyblosxom.pyblosxom import VERSION_DATE
+
+    PYBL_VERSION = "PyBlosxom: pyblcmd: " + VERSION_DATE + "\n"
 
     print PYBL_VERSION
+
+    # If the user defined a "codebase" property in their config file,
+    # then we insert that into our sys.path because that's where the
+    # PyBlosxom installation is.
+    if cfg.has_key("codebase"):
+        sys.path.insert(0, cfg["codebase"])
 
     if len(sys.argv) == 1:
         print HELP
         sys.exit(0)
     
-    env = {}
-    # names taken from wsgi instead of inventing something new
-    env['wsgi.input'] = sys.stdin
-    env['wsgi.errors'] = sys.stderr
+    p = PyBlosxom(cfg, {})
 
-    # setup url_scheme for static rendering
-    if 'base_url' in cfg.keys():
-        env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
-    else:
-        env['wsgi.url_scheme'] = "http"
-    
-    p = PyBlosxom(cfg, env)
-
-    optlist =parse_args(sys.argv[1:])
+    optlist = parse_args(sys.argv[1:])
 
     for mem in optlist:
         if mem[0] in ["-v", "--version"]:
@@ -114,7 +115,7 @@ if __name__ == '__main__':
             print HELP
 
         elif mem[0] in ["--static", "-s"]:
-            if mem[1] == "incremental":
+            if "--incremental" in sys.argv:
                 incremental = 1
             else:
                 incremental = 0
