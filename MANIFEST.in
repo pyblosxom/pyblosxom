@@ -3,8 +3,12 @@ include CHANGELOG
 include README
 include INSTALL
 include LICENSE
+include TODO
+include THANKS
+include AUTHORS
 recursive-include bin *
 recursive-include Pyblosxom *.py
 recursive-include web *
 recursive-include Pyblosxom/flavours *
 recursive-include docs *
+recursive-include tests *.py
