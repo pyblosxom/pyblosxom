@@ -27,8 +27,8 @@ if cfg.has_key("codebase"):
 from Pyblosxom.pyblosxom import PyBlosxom
 
 if __name__ == '__main__':
-    
     env = {}
+
     # names taken from wsgi instead of inventing something new
     env['wsgi.input'] = sys.stdin
     env['wsgi.errors'] = sys.stderr
@@ -38,50 +38,36 @@ if __name__ == '__main__':
         env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
     else:
         env['wsgi.url_scheme'] = "http"
-    
 
-    # if they executed pyblosxom.cgi from the command line, then
-    # there is no REQUEST_METHOD.
-    if not os.environ.get("REQUEST_METHOD", ""):
-        # install verification and static rendering
+    if not os.environ.has_key("REQUEST_METHOD"):
+        print "Please use pyblcmd for command-line functionality."
+        sys.exit(0)
+
+    try:
+        # try running as a WSGI-CGI
+        from wsgiref.handlers import CGIHandler
+        from wsgi_app import application
+        CGIHandler().run(application)
+
+    except ImportError:
+        # run as a regular CGI
+
+        if os.environ.get("HTTPS") in ("yes", "on", "1"):
+            env['wsgi.url_scheme'] = "https"
+
+        for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER",
+                    "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR",
+                    "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME",
+                    "HTTP_IF_NONE_MATCH", "HTTP_IF_MODIFIED_SINCE",
+                    "HTTP_COOKIE", "CONTENT_LENGTH", "HTTP_ACCEPT",
+                    "HTTP_ACCEPT_ENCODING"]:
+            env[mem] = os.environ.get(mem, "")
 
         p = PyBlosxom(cfg, env)
 
-        if len(sys.argv) > 1 and sys.argv[1] == "--static":
-            if "--incremental" in sys.argv:
-                incremental = 1
-            else:
-                incremental = 0
-            p.runStaticRenderer(incremental)
-        else:
-            p.testInstallation()
-
-    else:
-        try:
-            # try running as a WSGI-CGI
-            from wsgiref.handlers import CGIHandler
-            from wsgi_app import application
-            CGIHandler().run(application)
-
-        except ImportError:
-            # run as a regular CGI
-
-            if os.environ.get("HTTPS") in ("yes", "on", "1"):
-                env['wsgi.url_scheme'] = "https"
-
-            for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER",
-                        "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR",
-                        "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME",
-                        "HTTP_IF_NONE_MATCH", "HTTP_IF_MODIFIED_SINCE",
-                        "HTTP_COOKIE", "CONTENT_LENGTH", "HTTP_ACCEPT",
-                        "HTTP_ACCEPT_ENCODING"]:
-                env[mem] = os.environ.get(mem, "")
-
-            p = PyBlosxom(cfg, env)
-
-            p.run()
-            response = p.getResponse()
-            response.sendHeaders(sys.stdout)
-            response.sendBody(sys.stdout)
+        p.run()
+        response = p.getResponse()
+        response.sendHeaders(sys.stdout)
+        response.sendBody(sys.stdout)
 
 # vim: shiftwidth=4 tabstop=4 expandtab
