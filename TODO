@@ -31,6 +31,8 @@ UNIT TESTING
 
 MANUAL
 
+ - Go through and clarify the config.py properties if we haven't already
+   and provide examples in the PyBlosxom Manual.
  - Need to add information on migrating entries from other blog systems
    (Drupal?  WordPress?  LiveJournal? ...) to PyBlosxom.
  - Need to take out a lot of the blah blah blah content and clean up
