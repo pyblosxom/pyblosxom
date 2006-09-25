@@ -5,7 +5,8 @@ py = {}
 ###############
 # If your PyBlosxom installation is in a funky place, uncomment
 # this next line and point it to your PyBlosxom installation
-# directory.
+# directory.  Note, this should be the directory that holds
+# the "Pyblosxom" directory.
 #py["codebase"] = "/path/to/pyblosxom/installation"
 
 # What's this blog's title?
