@@ -10,6 +10,10 @@ Pertinent to users:
 2. The RSS2.0 story template no longer includes $default_flavour in the
    link.  (Thanks Martin!)
 
+3. PyBlosxom is now locale aware in respects to dates, months, days of the
+   week and such.  Users should set the "locale" config property to a
+   valid locale if they don't want English.
+
 
 Pertinent to developers:
 ------------------------
