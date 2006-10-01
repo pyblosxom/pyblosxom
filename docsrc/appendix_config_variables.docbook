@@ -127,7 +127,7 @@ your sys.path and Python won't be able to find it.</para>
 P and lowercase b) directory should be in 
 <literal>/home/joe/pyblosxom-1.3.2/</literal> and the 
 <literal>codebase</literal> property should be set to
-<literal>/home/joe/pyblosxom-1.3.2/</literal>.
+<literal>/home/joe/pyblosxom-1.3.2/</literal>.</para>
 <programlisting role="python"><![CDATA[
 py["codebase"] = "/home/joe/pyblosxom-1.3.2/"
 ]]></programlisting>
