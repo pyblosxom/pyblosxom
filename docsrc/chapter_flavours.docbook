@@ -211,6 +211,14 @@ at.
 <para>
 This is the list of variables that are available to your templates.
 Additionally, plugins that you are using will add additional variables.
+</para>
+<para>
+To use a variable in a template, prefix the variable name with a $.
+For example, this would expand to the blog's title as a h2:
+</para>
+<programlisting role="html"><![CDATA[<h2>$title</h2>
+]]></programlisting>
+<para>
 To get a complete list of what variables are available in your blog, use 
 the debug renderer by changing the renderer property in your 
 <filename>config.py</filename> file to debug like this:
