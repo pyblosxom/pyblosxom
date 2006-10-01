@@ -20,6 +20,7 @@ from __future__ import nested_scopes, generators
 import os
 import time
 import re
+import locale
 import sys
 import os.path
 import cgi
@@ -81,6 +82,15 @@ class PyBlosxom:
         data = self._request.getData()
         pyhttp = self._request.getHttp()
         config = self._request.getConfiguration()
+
+        # Initialize the locale, if wanted (will silently fail if locale 
+        # is not # available)
+        if config.get('locale'):
+            try: 
+                locale.setlocale(locale.LC_ALL, config['locale'])
+            except locale.Error: 
+                # Invalid locale 
+                pass 
 
         # initialize the tools module
         tools.initialize(config)
@@ -887,10 +897,18 @@ def blosxom_handler(request):
     mtime_gmtuple = time.gmtime(mtime)
 
     data["latest_date"] = time.strftime('%a, %d %b %Y', mtime_tuple)
+
+    # Make sure we get proper 'English' dates when using standards 
+    loc = locale.getlocale(locale.LC_ALL)
+    locale.setlocale(locale.LC_ALL, 'C')
+
     data["latest_w3cdate"] = time.strftime('%Y-%m-%dT%H:%M:%SZ', 
                                            mtime_gmtuple)
     data['latest_rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', 
                                               mtime_gmtuple)
+
+    # set the locale back
+    locale.setlocale(locale.LC_ALL, loc)
 
     # we pass the request with the entry_list through the prepare callback
     # giving everyone a chance to transform the data.  the request is

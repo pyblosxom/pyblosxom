@@ -109,6 +109,31 @@ py["blog_title"] = "Will's Blog of Unusual Stuff"
 </listitem>
 </varlistentry>
 
+<varlistentry><term><varname>codebase</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>This is the full path to where the <literal>Pyblosxom</literal>
+directory is on your system.</para>
+<para>You don't need to set it if you installed PyBlosxom by running 
+<literal>python setup.py install</literal> in the installation process.  
+If you didn't do that then the PyBlosxom library code won't be on 
+your sys.path and Python won't be able to find it.</para>
+<para>For example, if you untarred PyBlosxom into 
+<literal>/home/joe/pyblosxom-1.3.2/</literal>, then the Pyblosxom (uppercase
+P and lowercase b) directory should be in 
+<literal>/home/joe/pyblosxom-1.3.2/</literal> and the 
+<literal>codebase</literal> property should be set to
+<literal>/home/joe/pyblosxom-1.3.2/</literal>.
+<programlisting role="python"><![CDATA[
+py["codebase"] = "/home/joe/pyblosxom-1.3.2/"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
 <varlistentry><term><varname>datadir</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
@@ -199,11 +224,33 @@ py["ignore_directories"] = [ "draft" ]
 <member>DATATYPE:</member><member>list of strings</member>
 <member>DEFAULT VALUE:</member><member><literal>[ ]</literal> (an empty list)</member>
 </simplelist>
-<para>If this is not set, then PyBlosxom will load all the plugins in the plugin 
-dirs you specified in alphabetical order. If this is set, then PyBlosxom will 
-only load the plugins specified.</para>
+<para>If this is not set, then PyBlosxom will load all the plugins in the 
+plugin dirs you specified in alphabetical order. If this is set, then 
+PyBlosxom will only load the plugins specified.</para>
 <programlisting role="python"><![CDATA[
 py["load_plugins"] = ["pycalendar", "rss2renderer"]
+]]></programlisting>
+</listitem>
+</varlistentry>
+
+<varlistentry><term><varname>locale</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string</member>
+<member>DEFAULT VALUE:</member><member>"C" (I think)</member>
+</simplelist>
+<para>PyBlosxom uses the <literal>locale</literal> config property to
+adjust the values for month names and dates.  Locales get a bit
+complicated.  Suffice to say that if you're not en_US or en_UK, then
+you should set this.</para>
+<para>A listing of language codes is at:
+http://ftp.ics.uci.edu/pub/ietf/http/related/iso639.txt</para>
+<para>A listing of country codes is at:
+http://userpage.chemie.fu-berlin.de/diverse/doc/ISO_3166.html</para>
+<programlisting role="python"><![CDATA[
+# this sets the locale to the Dutch language in the Netherlands
+py["locale"] = "nl_NL.UTF-8"
 ]]></programlisting>
 </listitem>
 </varlistentry>

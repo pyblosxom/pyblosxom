@@ -9,6 +9,12 @@ py = {}
 # the "Pyblosxom" directory.
 #py["codebase"] = "/path/to/pyblosxom/installation"
 
+# What's the locale for the blog?  This affects things like the 
+# format of dates, etc.
+# Make sure the locale is valid for your system.
+# See the PyBlosxom manual for more details.
+#py["locale"] = "nl_NL.UTF-8"
+
 # What's this blog's title?
 py['blog_title'] = "Another pyblosxom blog"
 

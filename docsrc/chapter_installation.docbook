@@ -107,9 +107,15 @@ to the instructions.
 Make sure to set the datadir property to the datadir directory you created, 
 the flavourdir property to the flavourdir directory you created, the 
 plugins_dir property to the plugins directory you created, and the codebase 
-property to the directory you untarred PyBlosxom into.  Note: the
-codebase property should be the directory that holds the 
-<filename>Pyblosxom/</filename> directory.
+property to the directory you untarred PyBlosxom into.
+</para>
+<para>
+There are additional description and examples in the appendix of this 
+manual.
+</para>
+<para>
+Note: If you set the codebase property, it should be set to the directory 
+that holds the <filename>Pyblosxom/</filename> directory.
 </para>
 </listitem>
 <listitem>

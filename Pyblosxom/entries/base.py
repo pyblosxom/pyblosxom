@@ -20,7 +20,7 @@ a BaseEntry with data that you provide for it.
 
 __revision__ = "$Revision$"
 
-import time
+import time, locale
 from Pyblosxom import tools
 
 BIGNUM = 2000000000
@@ -203,12 +203,20 @@ class EntryBase:
         self['dw'] = time.strftime('%A', timetuple)
         self['yr'] = time.strftime('%Y', timetuple)
         self['fulltime'] = time.strftime('%Y%m%d%H%M%S', timetuple)
+        self['date'] = time.strftime('%a, %d %b %Y', timetuple)
+
+        # Temporarily disable the set locale, so RFC-compliant dates are
+        # really RFC-compliant
+        loc = locale.getlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, 'C')
 
         # YYYY-MM-DDThh:mm:ssZ
         self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', gmtimetuple)
         self['rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', \
                                            gmtimetuple)
-        self['date'] = time.strftime('%a, %d %b %Y', timetuple)
+        
+        # set the locale back
+        locale.setlocale(locale.LC_ALL, loc)
 
     def __getitem__(self, key, default=None):
         """
