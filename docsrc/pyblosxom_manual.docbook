@@ -124,6 +124,18 @@ at http://pyblosxom.sourceforge.net/ .
   _urlencoded; added revhistory; changed document versioning; additional 
   tweaks.
 </para>
+<para>
+1.3.2 - 2006-10-01 - wbg
+</para>
+<para>
+  Removed <literal>content_type</literal> from the variable listing.
+  Added some text regarding how variables are used in templates.  
+  (Thanks Ryan!)
+</para>
+<para>
+  Added <literal>codebase</literal> and <literal>locale</literal> to
+  the appendix on config variables.
+</para>
 </sect1>
 
 </preface>
