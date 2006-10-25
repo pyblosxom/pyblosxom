@@ -336,11 +336,6 @@ calculated based on the request.
 </thead>
 <tbody>
 <row>
-<entry>content_type</entry>
-<entry>the content type of this page</entry>
-<entry>text/html</entry>
-</row>
-<row>
 <entry>root_datadir</entry>
 <entry>the root datadir of this page?</entry>
 <entry>/home/subtle/blosxom/weblogs/tools/pyblosxom</entry>
