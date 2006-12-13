@@ -122,7 +122,7 @@ py['default_flavour'] = "html"
 
 # Doing static rendering?  Static rendering essentially "compiles" your
 # blog into a series of static html pages.  For more details, read:
-# http://wiki.subtlehints.net/moin/PyBlosxom_2fStaticRendering
+# http://pyblosxom.sourceforge.net/1.3.1/manual/c797.html
 # 
 # What directory do you want your static html pages to go into?
 #py["static_dir"] = "/path/to/static/dir"
