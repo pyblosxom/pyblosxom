@@ -39,6 +39,9 @@ py['blog_encoding'] = "iso-8859-1"
 # it in correctly could result in a feed that doesn't validate.
 py["blog_rights"] = "Copyright 2005 Joe Bobb"
 
+# Where is this blog geographically located?
+py['blog_icbm'] = '37.448089,-122.159259'
+
 # Where are this blog's entries kept?
 py['datadir'] = "/path/to/blog"
 

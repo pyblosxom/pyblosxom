@@ -295,6 +295,11 @@ from your <filename>config.py</filename> file.
 <entry>the email address of the author of the blog (feel free to obfuscate it)</entry>
 <entry>joe at joe dot com</entry>
 </row>
+<row>
+<entry>blog_icbm</entry>
+<entry>The geographical location of your blog, as a lat/long pair.</entry>
+<entry>37.448089,-122.159259</entry>
+</row>
 </tbody>
 </tgroup>
 </table>

@@ -80,6 +80,22 @@ py["blog_encoding"] = "iso-8859-1"
 </listitem>
 </varlistentry>
 
+<varlistentry><term><varname>blog_icbm</varname></term>
+<listitem>
+<simplelist columns="2" type="horiz">
+<member>REQUIRED:</member><member>no</member>
+<member>DATATYPE:</member><member>string: "<float>,<float>"</member>
+<member>DEFAULT VALUE:</member><member>N/A</member>
+</simplelist>
+<para>The geographical location of your blog as a lat/long pair, if
+appropriate. Useful as the value for the <meta name="ICBM"> taq, which is used
+by sites like e.g. http://geourl.org/ . </para>
+<programlisting role="python"><![CDATA[
+py["blog_icbm"] = "37.448089,-122.159259"
+]]></programlisting>
+</listitem>
+</varlistentry>
+
 <varlistentry><term><varname>blog_language</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">

@@ -14,6 +14,8 @@ Pertinent to users:
    week and such.  Users should set the "locale" config property to a
    valid locale if they don't want English.
 
+4. Added a $blog_icbm config variable, for use in the ICBM meta tag.
+
 
 Pertinent to developers:
 ------------------------
