@@ -1,7 +1,7 @@
 <!--
   CHAPTER FLAVOURS
 -->
-<chapter>
+<chapter id="chap_flavours">
 <title>Flavours</title>
 <para>
 PyBlosxom takes the data provided in the entries and by the plugins and
@@ -39,7 +39,7 @@ The rest of this chapter talks about the various things you can do with
 the blosxom renderer which comes with PyBlosxom.
 </para>
 
-<sect1>
+<sect1 id="flavandtemp">
 <title>Flavours and Templates</title>
 <para>
 The blosxom renderer uses the same template style that Blosxom uses.  As
@@ -125,7 +125,7 @@ created and submitted.
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="flavourfiles">
 <title>Where To Put Your Flavour Files</title>
 <para>
 If you want to override the existing flavours, add new flavours, or
@@ -206,7 +206,7 @@ at.
 </note>
 </sect1>
 
-<sect1>
+<sect1 id="tempvars">
 <title>Template Variables</title>
 <para>
 This is the list of variables that are available to your templates.
@@ -534,7 +534,7 @@ are available, and what the variables do.
 </sect1>
 
 
-<sect1>
+<sect1 id="invokeflav">
 <title>Invoking a Flavour</title>
 <para>
 The flavour for a given page is specified in the extension of the file 
@@ -638,7 +638,7 @@ above, then the following URIs will use the default flavour:
 </sect1>
 
 
-<sect1>
+<sect1 id="orderopsflav">
 <title>Order of Operations to Figure Out Which Flavour to Use</title>
 <para>
 We know that you can specify the default flavour to use in the 
@@ -677,7 +677,7 @@ The order in which we figure out which flavour to use is this:
 </sect1>
 
 
-<sect1>
+<sect1 id="examptemp">
 <title>Examples of Templates</title>
 <para>
 For examples of templates and flavours, see the included flavours

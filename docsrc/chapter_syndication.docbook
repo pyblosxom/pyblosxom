@@ -10,7 +10,7 @@ feel that you have to implement each one of them in your blog--you can most
 assuredly get away with implementing RSS 2.0 or ATOM and be just fine.
 </para>
 
-<sect1>
+<sect1 id="feedformats">
 <title>Feed formats that come with PyBlosxom</title>
 <para>
 PyBlosxom comes with a few default flavours, three of which are feeds.
@@ -103,14 +103,13 @@ http://atomenabled.org/
 </sect2>
 </sect1>
 
-<sect1>
+<sect1 id="debugfeeds">
 <title>Debugging your feeds</title>
 <para>
-There's a feed validator which is a hugely useful tool for figuring out
-whether your feed is valid and fixing bugs in your feed.
-</para>
-<para>
-http://feedvalidator.org/
+FeedValidator.org 
+(<ulink url="http://feedvalidator.org/">http://feedvalidator.org/</ulink>)
+is a hugely useful tool for figuring out whether your feed is valid and 
+fixing bugs in your feed.
 </para>
 </sect1>
 

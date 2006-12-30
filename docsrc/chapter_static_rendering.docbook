@@ -22,7 +22,7 @@ need re-rendering.
 Beyond that, it's not particularly sophisticated.
 </para>
 
-<sect1>
+<sect1 id="configstaticrend">
 <title>Configuring Static Rendering</title>
 <para>
 These are the instructions for configuring static rendering in PyBlosxom.
@@ -92,7 +92,7 @@ py["static_monthnumbers"] = 1   # i do want month numbers
 
 </sect1>
 
-<sect1>
+<sect1 id="runstaticrend">
 <title>Running Static Rendering</title>
 
 <sect2>
@@ -133,7 +133,7 @@ It works like this:
 </sect2>
 </sect1>
 
-<sect1>
+<sect1 id="rendotheruris">
 <title>Rendering Other URIs</title>
 <para>
 Some plugins provide other URIs that are part of your site, but not 
@@ -162,7 +162,7 @@ RSS feed for my main page, I would set it like this:
 
 </sect1>
 
-<sect1>
+<sect1 id="addthoughts">
 <title>Additional Thoughts</title>
 <para>
 Static rendering is pretty simplistic. We use the 

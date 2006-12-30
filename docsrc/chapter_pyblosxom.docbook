@@ -4,11 +4,12 @@
 <chapter id="pyblosxom">
 <title>PyBlosxom</title>
 
-<sect1><title>About PyBlosxom</title>
+<sect1 id="chap_pyblosxom">
+<title>About PyBlosxom</title>
 <para>
-PyBlosxom is a lightweight weblog system.  It originally started out 
-as a Python clone of Blosxom but has since evolved into a beast of its 
-own.  PyBlosxom focuses on three things:
+PyBlosxom is a lightweight weblog system.  It was originally a
+Python clone of Blosxom but has since evolved into a weblog system of its
+own reminiscent of Blosxom.  PyBlosxom focuses on three things:
 </para>
 <itemizedlist>
 <listitem>
@@ -46,7 +47,9 @@ FIXME - this needs to be re-written and more concise.
 <para>
 PyBlosxom is a small project.  As such, we have no customer support hotline,
 our documentation will be eternally half-done, and it's likely you will run
-into problems eventually unless you want a bare-bones blog.
+into problems eventually.  PyBlosxom offers mailing lists through
+SourceForge for support, we do have some documentation, and you're 
+encouraged to read the code.
 </para>
 <para>
 PyBlosxom is a CGI program at its heart.  While there have been changes to
@@ -54,7 +57,9 @@ make it work with WSGI and mod_python and other web-servers, it's still
 architected as a CGI program.  Using it in other ways may cause headaches.
 </para>
 <para>
-If this sort of thing infuriates you, we don't think you should use PyBlosxom.
+If this sort of thing infuriates you, we don't think you should use 
+PyBlosxom.  However, if this invigorates you, join the mailing lists and
+we'll work together to make PyBlosxom better for all of us.
 </para>
 <para>
 PyBlosxom is not all things to all people.  We have a framework that allows
@@ -66,14 +71,17 @@ possible that PyBlosxom may not fit your needs.
 <sect1>
 <title>Where to go for help</title>
 <para>
-The PyBlosxom project web-site is at http://pyblosxom.sourceforge.net/ .  There
-you can find up-to-date documentation, manuals, project status and mailing list
-information.
+The PyBlosxom project web-site is at <ulink
+url="http://pyblosxom.sourceforge.net/">hosted on SourceForge</ulink>.
+There you can find up-to-date documentation, manuals, project status
+and mailing list information.
 </para>
 <para>
 The pyblosxom-users mailing list is the place to go if you're having 
 difficulties.  Discussions from the mailing list affect the content of 
-this manual.
+this manual. Mailing list information can be found on our <ulink
+url="http://pyblosxom.sourceforge.net/blog/static/contact">Contact
+Us</ulink> page.
 </para>
 </sect1>
 

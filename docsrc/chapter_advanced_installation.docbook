@@ -4,6 +4,7 @@
 <chapter id="advancedinstallation">
 <title>Advanced Installation</title>
 <para>
+<anchor id="chap_advinst" />
 Don't try any of this until you've gotten your blog up and running.
 </para>
 <para>
@@ -14,13 +15,16 @@ own" kind of issue.
 </para>
 <para>
 If you ever have problems with PyBlosxom and you ask us questions on
-the pyblosxom-users or pyblosxom-devel mailing lists, make sure you
-explicitly state what things you've done from this chapter.  It'll
-go a long way in helping us to help you.
+the <ulink
+url="mailto:pyblosxom-users@lists.sourceforge.net">pyblosxom-users</ulink>
+or <ulink
+url="mailto:pyblosxom-devel@lists.sourceforge.net">pyblosxom-devel</ulink>
+mailing lists, make sure you explicitly state what things you've done
+from this chapter.  It'll go a long way in helping us to help you.
 </para>
 
 
-<sect1>
+<sect1 id="modtwistwsgi">
 <title>Using mod_python, Twisted or WSGI</title>
 <para>
 PyBlosxom 1.2 has preliminary support for other frameworks than CGI.  While
@@ -32,7 +36,7 @@ FIXME - need instructions for setting up with mod_python, Twisted, and WSGI.
 </sect1>
 
 
-<sect1>
+<sect1 id="rename">
 <title>Renaming the pyblosxom.cgi Script</title>
 <para>
 In the default installation, the PyBlosxom script is named 

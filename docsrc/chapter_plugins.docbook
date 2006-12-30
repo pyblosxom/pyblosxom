@@ -12,11 +12,11 @@ create new output data types; pull information from other non-blog sources;
 create images; and a variety of other things.
 </para>
 
-<sect1>
+<sect1 id="setpybplug">
 <title>Setting PyBloxsom up to Use Plugins</title>
 <para>
-There are two properties in your <filename>config.py</filename> file that affect 
-the behavior for loading plugins.
+There are two properties in your <filename>config.py</filename> file that 
+affect the behavior for loading plugins.
 </para>
 <para>
 The first one is the <varname>plugin_dirs</varname> property which is a list of 
@@ -33,20 +33,20 @@ This will cause PyBlosxom to look in this specific directory for plugins.
 </para>
 
 <para>
-The other property is the <varname>load_plugins</varname> property. If you don't 
-have this set at all (i.e. it's either not in the <filename>config.py</filename> 
-file or the line is commented out), PyBlosxom will load all plugins it finds 
-in the plugin directories you've specified and load them. It will look in 
-each directory in order as you've specified. It will load the plugins in 
-each directory in alphabetical order by filename.
+The other property is the <varname>load_plugins</varname> property.  If you 
+don't have this set at all (i.e. it's either not in the 
+<filename>config.py</filename> file or the line is commented out), PyBlosxom 
+will load all plugins it finds in the plugin directories you've specified 
+and load them.  It will look in each directory in order as you've specified. 
+It will load the plugins in each directory in alphabetical order by filename.
 </para>
 
 <para>
 The other way to load plugins is by specifying the plugins explicitly by 
 setting the <varname>load_plugins</varname> property.  PyBlosxom will load 
 only the plugins you've specified and will load them in the order you've 
-specified.  The <varname>load_plugins</varname> property takes a list of strings. 
-For example:
+specified.  The <varname>load_plugins</varname> property takes a list of 
+strings.  For example:
 </para>
 
 <example><title>load_plugins variable value</title>
@@ -55,14 +55,14 @@ For example:
 </example>
 
 <para>
-This will load the plugins whose filenames are <filename>calendar.py</filename>, 
-<filename>category.py</filename>, and <filename>booklist.py</filename>. It will 
-only load those plugins even if other plugins are in the directory and it will 
-load them in that order.
+This will load the plugins whose filenames are 
+<filename>calendar.py</filename>, <filename>category.py</filename>, and 
+<filename>booklist.py</filename>.  It will only load those plugins even if 
+other plugins are in the directory and it will load them in that order.
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="findplugs">
 <title>Finding Plugins</title>
 <para>
 You can find plugins in the plugin registry at 
@@ -77,7 +77,7 @@ a plugin that has the functionality you desire.
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="installplugs">
 <title>Installing Plugins</title>
 <para>
 When you're installing a plugin, refer to its documentation. The documentation 
@@ -116,7 +116,7 @@ in the plugin itself to meet your specific needs.
 </note>
 </sect1>
 
-<sect1>
+<sect1 id="writeplugs">
 <title>Writing Your Own Plugins</title>
 <para>
 You may find that you desire functionality and there is no plugin that anyone 

@@ -3,7 +3,7 @@
 -->
 <chapter id="writingentries">
 <title>Writing Entries</title>
-<sect1>
+<sect1 id="categories">
 <title>Categories</title>
 <para>
 Writing entries in PyBlosxom is fairly straightforward.  Each entry
@@ -25,7 +25,7 @@ front--you can add them as you need them.
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="formatentry">
 <title>The Format of an Entry</title>
 <para>
 PyBlosxom entries consist of three parts: the title, the metadata, and
@@ -118,7 +118,7 @@ would be filled in with <literal>The Doors - Greatest Hits Vol 1</literal>.
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="postdate">
 <title>Posting Date</title>
 <para>
 The posting date of the entry file is the modification time (also known as
@@ -177,7 +177,7 @@ the time that will show up in my blog as the posting date.
 </warning>
 </sect1>
 
-<sect1>
+<sect1 id="entryparsers">
 <title>Entry Parsers</title>
 <para>
 PyBlosxom supports only one format for entry files by default.  This format
@@ -222,7 +222,7 @@ parser plugin itself in the Python doc-string.
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="beyondeditors">
 <title>Beyond Editors</title>
 <para>
 There's no reason that all your entries have to come from editing blog entry

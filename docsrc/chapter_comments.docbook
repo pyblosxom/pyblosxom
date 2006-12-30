@@ -11,7 +11,7 @@ pingback, and CommentAPI plugins.
 FIXME - this chapter needs some serious work.
 </para>
 
-<sect1>
+<sect1 id="commentssummary">
 <title>Summary</title>
 <para>
 PyBlosxom does not come with comments functionality built-in.  Instead,
@@ -53,7 +53,7 @@ listed at the above url.
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="installcomments">
 <title>Installing the comments plugin</title>
 <para>
 Requirements:
@@ -139,7 +139,7 @@ $cmt_source - the source of the trackback
 </orderedlist>
 </sect1>
 
-<sect1>
+<sect1 id="addcommentsconf">
 <title>Additional comments plugin configuration</title>
 <sect2>
 <title>Enabling email notification</title>
@@ -167,7 +167,7 @@ py['comment_smtp_to']     = "joe@joe.com"
 </sect1>
 
 
-<sect1>
+<sect1 id="writecommenttemp">
 <title>Writing comments plugin templates</title>
 <para>
 This should explain which flavour templates are in charge of what
@@ -198,7 +198,7 @@ form stuff here.              |
 
 </sect1>
 
-<sect1>
+<sect1 id="dealwithspam">
 <title>Dealing with comment spam</title>
 <para>
 Expect it to happen.  Some folks get comment spam trickling in and others
@@ -331,7 +331,7 @@ def cb_comment_reject(args):
 </sect2>
 </sect1>
 
-<sect1>
+<sect1 id="installtrackback">
 <title>Installing trackback</title>
 <para>
 FIXME - this text probably needs fixing.
@@ -392,7 +392,7 @@ matter where you put it.
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="installpingback">
 <title>Installing pingback</title>
 <para>
 FIXME - this text probably needs fixing.
@@ -412,7 +412,7 @@ property in your <filename>config.py</filename> file.
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="installcommentapi">
 <title>Installing the CommentAPI</title>
 <para>
 FIXME - this text probably needs fixing.

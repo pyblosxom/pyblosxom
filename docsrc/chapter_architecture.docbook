@@ -2,7 +2,7 @@
   CHAPTER ARCHITECTURE
 -->
 
-<chapter>
+<chapter id="pybarchitecture">
 <title>PyBlosxom Architecture</title>
 <para>
 The architecture for PyBlosxom has evolved over time. The mission is to 
@@ -20,7 +20,7 @@ an authority when the code and this manual are in disagreement.
 FIXME - rework this whole chapter.
 </para>
 
-<sect1>
+<sect1 id="architectureparts">
 <title>Parts</title>
 <para>
 PyBlosxom is composed of several parts:
@@ -85,7 +85,7 @@ of your blog. These you can get from the flavour registry or write yourself.
 </itemizedlist>
 </sect1>
 
-<sect1>
+<sect1 id="lifecyclerequest">
 <title>Lifecycle of a PyBlosxom Request</title>
 <para>
 This is the life cycle of a single PyBlosxom request. It involves the 
@@ -190,7 +190,7 @@ Request object
 </orderedlist>
 </sect1>
 
-<sect1>
+<sect1 id="lifecyclehandler">
 <title>Lifecycle of the blosxom_handler</title>
 <para>
 This describes what the blosxom_handler does. This is the default handler 
@@ -223,7 +223,7 @@ and any other data in the Request object prior to rendering.</para>
 </orderedlist>
 </sect1>
 
-<sect1>
+<sect1 id="lifecyclerenderer">
 <title>Lifecycle of the blosxom Renderer</title>
 <para>
 The blosxom renderer renders the entries in a similar fashion to what 
@@ -263,7 +263,7 @@ templates and entry data at the time of rendering that specific piece.
 </orderedlist>
 </sect1>
 
-<sect1>
+<sect1 id="callbacks">
 <title>Callbacks</title>
 <para>
 Callbacks allow plugins to override behavior in PyBlosxom or provide
@@ -861,21 +861,21 @@ dict whether or not they adjust anything in it.
 </sect1>
 
 
-<sect1>
+<sect1 id="archentryparsers">
 <title>Entry Parsers</title>
 <para>
 FIXME
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="preandpostformat">
 <title>Pre-formatters and Post-formatters</title>
 <para>
 FIXME
 </para>
 </sect1>
 
-<sect1>
+<sect1 id="renderers">
 <title>Renderers</title>
 <para>
 FIXME 

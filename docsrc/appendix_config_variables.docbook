@@ -6,7 +6,7 @@ Here is a non-comprehensive list of configuration variables:
 
 <variablelist><title>configuration variables</title>
 
-<varlistentry><term><varname>base_url</varname></term>
+<varlistentry id="base_url"><term><varname>base_url</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -21,7 +21,7 @@ py["base_url"] = "http://pyblosxom.sourceforge.net/blog"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>blog_author</varname></term>
+<varlistentry id="blog_author"><term><varname>blog_author</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -36,7 +36,7 @@ py["blog_author"] = "Will"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>blog_description</varname></term>
+<varlistentry id="blog_description"><term><varname>blog_description</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -51,7 +51,7 @@ py["blog_description"] = "Blog of thoughts, comments, " + \
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>blog_email</varname></term>
+<varlistentry id="blog_email"><term><varname>blog_email</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -66,7 +66,7 @@ py["blog_email"] = "joe@example.com"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>blog_encoding</varname></term>
+<varlistentry id="blog_encoding"><term><varname>blog_encoding</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>yes</member>
@@ -80,23 +80,23 @@ py["blog_encoding"] = "iso-8859-1"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>blog_icbm</varname></term>
+<varlistentry id="blog_icbm"><term><varname>blog_icbm</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
-<member>DATATYPE:</member><member>string: "<float>,<float>"</member>
+<member>DATATYPE:</member><member>string: "float,float"</member>
 <member>DEFAULT VALUE:</member><member>N/A</member>
 </simplelist>
 <para>The geographical location of your blog as a lat/long pair, if
-appropriate. Useful as the value for the <meta name="ICBM"> taq, which is used
-by sites like e.g. http://geourl.org/ . </para>
+appropriate. Useful as the value for the &lt;meta name="ICBM"&gt; tag, 
+which is used by sites like e.g. http://geourl.org/ . </para>
 <programlisting role="python"><![CDATA[
 py["blog_icbm"] = "37.448089,-122.159259"
 ]]></programlisting>
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>blog_language</varname></term>
+<varlistentry id="blog_language"><term><varname>blog_language</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>yes</member>
@@ -111,7 +111,7 @@ py["blog_language"] = "en"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>blog_title</varname></term>
+<varlistentry id="blog_title"><term><varname>blog_title</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>yes</member>
@@ -125,7 +125,7 @@ py["blog_title"] = "Will's Blog of Unusual Stuff"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>codebase</varname></term>
+<varlistentry id="codebase"><term><varname>codebase</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -150,7 +150,7 @@ py["codebase"] = "/home/joe/pyblosxom-1.3.2/"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>datadir</varname></term>
+<varlistentry id="datadir"><term><varname>datadir</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>yes</member>
@@ -171,7 +171,7 @@ py["datadir"] = "e:/blogdata/datadir/"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>flavourdir</varname></term>
+<varlistentry id="flavourdir"><term><varname>flavourdir</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -194,7 +194,7 @@ py["datadir"] = "e:/blogdata/flavourdir/"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>default_flavour</varname></term>
+<varlistentry id="default_flavour"><term><varname>default_flavour</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -209,7 +209,7 @@ py["default_flavour"] = "joy"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>ignore_directories</varname></term>
+<varlistentry id="ignore_directories"><term><varname>ignore_directories</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -233,7 +233,7 @@ py["ignore_directories"] = [ "draft" ]
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>load_plugins</varname></term>
+<varlistentry id="load_plugins"><term><varname>load_plugins</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -249,7 +249,7 @@ py["load_plugins"] = ["pycalendar", "rss2renderer"]
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>locale</varname></term>
+<varlistentry id="locale"><term><varname>locale</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -271,7 +271,7 @@ py["locale"] = "nl_NL.UTF-8"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>log_file</varname></term>
+<varlistentry id="log_file"><term><varname>log_file</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -290,7 +290,7 @@ py['log_file'] = "c:/blogdata/logs/pyblosxom.log"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>log_level</varname></term>
+<varlistentry id="log_level"><term><varname>log_level</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -308,7 +308,7 @@ py['log_level'] = "warning"
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>log_filter</varname></term>
+<varlistentry id="log_filter"><term><varname>log_filter</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -329,7 +329,7 @@ py['log_filter'] = ['root', 'plugin1', 'plugin2']
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>num_entries</varname></term>
+<varlistentry id="num_entries"><term><varname>num_entries</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>
@@ -346,7 +346,7 @@ py["num_entries"] = 20
 </listitem>
 </varlistentry>
 
-<varlistentry><term><varname>plugin_dirs</varname></term>
+<varlistentry id="plugin_dirs"><term><varname>plugin_dirs</varname></term>
 <listitem>
 <simplelist columns="2" type="horiz">
 <member>REQUIRED:</member><member>no</member>

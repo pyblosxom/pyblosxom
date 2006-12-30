@@ -11,7 +11,7 @@ is very much a work in progress.
 
 <para>FIXME - absorb from wiki, Will's tips, and tutorials</para>
 
-<sect1>
+<sect1 id="allplugins">
 <title>Things all plugins should have</title>
 <para>
 All plugins should have a docstring at the top of the file that describes
@@ -205,7 +205,7 @@ def verify_installation(request):
 
 </sect1>
 
-<sect1>
+<sect1 id="logproblems">
 <title>How to log problems to a log file</title>
 <para>
 First you need to get the logger instance.  After that, you
@@ -230,7 +230,7 @@ def cb_prepare(args):
 
 </sect1>
 
-<sect1>
+<sect1 id="storepluginstate">
 <title>How to store plugin state between callbacks</title>
 <para>
 The easiest way to store state between callbacks is to store the data
@@ -258,7 +258,7 @@ def cb_filelist(args):
 ]]></programlisting>
 </sect1>
 
-<sect1>
+<sect1 id="implementcallback">
 <title>How to implement a callback</title>
 <para>
 If you want to implement a callback, you add a function corresponding
@@ -286,7 +286,7 @@ that are available, their arguments, and return values.
 
 </sect1>
 
-<sect1>
+<sect1 id="writeentryparser">
 <title>Writing an entryparser</title>
 <para>
 Entry parsing functions take in a filename and the Request object.
@@ -343,7 +343,7 @@ def parse(filename, request):
 ]]></programlisting>
 </sect1>
 
-<sect1>
+<sect1 id="writepreformatter">
 <title>Writing a preformatter plugin</title>
 <para>
 FIXME - need more about preformatters here
