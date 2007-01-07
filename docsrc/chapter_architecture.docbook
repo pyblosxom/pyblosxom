@@ -455,9 +455,16 @@ When a function returns a list of entries, the callback will stop.
 <sect2>
 <title>cb_filestat</title>
 <para>
-The filestat callback allows plugins to override the mtime of
-the entry.  One of the contributed plugins uses this to set the
+The filestat callback allows plugins to provide mtimes for entries.
+Plugins may use this to override the mtime stored in the filesystem. 
+For example, one of the contributed plugins uses this to set the 
 mtime to the time specified in the entry's filename.
+</para>
+<para>
+Plugins may also use this to provide a cheaper alternative to filesystem
+stat calls, a notorious performance drag,  The hardcodedates plugin, for
+example, stores mtimes in a file: it reads the file once at startup then 
+returns mtimes from its in-memory database.
 </para>
 <para>
 Functions that implement this callback will get an args dict containing:
@@ -468,8 +475,10 @@ Functions that implement this callback will get an args dict containing:
 entry</para></listitem>
 </itemizedlist>
 <para>
-Functions that implement this callback must return the input args
-dict whether or not they adjust anything in it.
+Functions that implement this callback must return the input args dict
+whether or not they adjust anything in it.  The callback chain will stop 
+as soon as a callback modifies mtime.  If no plugin handles the callback, 
+PyBlosxom will fall back to calling os.stat().
 </para>
 </sect2>
 

@@ -524,11 +524,18 @@ def filestat(request, filename):
         return filestat_cache[filename]     
     
     argdict = {"request": request, "filename": filename,    
-               "mtime": os.stat(filename)}      
+               "mtime": [0] * 10}
     argdict = run_callback("filestat",      
                            argdict,     
                            mappingfunc=lambda x,y:y,    
+                           donefunc=lambda x: x["mtime"][8] != 0,
                            defaultfunc=lambda x:x)      
+
+    # no plugin handled cb_filestat; we default to asking the
+    # filesystem
+    if argdict["mtime"][8] == 0:
+        argdict["mtime"] = os.stat(filename)
+
     timetuple = time.localtime(argdict["mtime"][8])     
     filestat_cache[filename] = timetuple    
      

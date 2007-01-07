@@ -16,11 +16,18 @@ Pertinent to users:
 
 4. Added a $blog_icbm config variable, for use in the ICBM meta tag.
 
+5. Changed the num_entries property in config.py from 40 to a much more
+   conservative 5.  (Thanks Jon!)
+
 
 Pertinent to developers:
 ------------------------
 
-1. Lots of code clean-up, documentation, and some refactoring.
+1. Lots of code clean-up, documentation, test-code, and some refactoring.
+
+2. cb_filestat will only do an os.stat if no plugin handles the filestat.
+   Previously, cb_filestat did an os.stat and ran through all the
+   plugins allowing them to over-ride it.
 
 
 Changes between 1.3.1 and 1.3.2
