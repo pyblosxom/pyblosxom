@@ -24,10 +24,12 @@ You can get the comments plugin via a couple of different methods:
 <orderedlist numeration="arabic">
 <listitem>
 <para>
-You can get it in the
-<a href="http://sourceforge.net/project/showfiles.php?group_id=67445&amp;package_id=145140">
-contributed plugins pack</a>. This is probably the best and easiest way to get
-the comments plugin.
+You can get it in a contributed plugins pack.  These are on the
+download section of our web-site.  Check here:
+http://sourceforge.net/project/showfiles.php?group_id=67445&amp;package_id=145140
+</para>
+<para>
+This is probably the best and easiest way to get the comments plugin.
 </para>
 </listitem>
 <listitem>
@@ -38,9 +40,9 @@ a version of the comments plugin that meets your specific needs.
 </listitem>
 <listitem>
 <para>
-You can get it via CVS--there are instructions on the
-<a href="http://cvs.sourceforge.net/viewcvs.py/pyblosxom/pyblosxom/contrib/plugins/comments/">
-project page of our web-site</a>.
+You can get it via CVS--there are instructions on the project page
+of our web-site.  Check here: 
+http://cvs.sourceforge.net/viewcvs.py/pyblosxom/pyblosxom/contrib/plugins/comments/
 </para>
 </listitem>
 </orderedlist>
@@ -148,7 +150,6 @@ feature, add the following properties to your <filename>config.py</filename> fil
 </para>
 
 <programlisting role="ascii"><![CDATA[py['comment_smtp_server'] - your SMTP server
-py['comment_mta_cmd']     - alternatively, the path to your MTA
 py['comment_smtp_from']   - the address sending the notification
 py['comment_smtp_to']     - the address receiving the notification
 ]]></programlisting>
@@ -158,7 +159,6 @@ For example:
 </para>
 
 <programlisting role="ascii"><![CDATA[py['comment_smtp_server'] = "localhost"
-py['comment_mta_cmd']     = "/usr/bin/mail"
 py['comment_smtp_from']   = "joe@joe.com"
 py['comment_smtp_to']     = "joe@joe.com"
 ]]></programlisting>
@@ -214,105 +214,71 @@ Also, you can run multiple comment rejection plugins.  The comments plugin
 calls them one after another until one has rejected the plugin or all have
 said it's ok.
 </para>
-<para>
-The recommended comment spam solution is <filename>akismetcomments</filename>
-and <filename>check_javascript</filename>, in parallel.
-<filename>akismetcomments</filename> uses
-<a href="http://akismet.com/">Akismet</a>, a centralized comment spam database
-and filter, and
-<filename>check_javascript</filename> simply checks that the client's user
-agent supports Javascript. (Spam bots almost never do.)
-</para>
 
 <sect2>
-<title>akismetcomments</title>
+<title>wbgcomment_blacklist</title>
 <para>
-<a href="http://akismet.com/">Akismet</a> is a spam filter service developed
-and operated by <a href="http://automattic.com/">Automattic</a>, the people
-behind <a href="http://wordpress.com/">WordPress</a>. Akismet maintains an
-up-to-date blacklist, Bayesian filter, and other tools to determine whether
-blog comments are spam or valid, ie "ham."
+I wrote a simple comment rejector which rejects based on whether certain
+words show up in the comment.  I noticed that "casino", "blackjack", and
+"pharmacy" show up with reckless abandon and yet none of my posts talks
+about anything related to these terms.
 </para>
 <para>
-The <filename>akismetcomments</filename> plugin passes every comment on your
-blog to Akismet, which decides whether the comment is spam or ham. If spam,
-the comment is logged and discarded; if ham, it is posted to your blog.
-</para>
-<para>
-To use <filename>akismetcomments</filename>, you'll need to
-<a href="http://faq.wordpress.com/2005/10/19/api-key/">sign up for a
-Wordpress.com API key</a>.
-</para>
-<para>
-After you have your API key, copy <filename>akismetcomments.py</filename> and
-<filename>akismet.py</filename> to your plugin directory. Add an
-<varname>akismet_api_key</varname> config variable with to your API key to your
-<filename>config.py</filename>. Also, make sure the <varname>baseurl</varname>
-config variable is defined:
+To get it running, make sure the comments plugin is installed and working
+first.  Then get the wbgcomment_blacklist plugin from my web-site.  Then
+set the <varname>comment_rejected_words</varname> property in your
+<filename>config.py</filename> file like this:
 </para>
 
-<programlisting role="ascii"><![CDATA[py['baseurl'] = "joe.com"
-py['akismet_api_key] = "ABQIAAAAg88GzFz..."
+<programlisting role="python"><![CDATA[py["comment_rejected_words"] = ["poker", "casino", "gambling"]
 ]]></programlisting>
 
-<para>
-Finally, your blog's web server will need to be able to make outbound HTTP
-connections on port 80 to <filename>api-key.rest.akismet.com</filename>. Some
-hosting providers and firewalls may prevent this. If you're not sure about
-this, check with your webmaster or hosting provider.
-</para>
-<para>
-<filename>akismetcomments</filename> was written by
-<a href="http://mako.cc/">Benjamin 'Mako' Hill</a> and
-<a href="http://bwinton.latte.ca/">Blake Winton</a>.
-</para>
+<note>
+  <title>good blacklists</title>
+  <para>
+  Each blog covers different topics and thus your word list will almost 
+  certainly differ from mine.  I figured my word list out mostly by waiting
+  for my blog to get comment spam and then picking out specific words in
+  the spam to use for signifying automatic rejection.
+  </para>
+  <para>
+  Every month or so, make sure the list of rejected words still makes sense.
+  For example, if I started talking about sleazy poker nights, then I should 
+  probably remove most of the poker-related words.
+  </para>
+</note>
 </sect2>
 
 <sect2>
-<title>check_javascript</title>
+<title>nospam plugin</title>
 <para>
-Comment spam is usually sent by automated spam bots, which blindly send HTTP
-POSTs to a large, static list of blog addresses. These spam bots have very
-little in common with web browsers. In particular, they rarely parse or render
-HTML, and even more rarely run Javascript.
+The <filename>nospam</filename> plugin was written by Steven
+Armstrong.  It uses PIL (Python Imaging Library) to create
+images of 5 digit numbers.  The person writing the comment
+has to type in the number they see in the box for the comment
+to go through.
 </para>
 <para>
-Given this, Javascript can be an effective way to determine whether a comment was
-submitted by a spam bot or a web browser. <filename>check_javascript</filename>
-uses a small piece of Javascript on the client side to set the value of an
-<variable>input</variable> element in the comment form, which it checks for on
-the server.
-</para>
-<para>
-
-To use <filename>check_javascript</filename>, first copy
-<filename>check_javascript.py</filename> to your plugins directory. Then
-include this hidden input element and Javascript in your flavour's
-<variable>comment-form</variable> template:
+As of this writing, there are more details here: 
+http://pyblosxom.sourceforge.net/blog/registry/input/comments/nospam
+and
+http://www.c-area.ch/code/pyblosxom/plugins/nospam.py
 </para>
 
-<programlisting role="ascii"><![CDATA[
-...
-<input type="hidden" name="secretToken" id="secretTokenInput"
-  value="pleaseDontSpam" />
-</form>
-
-<script type="text/javascript">
-// used by check_javascript.py. this is almost entirely backwards compatible,
-// back to 4.x browsers.
-document.getElementById("secretTokenInput").value = "$blog_title";
-</script>
-]]></programlisting>
-
-<para>
-It's included in the <filename>comment-form.html</filename> template in the 
-<filename>contrib/plugins/comments/flavours/</filename>, so if you use that
-template, you're good to go.
-</para>
-<para>
-<filename>check_javascript</filename> was written by
-<a href="http://snarfed.org/">Ryan Barrett</a>.
-</para>
+<note>
+  <title>a warning about captchas</title>
+  <para>
+  Captchas require that the user be able to see with their eyes
+  and recognize the text they need to type in.  As such, this is
+  prevents anyone who is using a web-browser that doesn't display
+  images or anyone who cannot see from leaving comments on your
+  site because they cannot perform the captcha.
+  </para>
+  <para>
+  If you want your site to be available to all people, don't
+  use captchas.
+  </para>
+</note>
 </sect2>
 
 <sect2>
