@@ -528,7 +528,7 @@ def filestat(request, filename):
     argdict = run_callback("filestat",      
                            argdict,     
                            mappingfunc=lambda x,y:y,    
-                           donefunc=lambda x: x["mtime"][8] != 0,
+                           donefunc=lambda x: x and x["mtime"][8] != 0,
                            defaultfunc=lambda x:x)      
 
     # no plugin handled cb_filestat; we default to asking the
