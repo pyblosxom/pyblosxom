@@ -7,14 +7,23 @@ P, TD {
    font-size: 10pt;
 }
 
-// TH {
-//    font-size: 10pt;
-//    background: #eeeeff;
-//    font-weight: bold;
-// }
-
 LI {
    font-size: 10pt;
+}
+
+.varname {
+   background-color: #FFFFEE;
+   color: #0000DD;
+}
+
+.literal {
+   background-color: #FFFFEE;
+   color: #0000DD;
+}
+
+.filename {
+   background-color: #FFFFEE;
+   color: #0000DD;
 }
 
 .programlisting {
