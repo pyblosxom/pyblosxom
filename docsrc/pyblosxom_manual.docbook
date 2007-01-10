@@ -45,13 +45,13 @@
 <releaseinfo>$Id$</releaseinfo>
 
 <copyright>
-  <year>2005, 2006</year>
+  <year>2005, 2006, 2007</year>
   <holder>Will Guaraldi</holder>
 </copyright>
 
 <legalnotice>
 <para>
-Copyright (c) 2005, 2006 Will Guaraldi.  Permission is granted to copy, 
+Copyright (c) 2005, 2006, 2007 Will Guaraldi.  Permission is granted to copy, 
 distribute and/or modify this document under the terms of the GNU Free 
 Documentation License, Version 1.1 or any later version published by the Free 
 Software Foundation; with the Invariant Sections being no Invariant Sections, 
