@@ -19,14 +19,14 @@ in having comments can install and everyone else can ignore.
 You can get the latest stable version of the comments plugin from the
 <ulink url="http://sourceforge.net/project/showfiles.php?group_id=67445&amp;package_id=145140">
 contributed plugins pack</ulink>. Alternatively, you can get the latest version
-<ulink url="http://cvs.sourceforge.net/viewcvs.py/pyblosxom/pyblosxom/contrib/plugins/comments/">
-from CVS</ulink>, which is even more recent, but may be broken. Caveat hacker!
+<ulink url="http://pyblosxom.svn.sourceforge.net/viewvc/pyblosxom/trunk/contrib/plugins/comments/">from SVN</ulink>, 
+which is even more recent but may be broken.  Caveat hacker!
 </para>
 <para>
 The comments plugin also has a
-<ulink url="http://pyblosxom.svn.sourceforge.net/viewvc/*checkout*/pyblosxom/trunk/contrib/plugins/comments/README">
-README file</ulink> that has more information on installing comments, traceback,
-pingback, and the commentAPI.
+<ulink url="http://pyblosxom.svn.sourceforge.net/viewvc/*checkout*/pyblosxom/trunk/contrib/plugins/comments/README">README file</ulink> 
+that has more information on installing comments, traceback, pingback, and 
+the commentAPI.
 </para>
 </sect1>
 
@@ -53,11 +53,11 @@ file.</para>
 </listitem>
 
 <listitem>
-<para>Comments are stored in a directory which will parallel the data
-directory.  The comments themselves are stored as XML files named
-entryname-datetime.suffix.  The comment system allows you to specify
-the directory where the comment directory tree will stored, and the
-suffix used for comment files.  You need to make sure that this
+<para>Comments are stored in a directory tree which will parallel the data
+directory tree.  The comments themselves are stored as XML files named
+<literal>entryname-datetime.suffix</literal>.  The comment system allows 
+you to specify the directory where the comment directory tree will stored, 
+and the suffix used for comment files.  You need to make sure that this
 directory is writable by the pyblosxom CGI scripts.
 </para>
 <para>
@@ -94,24 +94,74 @@ Available in the <filename>story</filename> and
 <filename>comment-story</filename> templates:
 </para>
 
-<programlisting role="ascii"><![CDATA[$num_comments - Contains an integer count of the number of comments
-                associated with this entry
-]]></programlisting>
-   
+<table>
+<title>Template variables from comments.py available in story and 
+comment-story</title>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>variable name</entry>
+<entry>description</entry>
+</row>
+</thead>
+
+<tbody>
+<row>
+<entry>num_comments</entry>
+<entry>contains an integer count of the number of comments associated with 
+   this entry</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
 <para>
 Available in the <filename>comment</filename> template:
 </para>
 
-<programlisting role="ascii"><![CDATA[$cmt_title - the title of the comment
-$cmt_description - the content of the comment or excerpt of the 
-                   trackback/pingback
-$cmt_link - the pingback link referring to this entry
-$cmt_author - the author of the comment or trackback
-$cmt_optionally_linked_author - the author, wrapped in an <a href> tag
-                                to $cmt_link *if* it was provided
-$cmt_pubDate - the date and time of the comment/trackback/pingback
-$cmt_source - the source of the trackback
-]]></programlisting>
+<table>
+<title>Template variables from comments.py</title>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>variable name</entry>
+<entry>description</entry>
+</row>
+</thead>
+
+<tbody>
+<row>
+<entry>cmt_title</entry>
+<entry>the title of the comment</entry>
+</row>
+<row>
+<entry>cmt_description</entry>
+<entry>the content of the comment or excerpt of the trackback/pingback</entry>
+</row>
+<row>
+<entry>cmt_link</entry>
+<entry>the pingback link referring to this entry</entry>
+</row>
+<row>
+<entry>cmt_author</entry>
+<entry>the author of the comment or trackback</entry>
+</row>
+<row>
+<entry>cmt_optionally_linked_author</entry>
+<entry>the author, wrapped in an &lt;a href&gt; tag to 
+   <varname>$cmt_link</varname> *if* it was provided</entry>
+</row>
+<row>
+<entry>cmt_pubDate</entry>
+<entry>the date and time of the comment/trackback/pingback</entry>
+</row>
+<row>
+<entry>cmt_source</entry>
+<entry>the source of the trackback</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
 
 </listitem>
 </orderedlist>
@@ -123,38 +173,72 @@ $cmt_source - the source of the trackback
 <title>Enabling email notification</title>
 <para>
 The comment system can notify you via e-mail when new
-comments/trackbacks/pingbacks are posted.  If you want to enable this 
-feature, add the following properties to your <filename>config.py</filename> file:
+comments/trackbacks/pingbacks are posted.  There are two ways to configure
+this feature.  The first is to have email notifications sent through your
+MTA via SMTP and the second is to have email notifications sent through
+your MTA via a local command.
+</para>
+<para>
+If you want to enable this feature, add the following properties to 
+your <filename>config.py</filename> file:
 </para>
 
-<programlisting role="ascii"><![CDATA[py['comment_smtp_server'] - your SMTP server
+<programlisting role="ascii"><![CDATA[
+py['comment_smtp_server'] - your SMTP server
+
+OR 
+
 py['comment_mta_cmd']     - alternatively, the path to your MTA
+
+AND THEN 
+
 py['comment_smtp_from']   - the address sending the notification
 py['comment_smtp_to']     - the address receiving the notification
+
 ]]></programlisting>
 
 <para>
-For example:
+For example, this sends email through your MTA via SMTP connecting
+to localhost:
 </para>
 
-<programlisting role="ascii"><![CDATA[py['comment_smtp_server'] = "localhost"
+<programlisting role="ascii"><![CDATA[
+py['comment_smtp_server'] = "localhost"
+py['comment_smtp_from']   = "joe@joe.com"
+py['comment_smtp_to']     = "joe@joe.com"
+
+]]></programlisting>
+
+<para>
+This sends email through your MTA via the command 
+<literal>/usr/bin/mail</literal>:
+</para>
+<programlisting role="ascii"><![CDATA[
 py['comment_mta_cmd']     = "/usr/bin/mail"
 py['comment_smtp_from']   = "joe@joe.com"
 py['comment_smtp_to']     = "joe@joe.com"
+
 ]]></programlisting>
 
 </sect2>
-</sect1>
 
+<sect2>
+<title>Problems you might have</title>
+<para>
+FIXME
+</para>
+</sect2>
+</sect1>
 
 <sect1 id="writecommenttemp">
 <title>Writing comments plugin templates</title>
 <para>
-This should explain which flavour templates are in charge of what
-using an example.
+This "diagram" shows which templates are responsible for what for rendering
+a single entry.
 </para>
 
-<programlisting role="ascii"><![CDATA[<div class="news">           <- story.html
+<programlisting role="ascii"><![CDATA[
+<div class="news">           <- story.html
 <h2>$title</h2>               |
 <div class="content">         |
 ...                           |
@@ -174,6 +258,7 @@ $blah                         |
 form stuff here.              |
 </div>                        |
 </div>                       <-
+
 ]]></programlisting>
 
 </sect1>
@@ -183,25 +268,31 @@ form stuff here.              |
 <para>
 Expect it to happen.  Some folks get comment spam trickling in and others
 get a torrential downpour.  It's best to deal with it from the start.
+It's also something you're going to have to deal with every few months
+as spam techniques change and your needs change.
 </para>
 <para>
-As of contributed plugins pack 1.2, the comments plugin has a
-<literal>comment_reject</literal> callback which allows other plugins to
-examine the comment and reject it according to their individual heuristics.
+If this doesn't sound like something you want to actively maintain on
+your blog, then you should encourage people to email comments to you
+and rely upon your email spam-prevention.
 </para>
 <para>
-Also, you can run multiple comment rejection plugins.  The comments plugin
-calls them one after another until one has rejected the plugin or all have
-said it's ok.
+As of contributed plugins pack 1.2 (March 27, 2005), the comments plugin has 
+a <literal>comment_reject</literal> callback which allows plugins to
+examine each comment and reject it according to the plugin's heuristics.
+Because this is done in a callback, you can have multiple comment rejection
+plugins that handle different situations.  A comment won't be accepted
+until it has been looked at by each comment rejection plugin you have
+running on your blog.
 </para>
 <para>
 The recommended comment spam solution is <filename>akismetcomments</filename>
 and <filename>check_javascript</filename>, in parallel.
 <filename>akismetcomments</filename> uses
-<ulink url="http://akismet.com/">Akismet</ulink>, a centralized comment spam database
-and filter, and
-<filename>check_javascript</filename> simply checks that the client's user
-agent supports Javascript. (Spam bots almost never do.)
+<ulink url="http://akismet.com/">Akismet</ulink>, a centralized comment 
+spam database and filter, and <filename>check_javascript</filename> simply 
+checks that the client's user agent supports Javascript.  (Spam bots almost 
+never do.)
 </para>
 
 <sect2>
@@ -210,14 +301,14 @@ agent supports Javascript. (Spam bots almost never do.)
 <ulink url="http://akismet.com/">Akismet</ulink> is a spam filter service
 developed and operated by
 <ulink url="http://automattic.com/">Automattic</ulink>, the people behind
-<ulink url="http://wordpress.com/">WordPress</ulink>. Akismet maintains an
+<ulink url="http://wordpress.com/">WordPress</ulink>.  Akismet maintains an
 up-to-date blacklist, Bayesian filter, and other tools to determine whether
-blog comments are spam or valid, ie "ham."
+blog comments are spam or valid, ie "ham".
 </para>
 <para>
 The <filename>akismetcomments</filename> plugin passes every comment on your
-blog to Akismet, which decides whether the comment is spam or ham. If spam,
-the comment is logged and discarded; if ham, it is posted to your blog.
+blog to Akismet, which decides whether the comment is spam or ham.  If spam,
+the comment is logged and discarded; if ham, it is accepted to your blog.
 </para>
 <para>
 To use <filename>akismetcomments</filename>, you'll need to
@@ -228,18 +319,20 @@ Wordpress.com API key</ulink>.
 After you have your API key, copy <filename>akismetcomments.py</filename> and
 <filename>akismet.py</filename> to your plugin directory. Add an
 <varname>akismet_api_key</varname> config variable with to your API key to your
-<filename>config.py</filename>. Also, make sure the <varname>baseurl</varname>
+<filename>config.py</filename>.  Also, make sure the <varname>baseurl</varname>
 config variable is defined:
 </para>
 
-<programlisting role="ascii"><![CDATA[py['baseurl'] = "joe.com"
+<programlisting role="ascii"><![CDATA[
+py['baseurl']        = "joe.com"
 py['akismet_api_key] = "ABQIAAAAg88GzFz..."
+
 ]]></programlisting>
 
 <para>
 Finally, your blog's web server will need to be able to make outbound HTTP
-connections on port 80 to <filename>api-key.rest.akismet.com</filename>. Some
-hosting providers and firewalls may prevent this. If you're not sure about
+connections on port 80 to <filename>api-key.rest.akismet.com</filename>.  Some
+hosting providers and firewalls may prevent this.  If you're not sure about
 this, check with your webmaster or hosting provider.
 </para>
 <para>
@@ -258,16 +351,15 @@ little in common with web browsers. In particular, they rarely parse or render
 HTML, and even more rarely run Javascript.
 </para>
 <para>
-Given this, Javascript can be an effective way to determine whether a comment was
-submitted by a spam bot or a web browser. <filename>check_javascript</filename>
-uses a small piece of Javascript on the client side to set the value of an
-<varname>input</varname> element in the comment form, which it checks for on
-the server.
+Given this, Javascript can be an effective way to determine whether a 
+comment was submitted by a spam bot or a web browser. 
+<filename>check_javascript</filename> uses a small piece of Javascript on 
+the client side to set the value of an <varname>input</varname> element 
+in the comment form, which it checks for on the server.
 </para>
 <para>
-
 To use <filename>check_javascript</filename>, first copy
-<filename>check_javascript.py</filename> to your plugins directory. Then
+<filename>check_javascript.py</filename> to your plugins directory.  Then
 include this hidden input element and Javascript in your flavour's
 <varname>comment-form</varname> template:
 </para>
@@ -283,6 +375,7 @@ include this hidden input element and Javascript in your flavour's
 // back to 4.x browsers.
 document.getElementById("secretTokenInput").value = "$blog_title";
 </script>
+
 ]]></programlisting>
 
 <para>
@@ -340,6 +433,7 @@ def cb_comment_reject(args):
     # FIXME - code for figuring out whether this comment should
     # be rejected or not goes here.  If you want to reject the
     # comment, return 1.  Otherwise return 0.
+
 ]]></programlisting>
 
 </example>
@@ -352,8 +446,8 @@ def cb_comment_reject(args):
 If you want to support
 <ulink url="http://www.sixapart.com/pronet/docs/trackback_spec">
 trackbacks</ulink>, copy 
-<filename>contrib/plugins/comments/plugins/trackback.py</filename> to your plugins 
-directory.  Then add <literal>"trackback"</literal> to the 
+<filename>contrib/plugins/comments/plugins/trackback.py</filename> to your 
+plugins directory.  Then add <literal>"trackback"</literal> to the 
 <varname>load_plugins</varname> property in your <filename>config.py</filename> 
 file.
 </para>
@@ -367,7 +461,9 @@ inserting the following HTML in story.html and comment-story.html
 files:
 </para>
 
-<programlisting role="html"><![CDATA[<a href="$base_url/trackback/$file_path" title="Trackback">TB</a> 
+<programlisting role="html"><![CDATA[
+<a href="$base_url/trackback/$file_path" title="Trackback">TB</a> 
+
 ]]></programlisting>
 
 <para>
@@ -379,7 +475,8 @@ The <literal>/trackback</literal> URL prefix is configurable with the
 You can supply an embedded RDF description of the trackback ping:
 </para>
 
-<programlisting role="html"><![CDATA[<!--
+<programlisting role="html"><![CDATA[
+<!--
   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
            xmlns:dc="http://purl.org/dc/elements/1.1/"
            xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
@@ -391,6 +488,7 @@ You can supply an embedded RDF description of the trackback ping:
  />
     </rdf:RDF>
 -->
+
 ]]></programlisting>
 
 <para>
@@ -407,18 +505,20 @@ If you want to support
 <ulink url="http://www.hixie.ch/specs/pingback/pingback">pingbacks</ulink>,
 copy <filename>contrib/plugins/comments/plugins/xmlrpc_pingback.py</filename>
 and <filename>contrib/xmlrpc_plugins/xmlrpc.py</filename>
-to your plugins directory. Make sure you have the <varname>base_url</varname>
-property defined in your <filename>config.py</filename> file. Then add
+to your plugins directory.  Make sure you have the <varname>base_url</varname>
+property defined in your <filename>config.py</filename> file.  Then add
 <literal>"xmlrpc_pingback"</literal> to the <varname>load_plugins</varname>
 property in your <filename>config.py</filename> file.
 </para>
-<para>
 
+<para>
 You'll need to advertise a pingback link in your <filename>head</filename>
 template. Add the following tag to the <varname>meta</varname> section:
 </para>
 
-<programlisting role="html"><![CDATA[  <link rel="pingback" href="http://joe.com/RPC" />
+<programlisting role="html"><![CDATA[
+  <link rel="pingback" href="http://joe.com/RPC" />
+
 ]]></programlisting>
 
 <para>
@@ -434,13 +534,14 @@ FIXME - this text probably needs fixing.
 <para>
 If you want to support
 <ulink url="http://wellformedweb.org/story/9">CommentAPI</ulink>, copy 
-<filename>contrib/plugins/comments/plugins/commentAPI.py</filename> to your plugins 
-directory.  If you enable CommentAPI in your RSS feed (see below), some RSS 
-aggregator programs will provide an interface that can post a comment to a blog 
-entry.
+<filename>contrib/plugins/comments/plugins/commentAPI.py</filename> to your 
+plugins directory.  If you enable CommentAPI in your RSS feed (see below), 
+some RSS aggregator programs will provide an interface that can post a 
+comment to a blog entry.
 </para>
 <para>
-You need to have comments.py installed in order for this to work.
+You need to have <literal>comments.py</literal> installed in order for this 
+to work.
 </para>
 <para>
 Then you must add the CommentAPI tags to your RSS 2.0 feed.  The best 
@@ -448,14 +549,18 @@ way to do this is to add an XML namespace declaration to the rss
 element:
 </para>
 
-<programlisting role="xml"><![CDATA[xmlns:wfw="http://wellformedweb.org/CommentAPI"
+<programlisting role="xml"><![CDATA[
+xmlns:wfw="http://wellformedweb.org/CommentAPI"
+
 ]]></programlisting> 
 
 <para>
 Then inside your RSS items you need to add a wfw:comment element:
 </para>
 
-<programlisting role="xml"><![CDATA[<wfw:comment>###commentAPI###/$file_path</wfw:comment>
+<programlisting role="xml"><![CDATA[
+<wfw:comment>###commentAPI###/$file_path</wfw:comment>
+
 ]]></programlisting>
 
 <para>    
