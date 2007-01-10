@@ -34,6 +34,11 @@
   <surname>Guaraldi</surname>
   <contrib>Primary author</contrib>
 </author>
+<author>
+  <firstname>Ryan</firstname>
+  <surname>Barrett</surname>
+  <contrib>Contributing author</contrib>
+</author>
 </authorgroup>
 
 <date>$Date$</date>
@@ -62,7 +67,7 @@ This manual will cover all aspects of using and developing for PyBlosxom.  It
 is a work in progress.
 </para>
 <para>
-Version: 1.3.3
+Version: 1.3.4
 </para>
 </abstract>
 
@@ -145,6 +150,13 @@ url="http://pyblosxom.sourceforge.net/">http://pyblosxom.sourceforge.net/.</ulin
 Modifications of Makefile to allow PDF and single file HTML documents.  
 Modifications to non-code specific areas needing clarification or updating.  
 Added Docbook HTML links in many places.  (Thanks Lance!)
+</para>
+<para>
+1.3.4 - 2007-01-10 - ryanbarrett
+</para>
+<para>
+Updated comments chapter. Included new config variables, template variables,
+and comment spam plugins, Updated trackback and pingback sections.
 </para>
 </sect1>
 
