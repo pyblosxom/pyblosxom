@@ -158,6 +158,12 @@ Added Docbook HTML links in many places.  (Thanks Lance!)
 Updated comments chapter. Included new config variables, template variables,
 and comment spam plugins, Updated trackback and pingback sections.
 </para>
+<para>
+1.3.5 - 2007-01-25 - ryanbarrett
+</para>
+<para>
+Added AJAX section to comments chapter.
+</para>
 </sect1>
 
 </preface>

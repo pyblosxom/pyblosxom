@@ -26,7 +26,7 @@ which is even more recent but may be broken.  Caveat hacker!
 The comments plugin also has a
 <ulink url="http://pyblosxom.svn.sourceforge.net/viewvc/*checkout*/pyblosxom/trunk/contrib/plugins/comments/README">README file</ulink> 
 that has more information on installing comments, traceback, pingback, and 
-the commentAPI.
+the comment API.
 </para>
 </sect1>
 
@@ -168,7 +168,7 @@ Available in the <filename>comment</filename> template:
 </sect1>
 
 <sect1 id="addcommentsconf">
-<title>Additional comments plugin configuration</title>
+<title>Email notification</title>
 <sect2>
 <title>Enabling email notification</title>
 <para>
@@ -261,6 +261,94 @@ form stuff here.              |
 
 ]]></programlisting>
 
+</sect1>
+
+<sect1 id="ajax">
+<title>AJAX commenting</title>
+<para>
+Comment previewing and posting can optionally use
+<ulink url="http://en.wikipedia.org/wiki/Ajax_(programming)">AJAX</ulink>,
+as opposed to full HTTP POST requests. This avoids a full-size roundtrip and
+re-render, so commenting feels faster and more lightweight.
+</para>
+<para>
+AJAX commenting degrades gracefully in older browsers. If the user's browser
+doesn't support JavaScript or XmlHttpRequest, or if the user has turned
+JavaScript off, comment posting and preview will use normal HTTP POST.
+</para>
+
+<sect2 id="enabling">
+<title>Enabling</title>
+<para>
+To enable AJAX commenting in your pyblosxom installation, just copy
+<literal>comments.js</literal> to your plugin directory and add the following
+JavaScript to your <literal>comment-form</literal> template. (It's already
+included in the <literal>comment-form.html</literal> template that comes with
+the comments plugin.)
+</para>
+<para>
+First, add a <literal>comment-anchor</literal> tag to the beginning of the
+template:
+</para>
+
+<programlisting role="html"><![CDATA[
+<p id="comment-anchor" />
+]]></programlisting>
+
+<para>
+Add an <literal>onsubmit</literal> handler to the <literal>form</literal> tag:
+</para>
+
+<programlisting role="html"><![CDATA[
+<form method="post" action="$base_url/$file_path#comment-anchor"
+      name="comments_form" id="comments_form" onsubmit="return false;">
+]]></programlisting>
+
+<para>
+If you run pyblosxom inside
+<ulink url="http://cgiwrap.sourceforge.net/">cgiwrap</ulink>, remove
+<literal>#comment-anchor</literal> from the URL in the action attribute, since
+it confuses cgiwrap. (If AJAX comment previewing and posting don't work, try
+removing <literal>#comment-anchor</literal> first. Your hosting provider may
+be using cgiwrap without your knowledge. )
+</para>
+<para>
+Next, add <literal>onclick</literal> handlers to the button
+<literal>input</literal> tags:
+</para>
+
+<programlisting role="html"><![CDATA[
+<input value="Preview" name="preview" type="button" id="preview"
+       onclick="send_comment('preview');" />
+<input value="Submit" name="submit" type="button" id="post"
+       onclick="send_comment('post');" />
+]]></programlisting>
+
+<para>
+Finally, include this <literal>script</literal> tag somewhere after the
+<literal>form</literal> closing tag:
+</para>
+
+<programlisting role="html"><![CDATA[
+<script type="text/javascript" src="/comments.js"></script>
+]]></programlisting>
+
+<para>
+The separate closing <literal>&lt;/script&gt;</literal> tag is necessary for
+IE. Without it, IE won't actually run the code in
+<literal>comments.js</literal>.
+</para>
+</sect2>
+
+<sect2 id="disabling">
+<title>Disabling</title>
+<para>
+To disable AJAX support, simply remove the JavaScript
+<literal>onsubmit</literal> and <literal>onclick</literal> handlers from your
+<literal>comment-form</literal> template. The comments plugin will fall back
+to traditional HTTP POST commenting.
+</para>
+</sect2>
 </sect1>
 
 <sect1 id="dealwithspam">
