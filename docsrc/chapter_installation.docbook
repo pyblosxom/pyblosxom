@@ -51,6 +51,19 @@ a text editor (notepad, vi, emacs, nano, ...)
 </para>
 </listitem>
 </itemizedlist>
+
+<para>
+Additionally, if you are running PyBlosxom on Windows, you will 
+also need:
+</para>
+<itemizedlist>
+<listitem>
+<para>
+Python for Windows extensions:
+<ulink url="http://sourceforge.net/projects/pywin32/">https://sourceforge.net/projects/pywin32/</ulink>
+</para>
+</listitem>
+</itemizedlist>
 </sect1>
 
 <sect1 id="installsteps">
@@ -122,19 +135,26 @@ Go through and change the values of the configuration settings according
 to the instructions.
 </para>
 <para>
-Make sure to set the datadir property to the datadir directory you created, 
-the flavourdir property to the flavourdir directory you created, the 
-plugins_dir property to the plugins directory you created, and the codebase 
-property to the directory you untarred PyBlosxom into.
+Make sure to set the <varname>datadir</varname> property to the datadir 
+directory you created, the <varname>flavourdir</varname> property to the 
+flavourdir directory you created, the <varname>plugins_dir</varname> 
+property to the plugins directory you created, and the 
+<varname>codebase</varname> property to the directory you untarred 
+PyBlosxom into.  Also, the <varname>load_plugins</varname> property should 
+be set to the empty list <literal>[ ]</literal>
 </para>
 <para>
 There are additional description and examples in the appendix of this 
 manual.
 </para>
-<para>
-Note: If you set the codebase property, it should be set to the directory 
-that holds the <filename>Pyblosxom/</filename> directory.
-</para>
+<note>
+  <title>make sure you set the codebase property correctly!</title>
+  <para>
+    If you set the <varname>codebase</varname> property, it should be 
+    set to the directory that holds the <filename>Pyblosxom/</filename> 
+    directory.
+  </para>
+</note>
 </listitem>
 <listitem>
 <para>
