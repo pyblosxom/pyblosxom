@@ -59,8 +59,8 @@ if __name__ == '__main__':
                     "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR",
                     "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME",
                     "HTTP_IF_NONE_MATCH", "HTTP_IF_MODIFIED_SINCE",
-                    "HTTP_COOKIE", "CONTENT_LENGTH", "HTTP_ACCEPT",
-                    "HTTP_ACCEPT_ENCODING"]:
+                    "HTTP_COOKIE", "CONTENT_LENGTH", "CONTENT_TYPE",
+                    "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING"]:
             env[mem] = os.environ.get(mem, "")
 
         p = PyBlosxom(cfg, env)
