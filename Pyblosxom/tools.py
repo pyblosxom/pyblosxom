@@ -27,6 +27,7 @@ import re
 import os
 import time
 import os.path
+import stat
 import sys
 import locale
 import urllib
@@ -524,19 +525,19 @@ def filestat(request, filename):
         return filestat_cache[filename]     
     
     argdict = {"request": request, "filename": filename,    
-               "mtime": [0] * 10}
+               "mtime": (0,) * 10}
     argdict = run_callback("filestat",      
                            argdict,     
                            mappingfunc=lambda x,y:y,    
-                           donefunc=lambda x: x and x["mtime"][8] != 0,
-                           defaultfunc=lambda x:x)      
+                           donefunc=lambda x: x and x["mtime"][stat.ST_MTIME] != 0,
+                           defaultfunc=lambda x:x)
 
     # no plugin handled cb_filestat; we default to asking the
     # filesystem
-    if argdict["mtime"][8] == 0:
+    if argdict["mtime"][stat.ST_MTIME] == 0:
         argdict["mtime"] = os.stat(filename)
 
-    timetuple = time.localtime(argdict["mtime"][8])     
+    timetuple = time.localtime(argdict["mtime"][stat.ST_MTIME])
     filestat_cache[filename] = timetuple    
      
     return timetuple
