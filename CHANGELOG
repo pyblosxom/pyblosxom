@@ -5,10 +5,11 @@ Pertinent to users:
 -------------------
 
 1. Added a pyblcmd command line program for PyBlosxom command line
-   things.
+   things.  This now handles static rendering, rendering a single
+   url to stdout, testing your blog setup, ...
 
-2. The RSS2.0 story template no longer includes $default_flavour in the
-   link.  (Thanks Martin!)
+2. The Atom story template now has a $default_flavour bit in the link.
+   Bug 1667937.  (Thanks Michael!)
 
 3. PyBlosxom is now locale aware in respects to dates, months, days of the
    week and such.  Users should set the "locale" config property to a
@@ -17,7 +18,18 @@ Pertinent to users:
 4. Added a $blog_icbm config variable, for use in the ICBM meta tag.
 
 5. Changed the num_entries property in config.py from 40 to a much more
-   conservative 5.  (Thanks Jon!)
+   conservative 5.  
+   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=373658
+   (Thanks Jon!)
+
+6. Changed the self link in the atom feed to be of type
+   application/atom+xml.
+   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=403008
+   (Thanks Brian!)
+
+7. Added DOCUMENT_ROOT to the python path per Martin's suggestion.
+   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=367127
+   (Thanks Martin!)
 
 
 Pertinent to developers:
@@ -28,6 +40,10 @@ Pertinent to developers:
 2. cb_filestat will only do an os.stat if no plugin handles the filestat.
    Previously, cb_filestat did an os.stat and ran through all the
    plugins allowing them to over-ride it.
+
+3. Moved documentation docbook files form /doc to /docsrc figuring it
+   makes more sense because they need to be "compiled" before they're
+   useful.
 
 
 Changes between 1.3.1 and 1.3.2
