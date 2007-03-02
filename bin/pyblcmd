@@ -3,7 +3,7 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# Copyright (c) 2003 - 2007 Wari Wahab
 # 
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
@@ -19,6 +19,7 @@ if script is not None:
     sys.path.insert(0, os.path.dirname(script))
 
 sys.path.insert(0, os.getcwd())
+
 
 def parse_args(args):
     """
@@ -50,69 +51,109 @@ def parse_args(args):
         i = i + 1
     return optlist
 
-HELP = """Syntax: pyblcmd [args]
+HELP = """Syntax: pyblcmd [path-opts] [args]
 
--v, --version
+PATH OPTIONS:
 
-    Prints the version
+  -c, --config
 
--h, --help
+     This specifies the location of the config.py file for the blog 
+     you want to work with.  If the config.py file is in the current 
+     directory, then you don't need to specify this.
 
-    Prints this help text
+     Note: pyblcmd will use the "codebase" parameter in your config.py
+     file to locate the version of PyBlosxom you're using.
 
--s, --static [incremental]
+ARGUMENTS:
 
-    Statically renders your blog.  Use "incremental" to do an
-    incremental rendering.
+  -v, --version
 
--t, --test
+     Prints the PyBlosxom version and some other information.
 
-    Tests your installation.  This can also be done with
-    "./pyblosxom.cgi".
+  -h, --help
+
+     Prints this help text
+
+  -s, --static [incremental]
+
+     Statically renders your blog.  Use "incremental" to do an incremental 
+     rendering.
+
+  -t, --test
+
+     Tests your installation.  This can also be done with
+     "./pyblosxom.cgi".
+
 
 Additional flags and options may be available through plugins that
 you have installed.  Refer to plugin documentation (usually found
 at the top of the plugin file) for more information.
 """
 
-
-if __name__ == '__main__':
-    # the configuration properties are in a dict named "py" in
-    # the config module
-    try:
-        from config import py as cfg
-    except:
-        print "Cannot find your config.py file.  Please execute pyblcmd"
-        print "in the directory with your config.py file in it."
-        sys.exit(0)
-
+def get_version():
     from Pyblosxom.pyblosxom import PyBlosxom
     from Pyblosxom.pyblosxom import VERSION_DATE
 
-    PYBL_VERSION = "PyBlosxom: pyblcmd: " + VERSION_DATE + "\n"
+    return "PyBlosxom: pyblcmd: %s" % VERSION_DATE
 
-    print PYBL_VERSION
+def get_help():
+    return HELP
+
+if __name__ == '__main__':
+
+    # this allows for a config.py override
+    script = os.environ.get('SCRIPT_FILENAME', None)
+    if script is not None:
+        sys.path.insert(0, os.path.dirname(script))
+
+    # parse initial command line variables
+    optlist = parse_args(sys.argv[1:])
+    for mem in optlist:
+        if mem[0] in ["-c", "--config"]:
+            m = mem[1]
+            if m.endswith("config.py"):
+                m = m[0:-9]
+            print "Appending %s to sys.path for config.py location." % m
+            sys.path.append(m)
+
+
+    # the configuration properties are in a dict named "py" in
+    # the config module
+    print "Trying to import the config module...."
+    try:
+        from config import py as cfg
+    except:
+        print "Cannot find your config.py file.  Please execute pyblcmd in the"
+        print "directory with your config.py file in it."
+        sys.exit(0)
 
     # If the user defined a "codebase" property in their config file,
     # then we insert that into our sys.path because that's where the
     # PyBlosxom installation is.
+    # NOTE: this _has_ to come before any PyBlosxom calls.
     if cfg.has_key("codebase"):
-        sys.path.insert(0, cfg["codebase"])
+        sys.path.append(cfg["codebase"])
+
+    print get_version()
 
     if len(sys.argv) == 1:
-        print HELP
+        print get_help()
         sys.exit(0)
+
+    from Pyblosxom.pyblosxom import PyBlosxom
     
     p = PyBlosxom(cfg, {})
 
-    optlist = parse_args(sys.argv[1:])
-
     for mem in optlist:
         if mem[0] in ["-v", "--version"]:
-            pass
+            # we print the version already, so if we do it again here
+            # it'd be doing it twice.
+            # print get_version()
+            sys.exit(0)
 
         elif mem[0] in ["-h", "--help"]: 
-            print HELP
+            print get_help()
+            sys.exit(0)
 
         elif mem[0] in ["--static", "-s"]:
             if "--incremental" in sys.argv:
