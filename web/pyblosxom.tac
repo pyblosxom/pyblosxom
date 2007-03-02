@@ -2,19 +2,19 @@
 Example tac file for running Pyblosxom on twisted:
 
 Dependencies:
-    - Pyblosxom 1.2+
-    - wsgiref library from http://cvs.eby-sarna.com/wsgiref/
-    - twisted wsgi wrapper (twisted_wsgi.py)
-        from http://svn.webwareforpython.org/WSGIKit/trunk/wsgikit/
+  - Pyblosxom 1.2+
+  - wsgiref library from http://cvs.eby-sarna.com/wsgiref/
+  - twisted wsgi wrapper (twisted_wsgi.py)
+    from http://svn.webwareforpython.org/WSGIKit/trunk/wsgikit/
 
 Configuration:
-    Fill in the desired username and port in the options dict below.
-    The username defaults to the current users name if the one specified
-    does not exist.
+  Fill in the desired username and port in the options dict below.
+  The username defaults to the current users name if the one specified
+  does not exist.
 
 Usage:
-    twistd -noy pyblosxom.tac    # for testing
-    twistd -y pyblosxom.tac      # for real
+  twistd -noy pyblosxom.tac    # for testing
+  twistd -y pyblosxom.tac      # for real
 
 Read the twistd manpage for more information.
 """
