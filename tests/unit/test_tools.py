@@ -1,3 +1,5 @@
+import _path_pyblosxom
+
 import string
 from Pyblosxom import tools
 
