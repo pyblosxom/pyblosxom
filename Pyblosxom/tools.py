@@ -776,16 +776,32 @@ def update_static_entry(cdict, entry_filename):
     for mem in staticflavours:
         renderme.append( "/index" + "." + mem, "" )
         renderme.append( entry_filename + "." + mem, "" )
-    
+   
     for mem in renderme:
-        render_url(cdict, mem[0], mem[1])
+        render_url_statically(cdict, mem[0], mem[1])
 
 
+def render_url_statically(cdict, url, q):
+    staticdir = cdict.get("static_dir", "")
+
+    response = render_url(cdict, url, q)
+    response.seek(0)
+
+    fn = os.path.normpath(staticdir + os.sep + url)
+    if not os.path.isdir(os.path.dirname(fn)):
+        os.makedirs(os.path.dirname(fn))
+
+    # by using the response object the cheesy part of removing 
+    # the HTTP headers from the file is history.
+    f = open(fn, "w")
+    f.write(response.read())
+    f.close()
+ 
 def render_url(cdict, pathinfo, querystring=""):
     """
     Takes a url and a querystring and renders the page that corresponds
     with that by creating a Request and a PyBlosxom object and passing
-    it through.
+    it through.  It then returns the resulting Response.
 
     @param cdict: the config.py dict
     @type  cdict: dict
@@ -795,6 +811,8 @@ def render_url(cdict, pathinfo, querystring=""):
 
     @param querystring: the querystring (if any).  ex: "debug=yes"
     @type  querystring: string
+
+    @returns: Response
     """
     staticdir = cdict.get("static_dir", "")
 
@@ -822,19 +840,7 @@ def render_url(cdict, pathinfo, querystring=""):
     data = {"STATIC": 1}
     p = PyBlosxom(cdict, env, data)
     p.run(static=True)
-    response = p.getResponse()
-    response.seek(0)
-
-    fn = os.path.normpath(staticdir + os.sep + pathinfo)
-    if not os.path.isdir(os.path.dirname(fn)):
-        os.makedirs(os.path.dirname(fn))
-
-    # by using the response object the cheesy part of removing 
-    # the HTTP headers from the file is history.
-    f = open(fn, "w")
-    f.write(response.read())
-    f.close()
-
+    return p.getResponse()
 
 
 

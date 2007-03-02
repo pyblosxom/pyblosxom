@@ -13,6 +13,12 @@
 
 import os, sys
 
+"""Whether to be quiet on output or not."""
+quiet = 0
+
+def printq(s):
+    if quiet == 0: print s
+
 # this allows for a config.py override
 script = os.environ.get('SCRIPT_FILENAME', None)
 if script is not None:
@@ -74,6 +80,24 @@ ARGUMENTS:
 
      Prints this help text
 
+  -h, --headers
+
+     When rendering a url, this will also render the HTTP headers.
+
+  -r, --render <url>
+
+     Renders a url of your blog.
+
+        pyblcmd -r http://www.joesblog.com/cgi-bin/pyblosxom.cgi/index.html
+
+     will pull off the base_url from the front leaving "/index.html" and
+     will render "/index.html" to stdout.
+
+        pyblcmd -c ~/cgi-bin/config.py -r /index.html
+
+     will use the config.py file located in ~/cgi-bin/ and render
+     "/index.html" from the PyBlosxom root.
+
   -s, --static [incremental]
 
      Statically renders your blog.  Use "incremental" to do an incremental 
@@ -83,6 +107,9 @@ ARGUMENTS:
 
      Tests your installation.  This can also be done with
      "./pyblosxom.cgi".
+
+
+EXAMPLES:
 
 
 Additional flags and options may be available through plugins that
@@ -113,18 +140,20 @@ if __name__ == '__main__':
             m = mem[1]
             if m.endswith("config.py"):
                 m = m[0:-9]
-            print "Appending %s to sys.path for config.py location." % m
+            printq("Appending %s to sys.path for config.py location." % m)
             sys.path.append(m)
 
+        elif mem[0] in ["-q", "--quiet"]:
+            quiet = 1
 
     # the configuration properties are in a dict named "py" in
     # the config module
-    print "Trying to import the config module...."
+    printq("Trying to import the config module....")
     try:
         from config import py as cfg
     except:
-        print "Cannot find your config.py file.  Please execute pyblcmd in the"
-        print "directory with your config.py file in it."
+        print "Error: Cannot find your config.py file.  Please execute pyblcmd "
+        print "in the directory with your config.py file in it."
         sys.exit(0)
 
     # If the user defined a "codebase" property in their config file,
@@ -134,7 +163,7 @@ if __name__ == '__main__':
     if cfg.has_key("codebase"):
         sys.path.append(cfg["codebase"])
 
-    print get_version()
+    printq(get_version())
 
     if len(sys.argv) == 1:
         print get_help()
@@ -143,6 +172,7 @@ if __name__ == '__main__':
     from Pyblosxom.pyblosxom import PyBlosxom
     
     p = PyBlosxom(cfg, {})
+    headers = 0
 
     for mem in optlist:
         if mem[0] in ["-v", "--version"]:
@@ -156,11 +186,24 @@ if __name__ == '__main__':
             sys.exit(0)
 
         elif mem[0] in ["--static", "-s"]:
-            if "--incremental" in sys.argv:
+            if mem[1].startswith("incr"):
                 incremental = 1
             else:
                 incremental = 0
+
             p.runStaticRenderer(incremental)
+
+        elif mem[0] in ["--headers", "-h"]:
+            headers = 1
+
+        elif mem[0] in ["--render", "-r"]:
+            url = mem[1]
+            if url.startswith(cfg.get("base_url", "")):
+                url = url[len(cfg.get("base_url", "")):]
+
+            printq("Rendering '%s'" % url)
+
+            p.runRenderOne(url, headers)
 
         elif mem[0] in ["--test", "-t"]:
             p.testInstallation()

@@ -233,14 +233,45 @@ class PyBlosxom:
 
         return handled
 
+    def runRenderOne(self, url, headers):
+        """
+        Renders a single page from the blog.
+
+        @param url: the url to render--this has to be relative to
+        PyBlosxom
+        @type url: string
+
+        @param headers: 1 if you want the headers rendered and 0 if not.
+        @type headers: int
+        """ 
+        self.initialize()
+
+        config = self._request.getConfiguration()
+        data = self._request.getData()
+
+        if url.find("?") != -1:
+            url = url[:url.find("?")]
+            query = url[url.find("?")+1:]
+        else:
+            query = ""
+
+        url = url.replace(os.sep, "/")
+        response = tools.render_url(config, url, query)
+        response.sendHeaders(sys.stdout)
+        response.sendBody(sys.stdout)
+
+        print response.read()
+
+        # we're done, clean up
+        self.cleanup()
+ 
     def runStaticRenderer(self, incremental=0):
         """
-        This will go through all possible things in the blog
-        and statically render everything to the "static_dir"
-        specified in the config file.
+        This will go through all possible things in the blog and statically 
+        render everything to the "static_dir" specified in the config file.
 
-        This figures out all the possible path_info settings
-        and calls self.run() a bazillion times saving each file.
+        This figures out all the possible path_info settings and calls 
+        self.run() a bazillion times saving each file.
 
         @param incremental: whether (1) or not (0) to incrementally
             render the pages.  if we're incrementally rendering pages,
@@ -385,7 +416,8 @@ class PyBlosxom:
         for url, q in renderme:
             url = url.replace(os.sep, "/")
             print "rendering '%s' ..." % url
-            tools.render_url(config, url, q)
+
+            tools.render_url_statically(config, url, q)
 
         # we're done, clean up
         self.cleanup()
