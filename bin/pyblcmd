@@ -68,7 +68,9 @@ PATH OPTIONS:
      directory, then you don't need to specify this.
 
      Note: pyblcmd will use the "codebase" parameter in your config.py
-     file to locate the version of PyBlosxom you're using.
+     file to locate the version of PyBlosxom you're using if there
+     is one.  If there isn't one, then pyblcmd expects PyBlosxom to
+     be installed as a Python package on your system.
 
 ARGUMENTS:
 
