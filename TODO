@@ -20,28 +20,55 @@ pyblosxom-devel mailing list.
 Thanks!
 
 
+MILESTONE VERSION 1.4
+=====================
+
+Prospective release date: February sometime.
+
+UNIT TESTING
+
+ - Look at the Cheesecake system and use something similar so that we
+   have some basic tests we can run that test the whole system.
+
+MANUAL
+
+ - Go through and fill in more FIXMEs.
+ - Add instructions for PyBlosxom with FastCGI.
+ - Add instructions for servers with multiple users (look at Martin Kraaft's 
+   stuff).
+
+PYBLCMD
+
+ - Finish up pyblcmd so that it's a good alternative to running
+   pyblosxom.cgi.
+
+
+ANYTHING ELSE?
+
+
+
 PROJECT INFRASTRUCTURE
 ======================
 
 UNIT TESTING
 
  - We need a unit testing framework and unit tests.  Seriously.
-   (Will - I'm using cheesecake and modelling the test system on things they
+   (Will - I'm using cheesecake and modeling the test system on things they
    suggest.  Right now I'm writing unit tests using nose as the framework.)
 
 MANUAL
 
  - Go through and clarify the config.py properties if we haven't already
    and provide examples in the PyBlosxom Manual.
+ - Need to take out a lot of the blah blah blah content and clean up
+   the language so it's clearer with more examples.  Also look at trimming
+   text if possible.
+ - Need to add installation instructions for PyBlosxom as WSGI middleware.
+ - Need to add installation instructions for PyBlosxom with SCGI/FCGI with 
+   flup.
+ - Need to add installation instructions for PyBlosxom for IIS.
  - Need to add information on migrating entries from other blog systems
    (Drupal?  WordPress?  LiveJournal? ...) to PyBlosxom.
- - Need to take out a lot of the blah blah blah content and clean up
-   the language so it's clearer with more examples.
- - Need to add installation instructions for PyBlosxom for IIS.
- - Need to add installation instructions for PyBlosxom with SCGI/FCGI with
-   flup.
- - Need to add installation instructions for PyBlosxom as WSGI 
-   middleware.
 
 
 PYBLOSXOM
@@ -152,17 +179,3 @@ STORAGE
    entries and it'll allow us to optimize the functions using caching
    and such.
  - how many plugins use Walk?  for what purposes?
-
-
-CONTRIBUTED PLUGINS
-===================
-
-COMMENTS
-
- - Allow the user to specify which fields should be saved and which
-   ones are transient.
- - Add a callback for commiting a comment or something like that?
-   Then move the SMTP code there?
- - Fix the plugin so it's easier to configure.
- - Fix the installation.
- - Should we fold in tracebacks, pingbacks, and all that?
