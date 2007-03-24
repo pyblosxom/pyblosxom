@@ -11,7 +11,7 @@ from Pyblosxom import pyblosxom
 VER = pyblosxom.VERSION
 PVER = "pyblosxom-" + VER
 
-def Walk(root='.'):
+def walk(root='.'):
     """
     A really really scaled down version of what we have in tools.py.
     """
@@ -33,11 +33,11 @@ def Walk(root='.'):
         # recursively scan other folders, appending results
         if os.path.isdir(fullname) and not os.path.islink(fullname):
             result.append(fullname)
-            result = result + Walk(fullname)
+            result = result + walk(fullname)
 
     return result
 
-flavour_files = Walk("Pyblosxom/flavours")
+flavour_files = walk("Pyblosxom/flavours")
 
 # FIXME - this doesn't account for a variety of platforms
 platform = sys.platform
@@ -99,7 +99,7 @@ Thanks!
 
 In the meantime, you'll have to put the docs and web scripts where you 
 want them on your own.  They're in subdirectories of this one: web/ 
-and docs/ .  Sorry for the inconvenience.
+and docsrc/ .  Sorry for the inconvenience.
 """
 
 
@@ -110,17 +110,18 @@ if sys.version < '2.2.3':
 
 setup(name="pyblosxom",
     version=VER,
-    description="pyblosxom weblog engine",
-    author="Wari Wahab",
+    author="Will Guaraldi",
+    description="PyBlosxom is a weblog engine that uses the filesystem " + \
+                "to store your entries.",
+    license='MIT',
+    keywords="blog pyblosxom cgi weblog",
     author_email="pyblosxom-devel@lists.sourceforge.net",
     url="http://pyblosxom.sourceforge.net/",
+    packages=['Pyblosxom', 
+              'Pyblosxom.cache', 
+              'Pyblosxom.entries', 
+              'Pyblosxom.renderers'],
     scripts=["bin/pyblcmd"],
-    packages=['Pyblosxom', 'Pyblosxom.cache', 'Pyblosxom.entries', 'Pyblosxom.renderers'],
-    license = 'MIT',
-    long_description =
-"""Pyblosxom is a weblog engine that uses the filesystem as the database of
-your entries.
-""",
     data_files=pydf,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
