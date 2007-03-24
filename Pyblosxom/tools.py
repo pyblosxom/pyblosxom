@@ -404,7 +404,7 @@ def parse(request, encoding, var_dict, template):
                                 template)
 
 
-def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
+def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
     """
     This function walks a directory tree starting at a specified root folder,
     and returns a list of all of the files (and optionally folders) that match
@@ -466,6 +466,9 @@ def Walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
         return []
 
     return __walk_internal(root, recurse, pattern, ignorere, return_folders)
+
+# we do this for backwards compatibility reasons.
+Walk = walk
 
 def __walk_internal( root, recurse, pattern, ignorere, return_folders ):
     """
