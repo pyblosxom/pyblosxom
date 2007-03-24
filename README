@@ -59,3 +59,16 @@ If you discover a problem with PyBlosxom, please log it in our bug-tracker:
 If you can additionally fix it, attach a patch file to the bug or
 send the patch as an attachment to the pyblosxom-devel mailing list.
 Please make sure to describe the details of the problem you are fixing.
+
+
+How to run unit tests
+=====================
+
+We use nose (http://somethingaboutorange.com/mrl/projects/nose/) for
+test discovery.  You'll need to have that installed to run our tests.
+
+To run, execute:
+
+   nosetests -w tests/unit -v
+
+If you would like to add tests to the test suite, please let us know.
