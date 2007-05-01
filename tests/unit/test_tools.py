@@ -1,6 +1,8 @@
 import _path_pyblosxom
 
 import string
+import os
+import os.path
 from Pyblosxom import tools
 
 class Testis_year:
@@ -88,7 +90,7 @@ class TestUrlencodeText():
         assert tools.urlencode_text("abc") == "abc"
 
 class TestVariableDict():
-    """tools.VariableDict"""
+    """tools.VariableDict class"""
 
     def __init__(self):
         self.vd = tools.VariableDict()
@@ -136,3 +138,74 @@ class TestVariableDict():
         assert self.vd.get("badkey_urlencoded", "novalue") == "novalue"
         assert self.vd.get("badkey_urlencoded", "no value") == "no%20value"
 
+class TestStripper:
+    """tools.Stripper class"""
+
+    def _strip(self, text):
+        s = tools.Stripper()
+        s.feed(text)
+        s.close()
+        return s.gettext()
+
+    def test_replaces_html_markup_from_string_with_space(self):
+        s = tools.Stripper()
+        assert self._strip("") == ""
+        assert self._strip("abc") == "abc"
+        assert self._strip("<b>abc</b>") == " abc "
+        assert self._strip("abc <b>def</b> ghi") == "abc  def  ghi"
+        
+class TestWhatExt:
+    """tools.what_ext"""
+    def __init__(self):
+        self._files = ["a.txt", "b.html", "c.txtl"]
+        d = os.path.dirname(__file__)
+        self._d = os.path.join(d, "what_ext_test_dir")
+        
+    def _setup(self):
+        """
+        Creates the directory with some files in it.
+        """
+        try:
+            os.mkdir(self._d)
+
+            for mem in self._files:
+                f = open(os.path.join(self._d, mem), "w")
+                f.write("lorem ipsum")
+                f.close()
+        except:
+            self._teardown()
+
+    def _teardown(self):
+        """
+        Cleans up the test files and the directory that we created.
+        """
+        for mem in self._files:
+            try:
+                os.remove(os.path.join(self._d, mem))
+            except:
+                pass
+
+        try:
+            os.rmdir(self._d)
+        except:
+            pass
+    
+    def test_returns_extension_if_file_has_extension(self):
+        self._setup()
+        try:
+            assert "txt" == tools.what_ext(["txt", "html"],
+                                           os.path.join(self._d, "a"))
+            assert "html" == tools.what_ext(["txt", "html"],
+                                           os.path.join(self._d, "b"))
+        finally:
+            self._teardown()
+
+    def test_returns_None_if_extension_not_present(self):
+        self._setup()
+        try:
+            assert None == tools.what_ext([],
+                                          os.path.join(self._d, "a"))
+            assert None == tools.what_ext(["html"],
+                                          os.path.join(self._d, "a"))
+        finally:
+            self._teardown()
