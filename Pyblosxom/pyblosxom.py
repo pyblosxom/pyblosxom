@@ -1,3 +1,4 @@
+from __future__ import nested_scopes, generators
 #######################################################################
 # This file is part of PyBlosxom.
 #
@@ -16,7 +17,6 @@ and default handlers are defined here.
 __revision__ = "$Revision$"
 
 # Python imports
-from __future__ import nested_scopes, generators
 import os
 import time
 import re

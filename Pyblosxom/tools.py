@@ -115,7 +115,7 @@ QUOTES = {"'": "&apos;", '"': "&quot;"}
 
 def escape_text(s):
     """
-    Takes in a string and escapes ' to &apos; and " to &quot;.
+    Takes in a string and escapes \' to &apos; and \" to &quot;.
     If s is None, then we return None.
 
     @param s: the input string to escape
@@ -147,7 +147,7 @@ def urlencode_text(s):
 class VariableDict:
     """
     Wraps around a standard dict allowing for escaped and urlencoding
-    of internal data by tacking on a "_urlencoded" or a "_escaped"
+    of internal data by tacking on a _urlencoded or a _escaped
     to the end of the key name.
     """
     def __init__(self):
@@ -158,10 +158,10 @@ class VariableDict:
 
     def __getitem__(self, key, default=None):
         """
-        If the key ends with "_escaped", then this will retrieve
+        If the key ends with _escaped, then this will retrieve
         the value for the key and escape it.
 
-        If the key ends with "_urlencoded", then this will retrieve
+        If the key ends with _urlencoded, then this will retrieve
         the value for the key and urlencode it.
 
         Otherwise, this calls get(key, default) on the wrapped
@@ -174,8 +174,8 @@ class VariableDict:
                         exist.
         @type  default: string
 
-        @returns: the value; escaped if the key ends in "_escaped";
-                  urlencoded if the key ends in "_urlencoded".
+        @returns: the value; escaped if the key ends in _escaped;
+                  urlencoded if the key ends in _urlencoded.
         @rtype: string
         """
         if key.endswith("_escaped"):
@@ -277,13 +277,13 @@ class Stripper(sgmllib.SGMLParser):
 
     def unknown_starttag(self, tag, attrs): 
         """
-        Implements unknown_starttag.  Appends a " " to the buffer.
+        Implements unknown_starttag.  Appends a space to the buffer.
         """
         self.data.append(" ")
 
     def unknown_endtag(self, tag): 
         """
-        Implements unknown_endtag.  Appends a " " to the buffer.
+        Implements unknown_endtag.  Appends a space to the buffer.
         """
         self.data.append(" ")
 
@@ -309,7 +309,7 @@ class Replacer:
     """
     def __init__(self, request, encoding, var_dict):
         """
-        It's only duty is to populate itself with the replacement dictionary
+        Its only duty is to populate itself with the replacement dictionary
         passed.
 
         @param request: the Request object
@@ -400,8 +400,9 @@ def parse(request, encoding, var_dict, template):
         # convert strings to unicode, assumes strings in iso-8859-1
         template = unicode(template, encoding, 'replace')
 
-    return u'' + VAR_REGEXP.sub(Replacer(request, encoding, var_dict).replace, 
-                                template)
+    replacer = Replacer(request, encoding, var_dict)
+
+    return u'' + VAR_REGEXP.sub(replacer.replace, template)
 
 
 def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
@@ -518,7 +519,7 @@ def filestat(request, filename):
     @param filename: the name of the file to stat   
     @type  filename: string     
     
-    @returns: the mtime of the file (same as returned by time.localtime(...))   
+    @returns: the mtime of the file (same as returned by time.localtime(...))
     @rtype: tuple of 9 ints     
     """     
     data = request.getData()    
@@ -527,20 +528,24 @@ def filestat(request, filename):
     if filestat_cache.has_key(filename):    
         return filestat_cache[filename]     
     
-    argdict = {"request": request, "filename": filename,    
-               "mtime": (0,) * 10}
+    argdict = { "request": request,
+                "filename": filename,    
+                "mtime": (0,) * 10 }
+
+    MT = stat.ST_MTIME
+
     argdict = run_callback("filestat",      
                            argdict,     
-                           mappingfunc=lambda x,y:y,    
-                           donefunc=lambda x: x and x["mtime"][stat.ST_MTIME] != 0,
-                           defaultfunc=lambda x:x)
+                           mappingfunc = lambda x,y:y,    
+                           donefunc = lambda x:x and x["mtime"][MT] != 0,
+                           defaultfunc = lambda x:x)
 
     # no plugin handled cb_filestat; we default to asking the
     # filesystem
-    if argdict["mtime"][stat.ST_MTIME] == 0:
+    if argdict["mtime"][MT] == 0:
         argdict["mtime"] = os.stat(filename)
 
-    timetuple = time.localtime(argdict["mtime"][stat.ST_MTIME])
+    timetuple = time.localtime(argdict["mtime"][MT])
     filestat_cache[filename] = timetuple    
      
     return timetuple
@@ -600,7 +605,8 @@ def importname(modulename, name):
     @param name: The name of the module to import from the modulename
     @type name: string
 
-    @returns: If successful, returns an imported object reference, else C{None}
+    @returns: If successful, returns an imported object reference, else
+              C{None}
     @rtype: object
     """
     try:
@@ -617,7 +623,8 @@ def generateRandStr(minlen=5, maxlen=10):
     """
     Generate a random string
     
-    Tool to generate a random string between C{minlen} to C{maxlen} characters
+    Tool to generate a random string between C{minlen} to C{maxlen}
+    characters.
 
     @param minlen: The minimum length the string should be
     @type minlen: integer
@@ -640,9 +647,9 @@ def generateRandStr(minlen=5, maxlen=10):
 
 
 def run_callback(chain, input, 
-        mappingfunc=lambda x,y:x, 
-        donefunc=lambda x:0,
-        defaultfunc=None):
+        mappingfunc = lambda x,y:x, 
+        donefunc = lambda x:0,
+        defaultfunc = None):
     """
     Executes a callback chain on a given piece of data.
     passed in is a dict of name/value pairs.  Consult the documentation
@@ -678,8 +685,8 @@ def run_callback(chain, input,
         of the most recent iteration.  If this function returns 
         true (1) then we'll drop out of the loop.  For example,
         if you wanted a callback to stop running when one of the
-        registered functions returned a 1, then you would pass in
-        "donefunc=lambda x:x".
+        registered functions returned a 1, then you would pass in:
+        donefunc=lambda x:x .
     @type  donefunc: function
 
     @param defaultfunc: if this is set and we finish going through all
@@ -722,6 +729,69 @@ def run_callback(chain, input,
     # output.
     return output
 
+
+def create_entry(datadir, category, filename, mtime, title, metadata, body):
+    """
+    Creates a new entry in the blog.
+
+    This is primarily used by the testing system, but it could be
+    used by scripts and other tools.
+
+    @param datadir: the directory of the datadir where the blog
+                    entries are stored.
+    @type  datadir: string
+
+    @param category: the category of the entry.
+    @type  category: string
+
+    @param filename: the name of the blog entry (filename and extension).
+    @type  filename: string
+
+    @param mtime: the mtime for the entry (seconds since the epoch).
+    @type  mtime: float
+
+    @param title: the title for the entry.
+    @type  title: string
+
+    @param metadata: any metadata for this entry.
+    @type  metadata: dict
+
+    @param body: the content of the entry.
+    @type  body: string
+
+    @raises IOError: if the datadir + category directory exists, but isn't
+                     a directory.
+    """
+
+    def addcr(s):
+        if not s.endswith("\n"):
+            return s + "\n"
+        return s
+
+    # format the metadata lines for the entry
+    metadatalines = ["#%s %s" % (key, metadata[key])
+                     for key in metadata.keys()]
+
+    entry = addcr(title) + "\n".join(metadatalines) + body
+
+    # create the category directories
+    d = os.path.join(datadir, category)
+    if not os.path.exists(d):
+        os.makedirs(d)
+
+    if not os.path.isdir(d):
+        raise IOError("%s exists, but isn't a directory." % d)
+    
+    # create the filename
+    fn = os.path.join(datadir, category, filename)
+
+    # write the entry to disk
+    f = open(fn, "w")
+    f.write(entry)
+    f.close()
+
+    # set the mtime on the entry
+    os.utime(fn, (mtime, mtime))
 
 def get_cache(request):
     """
@@ -809,10 +879,10 @@ def render_url(cdict, pathinfo, querystring=""):
     @param cdict: the config.py dict
     @type  cdict: dict
 
-    @param pathinfo: the path_info string.  ex: "/dev/pyblosxom/firstpost.html"
+    @param pathinfo: the path_info string.  ex: /dev/pyblosxom/firstpost.html
     @type  pathinfo: string
 
-    @param querystring: the querystring (if any).  ex: "debug=yes"
+    @param querystring: the querystring (if any).  ex: debug=yes
     @type  querystring: string
 
     @returns: Response
