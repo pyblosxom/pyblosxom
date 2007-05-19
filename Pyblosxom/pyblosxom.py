@@ -438,11 +438,11 @@ class PyBlosxom:
 class EnvDict(dict):
     """
     Wrapper arround a dict to provide a backwards compatible way
-    to get the L{form<cgi.FieldStorage>} with syntax as:
+    to get the L{form<cgi.FieldStorage>} with syntax as::
 
         request.getHttp()['form'] 
 
-    instead of:
+    instead of::
 
         request.getForm()
     """

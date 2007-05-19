@@ -128,11 +128,11 @@ def get_module_name(filename):
 
     Example: passing in "/blah/blah/blah/module.ext" returns "module"
 
-    @param file_name: the filename in question (with a full path)
-    @type  file_name: string
+    @param filename: the filename in question (with a full path)
+    @type  filename: string
 
     @returns: the filename without path or extension
-    @rtype: string
+    @rtype:   string
     """
     return os.path.splitext(os.path.split(filename)[1])[0]
 

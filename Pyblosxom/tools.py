@@ -647,8 +647,8 @@ def generateRandStr(minlen=5, maxlen=10):
 
 
 def run_callback(chain, input, 
-        mappingfunc = lambda x,y:x, 
-        donefunc = lambda x:0,
+        mappingfunc = lambda x,y : x, 
+        donefunc = lambda x : 0,
         defaultfunc = None):
     """
     Executes a callback chain on a given piece of data.
@@ -1068,7 +1068,7 @@ def log_caller(frame_num=1, log_file=None):
     Logs some info about the calling function/method.
     Useful for debugging.
 
-    Usage:
+    Usage::
         import tools
         tools.log_caller() # logs frame 1
         tools.log_caller(2)

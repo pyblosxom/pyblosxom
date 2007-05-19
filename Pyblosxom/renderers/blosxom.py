@@ -38,11 +38,11 @@ def get_included_flavour(taste):
     files for the associated taste (assuming it exists) or None if it
     doesn't.
 
-    @param taste The name of the taste.  e.g. "html", "rss", ...
-    @type  taste string
+    @param taste: The name of the taste.  e.g. "html", "rss", ...
+    @type  taste: string
 
-    @returns A dict of template type to template file or None
-    @rtype dict or None
+    @returns: A dict of template type to template file or None
+    @rtype: dict or None
     """
     path = __file__[:__file__.rfind(os.sep)]
     path = path[:path.rfind(os.sep)+1] + "flavours" + os.sep
@@ -129,15 +129,15 @@ class BlosxomRenderer(RendererBase):
         looking at an entry in the category "dev/pyblosxom", then
         _getflavour will:
 
-        1. pick up the flavour files in the default html flavour
-        2. start in EITHER datadir OR flavourdir (if configured)
-        3. override the default html flavour files with html flavour
-           files in this directory or in html.flav/ subdirectory
-        4. override the html flavour files it's picked up so far
-           with html files in dev/ or dev/html.flav/
-        5. override the html flavour files it's picked up so far
-           with html files in dev/pyblosxom/ or 
-           dev/pyblosxom/html.flav/
+          1. pick up the flavour files in the default html flavour
+          2. start in EITHER datadir OR flavourdir (if configured)
+          3. override the default html flavour files with html flavour
+             files in this directory or in html.flav/ subdirectory
+          4. override the html flavour files it's picked up so far
+             with html files in dev/ or dev/html.flav/
+          5. override the html flavour files it's picked up so far
+             with html files in dev/pyblosxom/ or 
+             dev/pyblosxom/html.flav/
 
         If it doesn't find any flavour files at all, then it returns
         None which indicates the flavour doesn't exist in this blog.
