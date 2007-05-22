@@ -39,7 +39,8 @@ py['blog_encoding'] = "iso-8859-1"
 # it in correctly could result in a feed that doesn't validate.
 py["blog_rights"] = "Copyright 2005 Joe Bobb"
 
-# Where is this blog geographically located?
+# Where is this blog geographically located? This is used by geocoding aka
+# geotagging crawlers and sites like http://geourl.org/ .
 py['blog_icbm'] = '37.448089,-122.159259'
 
 # Where are this blog's entries kept?
@@ -55,7 +56,7 @@ py['datadir'] = "/path/to/blog"
 # For production 'warning' or 'error' is recommended.
 # py['log_level'] = "warning"
 
-# Let's you specify which channels should be logged.
+# Lets you specify which channels should be logged.
 # If specified, only messages from the listed channels are logged.
 # Each plugin logs to it's own channel, therefor channelname == pluginname.
 # Application level messages are logged to a channel named 'root'.

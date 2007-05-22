@@ -38,6 +38,10 @@ efforts can be found on the PyBlosxom web-site at:
 
    http://pyblosxom.sourceforge.net/
 
+You can also build the manual, as a PDF, single HTML page, or multiple HTML
+pages, from the XML-DocBook sources. Just run `make' in the docsrc/ directory.
+You'll need openjade and htmldoc; see docsrc/Makefile for more info.
+
 
 How to get help
 ===============
