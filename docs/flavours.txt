@@ -1,11 +1,12 @@
-Flavours
-========
-
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document has been placed in the public domain.
 
 .. contents::
+
+
+Flavours
+========
 
 
 PyBlosxom takes the data provided in the entries and by the plugins and
@@ -89,11 +90,13 @@ If you want to create a "joy" flavour, you would have the following files:
 You can have as many flavours as you want in your blog.
 
 
-**WARNING**
+   **A WARNING ABOUT FLAVOUR NAMES**
+
    The one thing to be aware of is creating a flavour where the name is 
    the same extension as file extensions of your blog entries.  For example,
    the default extension for pyblosxom blog entries is 
    ``.txt``.  Don't create a **txt** flavour.
+
 
 PyBlosxom comes with a series of flavours: html, rss (RSS 0.9.1), rss20
 (RSS 2.0), and atom (Atom 1.0).  These flavours come as part of PyBlosxom
@@ -162,7 +165,8 @@ This allows you to easily override specific templates in your blog
 at.
 
 
-**NOTE**
+   **A NOTE ABOUT DATADIR AND FLAVOURDIR**
+
    PyBlosxom is backwards compatible with previous versions of
    PyBlosxom.  You can put your flavour files in your datadir.  You
    can also put your flavour files in the categories of your datadir.
@@ -201,7 +205,7 @@ in the request.  Don't forget to change it back when you're done!
 
 
 URL Encoding and Escaping of Template Variables
-```````````````````````````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 PyBlosxom versions 1.3 and later allows you to escape and URL encode 
 any variables by adding ``_escaped`` or ``_urlencoded`` to the end of 
@@ -217,7 +221,7 @@ the Python urllib.
 
 
 Variables from config.py
-````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 These template variables are available to all templates.  They come directly 
 from your ``config.py`` file.
@@ -272,7 +276,7 @@ to your ``config.py`` file and it would be available in all your templates.
 
 
 Calculated Template Variables
-`````````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These template variables are available to all templates as well.  They are 
 calculated based on the request.
@@ -339,7 +343,7 @@ calculated based on the request.
 
 
 Template Variables Only Available in the story Template
-```````````````````````````````````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These template variables are only available in your story template.
 
@@ -447,7 +451,7 @@ These template variables are only available in your story template.
 
 
 Template Variables from Plugins
-```````````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Many plugins will create additional variables that are available in
 templates.  Refer to the documentation of the plugins that you have
