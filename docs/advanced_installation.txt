@@ -81,7 +81,9 @@ that may be all you need.
 You might have to change the ``base_url`` property in your
 ``config.py`` file to match the new URL.
 
-    **A NOTE ABOUT THE BASE_URL**
+.. Note::
+
+    A note about the base_url:
     
     The base_url property should NOT have a trailing slash.
 

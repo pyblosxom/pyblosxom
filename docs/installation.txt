@@ -21,14 +21,17 @@ mailing list are on our `web-site`_.
 
 .. _web-site: http://pyblosxom.sourceforge.net/
 
-    **A NOTE ABOUT UPGRADING PYBLOSXOM**
+
+.. Note::
+
+   A note about upgrading PyBlosxom:
     
-    If you are upgrading your version of PyBlosxom, follow the
-    instructions here and also read the ``README`` that comes with
-    your PyBlosxom tarball for differences between this version and
-    the previous versions.  The ``README`` file contains instructions
-    on updating your ``config.py`` file, templates, and other parts of
-    your PyBlosxom installation which you will have to do by hand.
+   If you are upgrading your version of PyBlosxom, follow the
+   instructions here and also read the ``README`` that comes with
+   your PyBlosxom tarball for differences between this version and
+   the previous versions.  The ``README`` file contains instructions
+   on updating your ``config.py`` file, templates, and other parts of
+   your PyBlosxom installation which you will have to do by hand.
 
 
 Pre-requisites for installing PyBlosxom
@@ -98,11 +101,12 @@ Here are the steps you need to do to install PyBlosxom:
    There are additional description and examples in the appendix of this 
    manual.
 
+   .. Warning::
 
-       **A WARNING ABOUT CODEBASE**
+      A warning about codebase:
   
-       If you set the ``codebase`` property, it should be set to the
-       directory that holds the ``Pyblosxom/`` directory.
+      If you set the ``codebase`` property, it should be set to the
+      directory that holds the ``Pyblosxom/`` directory.
   
 
 7. Verify your installation: Run ``./pyblosxom.cgi`` from the
@@ -132,7 +136,9 @@ Here are the steps you need to do to install PyBlosxom:
    logs for more details.
 
 
-.. Installing PyBlosxom in Debian
+.. Note::
+
+   A note about installing PyBlosxom in Debian:
 
    At the time of this writing, `Debian GNU/Linux`_ offers Pyblosxom in
    all three of its distributions. Debian *Sarge* offers version
@@ -147,7 +153,7 @@ Here are the steps you need to do to install PyBlosxom:
    ``/etc/pyblosxom/`` directory.
 
    Your ``config.py`` is in the ``/etc/pyblosxom/`` directory and that is
-   the file you will edit as per `the previous instructions`_.
+   the file you will edit as per the previous instructions.
 
    The pyblosxom CGI is installed in Debian's default
    ``/usr/lib/cgi-bin/`` directory.
@@ -201,13 +207,14 @@ When you try to look at your blog and you get a HTTP 500 error, check
 your server logs.  For Apache, look for the ``error.log`` file in a
 place like ``/var/logs/apache`` or ``/var/logs/httpd``.
 
+.. Note::
 
-    **PLEASE READ THE INSTALLATION CHAPTER**
+   Please read the installation chapter:
     
-    At this point, running ``./pyblosxom.cgi`` at the command prompt
-    should work fine.  If you haven't done that and you're busy
-    trouble-shooting, go back to the *installation guide* and make
-    sure you did all the steps.
+   At this point, running ``./pyblosxom.cgi`` at the command prompt
+   should work fine.  If you haven't done that and you're busy
+   trouble-shooting, go back to the *installation guide* and make
+   sure you did all the steps.
 
 
 Does the account your web-server runs as have execute access to your
@@ -217,7 +224,7 @@ Is it kicking up a Python stack trace?  If so, uncomment the line in
 ``pyblosxom.cgi`` (remove the # at the beginning of the line) that
 looks like this::
 
-    #import cgitb; cgitb.enable()
+   #import cgitb; cgitb.enable()
 
 Then try looking at your blog again.  That should spit up a huge
 pretty traceback that should help iron out the issue for you.  At a

@@ -88,8 +88,9 @@ If you want to create a "joy" flavour, you would have the following files:
 
 You can have as many flavours as you want in your blog.
 
+.. Warning::
 
-   **A WARNING ABOUT FLAVOUR NAMES**
+   A warning about flavour names:
 
    The one thing to be aware of is creating a flavour where the name is 
    the same extension as file extensions of your blog entries.  For example,
@@ -161,8 +162,9 @@ This allows you to easily override specific templates in your blog
 (like the header or footer) depending on what category the user is looking
 at.
 
+.. Note::
 
-   **A NOTE ABOUT DATADIR AND FLAVOURDIR**
+   A note about the datadir and flavourdir:
 
    PyBlosxom is backwards compatible with previous versions of
    PyBlosxom.  You can put your flavour files in your datadir.  You
