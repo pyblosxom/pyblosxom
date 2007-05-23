@@ -1,6 +1,6 @@
 :Author: PyBlosxom Development Team
 :Version: $Id$
-:Copyright: This document has been placed in the public domain.
+:Copyright: This document is distributed under the MIT license.
 
 .. contents::
 
@@ -13,11 +13,10 @@ PyBlosxom takes the data provided in the entries and by the plugins and
 transforms it into output using renderers.  Output can be in html, xhtml, 
 xml, or anything else--anything that you could get back from a CGI 
 script or web application.  The default renderer can be set in your 
-config file like this:
-
-::
+config file like this::
 
    py["renderer"] = "blosxom"
+
 
 PyBlosxom comes with two renderers: blosxom and debug.
 
@@ -57,12 +56,12 @@ A flavour consists of a series of templates each of which is a part of
 the page that finally gets rendered.  The minimum set of templates are
 these:
 
- * **content_type** - holds the content type of the flavour
- * **head** - holds everything before all the entries
- * **story** - holds a single entry
- * **foot** - holds everything after all the entries
- * **date_head** - shows at the start of a date
- * **date_foot** - shows at the end of a date
+* **content_type** - holds the content type of the flavour
+* **head** - holds everything before all the entries
+* **story** - holds a single entry
+* **foot** - holds everything after all the entries
+* **date_head** - shows at the start of a date
+* **date_foot** - shows at the end of a date
 
 You can have other templates as well.  Many plugins require additional
 templates in order to work.
@@ -71,21 +70,21 @@ The template files for a given flavour all have the same file extension which
 is the flavour's name.  For example, if you were using an "html" flavour,
 the flavour itself would be composed of the following files:
 
- * content_type.html
- * head.html
- * story.html
- * foot.html
- * date_head.html
- * date_foot.html
+* content_type.html
+* head.html
+* story.html
+* foot.html
+* date_head.html
+* date_foot.html
 
 If you want to create a "joy" flavour, you would have the following files:
 
- * content_type.joy
- * head.joy
- * story.joy
- * foot.joy
- * date_head.joy
- * date_foot.joy
+* content_type.joy
+* head.joy
+* story.joy
+* foot.joy
+* date_head.joy
+* date_foot.joy
 
 You can have as many flavours as you want in your blog.
 
@@ -118,9 +117,7 @@ If you want to override the existing flavours, add new flavours, or
 develop your own flavours, you should set the ``flavourdir`` property of 
 your ``config.py`` file.  I have this directory parallel to my datadir.  
 In my flavourdir, I have flavour directories--one for each flavour in my 
-blog:
-
-::
+blog::
 
    home
     |-- willg/
@@ -183,18 +180,14 @@ This is the list of variables that are available to your templates.
 Additionally, plugins that you are using will add additional variables.
 
 To use a variable in a template, prefix the variable name with a $.
-For example, this would expand to the blog's title as a h2:
-
-::
+For example, this would expand to the blog's title as a h2::
 
    <h2>$title</h2>
 
 
 To get a complete list of what variables are available in your blog, use 
 the debug renderer by changing the renderer property in your 
-``config.py`` file to debug like this:
-
-::
+``config.py`` file to debug like this::
 
    py["renderer"] = "debug"
 
@@ -264,9 +257,7 @@ from your ``config.py`` file.
 
 Additionally, any other properties you set in ``config.py`` are available 
 in your templates.  If you wanted to create a ``blog_images`` variable 
-holding the base url of the directory with all your images:
-
-::
+holding the base url of the directory with all your images::
 
    py["blog_images"] = "http://www.joe.com/~joe/images/"
 
@@ -492,9 +483,7 @@ variable in the query-string.  Examples:
 
 
 You can change the default flavour from ``html`` to some other flavour 
-in your ``config.py`` file with the ``default_flavour`` property:
-
-::
+in your ``config.py`` file with the ``default_flavour`` property::
 
    py["default_flavour"] = "joy"
 

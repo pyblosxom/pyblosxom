@@ -1,6 +1,6 @@
 :Author: PyBlosxom Development Team
 :Version: $Id$
-:Copyright: This document has been placed in the public domain.
+:Copyright: This document is distributed under the MIT license.
 
 .. contents::
 
@@ -49,6 +49,13 @@ anything else, let us know on the `pyblosxom-devel`_ mailing list.
 Details of mailing lists and other contact information are on our
 web-site at http://pyblosxom.sourceforge.net/.
 
+
+**about_pyblosxom.txt**
+
+   This document covers what PyBlosxom is and the goals of the PyBlosxom
+   project.  It also has a section on who probably shouldn't use PyBlosxom.
+   Additionally, it has a section on where to go for help if you're having
+   problems with PyBlosxom.
 
 **installation.txt**
 
