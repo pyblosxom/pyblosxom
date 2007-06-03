@@ -12,13 +12,15 @@ Pertinent to users:
    Bug 1667937.  (Thanks Michael!)
 
 3. PyBlosxom is now locale aware in respects to dates, months, days of the
-   week and such.  Users should set the "locale" config property to a
+   week and such.  Users should set the locale config property to a
    valid locale if they don't want English.
 
-4. Added a $blog_icbm config variable, for use in the ICBM meta tag.
+4. Added a ``blog_icbm`` config variable for use in the ICBM meta tag.  See
+   config_variables.txt for more information.
 
-5. Changed the num_entries property in config.py from 40 to a much more
-   conservative 5.  
+5. Changed the ``num_entries`` property in config.py from 40 to a much more
+   conservative 5.  Also changed the default value from 0 to 5 if you
+   happened not to set ``num_entries`` at all.
    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=373658
    (Thanks Jon!)
 
@@ -31,6 +33,9 @@ Pertinent to users:
    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=367127
    (Thanks Martin!)
 
+8. Translated all documentation from Docbook to reST.  reST documentation
+   is easier to read in "source-form" and a lot easier to convert to HTML
+   and other formats using the Python docutils tools.
 
 Pertinent to developers:
 ------------------------
@@ -40,10 +45,6 @@ Pertinent to developers:
 2. cb_filestat will only do an os.stat if no plugin handles the filestat.
    Previously, cb_filestat did an os.stat and ran through all the
    plugins allowing them to over-ride it.
-
-3. Moved documentation docbook files form /doc to /docsrc figuring it
-   makes more sense because they need to be "compiled" before they're
-   useful.
 
 
 Changes between 1.3.1 and 1.3.2
@@ -64,7 +65,7 @@ Changes between 1.3 and 1.3.1
 Pertinent to users:
 -------------------
 
-1. The "num_entries" property now affects the home page and category
+1. The ``num_entries`` property now affects the home page and category
    index pages.  It no longer affects archive index pages.
 
 2. Fixed the RSS 0.9.1 feed templates.  It has the correct link url
@@ -72,16 +73,16 @@ Pertinent to users:
 
 3. The version string is correct.
 
-4. Added support for $body_escaped .
+4. Added support for ``$body_escaped`` .
 
 5. Fixed the blog encoding on the RSS 2.0 feed so that it uses the
-   value provided in the config.py $blog_encoding variable.
+   value provided in the config.py ``$blog_encoding`` variable.
 
-6. Fixed the Atom 1.0 story flavour to use $body_escaped instead of
-   <![CDATA[ $body ]]>
+6. Fixed the Atom 1.0 story flavour to use ``$body_escaped`` instead of
+   ``<![CDATA[ $body ]]>``
 
-7. Fixed a problem with static rendering where we'd render "/index.html"
-   and "//index.html" if the user had entries in their root category.
+7. Fixed a problem with static rendering where we'd render ``/index.html``
+   and ``//index.html`` if the user had entries in their root category.
 
 
 Pertinent to developers:
@@ -100,19 +101,19 @@ Changes between 1.2 and 1.3
 Pertinent to users:
 -------------------
 
-1. We added a "blog_rights" property.  This holds a textual description
+1. We added a ``blog_rights`` property.  This holds a textual description
    of the rights you give to others who read your blog.  Leaving this
-   blank or not filling it in will affect the RSS 2.0 and ATOM 1.0
+   blank or not filling it in will affect the RSS 2.0 and Atom 1.0
    feeds.
 
-2. If you set "flavourdir" in your config.py file, you have to put
+2. If you set ``flavourdir``in your config.py file, you have to put
    your flavour files in that directory tree.  If you don't set
-   "flavourdir", then PyBlosxom expects to find your flavour files
-   in your "datadir".
+   ``flavourdir``, then PyBlosxom expects to find your flavour files
+   in your ``datadir``.
 
    The flavour overhaul is backwards compatible with previous PyBlosxom
    versions.  So if you want to upgrade your blog, but don't want to
-   move your flavour files to a new directory, DON'T set your "flavourdir" 
+   move your flavour files to a new directory, DON'T set your ``flavourdir``
    property.
 
 3. Moved the content that was in README to CHANGELOG.
@@ -127,15 +128,15 @@ Pertinent to users:
    useful for determining whether events in PyBlosxom are logged and
    what will get logged:
 
-   "log_file" - the file that PyBlosxom events will be logged to--the
-                web-server MUST be able to write to this file.
+   * "log_file" - the file that PyBlosxom events will be logged to--the
+     web-server MUST be able to write to this file.
 
-   "log_level" - the level of events to write to the log.  options are
-                 "critical", "error", "warning", "info", and "debug"
+   * "log_level" - the level of events to write to the log.  options are
+     "critical", "error", "warning", "info", and "debug"
 
-   "log_filter" - the list of channels that should have messages logged.
-                  if you set the log_filter and omit "root", then app-level
-                  messages are not logged.
+   * "log_filter" - the list of channels that should have messages logged.
+     if you set the log_filter and omit "root", then app-level
+     messages are not logged.
 
    It's likely you'll want to set log_file and log_level and that's it.
    Omit log_file and logging will fall back to stderr which usually gets
@@ -156,32 +157,31 @@ Changes between 1.1 and 1.2
 Pertinent to users:
 -------------------
 
-1. We added a "blog_email" item to config.py and changed "blog_author"
+1. We added a ``blog_email`` item to config.py and changed ``blog_author``
    to just the author's name.  Examples:
 
-   py["blog_email"] = "joe@blah.com"
-   py["blog_author"] = "Joe Man"
+      py["blog_email"] = "joe@blah.com"
+      py["blog_author"] = "Joe Man"
 
-2. We no longer adjust blog_title from what you set in config.py.  Now
-   we have a "blog_title_with_path" variable which is in the data dict
-   which is the blog_title with the path information.  People who want
+2. We no longer adjust blog_title from what you set in ``config.py``.  Now
+   we have a ``blog_title_with_path`` variable which is in the data dict
+   which is the ``blog_title`` with the path information.  People who want
    the title of their blog to be the title and not include the path
-   should use $blog_title.  Folks who want the old behavior where the
-   path was appended to the title should use $blog_title_with_path .
+   should use ``$blog_title``.  Folks who want the old behavior where the
+   path was appended to the title should use ``$blog_title_with_path`` .
 
 3. We now support WSGI, mod_python, and Twisted in addition to CGI.
 
 4. Upped our Python requirement to Python 2.2.  If you have an earlier
    version than that, you won't be able to use PyBlosxom 1.2.
 
-5. Changed "defaultFlavour" to "default_flavour".  This property allows
+5. Changed ``defaultFlavour`` to ``default_flavour``.  This property allows
    you to specify the flavour to use by default if the URI doesn't
-   specify one.  It default to "html".
+   specify one.  It default to ``html``.
 
 6. We moved the main PyBlosxom site to http://pyblosxom.sourceforge.net/ .
-   There's a "powered by pyblosxom" image at:
-
-      http://pyblosxom.sourceforge.net/images/pb_pyblosxom.gif
+   There's a "powered by pyblosxom" image at
+   http://pyblosxom.sourceforge.net/images/pb_pyblosxom.gif
 
    You should adjust your templates accordingly.
 
@@ -193,14 +193,14 @@ Pertinent to developers and plugin developers:
    for more details.
 
 2. Don't use os.environ directly--use the http dict.  For example, this
-   is bad:
+   is bad::
 
-   path_info = os.environ["HTTP_PATHINFO"]
+      path_info = os.environ["HTTP_PATHINFO"]
 
-   This is what you should be doing:
+   This is what you should be doing::
 
-   http = request.getHttp()
-   path_info = http["HTTP_PATHINFO"]
+      http = request.getHttp()
+      path_info = http["HTTP_PATHINFO"]
 
    If you use os.environ directly, it's likely your plugin won't work
    with non-CGI installations of PyBlosxom.
@@ -209,11 +209,12 @@ Pertinent to developers and plugin developers:
    to the Request object.  All of them access the input stream.
    You should not use sys.stdin directly.
    
-   Usage:
-   data = request.read()
-   data_part = request.read(1024)
-   one_line = request.readline()
-   lines = request.readlines()
+   Usage::
+
+      data = request.read()
+      data_part = request.read(1024)
+      one_line = request.readline()
+      lines = request.readlines()
 
 4. The output stream should be accessed through the PyBlosxom Response
    object.  The following methods are implemented in the Response
@@ -222,23 +223,24 @@ Pertinent to developers and plugin developers:
    You should not use sys.stdout directly. See the
    API for more details.
 
-   Usage:
-   response = request.getResponse()
-   response.addHeader('Status', '200 Ok')
-   response.addHeader('Content-type', 'text/html')
-   response.write("Hello World")
-   response.writelines(["list", "of", "data"])
+   Usage::
 
-5. Instead of doing:
+      response = request.getResponse()
+      response.addHeader('Status', '200 Ok')
+      response.addHeader('Content-type', 'text/html')
+      response.write("Hello World")
+      response.writelines(["list", "of", "data"])
 
-   form = request.getHttp()["form"]
+5. Instead of doing::
 
-   you can now do:
+      form = request.getHttp()["form"]
 
-   form = request.getForm()
+   you can now do::
+
+      form = request.getForm()
 
 6. Plugins should not be importing the config module and looking at the
-   py dict directly.  You should instead use the Request 
+   ``py`` dict directly.  You should instead use the Request 
    getConfiguration() method to get the config py dict.
 
 
@@ -249,14 +251,13 @@ Pertinent to users:
 -------------------
 
 1. We no longer include contributed plugins and flavours.  To find
-   plugins and flavours, go to the PyBlosxom registry located at:
+   plugins and flavours, go to the PyBlosxom registry located at
+   http://pyblosxom.sourceforge.net/ .
 
-   http://pyblosxom.sourceforge.net/
-
-2. We changed how num_entries is handled internally.  If num_entries
-   is set to 0, the blosxom default file handler will display all
-   the entries.  If num_entries is set to a positive number, then
-   the blosxom default file handler will display at most that many
+2. We changed how ``num_entries`` is handled internally.  If 
+   ``num_entries`` is set to 0, the blosxom default file handler will 
+   display all the entries.  If ``num_entries`` is set to a positive number, 
+   then the blosxom default file handler will display at most that many
    entries.
 
 
@@ -264,7 +265,7 @@ Pertinent to developers and plugin developers:
 ----------------------------------------------
 
 1. Plugins that implement cb_filelist are now in charge of adjusting
-   the number of entries to be displayed based on the num_entries
+   the number of entries to be displayed based on the ``num_entries``
    configuration variable.  This is no longer done in the renderer.
 
 2. We added HTTP_COOKIE to the list of things that get added to the http
@@ -277,29 +278,29 @@ Changes between 0.9 and 1.0
 Pertinent to users:
 -------------------
 
-1. We ditched "blosxom_custom_flavours"--you can remove it from your 
-   config.py file.
+1. We ditched ``blosxom_custom_flavours``--you can remove it from your 
+   ``config.py`` file.
 
 2. We added static rendering--see the howto in the PyBlosxom manual.
 
 3. Rewrote comments to use the new handler system.  You should replace
    the comments, pingbacks, trackbacks, and other comments-oriented
-   plugins with the new versions from contrib/plugins/comments/
+   plugins with the new versions from ``contrib/plugins/comments/``.
 
-4. pingbacks plugin is now xmlrpc_pingbacks.py .
+4. pingbacks plugin is now ``xmlrpc_pingbacks.py`` .
 
 5. Adjusted the default templates for HTML and RSS.  Removed all other
    default templates.  Look at the flavour_examples directory for
    flavour examples.
 
-6. Added an "ignore_properties" property to config.py which allows you to
-   specify which directories in your datadir should be ignored.  For
-   example:
+6. Added an ``ignore_properties`` property to ``config.py`` which allows 
+   you to specify which directories in your datadir should be ignored.  
+   For example::
 
-     py["ignore_directories"] = ["CVS", ".svn"]
+      py["ignore_directories"] = ["CVS", ".svn"]
 
-7. Added a template variable "pyblosxom_version" which points to
-   pyblosxom/Pyblosxom/pyblosxom.VERSION_DATE .
+7. Added a template variable ``pyblosxom_version`` which points to
+   ``pyblosxom/Pyblosxom/pyblosxom.VERSION_DATE`` .
 
 8. Fixed some code in pyarchives so it worked with Python 2.1.
    Thanks to Wilhelm.
@@ -308,7 +309,7 @@ Pertinent to users:
    to use for a given category or parent categories.  Thanks to Nathan 
    for fixing this.
 
-10. We added a "logdir" property to config.  PyBlosxom (and plugins) will
+10. We added a ``logdir`` property to config.  PyBlosxom (and plugins) will
     create logs in this directory so the directory has to have write
     access for whatever user the webserver uses to run the script.
 
@@ -321,12 +322,12 @@ Pertinent to developers and plugin developers:
    function.
 
 2. Unhardcoded where contrib and web files go when doing a multi-user
-   installation using "python setup.py install".
+   installation using ``python setup.py install``.
 
-3. Adjusted the comments plugin so that if a given entry has a "nocomments"
+3. Adjusted the comments plugin so that if a given entry has a ``nocomments``
    property, then it won't get comments.
 
-4. Moved the Request object into pyblosxom/Pyblosxom/pyblosxom.py .
+4. Moved the Request object into ``pyblosxom/Pyblosxom/pyblosxom.py`` .
 
 5. Fixed variable parsing so that if the variable value is a function that
    takes arguments, we pass the request in as the first argument.
