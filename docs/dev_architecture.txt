@@ -1,3 +1,7 @@
+======================
+PyBlosxom Architecture
+======================
+
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document is distributed under the MIT license.
@@ -5,8 +9,8 @@
 .. contents::
 
 
-PyBlosxom Architecture
-======================
+Summary
+=======
 
 The architecture for PyBlosxom has evolved over time.  The mission is to 
 build an easily augmented blog server that uses the file system for data 
@@ -23,7 +27,7 @@ FIXME - rework this whole chapter.
 
 
 Parts
------
+=====
 
 PyBlosxom is composed of several parts:
 
@@ -62,7 +66,7 @@ PyBlosxom's behavior and output is then augmented by:
 
 
 Lifecycle of a PyBlosxom Request
---------------------------------
+================================
 
 This is the life cycle of a single PyBlosxom request. It involves the 
 following "entities":
@@ -125,7 +129,7 @@ The PyBlosxom request lifecycle starts with the web-server executing
 
 
 Lifecycle of the blosxom_handler
---------------------------------
+================================
 
 This describes what the blosxom_handler does. This is the default handler 
 for PyBlosxom. It's called by the PyBlosxom instance in the run method if 
@@ -155,7 +159,7 @@ none of the plugins have handled the request already.
 
 
 Lifecycle of the blosxom renderer
----------------------------------
+=================================
 
 The blosxom renderer renders the entries in a similar fashion to what 
 Blosxom does.  The blosxom renderer uses flavour templates and template 
@@ -184,7 +188,7 @@ templates and entry data at the time of rendering that specific piece.
 
 
 Callbacks
----------
+=========
 
 Callbacks allow plugins to override behavior in PyBlosxom or provide
 additional behavior.  The callback mechanism actually encompasses a
@@ -193,7 +197,7 @@ notifiers, and also as modifiers.
 
 
 Types of callbacks
-~~~~~~~~~~~~~~~~~~
+------------------
 
 In the case of handler callbacks, PyBlosxom will query each plugin
 implementing the callback until one of the plugins returns that it
@@ -217,7 +221,7 @@ your plugin gives will affect PyBlosxom's execution.
 
 
 Callbacks that have blosxom equivalents
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------
 
 There are a series of callbacks in PyBlosxom that have equivalents
 in blosxom 2.0.  The names are sometimes different and in most cases
@@ -245,10 +249,10 @@ Additionally, we have these lifecycle callbacks available:
 
 
 Callbacks
----------
+=========
 
 cb_prepare
-~~~~~~~~~~
+----------
 
 The prepare callback is called in the default blosxom handler after 
 we've figured out what we're rendering and before we actually go to the
@@ -290,7 +294,7 @@ Example of a cb_prepare function in a plugin::
 
 
 cb_logrequest
-~~~~~~~~~~~~~
+-------------
 
 The logrequest callback is used to notify plugins of the current 
 PyBlosxom request for the purposes of logging.
@@ -316,7 +320,7 @@ An example input args dict is like this::
 
 
 cb_filelist
-~~~~~~~~~~~
+-----------
 
 The filelist callback allows plugins to generate the list of entries
 to be rendered.  Entries should be EntryBase derivatives--either
@@ -337,7 +341,7 @@ When a function returns a list of entries, the callback will stop.
 
 
 cb_filestat
-~~~~~~~~~~~
+-----------
 
 The filestat callback allows plugins to provide mtimes for entries.
 Plugins may use this to override the mtime stored in the filesystem. 
@@ -364,7 +368,7 @@ PyBlosxom will fall back to calling os.stat().
 
 
 cb_pathinfo
-~~~~~~~~~~~
+-----------
 
 The pathinfo callback allows plugins to parse the HTTP PATH_INFO
 item.  This item is stored in the http dict of the Request object.
@@ -392,7 +396,7 @@ to the data dict in place--no need to return anything.
 
 
 cb_renderer
-~~~~~~~~~~~
+-----------
 
 The renderer callback allows plugins to specify a renderer to use by
 returning a renderer instance to use.  If no renderer is specified,
@@ -411,7 +415,7 @@ stops.
 
 
 cb_entryparser
-~~~~~~~~~~~~~~
+--------------
 
 The entryparser callback allows plugins to register the entryparsers
 they have.  Entry parsers are linked with a filename extension.  For
@@ -427,7 +431,7 @@ dict after modifying it.
 
 
 cb_preformat
-~~~~~~~~~~~~
+------------
 
 The preformat callback acts in conjunction with the entryparser
 that handled the entry to do a two-pass formatting of the entry.
@@ -449,7 +453,7 @@ didn't modify the story or a single story string.
 
 
 cb_postformat
-~~~~~~~~~~~~~
+-------------
 
 The postformat callback allows plugins to make further modifications
 to entry text.  It typically gets called after a preformatter by
@@ -479,7 +483,7 @@ anything--modifications to the entry_data dict are done in place.
 
 
 cb_start
-~~~~~~~~
+--------
 
 The start callback allows plugins to execute startup/initialization code.
 Use this callback for any setup code that your plugin needs, like:
@@ -510,7 +514,7 @@ anything.
 
 
 cb_end
-~~~~~~
+------
 
 The start callback allows plugins to execute teardown/cleanup code,
 save any data that hasn't been saved, clean up temporary files,
@@ -542,7 +546,7 @@ anything.
 
 
 cb_head
-~~~~~~~
+-------
 
 The head callback is called before a head flavour template is rendered.
 
@@ -582,7 +586,7 @@ to the ``$blog_title`` variable::
 
 
 cb_date_head
-~~~~~~~~~~~~
+------------
 
 The date_head callback is called before a date_head flavour template is
 rendered.
@@ -609,7 +613,7 @@ dict whether or not they adjust anything in it.
 
 
 cb_story
-~~~~~~~~
+--------
 
 The story callback gets called before the entry is rendered.
 
@@ -638,7 +642,7 @@ dict whether or not they adjust anything in it.
 
 
 cb_story_end
-~~~~~~~~~~~~
+------------
 
 The story_end callback is is called after the variables in the entry 
 are substituted into the template.  You have access to all the 
@@ -659,7 +663,7 @@ dict whether or not they adjust anything in it.
 
 
 cb_foot
-~~~~~~~
+-------
 
 The foot callback is called before the variables in the entry are 
 substituted into the foot template.  This is the place to modify the 
@@ -682,20 +686,20 @@ dict whether or not they adjust anything in it.
 
 
 Entry Parsers
--------------
+=============
 
 FIXME
 
 
 
 Pre-formatters and Post-formatters
-----------------------------------
+==================================
 
 FIXME
 
 
 
 Renderers
----------
+=========
 
 FIXME

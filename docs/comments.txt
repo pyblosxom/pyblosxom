@@ -171,9 +171,7 @@ Writing comments plugin templates
 =================================
 
 This "diagram" shows which templates are responsible for what for rendering
-a single entry.
-
-::
+a single entry::
 
     <div class="news">           <- story.html
     <h2>$title</h2>               |
@@ -195,7 +193,6 @@ a single entry.
     form stuff here.              |
     </div>                        |
     </div>                       <-
-
 
 
 

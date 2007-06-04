@@ -1,3 +1,7 @@
+===============
+Writing Plugins
+===============
+
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document is distributed under the MIT license.
@@ -5,8 +9,8 @@
 .. contents::
 
 
-Writing Plugins
-===============
+Summary
+=======
 
 This chapter covers a bunch of useful things to know when writing
 PyBlosxom plugins.  This chapter, moreso than the rest of this manual,
@@ -16,7 +20,7 @@ FIXME - absorb from wiki, Will's tips, and tutorials
 
 
 Things that all plugins should have
------------------------------------
+===================================
 
 All plugins should have a docstring at the top of the file that describes
 in detail:
@@ -196,7 +200,7 @@ plugin::
 
 
 How to log messages to a log file
----------------------------------
+=================================
 
 First you need to get the logger instance.  After that, you can call 
 debug, info, warning, error and critical on the logger instance.  For 
@@ -217,7 +221,7 @@ example::
 
 
 How to store plugin state between callbacks
--------------------------------------------
+===========================================
 
 The easiest way to store state between callbacks is to store the data
 in the data dict of the Request object.  For example::
@@ -242,7 +246,7 @@ in the data dict of the Request object.  For example::
 
 
 How to implement a callback
----------------------------
+===========================
 
 If you want to implement a callback, you add a function corresponding
 to the callback name to your plugin module.  For example, if you wanted
@@ -266,7 +270,7 @@ that are available, their arguments, and return values.
 
 
 Writing an entryparser
-----------------------
+======================
 
 Entry parsing functions take in a filename and the Request object.
 They then open the file and parse it out.  The can call cb_preformat and 
@@ -319,7 +323,7 @@ metadata the body of the entry::
 
 
 Writing a preformatter plugin
------------------------------
+=============================
 
 FIXME - need more about preformatters here
 

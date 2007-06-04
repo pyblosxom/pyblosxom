@@ -1,3 +1,7 @@
+================
+Static Rendering
+================
+
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document is distributed under the MIT license.
@@ -5,8 +9,8 @@
 .. contents::
 
 
-Static Rendering
-================
+Summary
+=======
 
 Static rendering made its first appearance in PyBlosxom 1.0.  It fills the 
 functionality gap for people who want to use PyBlosxom, but don't have a 
@@ -24,7 +28,7 @@ Beyond that, it's not particularly sophisticated.
 
 
 Configuring Static Rendering
-----------------------------
+============================
 
 These are the instructions for configuring static rendering in PyBlosxom.
 
@@ -79,10 +83,16 @@ Here's an example of static rendering configuration::
 
 
 Running Static Rendering
-------------------------
+========================
+
+There are two ways to run static rendering.  The first is to render
+your entire blog from scratch (see "render everything") and the second
+is to render only the parts of the blog that will be different because
+of new blog entries or updated blog entries (see "incremental rendering").
+
 
 Render Everything
-~~~~~~~~~~~~~~~~~
+-----------------
 
 If you're using PyBlosxom 1.4 or later, run the static renderer like
 this to render all pages in your blog::
@@ -102,7 +112,7 @@ be rendered and then renders them all one by one.
 
 
 Incremental Rendering
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 We have incremental rendering which will find all the entries that have 
 changed since we rendered them and then re-render them.  It does this by 
@@ -122,7 +132,7 @@ static renderer like this::
 
 
 Rendering Other URIs
---------------------
+====================
 
 Some plugins provide other URIs that are part of your site, but not 
 really part of your blog since they're not related to entries.  Examples 
@@ -149,7 +159,7 @@ for my main page, I would set it like this::
 
 
 Additional Thoughts
--------------------
+===================
 
 Static rendering is pretty simplistic. We use the ``tools.render_url`` 
 function to render each url.  Plugins that need to re-render the entry 

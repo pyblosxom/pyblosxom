@@ -1,3 +1,7 @@
+===================
+config.py variables
+===================
+
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document is distributed under the MIT license.
@@ -5,8 +9,9 @@
 .. contents::
 
 
-config.py variables
-===================
+
+Summary
+=======
 
 This is a non-comprehensive list of configuration variables in ``config.py``.
 
@@ -25,8 +30,12 @@ directory with media files and use that in your templates.
 
 ----------------------------
 
+Variables
+=========
+
+
 base_url
-~~~~~~~~
+--------
 
 **REQUIRED**: no
 
@@ -72,7 +81,7 @@ on my web-server so that the base_url looked like this:
 ----------------------------
 
 blog_author
-~~~~~~~~~~~
+-----------
 
 **REQUIRED**: no
 
@@ -97,7 +106,7 @@ might set his blog_author to "Magic Rocks"::
 ----------------------------
 
 blog_description
-~~~~~~~~~~~~~~~~
+----------------
 
 **REQUIRED**: no
 
@@ -136,7 +145,7 @@ might go like this::
 ----------------------------
 
 blog_email
-~~~~~~~~~~
+----------
 
 **REQUIRED**: no
 
@@ -156,7 +165,7 @@ address as such::
 ----------------------------
 
 blog_encoding
-~~~~~~~~~~~~~
+-------------
 
 **REQUIRED**: YES
 
@@ -191,7 +200,7 @@ valid encoding value?
 ----------------------------
 
 blog_icbm
-~~~~~~~~~
+---------
 
 **REQUIRED**: no
 
@@ -215,7 +224,7 @@ FIXME - how can you figure out where you are?
 ----------------------------
 
 blog_language
-~~~~~~~~~~~~~
+-------------
 
 **REQUIRED**: YES
 
@@ -235,7 +244,7 @@ FIXME - where's a list of valid language codes?
 ----------------------------
 
 blog_title
-~~~~~~~~~~
+----------
 
 **REQUIRED**: YES
 
@@ -256,7 +265,7 @@ his blog::
 ----------------------------
 
 codebase
-~~~~~~~~
+--------
 
 **REQUIRED**: no
 
@@ -286,7 +295,7 @@ like this::
 ----------------------------
 
 datadir
-~~~~~~~
+-------
 
 **REQUIRED**: YES
 
@@ -320,7 +329,7 @@ For example, if you are storing your blog entries in
 ----------------------------
 
 flavourdir
-~~~~~~~~~~
+----------
 
 **REQUIRED**: no
 
@@ -366,7 +375,7 @@ set flavourdir and datadir like this::
 ----------------------------
 
 default_flavour
-~~~~~~~~~~~~~~~
+---------------
 
 **REQUIRED**: no
 
@@ -397,7 +406,7 @@ For example, the following will all use the "joy" flavour::
 ----------------------------
 
 ignore_directories
-~~~~~~~~~~~~~~~~~~
+------------------
 
 **REQUIRED**: no
 
@@ -431,7 +440,7 @@ tree.
 ----------------------------
 
 load_plugins
-~~~~~~~~~~~~
+------------
 
 **REQUIRED**: no
 
@@ -499,7 +508,7 @@ would set load_plugins to::
 ----------------------------
 
 locale
-~~~~~~
+------
 
 **REQUIRED**: no
 
@@ -530,7 +539,7 @@ in the Netherlands you'd set locale to::
 ----------------------------
 
 log_file
-~~~~~~~~
+--------
 
 **REQUIRED**: no
 
@@ -560,7 +569,7 @@ If you were on Windows, then you might set it to::
 ----------------------------
 
 log_level
-~~~~~~~~~
+---------
 
 **REQUIRED**: no
 
@@ -602,7 +611,7 @@ set the log_level like this::
 ----------------------------
 
 log_filter
-~~~~~~~~~~
+----------
 
 **REQUIRED**: no
 
@@ -641,7 +650,7 @@ PyBlosxom or is the channel name specified when logging?
 ----------------------------
 
 num_entries
-~~~~~~~~~~~
+-----------
 
 **REQUIRED**: no
 
@@ -666,7 +675,7 @@ show on your category index pages, you sould set it like this::
 ----------------------------
 
 plugin_dirs
-~~~~~~~~~~~
+-----------
 
 **REQUIRED**: no
 

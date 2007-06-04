@@ -1,3 +1,7 @@
+====================
+Installing PyBlosxom
+====================
+
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document is distributed under the MIT license.
@@ -5,8 +9,9 @@
 .. contents::
 
 
-Installing PyBlosxom
-====================
+
+Summary
+=======
 
 While there are many ways to install PyBlosxom, the most common one is
 to install PyBlosxom as a CGI script for a single user.  This
@@ -34,8 +39,9 @@ mailing list are on our `web-site`_.
    your PyBlosxom installation which you will have to do by hand.
 
 
+
 Pre-requisites for installing PyBlosxom
----------------------------------------
+=======================================
 
 You will need:
 
@@ -50,7 +56,7 @@ also need:
 
 
 Installing PyBlosxom
---------------------
+====================
 
 Installing PyBlosxom should take 5-10 minutes depending on what state
 your system is currently in.  The installation consists of seven
@@ -161,7 +167,7 @@ Here are the steps you need to do to install PyBlosxom:
  
 
 Trouble-shooting
-----------------
+================
 
 We're going to try to break this down a bit into categories.  Bear
 with us and keep trying things.  If you have problems and have gone
@@ -174,7 +180,7 @@ our `Contact Us`_ page.
 
 
 Running ./pyblosxom.cgi doesn't work
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------
 
 First, you should check to see if you have Python installed on your
 system.  If not, then please install Python.
@@ -191,7 +197,7 @@ running ``./pyblosxom.cgi`` again.
 
 
 I see a HTTP 404 error when I try to bring up my blog
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------------------
 
 When you try to look at your blog and you get a HTTP 404 error, then
 you're using the wrong URL.  Are you futzing with ``.htaccess``?  Does
@@ -201,7 +207,7 @@ URLs that work on your system?
 
 
 I see a HTTP 500 error when I try to bring up my blog
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------------------
 
 When you try to look at your blog and you get a HTTP 500 error, check
 your server logs.  For Apache, look for the ``error.log`` file in a
@@ -236,7 +242,7 @@ that only show up in certain situations.
 
 
 I have other issues
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Try changing the renderer for your blog to the debug renderer.  You
 can do this by setting the ``renderer`` property in your ``config.py``
@@ -245,13 +251,16 @@ get set to and may help you figure out your issues.
 
 
 UGH!  My blog looks UGLY!
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 Read the chapter on *Flavours and Templates* to help you out.
 
 
 
 I hate writing in HTML!
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
-That's ok.  Read the chapter on *Entry Parsers*.
+That's ok.  PyBlosxom supports entry parsers which allow you to format
+your blog entries in any formatting markup that someone has written
+a plugin for.  See the article on "writing entries" for more information.
+

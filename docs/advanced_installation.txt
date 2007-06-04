@@ -1,3 +1,7 @@
+=====================
+Advanced Installation
+=====================
+
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document is distributed under the MIT license.
@@ -5,10 +9,9 @@
 .. contents::
 
 
-Advanced Installation
-=====================
 
-Don't try any of this until you've gotten your blog up and running.
+We encourage you not to try any of this until you've gotten a blog up
+and running.
 
 This chapter covers additional advanced things you can do to your blog
 that will make it nicer.  However, they're not necessary and they're
@@ -25,7 +28,7 @@ go a long way in helping us to help you.
 
 
 Using mod_python, Twisted or WSGI
----------------------------------
+=================================
 
 PyBlosxom 1.2 has preliminary support for other frameworks than CGI.
 While we think it works fine, it could use some more testing.
@@ -35,7 +38,7 @@ WSGI.
 
 
 Renaming the pyblosxom.cgi Script
----------------------------------
+=================================
 
 In the default installation, the PyBlosxom script is named ``pyblosxom.cgi``.
 
@@ -64,7 +67,7 @@ Both methods are described here in more detail.
 
 
 Change the Name of the pyblosxom.cgi Script
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------
 
 There's no reason that ``pyblosxom.cgi`` has to be named
 ``pyblosxom.cgi``.  Let's try changing it from ``pyblosxom.cgi`` to
@@ -114,7 +117,7 @@ take effect.
 
 
 Hiding the .cgi with RewriteRule
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
 Apache has a module for URL rewriting which allows you to convert
 incoming URLs to other URLs that can be handled internally.  You can

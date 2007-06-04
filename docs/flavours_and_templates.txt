@@ -1,3 +1,8 @@
+========
+Flavours
+========
+
+
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document is distributed under the MIT license.
@@ -5,9 +10,8 @@
 .. contents::
 
 
-Flavours
-========
-
+Summary
+=======
 
 PyBlosxom takes the data provided in the entries and by the plugins and
 transforms it into output using renderers.  Output can be in html, xhtml, 
@@ -38,7 +42,7 @@ the blosxom renderer which comes with PyBlosxom.
 
 
 Flavours and Templates
-----------------------
+======================
 
 The blosxom renderer uses the same template style that Blosxom uses.  As
 such, you can use most Blosxom flavour templates and only have to make some
@@ -112,7 +116,7 @@ submitted.
 
 
 Where to Put Your Flavour Files
--------------------------------
+===============================
 
 If you want to override the existing flavours, add new flavours, or
 develop your own flavours, you should set the ``flavourdir`` property of 
@@ -176,7 +180,7 @@ at.
 
 
 Template Variables
-------------------
+==================
 
 This is the list of variables that are available to your templates.
 Additionally, plugins that you are using will add additional variables.
@@ -200,7 +204,7 @@ in the request.  Don't forget to change it back when you're done!
 
 
 URL Encoding and Escaping of Template Variables
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------------
 
 PyBlosxom versions 1.3 and later allows you to escape and URL encode 
 any variables by adding ``_escaped`` or ``_urlencoded`` to the end of 
@@ -216,7 +220,7 @@ the Python urllib.
 
 
 Variables from config.py
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 These template variables are available to all templates.  They come directly 
 from your ``config.py`` file.
@@ -269,7 +273,7 @@ to your ``config.py`` file and it would be available in all your templates.
 
 
 Calculated Template Variables
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
 These template variables are available to all templates as well.  They are 
 calculated based on the request.
@@ -336,7 +340,7 @@ calculated based on the request.
 
 
 Template Variables Only Available in the story Template
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------
 
 These template variables are only available in your story template.
 
@@ -444,7 +448,7 @@ These template variables are only available in your story template.
 
 
 Template Variables from Plugins
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 Many plugins will create additional variables that are available in
 templates.  Refer to the documentation of the plugins that you have
@@ -453,7 +457,7 @@ installed to see what variables are available and what they do.
 
 
 Invoking a Flavour
-------------------
+==================
 
 The flavour for a given page is specified in the extension of the file 
 being requested.  For example:
@@ -503,7 +507,7 @@ above, then the following URIs will use the default flavour:
 
 
 Order of Operations to Figure Out Which Flavour to Use
-------------------------------------------------------
+======================================================
 
 We know that you can specify the default flavour to use in the ``config.py`` 
 file with the ``default_flavour`` property.  We know that the user can 
@@ -523,7 +527,7 @@ The order in which we figure out which flavour to use is this:
 
 
 Examples of Templates
----------------------
+=====================
 
 For examples of templates and flavours, see the included flavours
 that come with your PyBlosxom installation.

@@ -1,3 +1,7 @@
+===============
+Writing Entries
+===============
+
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document is distributed under the MIT license.
@@ -5,11 +9,9 @@
 .. contents::
 
 
-Writing Entries
-===============
 
 Categories
-----------
+==========
 
 Writing entries in PyBlosxom is fairly straightforward.  Each entry
 is a single text file located somewhere in the directory tree of your
@@ -32,8 +34,9 @@ Don't worry about making sure you have all the categories you need up
 front--you can add them as you need them.
 
 
+
 The Format of an Entry
-----------------------
+======================
 
 PyBlosxom entries consist of three parts: the title, the metadata, and
 then the body of the entry.  The first line is title of the entry.  Then
@@ -95,8 +98,9 @@ variable ``$mood`` would be filled in with ``bored`` and ``$music``
 would be filled in with ``The Doors - Greatest Hits Vol 1``.
 
 
+
 Posting Date
-------------
+============
 
 The posting date of the entry file is the modification time (also known as
 mtime) on the file itself as stored by your file system.  Every time you 
@@ -150,7 +154,7 @@ in the following example of output::
 
 
 Entry Parsers
--------------
+=============
 
 PyBlosxom supports only one format for entry files by default.  This format
 is the same format that blosxom uses.  The extension for this format is 
@@ -187,16 +191,18 @@ Details on the various entry parsers should be at the top of the entry
 parser plugin itself in the Python doc-string.
 
 
+
 Beyond Editors
---------------
+==============
 
 There's no reason that all your entries have to come from editing blog entry
 text files in your datadir.  You could rig up procmail to look for emails
 that meet a certain description and convert those emails into blog entries.
 
 
+
 weblog-add
-~~~~~~~~~~
+----------
 
 You can find the weblog-add CGI script in the Plugin Registry at
 http://pyblosxom.sourceforge.net/ .  This script allows you to create
@@ -226,7 +232,7 @@ don't remember what file names exist and what don't.
 
 
 w.bloggar
-~~~~~~~~~
+---------
 
 PyBlosxom works with w.bloggar (http://www.wbloggar.com/).  In order to 
 use w.bloggar you have to do the following:
@@ -271,7 +277,7 @@ FIXME - Does this still work?
 
 
 Using Ecto
-~~~~~~~~~~
+----------
 
 FIXME - I need instructions for this
 

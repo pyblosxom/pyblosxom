@@ -1,3 +1,7 @@
+===============
+About PyBlosxom
+===============
+
 :Author: PyBlosxom Development Team
 :Version: $Id$
 :Copyright: This document is distributed under the MIT license.
@@ -5,12 +9,9 @@
 .. contents::
 
 
-PyBlosxom
-=========
-
 
 About PyBlosxom
----------------
+===============
 
 PyBlosxom is a lightweight weblog system.  It was originally a Python
 clone of Blosxom but has since evolved into a weblog system of its own
@@ -35,7 +36,7 @@ the things you need to do without building everything from scratch.
 
 
 Who shouldn't use PyBlosxom
----------------------------
+===========================
 
 PyBlosxom is a small project.  As such, we have no customer support
 hotline, our documentation will be eternally half-done, and it's
@@ -74,7 +75,7 @@ work together to make PyBlosxom better for all of us.
 
 
 Where to go for help
---------------------
+====================
 
 The PyBlosxom project web-site is `hosted on SourceForge`_.  There, you
 can find up-to-date documentation, manuals, project status and mailing
