@@ -52,9 +52,8 @@ PROJECT INFRASTRUCTURE
 
 UNIT TESTING
 
- - We need a unit testing framework and unit tests.  Seriously.
-   (Will - I'm using cheesecake and modeling the test system on things they
-   suggest.  Right now I'm writing unit tests using nose as the framework.)
+ - We need additional unit and functional tests.  Part of the testing
+   framework is in as of PyBlosxom 1.4.  This needs to be fleshed out.
 
 MANUAL
 
@@ -81,10 +80,12 @@ DATA CACHING
 
 CONFIGURATION DEFAULTS
 
- - These should be centralized somewhere if they aren't already.  Any
-   required configuration elements should be set here.  It might be
-   interesting to get it to the point where you could run PyBlosxom
-   with no config.py file at all.
+ - Defaults for config.py variables need to be centralized somewhere,
+   copied, and then updated with whatever is in config.py.  This should
+   be done instead of get defaults floating across the codebase.
+
+ - We should look into setting defaults to sane values allowing PyBlosxom
+   to run with no config.py file at all.
 
 PATH AND ABSOLUTE PATH
 
@@ -108,7 +109,7 @@ PYTHON VERSIONS
 
 CONFIGURATION
 
- - the Debian package (it might not do this anymore) assumes that
+ - The Debian package (it might not do this anymore) assumes that
    config.py is a site-wide configuration file rather than a user-specific
    configuration file.  MoinMoin has both a site-wide configuration file
    and a user-specific (well...  wiki-specific) configuration file.
@@ -120,6 +121,8 @@ MTIMES
 
  - pyblcmd should go through the datadir and export the mtimes for
    all files (by calling cb_filestat) into a file index
+   (There's an rdate module that copies mtimes into the entries.  We
+   might want to fold this functionality into pyblcmd.)
  - adjust pyblosxom so that it looks for the file index cache before
    the default of stating the file
 
@@ -146,9 +149,9 @@ TEMPLATES
 
 FLAVOUR FILES
 
- - We still have one problem with making flavour files really cool:
-   resources.  If a flavour file requires a .css file or images or
-   something like that, it needs to be handled outside of PyBlosxom
+ - We still have one problem with making flavour files easy to use and
+   install: resources.  If a flavour file requires a .css file or images 
+   or something like that, it needs to be handled outside of PyBlosxom
    by the web-server.  That makes documentation a mild pain in the ass
    and makes it harder to explain in a generic sense how to install
    flavour files.  It'd be cool if there was a way to specify whether
@@ -174,8 +177,8 @@ TAGS
 
 STORAGE
 
- - Walk sucks.  We really need to split it into a couple of more specific
-   functions.  This makes the API easier to use with respects to
-   entries and it'll allow us to optimize the functions using caching
-   and such.
+ - Walk is less than optimal.  We should probably split it into a couple
+   of different functions with hooks allowing for other data persistence
+   methods.  This should make the API easier to use in regards to entries
+   and it'll allow us to optimize the functions using caching more easily.
  - how many plugins use Walk?  for what purposes?
