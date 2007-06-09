@@ -446,6 +446,10 @@ These template variables are only available in your story template.
    Example: ``23``
 
 
+Also, any variables created by plugins that are entry-centric and any
+variables that come from metadata in the entry are available.  See
+those sections in this document for more details.
+
 
 Template Variables from Plugins
 -------------------------------
@@ -453,6 +457,28 @@ Template Variables from Plugins
 Many plugins will create additional variables that are available in
 templates.  Refer to the documentation of the plugins that you have
 installed to see what variables are available and what they do.
+
+
+Template Variables from Entry Metadata
+--------------------------------------
+
+You can add metadata to your entries on an individual basis and this
+metadata is available to your story templates.
+
+For example, if I had a blog entry like this::
+
+   First Post!
+   #mood happy
+   #music The Doors - Break on Through to the Other Side
+   <p>
+     This is the first post to my new PyBlosxom blog.  I've
+     also got two metadata items in it which will be available
+     as variables!
+   </p>
+
+
+You'll have two variables ``$mood`` and ``$music`` that will also
+be available in your story templates.
 
 
 
