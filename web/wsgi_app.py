@@ -2,37 +2,41 @@
 WSGI application launcher for Pyblosxom.
 
 Dependencies:
-  - Pyblosxom 1.2+
-  - wsgiref library from http://cvs.eby-sarna.com/wsgiref/
-  - for mod_python: mp_wsgi_handler.py (mod_python wsgi wrapper)
-    from http://www.c-area.ch/code/
-  - for twisted: twisted_wsgi.py (twisted wsgi wrapper)
-    from http://svn.webwareforpython.org/WSGIKit/trunk/wsgikit/
+
+* Pyblosxom 1.2+
+* wsgiref library from http://cvs.eby-sarna.com/wsgiref/
+* for mod_python: mp_wsgi_handler.py (mod_python wsgi wrapper)
+  from http://www.c-area.ch/code/
+* for twisted: twisted_wsgi.py (twisted wsgi wrapper)
+  from http://svn.webwareforpython.org/WSGIKit/trunk/wsgikit/
 
 Configuration:
-  - put this file in your weblog folder (where pyblosxom.cgi is)
-  - mod_python:
-    Note: If you have a folder in your document root that has the 
-    same name as the Location used below, the SCRIPT_NAME and 
-    PATH_INFO variables will be broken.  You should keep your blog's 
-    files outside your document root.
 
-    <Location /weblog>
-       PythonDebug Off
-       SetHandler python-program
-       # set PythonPath to the folders containing the files.
-       PythonPath "['/path/to/mp_wsgi_handler', '/path/to/wsgi_app']+sys.path"
-       PythonHandler mp_wsgi_handler::wsgi_handler
-       # This should be the same as the Location above
-       PythonOption ApplicationPath /weblog
-       PythonOption application wsgi_app::application
-    </Location>
+1. put this file in your weblog folder (where pyblosxom.cgi is)
+2. mod_python:
+
+   Note: If you have a folder in your document root that has the 
+   same name as the Location used below, the SCRIPT_NAME and 
+   PATH_INFO variables will be broken.  You should keep your blog's 
+   files outside your document root::
+
+      <Location /weblog>
+          PythonDebug Off
+          SetHandler python-program
+          # set PythonPath to the folders containing the files.
+          PythonPath "['/path/to/mp_wsgi_handler', '/path/to/wsgi_app']+sys.path"
+          PythonHandler mp_wsgi_handler::wsgi_handler
+          # This should be the same as the Location above
+          PythonOption ApplicationPath /weblog
+          PythonOption application wsgi_app::application
+       </Location>
         
 Todo:
-  - can this work with paster?
-  - example configuration for FCGI (flup)
-  - example configuration for twisted
-  - more documentation
+
+* can this work with paster?
+* example configuration for FCGI (flup)
+* example configuration for twisted
+* more documentation
 
 $Id$
 """
@@ -94,7 +98,8 @@ def application(env, start_response):
         status = "500 Oops"
         response_headers = [("content-type","text/plain")]
         start_response(status, response_headers)
-        result = ["Pyblosxom WSGI application: A server error occurred.  Please contact the administrator."]
+        result = ["Pyblosxom WSGI application: A server error occurred.  " + \
+                  "Please contact the administrator."]
         if cfg.get('log_level', '') == "debug":
             result.append("\n")
             result.append(_getExcInfo())
