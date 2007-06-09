@@ -3,34 +3,35 @@ py = {}
 ###############
 # Start Below #
 ###############
-# If your PyBlosxom installation is in a funky place, uncomment
-# this next line and point it to your PyBlosxom installation
-# directory.  Note, this should be the directory that holds
-# the "Pyblosxom" directory.
+# If you did not install PyBlosxom as a library (i.e. python setup.py install)
+# then uncomment this next line and point it to your PyBlosxom installation
+# directory.  Note, this should be the directory that holds the 
+# "Pyblosxom" directory (note the case--uppercase P lowercase b!).
 #py["codebase"] = "/path/to/pyblosxom/installation"
 
-# What's the locale for the blog?  This affects things like the 
-# format of dates, etc.
-# Make sure the locale is valid for your system.
-# See the PyBlosxom manual for more details.
+# What is the locale for this blog?  This is used when formatting dates
+# and other locale-sensitive things.  Make sure the locale is valid for
+# your system.  See the PyBlosxom manual for details.
 #py["locale"] = "nl_NL.UTF-8"
+#py["locale"] = "en_US.iso-8859-1"
 
-# What's this blog's title?
+# What is the title of this blog?
 py['blog_title'] = "Another pyblosxom blog"
 
-# What's this blog's description (for outgoing RSS feed)?
+# What is the description of this blog?
 py['blog_description'] = "blosxom with a touch of python"
 
-# What's this blog's author name?
+# Who are the author(s) of this blog?
 py['blog_author'] = "name"
 
-# What's the blog author's email address?
+# What is the email address through which readers of the blog may contact
+# the authors?
 py["blog_email"] = "email@blah.com"
 
-# What's this blog's primary language (for outgoing RSS feed)?
+# What is this blog's primary language (for outgoing RSS feed)?
 py['blog_language'] = "en"
 
-# Encoding for output. Default is iso-8859-1.
+# Encoding for output.  This defaults to iso-8859-1.
 py['blog_encoding'] = "iso-8859-1"
 
 # These are the rights you give to others in regards to the content
@@ -39,24 +40,24 @@ py['blog_encoding'] = "iso-8859-1"
 # it in correctly could result in a feed that doesn't validate.
 py["blog_rights"] = "Copyright 2005 Joe Bobb"
 
-# Where is this blog geographically located? This is used by geocoding aka
-# geotagging crawlers and sites like http://geourl.org/ .
+# Where is this blog geographically located?  This is used by geocoding 
+# (aka geotagging crawlers) and sites like http://geourl.org/ .
 py['blog_icbm'] = '37.448089,-122.159259'
 
 # Where are this blog's entries kept?
 py['datadir'] = "/path/to/blog"
 
-# Where should the application log to?
+# Where should PyBlosxom write logged messages to?
 # If set to "NONE" log messages are silently ignored.
 # Falls back to sys.stderr if the file can't be opened for writing.
 # py['log_file'] = "/path/to/pyblosxom.log"
 
 # At what level should we log to log_file?
 # One of: critical, error, warning, info, debug
-# For production 'warning' or 'error' is recommended.
+# For production, 'warning' or 'error' is recommended.
 # py['log_level'] = "warning"
 
-# Lets you specify which channels should be logged.
+# This lets you specify which channels should be logged.
 # If specified, only messages from the listed channels are logged.
 # Each plugin logs to it's own channel, therefor channelname == pluginname.
 # Application level messages are logged to a channel named 'root'.
@@ -141,6 +142,7 @@ py['default_flavour'] = "html"
 # Whether (1) or not (0) you want to create date indexes using month
 # names?  (ex. /2004/Apr/01)  Defaults to 1 (yes).
 #py["static_monthnames"] = 1
+
 # Whether (1) or not (0) you want to create date indexes using month
 # numbers?  (ex. /2004/04/01)  Defaults to 0 (no).
 #py["static_monthnumbers"] = 0
