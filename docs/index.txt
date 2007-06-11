@@ -43,9 +43,10 @@ cause a reorganization of the manual to account for those topics).
 If you want to help out with documentation, let us know on the
 `pyblosxom-devel`_ mailing list.  If you notice errors, missing
 pieces, sections that are unclear, examples that are erroneous, or
-anything else, let us know on the `pyblosxom-devel`_ mailing list.
+anything else, `let us know`_.
 
-.. _pyblosxom-devel: mailto:pyblosxom-devel@lists.sourceforge.net
+.. _pyblosxom-devel: http://lists.sourceforge.net/lists/listinfo/pyblosxom-devel
+.. _let us know: mailto:pyblosxom-devel@lists.sourceforge.net
 
 Details of mailing lists and other contact information are on our
 web-site at http://pyblosxom.sourceforge.net/.

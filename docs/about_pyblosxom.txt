@@ -14,8 +14,10 @@ About PyBlosxom
 ===============
 
 PyBlosxom is a lightweight weblog system.  It was originally a Python
-clone of Blosxom but has since evolved into a weblog system of its own
-reminiscent of Blosxom.  PyBlosxom focuses on three things:
+clone of `Blosxom`_ but has since evolved into a weblog system of its own
+reminiscent of `Blosxom`_.  PyBlosxom focuses on three things:
+
+.. _Blosxom: http://www.blosxom.com/
 
 **simplicity**
   PyBlosxom uses the file system for all its data storage.  Because 
@@ -74,18 +76,56 @@ However, if this invigorates you, join the mailing lists and we'll
 work together to make PyBlosxom better for all of us.
 
 
+Basic Overview of PyBlosxom
+===========================
+
+PyBlosxom is a file-based weblog system.  Entries are stored in
+text files (one file per entry) in a directory corresponding to the
+category for the entry.  The directory tree of your entries and
+categories is called a *datadir*.  For more about this see 
+``install`` and ``writing_entries``.
+
+The look and feel of your blog is determined by flavours.  A
+flavour is a group of templates.  Examples of flavours include:
+
+* RSS
+* RSS 2.0
+* Atom 1.0
+* HTML
+* XHTML
+
+For more information about flavours, see ``flavours_and_templates``.
+The PyBlosxom web-site maintains flavours submitted by people like you
+at http://pyblosxom.sourceforge.net/registry/flavours/ .
+
+PyBlosxom behavior can be adjusted by using PyBlosxom plugins.  Plugins
+are written in Python and use the PyBlosxom callback system to override
+or adjust PyBlosxom behavior.  For more information on plugins, see
+``plugins``, ``writing_plugins``, and ``dev_architecture``.  The PyBlosxom 
+web-site maintains plugins submitted by people like you at 
+http://pyblosxom.sourceforge.net/registry/ .  
+
+Additionally, there's a contributed plugins pack that contains many 
+often-used plugins that are maintained by the PyBlosxom developers.  You
+can download the contributed plugins pack from our `web-site`_.
+
+.. web-site: http://pyblosxom.sourceforge.net/
+
+
 Where to go for help
 ====================
 
-The PyBlosxom project web-site is `hosted on SourceForge`_.  There, you
-can find up-to-date documentation, manuals, project status and mailing
-list information.
+PyBlosxom comes with documentation in the ``docs`` directory.  This
+should be the first place you should go to for help.
 
-.. _hosted on SourceForge: http://pyblosxom.sourceforge.net/
+On the PyBlosxom project `web-site`_, you can find up-to-date documentation, 
+manuals, project status and mailing list information.
+
+.. _web-site: http://pyblosxom.sourceforge.net/
 
 The pyblosxom-users mailing list is the place to go if you're having
 difficulties.  Discussions from the mailing list affect the content of
-this manual. Mailing list information can be found on our
-`Contact Us`_ page.
+this manual.  Mailing list information can be found on our `Contact Us`_ 
+page.
 
 .. _Contact Us: http://pyblosxom.sourceforge.net/blog/static/contact

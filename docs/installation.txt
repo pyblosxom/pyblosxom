@@ -209,10 +209,6 @@ URLs that work on your system?
 I see a HTTP 500 error when I try to bring up my blog
 -----------------------------------------------------
 
-When you try to look at your blog and you get a HTTP 500 error, check
-your server logs.  For Apache, look for the ``error.log`` file in a
-place like ``/var/logs/apache`` or ``/var/logs/httpd``.
-
 .. Note::
 
    Please read the installation chapter:
@@ -223,18 +219,34 @@ place like ``/var/logs/apache`` or ``/var/logs/httpd``.
    sure you did all the steps.
 
 
-Does the account your web-server runs as have execute access to your
-``pyblosxom.cgi`` script?
-
-Is it kicking up a Python stack trace?  If so, uncomment the line in
-``pyblosxom.cgi`` (remove the # at the beginning of the line) that
-looks like this::
+When you try to look at your blog in a web-browser and get a HTTP 500 error, 
+the first thing you should do is uncomment the line in ``pyblosxom.cgi`` 
+(remove the # at the beginning of the line) that looks like this::
 
    #import cgitb; cgitb.enable()
 
-Then try looking at your blog again.  That should spit up a huge
-pretty traceback that should help iron out the issue for you.  At a
-bare minimum, it's useful to people who can help you out.
+so that it looks like this::
+
+   import cgitb; cgitb.enable()
+
+Then refresh the page in your browser.  If the problem is with PyBlosxom
+and not your web-server, then you should see a pretty traceback that will
+help you figure out what the specific problem is.
+
+If it doesn't make any sense to you, you can copy and paste that into
+an email to the pyblosxom-users mailing list and we're in a better position
+to help you out.
+
+If you don't see a traceback, then you either have a configuration problem
+with your web-server or a configuration problem with Python.  The first
+thing you should do is check your web-server's error logs.  For Apache, 
+look for the ``error.log`` file in a place like ``/var/logs/apache`` or 
+``/var/logs/httpd``.
+
+Does the account your web-server runs as have execute access to your
+``pyblosxom.cgi`` script?  If your web-server does not have the permissions
+to read and execute your pyblosxom.cgi script, then your blog will not
+work.
 
 Do you have plugins loaded?  If you do, try unloading all your plugins
 and see if the problem persists.  Sometimes there are issues with plugins
@@ -246,8 +258,10 @@ I have other issues
 
 Try changing the renderer for your blog to the debug renderer.  You
 can do this by setting the ``renderer`` property in your ``config.py``
-file to ``debug``.  That will show a lot more detail about what things
-get set to and may help you figure out your issues.
+file to ``debug``.  That will show a lot more detail about your configuration,
+what the web-server passes PyBlosxom in environment variables, and other
+data about your blog that might help you figure out what your problem is.
+
 
 
 UGH!  My blog looks UGLY!
