@@ -129,7 +129,7 @@ py['default_flavour'] = "html"
 # What directory do you want your static html pages to go into?
 #py["static_dir"] = "/path/to/static/dir"
 
-# What flavours shouldt get generated?
+# What flavours should get generated?
 #py["static_flavours"] = ["html"]
 
 # What other paths should we statically render?
