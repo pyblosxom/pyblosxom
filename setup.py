@@ -99,7 +99,7 @@ Thanks!
 
 In the meantime, you'll have to put the docs and web scripts where you 
 want them on your own.  They're in subdirectories of this one: web/ 
-and docsrc/ .  Sorry for the inconvenience.
+and docs/ .  Sorry for the inconvenience.
 """
 
 
