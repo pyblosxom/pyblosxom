@@ -1,0 +1,33 @@
+==============================
+Installing PyBlosxom with WSGI
+==============================
+
+:Author: PyBlosxom Development Team
+:Version: $Id: advanced_installation.txt 1029 2007-06-07 02:33:12Z willhelm $
+:Copyright: This document is distributed under the MIT license.
+
+.. contents::
+
+
+Summary
+=======
+
+As of PyBlosxom 1.2, PyBlosxom has support for WSGI.
+
+
+
+Dependencies
+============
+
+* Pyblosxom 1.2 or a later version
+* If you're running a version of Python less than 2.5, then you need
+  the wsgiref library from http://svn.eby-sarna.com/wsgiref/
+
+
+Configuration
+=============
+
+1. copy the file ``wsgi_app.py`` from ``web/`` into the directory where
+   your ``pyblosxom.cgi`` file is.
+
+2. FIXME - need the rest of the instructions here
