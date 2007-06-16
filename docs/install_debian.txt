@@ -1,0 +1,24 @@
+==============================
+Installing PyBlosxom on Debian
+==============================
+
+:Author: PyBlosxom Development Team
+:Version: $Id: installation.txt 1036 2007-06-11 14:40:48Z willhelm $
+:Copyright: This document is distributed under the MIT license.
+
+.. contents::
+
+
+Summary
+=======
+
+On Debian and Debian derivatives there's a pyblosxom package which
+does most of the setup for you.
+
+This will create a ``/etc/pyblosxom/`` directory which has your
+``config.py`` file in it.
+
+The ``pyblosxom.cgi`` file is in ``/usr/lib/cgi-bin/``.
+
+
+You can follow the main installation instructions from here.
