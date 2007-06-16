@@ -27,15 +27,6 @@ go a long way in helping us to help you.
 .. _pyblosxom-devel: mailto:pyblosxom-devel@lists.sourceforge.net
 
 
-Using mod_python, Twisted or WSGI
-=================================
-
-PyBlosxom 1.2 has preliminary support for other frameworks than CGI.
-While we think it works fine, it could use some more testing.
-
-FIXME - need instructions for setting up with mod_python, Twisted, and
-WSGI.
-
 
 Renaming the pyblosxom.cgi Script
 =================================
