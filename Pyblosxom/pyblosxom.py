@@ -102,9 +102,10 @@ class PyBlosxom:
         if pyhttp.has_key('SCRIPT_NAME'):
             if not config.has_key('base_url'):
                 # allow http and https
-                config['base_url'] = '%s://%s%s' % (pyhttp['wsgi.url_scheme'], 
-                                                    pyhttp['HTTP_HOST'], 
-                                                    pyhttp['SCRIPT_NAME'])
+                config['base_url'] = '%s://%s%s' % \
+                                     (pyhttp['wsgi.url_scheme'], 
+                                      pyhttp['HTTP_HOST'], 
+                                      pyhttp['SCRIPT_NAME'])
         else:
             config['base_url'] = config.get('base_url', '')
 
@@ -170,10 +171,11 @@ class PyBlosxom:
         """
         This is the main loop for PyBlosxom.  This method will run the 
         handle callback to allow registered handlers to handle the request.  
-        If nothing handles the request, then we use the default_blosxom_handler.
+        If nothing handles the request, then we use the
+        default_blosxom_handler.
 
-        @param static: True if we should execute in "static rendering mode" and
-            False otherwise
+        @param static: True if we should execute in "static rendering mode"
+            and False otherwise
         @type  static: boolean
         """
         self.initialize()
@@ -326,7 +328,8 @@ class PyBlosxom:
             except:
                 smtime = 0
 
-            # if the entry is more recent than the static, we want to re-render
+            # if the entry is more recent than the static, we want to
+            # re-render
             if smtime < mtime or not incremental:
 
                 # grab the categories
@@ -433,6 +436,74 @@ class PyBlosxom:
         tools.initialize(self._config)
         test_installation(self._request)
         tools.cleanup()
+
+
+class PyBlosxomWSGIApp:
+    """
+    This class is the WSGI application for PyBlosxom.
+    """
+    def __init__(self, configini=None):
+        """
+        Make WSGI app for PyBlosxom
+	
+        @param configini: dict encapsulating information from a config.ini
+            file or any other property file that will override the config.py
+            file.
+        @type  configini: dict
+        """
+        if configini == None:
+            configini = {}
+
+        _config = {}
+        for key, value in configini.items():
+            if isinstance(value, basestring) and value.isdigit():
+                _config[key] = int(value)
+            else:
+                _config[key] = value
+        self.config = _config
+        if "codebase" in _config:
+            sys.path.insert(0, _config["codebase"])
+
+    def __call__(self, env, start_response):
+        """
+        Runs the WSGI app.
+        """
+        # ensure that PATH_INFO exists. a few plugins break if this is 
+        # missing.
+        if "PATH_INFO" not in env:
+            env["PATH_INFO"] = ""
+
+        p = PyBlosxom(self.config, env)
+        p.run()
+
+        pyresponse = p.getResponse()
+        start_response(pyresponse.status, list(pyresponse.headers.items()))
+        pyresponse.seek(0)
+        return [pyresponse.read()]
+
+def pyblosxom_app_factory(global_config, **local_config):
+    """
+    App factory for paste.
+    """
+    from paste import cgitb_catcher
+
+    conf = global_config.copy()
+    conf.update(local_config)
+    conf.update(dict(local_config=local_config, global_config=global_config))
+
+    # FIXME - should we allow people to do their entire configuration
+    # in an ini file?
+    try:
+        # update the config.py data with config.ini data
+        import config
+        configpy = dict(config.py)
+        configpy.update(conf)
+        conf = configpy
+    except:
+        pass
+    
+    return cgitb_catcher.make_cgitb_middleware(PyBlosxomWSGIApp(conf),
+                                               global_config)
 
 
 class EnvDict(dict):
@@ -1379,14 +1450,10 @@ def test_installation(request):
         no_verification_support = []
 
         for mem in plugin_utils.plugins:
-            if "verify_installation" in dir(mem):
+            if hasattr(mem, "verify_installation"):
                 print "=== plugin: '%s'" % mem.__name__
                 print "    file: %s" % mem.__file__
-
-                if "__version__" in dir(mem):
-                    print "    version: %s" % mem.__version__
-                else:
-                    print "    plugin has no version."
+                print "    version: %s" % (str(getattr(mem, "__version__")))
 
                 try:
                     if mem.verify_installation(request) == 1:
