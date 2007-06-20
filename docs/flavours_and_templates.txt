@@ -1,6 +1,6 @@
-========
-Flavours
-========
+======================
+Flavours and Templates
+======================
 
 
 :Author: PyBlosxom Development Team
