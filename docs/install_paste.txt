@@ -109,7 +109,7 @@ There are several things to note here:
    There's more information on configuring Paste on the `Paste Deployment`_
    site.
 
-   .. Paste Deployment: http://pythonpaste.org/deploy/
+   .. _Paste Deployment: http://pythonpaste.org/deploy/
 
 2. The ``[app:main]`` section needs to have the ``paste.app_factory``
    defined--this tells Paste where the PyBlosxom WSGI app factory
