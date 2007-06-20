@@ -1,6 +1,6 @@
-====================
-Installing PyBlosxom
-====================
+=============================
+Installing PyBlosxom with CGI
+=============================
 
 :Author: PyBlosxom Development Team
 :Version: $Id$
