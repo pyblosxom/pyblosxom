@@ -1,0 +1,130 @@
+===============================
+Installing PyBlosxom with Paste
+===============================
+
+:Author: PyBlosxom Development Team
+:Version: $Id: advanced_installation.txt 1029 2007-06-07 02:33:12Z willhelm $
+:Copyright: This document is distributed under the MIT license.
+
+.. contents::
+
+
+Summary
+=======
+
+As of PyBlosxom 1.4, we have support for Paste.  This document covers
+installing and using PyBlosxom with Paste.
+
+This document is in a "works for me" status.  Any help to flesh it out
+to be more generally useful is **greatly** appreciated.
+
+
+Pre-requisites for installing PyBlosxom with Paste
+==================================================
+
+* Pyblosxom 1.4 or a later version
+* If you're running a version of Python less than 2.5, then you need
+  the wsgiref library from http://svn.eby-sarna.com/wsgiref/
+* Python Paste which can be found at http://pythonpaste.org/
+
+
+A bit about Paste
+=================
+
+FIXME - write up a blurb about Paste to make it easier to understand
+what's going on and how PyBlosxom is being run.
+
+
+Installation
+============
+
+1. Download PyBlosxom from the PyBlosxom site.
+
+2. Untar PyBlosxom::
+
+      tar -xzvf pyblosxom*.tar.gz
+
+3. Create a ``blog.ini`` file in the ``pyblosxom`` directory.
+
+4. Copy ``config.py`` from ``pyblosxom/web`` into your current directory.
+
+5. Edit ``blog.ini`` and ``config.py`` -- see instructions in configuration.
+
+6. If you left ``use``, ``host``, and ``port`` at the defaults, then you
+   can run your blog like this::
+
+      paster serve blog.ini
+
+
+   paster will print the URL for your blog on the command line.
+
+   .. Note::
+
+      If the host of your blog is ``0.0.0.0``, then the only place your
+      blog will be visible is on the same machine it's running from.
+
+7. FIXME - fill in better instructions other than this set of "works for
+   me instructions".
+
+
+Configuration
+=============
+
+Paste configuration is done in an ``.ini`` file.
+
+Create a ``blog.ini`` that holds information that Paste needs to
+run your blog.
+
+An example ``blog.ini`` is here::
+
+   [DEFAULT]
+   debug = True
+
+   [server:main]
+   use = egg:Paste#http
+   host = 0.0.0.0
+   port = 5000
+
+   [app:main]
+   paste.app_factory = Pyblosxom.pyblosxom:pyblosxom_app_factory
+
+   # PyBlosxom config here
+   blog_title = Joe's Blog
+   blog_description = This is Joe's test blog.
+   blog_author = Joe
+   blog_email = joe@example.com
+   datadir = /home/joe/blog/entries/
+   num_entries = 5
+
+
+There are several things to note here:
+
+1. In the ``[server:main]`` section, define the ``host`` and ``port``
+   of your blog.  Using ``0.0.0.0`` and ``5000`` is really useful
+   for building a test environment that only someone on the machine
+   the blog is running on can see.  When you want to make your blog
+   public, you can set the host to your ip address and the port to
+   something more reasonable.
+
+   There's more information on configuring Paste on the `Paste Deployment`_
+   site.
+
+   .. Paste Deployment: http://pythonpaste.org/deploy/
+
+2. The ``[app:main]`` section needs to have the ``paste.app_factory``
+   defined--this tells Paste where the PyBlosxom WSGI app factory
+   function is.  
+
+3. You can define PyBlosxom config properties in the ``[app:main]`` 
+   section as well.  Properties declared here will **override**
+   properties declared in your ``config.py`` file.  This is really
+   handy for building a testing environment blog on a different port.
+
+   You don't have to define any config properties in the ``blog.ini``
+   file--you can define them all in your ``config.py`` file.
+
+   .. Note::
+
+      Defining PyBlosxom config properties in an .ini file is a bit
+      of a trick since .ini files treat all keys and values as
+      strings but not all config properties have string values.
