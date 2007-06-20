@@ -89,7 +89,9 @@ class Renderer(RendererBase):
         printout(hbar)
         printout("The HTTP Return codes are:\n")
         printout(hbar)
-        print_map(printout, self._header)
+        for k, v in self._header:
+            printout("<font color=\"#0000ff\">%s</font> -&gt; %s\n" % \
+                     (escv(k), escv(v)))
 
         printout(hbar)
         printout("The OS environment contains:\n")

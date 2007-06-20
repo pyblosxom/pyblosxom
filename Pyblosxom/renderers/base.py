@@ -42,7 +42,10 @@ class RendererBase:
         @type stdoutput: file
         """
         self._request = request
-        self._header = {}
+
+        # this is a list of tuples of the form (key, value)
+        self._header = []
+
         self._out = stdoutput
         self._content = None
         self._content_mtime = None
@@ -103,16 +106,15 @@ class RendererBase:
         @raises ValueError: This happens when the parameters are not correct
         """
         args = list(args)
-        if not len(args) % 2:
-            while args:
-                key = args.pop(0).strip()
-                if key.find(' ') != -1 or key.find(':') != -1:
-                    raise ValueError, 'There should be no spaces in header keys'
-                value = args.pop(0).strip()
-                self._header.update({key: value})
-        else:
+        if len(args) % 2 != 0:
             raise ValueError, 'Headers recieved are not in the correct form'
 
+        while args:
+            key = args.pop(0).strip()
+            if key.find(' ') != -1 or key.find(':') != -1:
+                raise ValueError, 'There should be no spaces in header keys'
+            value = args.pop(0).strip()
+            self._header.append( (key, value) )
 
     def setContent(self, content):
         """
@@ -145,11 +147,12 @@ class RendererBase:
 
     def showHeaders(self):
         """
-        Updated the headers of the L{Response<Pyblosxom.pyblosxom.Response>} instance.
+        Updated the headers of the L{Response<Pyblosxom.pyblosxom.Response>} 
+        instance.
         This is just for backwards compatibility.
         """
         response = self._request.getResponse()
-        for k, v in self._header.items():
+        for k, v in self._header:
             response.addHeader(k, v)
 
 
