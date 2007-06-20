@@ -37,7 +37,8 @@ Pertinent to users:
    is easier to read in "source-form" and a lot easier to convert to HTML
    and other formats using the Python docutils tools.  (Thanks John!)
 
-9. Added support for Paste.
+9. Added support for Paste and brought the WSGI support into the
+   codebase.  (Thanks Steven and Yury!)
 
 Pertinent to developers:
 ------------------------
