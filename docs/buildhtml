@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+"""
+This assumes you have docutils installed on your system.
+"""
+import os
+
+def buildhtml():
+    files = os.listdir(os.getcwd())
+    files = [ f for f in files if f.endswith(".txt") ]
+
+    for mem in files:
+        os.system("rst2html %s %s" % (mem, mem[:-4] + ".html"))
+
+if __name__ == "__main__":
+    buildhtml()
