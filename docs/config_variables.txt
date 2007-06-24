@@ -328,6 +328,24 @@ For example, if you are storing your blog entries in
 
 ----------------------------
 
+depth
+-----
+
+**REQUIRED**: NO
+
+**DATATYPE**: integer
+
+**DEFAULT VALUE**: defaults to 0--infinite depth
+
+The depth setting determines how many levels deep in the directory
+(category) tree that PyBlosxom will display when doing indexes.
+
+* 0 - infinite depth (aka grab everything) DEFAULT
+* 1 - datadir only
+* n - n levels deep
+
+----------------------------
+
 flavourdir
 ----------
 
