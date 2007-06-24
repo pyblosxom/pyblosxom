@@ -47,8 +47,6 @@ if __name__ == '__main__':
 
         args = sys.argv[1:]
 
-        print repr(args)
-
         if len(args) == 0:
             args = ["--test"]
 
