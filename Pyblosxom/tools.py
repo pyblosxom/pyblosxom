@@ -111,6 +111,39 @@ def cleanup():
     except ValueError:
         pass
 
+
+def parse_args(args):
+    """
+    Takes in a list of args and parses it out into a hashmap of arg-name 
+    to value(s).
+
+    @param args: the list of command-line arguments
+    @type  args: list of strings
+
+    @return: list of tuples of (arg, value) pairings
+    @rtype: list of tuples of (string, string)
+    """
+    i = 0
+    optlist = []
+    while (i < len(args)):
+        if args[i].startswith("-"):
+            if (i+1 < len(args)):
+                if not args[i+1].startswith("-"):
+                    optlist.append((args[i], args[i+1]))
+                    i = i + 1
+                else:
+                    optlist.append((args[i], ""))
+            else:
+                optlist.append((args[i], ""))
+
+        else:
+            optlist.append(("", args[i]))
+
+        i = i + 1
+    return optlist
+
+
+
 QUOTES = {"'": "&apos;", '"': "&quot;"}
 
 def escape_text(s):
