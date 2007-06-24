@@ -33,9 +33,8 @@ UNIT TESTING
 MANUAL
 
  - Go through and fill in more FIXMEs.
- - Add instructions for PyBlosxom with FastCGI.
- - Add instructions for servers with multiple users (look at Martin Kraaft's 
-   stuff).
+ - Need to add installation instructions for PyBlosxom as WSGI middleware.
+ - Convert to reST.
 
 PYBLCMD
 
@@ -44,6 +43,8 @@ PYBLCMD
 
 
 ANYTHING ELSE?
+
+ - Paste support.
 
 
 
@@ -62,12 +63,14 @@ MANUAL
  - Need to take out a lot of the blah blah blah content and clean up
    the language so it's clearer with more examples.  Also look at trimming
    text if possible.
- - Need to add installation instructions for PyBlosxom as WSGI middleware.
  - Need to add installation instructions for PyBlosxom with SCGI/FCGI with 
    flup.
  - Need to add installation instructions for PyBlosxom for IIS.
  - Need to add information on migrating entries from other blog systems
    (Drupal?  WordPress?  LiveJournal? ...) to PyBlosxom.
+ - Add instructions for PyBlosxom with FastCGI.
+ - Add instructions for servers with multiple users (look at Martin Kraaft's 
+   stuff).
 
 
 PYBLOSXOM
@@ -92,6 +95,7 @@ PATH AND ABSOLUTE PATH
  - For each entry, we calculate $path and $absolute_path.  Why do
    we have both of them?  Are there inherent differences between the
    two?  What does blosxom do?
+
    Regardless, it looks like $path behaves differently in 1.3 than
    in previous versions.
 
@@ -125,20 +129,6 @@ MTIMES
    might want to fold this functionality into pyblcmd.)
  - adjust pyblosxom so that it looks for the file index cache before
    the default of stating the file
-
-PASTE/WSGI
-
- - It'd be way cool if we could continue honing PyBlosxom so that it
-   can slide into a WSGI-based system as a piece of middleware.  If
-   we did that, then PyBlosxom could more nicely hang out with other
-   frameworks.
- - Also, it'd be way cool if we could do:
-
-     paster serve myblog.ini
-
-   and have Paste serve it.  Paste and WSGI are definitely the way
-   forward.  If we fix PyBlosxom to be friendly with Paste and WSGI, 
-   then PyBlosxom is a lot more useful to a lot more people.
 
 TEMPLATES
 
