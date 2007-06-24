@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
-#!/path/to/python -u
 # -u turns off character translation to allow transmission
 # of gzip compressed content on Windows and OS/2
+#!/path/to/python -u
 
 # Uncomment this if something goes wrong (for debugging)
 #import cgitb; cgitb.enable()
+
+
+# Don't touch anything below this line
+# --------------------------------------------------
 
 import os, sys
 
@@ -36,25 +40,43 @@ from Pyblosxom.pyblosxom import PyBlosxom
 if __name__ == '__main__':
     env = {}
 
+    # if there's no REQUEST_METHOD, then this is being run on the
+    # command line and we should execute the command_line_handler.
+    if not os.environ.has_key("REQUEST_METHOD"):
+        from Pyblosxom.pyblosxom import command_line_handler
+
+        args = sys.argv[1:]
+
+        print repr(args)
+
+        if len(args) == 0:
+            args = ["--test"]
+
+        sys.exit(command_line_handler("pyblosxom.cgi", args))
+
+
     # names taken from wsgi instead of inventing something new
     env['wsgi.input'] = sys.stdin
     env['wsgi.errors'] = sys.stderr
 
-    # setup url_scheme for static rendering
+    # figure out what the protocol is for the wsgi.url_scheme property.
+    # we look at the base_url first and if there's nothing set there,
+    # we look at environ.
     if 'base_url' in cfg.keys():
         env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
-    else:
-        env['wsgi.url_scheme'] = "http"
 
-    if not os.environ.has_key("REQUEST_METHOD"):
-        print "Please use pyblcmd for command-line functionality."
-        sys.exit(0)
+    else:
+        if os.environ.get("HTTPS", "off") in ("on", "1"):
+            env["wsgi.url_scheme"] = "https"
+
+        else:
+            env['wsgi.url_scheme'] = "http"
 
     try:
         # try running as a WSGI-CGI
         from wsgiref.handlers import CGIHandler
-        from wsgi_app import application
-        CGIHandler().run(application)
+        from Pyblosxom.pyblosxom import PyBlosxomWSGIApp
+        CGIHandler().run(PyBlosxomWSGIApp())
 
     except ImportError:
         # run as a regular CGI
