@@ -445,7 +445,7 @@ class PyBlosxomWSGIApp:
     def __init__(self, configini=None):
         """
         Make WSGI app for PyBlosxom
-	
+
         @param configini: dict encapsulating information from a config.ini
             file or any other property file that will override the config.py
             file.
@@ -1139,7 +1139,7 @@ def blosxom_file_list_handler(args):
     if data['bl_type'] == 'dir':
         filelist = tools.Walk(request, 
                               data['root_datadir'], 
-                              int(config['depth']))
+                              int(config.get("depth", "0")))
     elif data['bl_type'] == 'file':
         filelist = [data['root_datadir']]
     else:
