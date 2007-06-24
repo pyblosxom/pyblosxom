@@ -13,7 +13,8 @@ Summary
 =======
 
 As of PyBlosxom 1.2, PyBlosxom has support for WSGI.
-
+As of PyBlosxom 1.4, WSGI support has been folded into the main codebase
+(as opposed to being a separate wsgi_app.py file).
 
 
 Dependencies
@@ -23,11 +24,24 @@ Dependencies
 * If you're running a version of Python less than 2.5, then you need
   the wsgiref library from http://svn.eby-sarna.com/wsgiref/
 
+.. Note::
 
-Configuration
-=============
+   It's better if you're using PyBlosxom 1.4 or later.
+
+
+Setup
+=====
+
+If you're using PyBlosxom 1.2 or 1.3.x:
 
 1. copy the file ``wsgi_app.py`` from ``web/`` into the directory where
    your ``pyblosxom.cgi`` file is.
 
-2. FIXME - need the rest of the instructions here
+2. create your web application using the ``application`` function in
+   ``wsgi_app.py``.
+
+
+If you're using PyBlosxom 1.4 or later:
+
+1. create your web application using the ``PyBlosxomWSGIApp`` class in
+   the ``Pyblosxom.pyblosxom`` module.
