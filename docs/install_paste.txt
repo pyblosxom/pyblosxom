@@ -44,13 +44,20 @@ Installation
 
       tar -xzvf pyblosxom*.tar.gz
 
-3. Create a ``blog.ini`` file in the ``pyblosxom`` directory.
+3. Either:
 
-4. Copy ``config.py`` from ``pyblosxom/web`` into your current directory.
+   3.1. install PyBlosxom as a Python library by doing 
+        ``python setup.py install``, OR
+   3.2. add ``PYTHONPATH`` = ``/path/to/Pyblosxom/parent/`` to your
+        environment variables
 
-5. Edit ``blog.ini`` and ``config.py`` -- see instructions in configuration.
+4. Create a ``blog.ini`` file in the ``pyblosxom`` directory.
 
-6. If you left ``use``, ``host``, and ``port`` at the defaults, then you
+5. Copy ``config.py`` from ``pyblosxom/web`` into your current directory.
+
+6. Edit ``blog.ini`` and ``config.py`` -- see instructions in configuration.
+
+7. If you left ``use``, ``host``, and ``port`` at the defaults, then you
    can run your blog like this::
 
       paster serve blog.ini
@@ -62,9 +69,6 @@ Installation
 
       If the host of your blog is ``0.0.0.0``, then the only place your
       blog will be visible is on the same machine it's running from.
-
-7. FIXME - fill in better instructions other than this set of "works for
-   me instructions".
 
 
 Configuration
@@ -128,3 +132,41 @@ There are several things to note here:
       Defining PyBlosxom config properties in an .ini file is a bit
       of a trick since .ini files treat all keys and values as
       strings but not all config properties have string values.
+
+
+Trouble-shooting
+================
+
+Import Error: No module named Pyblosxom.pyblosxom
+-------------------------------------------------
+
+If you installed PyBlosxom as a Python library (i.e. you did
+``python setup.py install``), then the problem is probably that
+you have multiple versions of Python on your system and paster
+is using a different one than the one you install PyBlosxom into.
+
+Run::
+
+   paster --version
+
+and see if that matches the version of Python you installed PyBlosxom
+into.  If it doesn't match, then you need to install PyBlosxom into
+the version of Python that paster is using.
+
+If you didn't install PyBlosxom as a Python library, then you need
+to add the directory that the PyBlosxom code is in to the Python
+sys.path.  The easiest way to do that is to set the ``PYTHONPATH``
+environment variable to the directory that PyBlosxom is in.
+
+For example, I untarred PyBlosxom into ``/home/joe/`` and I have
+a directory tree like this::
+
+   /home/joe/
+         |- pyblosxom/
+            |- Pyblosxom/
+               |- ...
+
+
+I then set ``PYTHONPATH`` like this::
+
+   % export PYTHONPATH=${PYTHONPATH}:/home/joe/pyblosxom/
