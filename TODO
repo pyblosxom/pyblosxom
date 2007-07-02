@@ -20,31 +20,24 @@ pyblosxom-devel mailing list.
 Thanks!
 
 
-MILESTONE VERSION 1.4
+MILESTONE VERSION 1.5
 =====================
 
-Prospective release date: February sometime (ha!).
+Prospective release date: ?
+
+This release is in the early planning stages.
 
 UNIT TESTING
 
- - Look at the Cheesecake system and use something similar so that we
-   have some basic tests we can run that test the whole system.
+ - Continue adding unit and functional tests to PyBlosxom.
 
 MANUAL
 
  - Go through and fill in more FIXMEs.
- - Need to add installation instructions for PyBlosxom as WSGI middleware.
- - Convert to reST.
-
-PYBLCMD
-
- - Finish up pyblcmd so that it's a good alternative to running
-   pyblosxom.cgi.
-
 
 ANYTHING ELSE?
 
- - Paste support.
+ - ?
 
 
 
