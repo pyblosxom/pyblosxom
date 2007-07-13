@@ -1,3 +1,33 @@
+Changes between 1.4 and 2.0
+===========================
+
+Pertinent to users:
+-------------------
+
+1. PyBlosxom now requires setuptools and Python 2.3 to install.
+
+2. The pyblosxom.cgi file has changed significantly--if you're using it
+   you will have to update.
+
+3. pyblcmd now has an option to create the blog directory structure
+   for you.  This makes it much faster to get a new blog up and running.
+
+4. A minor bug with Paste support has been fixed.  You can specify a
+   ``configpydir`` in the ``[app:main]`` section which lets Paste know
+   where the ``config.py`` file is.  
+
+   NOTE: You have to set this even if ``config.py`` is in the same directory 
+   as your ``blog.ini`` file.
+
+Pertinent to developers:
+------------------------
+
+1. We're cleaning up a lot of code in PyBlosxom.  We don't really know
+   the extent to which this will affect all the plugins in the world,
+   so to be on the safe side, it's a good idea to check your plugins
+   with the new version and adjust accordingly.
+
+
 Changes between 1.3.2 and 1.4
 =============================
 

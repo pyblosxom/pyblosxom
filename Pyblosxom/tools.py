@@ -105,11 +105,12 @@ def cleanup():
     # except ImportError:
     #     import _logging as logging
 
-    try:
-        logging.shutdown()
-        _loghandler_registry = {}
-    except ValueError:
-        pass
+    # try:
+    #     logging.shutdown()
+    #     _loghandler_registry = {}
+    # except ValueError:
+    #     pass
+    pass
 
 
 def parse_args(args):
@@ -1122,7 +1123,6 @@ def log_caller(frame_num=1, log_file=None):
     log = getLogger(log_file)
     log.info("\n  module: %s\n  filename: %s\n  line: %s\n  subroutine: %s", 
         module, filename, line, subr)
-
 
 
 # %<-------------------------

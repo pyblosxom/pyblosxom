@@ -17,7 +17,6 @@ and default handlers are defined here.
 __revision__ = "$Revision$"
 
 
-
 # Python imports
 import os
 import time
@@ -39,7 +38,6 @@ from entries.fileentry import FileEntry
 VERSION = "1.4"
 VERSION_DATE = VERSION + " 7/2/2007"
 VERSION_SPLIT = tuple(VERSION.split('.'))
-
 
 
 class PyBlosxom:
@@ -83,9 +81,9 @@ class PyBlosxom:
         additional information in the _data dict, registering plugins,
         and entryparsers.
         """
-        data = self._request.getData()
-        pyhttp = self._request.getHttp()
-        config = self._request.getConfiguration()
+        data = self._request.data
+        pyhttp = self._request.http
+        config = self._request.configuration
 
         # Initialize the locale, if wanted (will silently fail if locale 
         # is not # available)
@@ -495,62 +493,38 @@ def pyblosxom_app_factory(global_config, **local_config):
     conf.update(local_config)
     conf.update(dict(local_config=local_config, global_config=global_config))
 
-    # FIXME - should we allow people to do their entire configuration
-    # in an ini file?
-    try:
-        # update the config.py data with config.ini data
-        import config
-        configpy = dict(config.py)
-        configpy.update(conf)
-        conf = configpy
-    except:
-        pass
+    if "configpydir" in conf:
+        sys.path.insert(0, conf["configpydir"])
+
+    import config
+    configpy = dict(config.py)
+    configpy.update(conf)
+    conf = configpy
     
     return cgitb_catcher.make_cgitb_middleware(PyBlosxomWSGIApp(conf),
                                                global_config)
 
 
-class EnvDict(dict):
+class EnvironmentDict(dict):
     """
-    Wrapper arround a dict to provide a backwards compatible way
-    to get the L{form<cgi.FieldStorage>} with syntax as::
-
-        request.getHttp()['form'] 
-
-    instead of::
-
-        request.getForm()
+    Extends dict with the environ and adds a "form" item that is a
+    cgi.FieldStorage created on-demand.
     """
-    def __init__(self, request, env):
-        """
-        Wraps an environment (which is a dict) and a request.
-
-        @param request: the Request object for this request
-        @type  request: Request
-
-        @param env: the environment for this request
-        @type  env: dict
-        """
+    def __init__(self, request, environ):
         dict.__init__(self)
         self._request = request
-        self.update(env)
+        self.update(environ)
 
-    def __getitem__(self, key):
+    def __getitem__(self, k):
         """
         If the key argument is "form", we return the _request.getForm().
         Otherwise this returns the item for that key in the wrapped
         dict.
-
-        @param key: the key requested
-        @type  key: string
-
-        @returns: varies
-        @rtype:  varies
         """
-        if key == "form":
+        if k == "form":
             return self._request.getForm()
-        else:
-            return dict.__getitem__(self, key)   
+
+        return dict.__getitem__(self, k)
 
 class Request(object):
     """
@@ -584,14 +558,13 @@ class Request(object):
 
         # this holds HTTP/CGI oriented data specific to the request
         # and the environment in which the request was created
-        self._http = EnvDict(self, environ)
+        self._http = EnvironmentDict(self, environ)
 
         # this holds run-time data which gets created and transformed
         # by pyblosxom during execution
         if data == None:
-            self._data = dict()
-        else:
-            self._data = data
+            data = dict()
+        self._data = data
 
         # this holds the input stream.
         # initialized for dynamic rendering in Pyblosxom.run.
@@ -626,7 +599,7 @@ class Request(object):
     def buffer_input_stream(self):
         """
         Buffer the input stream in a StringIO instance.
-        This is done to have a known/consistent way of accessing incomming 
+        This is done to have a known/consistent way of accessing incoming 
         data.  For example the input stream passed by mod_python does not 
         offer the same functionallity as sys.stdin.
         """
@@ -670,21 +643,6 @@ class Request(object):
         """
         return self._response
 
-    def __getform(self):
-        """
-        Parses and returns the form data submitted by the client.
-        Rewinds the input buffer after calling cgi.FieldStorage.
-
-        @returns: L{cgi.FieldStorage}
-        @rtype: object
-        """        
-        form = cgi.FieldStorage(fp=self._in, 
-                                environ=self._http, 
-                                keep_blank_values=0)
-        # rewind the input buffer
-        self._in.seek(0)
-        return form
-
     def getForm(self):
         """
         Returns the form data submitted by the client.
@@ -696,60 +654,40 @@ class Request(object):
         @rtype: object
         """
         if self._form == None:
-            self._form = self.__getform()
+            # parse the form on-demand
+            form = cgi.FieldStorage(fp=self._in,
+                                    environ=dict(self._http), 
+                                    keep_blank_values=0)
+            # rewind the input buffer
+            self._in.seek(0)
+            self._form = form
+
         return self._form
 
     def getConfiguration(self):
         """
-        Returns the _actual_ configuration dict.  The configuration
-        dict holds values that the user sets in their config.py file.
-
-        Modifying the contents of the dict will affect all downstream 
-        processing.
-
-        @returns: the configuration dict
-        @rtype: dict
+        Returns the configuration dict generated by config.py.
         """
         return self._configuration
-
+    
     def getHttp(self):
         """
-        Returns the _actual_ http dict.   Holds HTTP/CGI data derived 
-        from the environment of execution.
-
-        Modifying the contents of the dict will affect all downstream 
-        processing. 
-
-        @returns: the http environment dict
-        @rtype: dict
+        Returns the http dict generated by environ and wsgi variables.
         """
         return self._http
 
     def getData(self):
         """
-        Returns the _actual_ data dict.   Holds run-time data which is 
-        created and transformed by pyblosxom during execution.
-
-        Modifying the contents of the dict will affect all downstream 
-        processing. 
-
-        @returns: the run-time data dict
-        @rtype: dict
+        Returns the data dict generated during the course of handling
+        a PyBlosxom request.
         """
         return self._data
 
-    def __populatedict(self, currdict, newdict):
-        """
-        Internal helper method for populating an existing dict with
-        data from the new dict.
-
-        @param currdict: the existing dict to update
-        @type currdict: dict
-
-        @param newdict: the new dict with values to update with
-        @type newdict: dict
-        """
-        currdict.update(newdict)
+    configuration = property(getConfiguration)
+    config = configuration
+    conf = configuration
+    http = property(getHttp)
+    data = property(getData)
 
     def addHttp(self, d):
         """
@@ -759,7 +697,7 @@ class Request(object):
         @param d: the dict with the new keys/values to add
         @type  d: dict
         """
-        self.__populatedict(self._http, d)
+        self._http.update(d)
 
     def addData(self, d):
         """
@@ -769,7 +707,7 @@ class Request(object):
         @param d: the dict with the new keys/values to add
         @type  d: dict
         """
-        self.__populatedict(self._data, d)
+        self._data.update(d)
 
     def addConfiguration(self, newdict):
         """
@@ -779,29 +717,7 @@ class Request(object):
         @param newdict: the dict with the new keys/values to add
         @type  newdict: dict
         """
-        self.__populatedict(self._configuration, newdict)
-
-    def __getattr__(self, name, default=None):
-        """
-        Sort of simulates the dict except we only have three
-        valid attributes: config, data, and http.
-
-        @param name: the name of the attribute to get
-        @type  name: string
-
-        @param default: varies
-        @type  default: varies
-        """
-        if name in ["config", "configuration", "conf"]:
-            return self._configuration
-
-        if name == "data":
-            return self._data
-
-        if name == "http":
-            return self._http
-
-        return default
+        self._configuration.update(newdict)
 
     def __repr__(self):
         """
@@ -881,19 +797,21 @@ class Response(object):
         @raises ValueError: This happens when the parameters are not correct
         """
         args = list(args)
-        if not len(args) % 2:
-            while args:
-                key = args.pop(0).strip()
-                if key.find(' ') != -1 or key.find(':') != -1:
-                    raise ValueError, 'There should be no spaces in header keys'
-                value = args.pop(0).strip()
 
-                if key.lower() == "status":
-                    self.setStatus(str(value))
-                else:
-                    self.headers.update({key: str(value)})
-        else:
-            raise ValueError, 'Headers recieved are not in the correct form'
+        if len(args) % 2 == 1:
+            raise ValueError, "Headers recieved are not in the correct form"
+            
+        while args:
+            key = args.pop(0).strip()
+            if key.find(' ') != -1 or key.find(':') != -1:
+                raise ValueError, "There should be no spaces in header keys"
+
+            value = args.pop(0).strip()
+            
+            if key.lower() == "status":
+                self.setStatus(str(value))
+            else:
+                self.headers.update({key: str(value)})
 
     def getHeaders(self):
         """
@@ -1045,6 +963,7 @@ def blosxom_handler(request):
                  'body': 'Somehow I cannot find the page you want. ' + 
                  'Go Back to <a href="%s">%s</a>?' 
                  % (config["base_url"], config["blog_title"])})
+
             # Log it as failure
             tools.run_callback("logrequest", 
                     {'filename':config.get('logfile',''), 
@@ -1361,6 +1280,67 @@ def blosxom_process_path_info(args):
     data['path_info'] = path_info
 
 
+def run_pyblosxom():
+    env = {}
+
+    # if there's no REQUEST_METHOD, then this is being run on the
+    # command line and we should execute the command_line_handler.
+    if not os.environ.has_key("REQUEST_METHOD"):
+        from Pyblosxom.pyblosxom import command_line_handler
+
+        args = sys.argv[1:]
+
+        if len(args) == 0:
+            args = ["--test"]
+
+        sys.exit(command_line_handler("pyblosxom.cgi", args))
+
+
+    # names taken from wsgi instead of inventing something new
+    env['wsgi.input'] = sys.stdin
+    env['wsgi.errors'] = sys.stderr
+
+    # figure out what the protocol is for the wsgi.url_scheme property.
+    # we look at the base_url first and if there's nothing set there,
+    # we look at environ.
+    if 'base_url' in cfg.keys():
+        env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
+
+    else:
+        if os.environ.get("HTTPS", "off") in ("on", "1"):
+            env["wsgi.url_scheme"] = "https"
+
+        else:
+            env['wsgi.url_scheme'] = "http"
+
+    try:
+        # try running as a WSGI-CGI
+        from wsgiref.handlers import CGIHandler
+        from Pyblosxom.pyblosxom import PyBlosxomWSGIApp
+        CGIHandler().run(PyBlosxomWSGIApp())
+
+    except ImportError:
+        # run as a regular CGI
+
+        if os.environ.get("HTTPS") in ("yes", "on", "1"):
+            env['wsgi.url_scheme'] = "https"
+
+        for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER",
+                    "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR",
+                    "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME",
+                    "HTTP_IF_NONE_MATCH", "HTTP_IF_MODIFIED_SINCE",
+                    "HTTP_COOKIE", "CONTENT_LENGTH", "CONTENT_TYPE",
+                    "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING"]:
+            env[mem] = os.environ.get(mem, "")
+
+        p = PyBlosxom(cfg, env)
+
+        p.run()
+        response = p.getResponse()
+        response.sendHeaders(sys.stdout)
+        response.sendBody(sys.stdout)
+
+
 
 #
 # command line stuff
@@ -1390,6 +1370,12 @@ ARGUMENTS:
   -h, --help
 
      Prints this help text
+
+  -C, --create <dir>
+
+     Creates a PyBlosxom "installation" by building the directory hierarchy
+     and copying necessary files into it.  This is an easy way to create
+     a new blog.
 
   -h, --headers
 
@@ -1592,6 +1578,78 @@ def test_installation(request):
         print "You have chosen not to load any plugins."
 
 
+def create_blog(d):
+    """
+    Creates a blog in the specified directory.  Mostly this involves
+    copying things over, but there are a few cases where we expand
+    template variables.
+    """
+    if d == ".":
+        d = "./blog"
+
+    d = os.path.abspath(d)
+    
+    if os.path.isfile(d) or os.path.isdir(d):
+        print "Cannot create '%s'--something is in the way." % d
+        return 0
+
+    def mkdir(d):
+        print "Creating '%s'..." % d
+        os.makedirs(d)
+
+    mkdir(d)
+    mkdir(os.path.join(d, "entries"))
+    mkdir(os.path.join(d, "plugins"))
+    # mkdir(os.path.join(d, "flavours"))
+
+    def copyfile(frompath, topath, fn, fix=0):
+        print "Creating '%s'..." % os.path.join(topath, fn)
+        fp = open(os.path.join(frompath, fn), "r")
+        filedata = fp.readlines()
+        fp.close()
+
+        if fix:
+            datamap = { "basedir": topath }
+            filedata = [line % datamap for line in filedata]
+
+        fp = open(os.path.join(topath, fn), "w")
+        fp.write("".join(filedata))
+        fp.close()
+
+    def copydir(arg, dirname, names):
+        frompath = dirname
+        topath = os.path.join(os.path.join(d, "flavours"),
+                              dirname[len(path)+1:])
+        mkdir(topath)
+        for name in names:
+            fn = os.path.join(frompath, name)
+            
+            if os.path.isfile(fn):
+                copyfile(frompath, topath, name, 0)
+
+    path = os.path.join(os.path.dirname(__file__), "flavours")
+
+    os.path.walk(path, copydir, [])
+
+    path = os.path.join(os.path.dirname(__file__), "data")
+
+    copyfile(path, d, "config.py", 1)
+    copyfile(path, d, "blog.ini", 1)
+    copyfile(path, d, "pyblosxom.cgi", 0)
+
+    datadir = os.path.join(d, "entries")
+    firstpost = os.path.join(datadir, "firstpost.txt")
+    print "Creating '%s'..." % firstpost
+    fp = open(firstpost, "w")
+    fp.write("""First post!
+<p>
+  This is your first post!  If you can see this with a web-browser,
+  then it's likely that everything's working nicely!
+</p>
+""")
+    fp.close()
+
+
 def command_line_handler(scriptname, argv):
     """
     Handles calling PyBlosxom from the command line.  This can be
@@ -1608,7 +1666,7 @@ def command_line_handler(scriptname, argv):
     def printq(s):
         print s
 
-    # parse initial command line variables
+    # parse initial command line variables that don't require config
     optlist = tools.parse_args(argv)
     for mem in optlist:
         if mem[0] in ["-c", "--config"]:
@@ -1618,10 +1676,21 @@ def command_line_handler(scriptname, argv):
             printq("Appending %s to sys.path for config.py location." % m)
             sys.path.append(m)
 
+        elif mem[0] in ["-C", "--create"]:
+            return create_blog(mem[1])
+
         elif mem[0] in ["-q", "--quiet"]:
             # this quiets the printing by doing nothing with the input
             printq = lambda s : s
 
+        elif mem[0] in ["-v", "--version"]:
+            return 0
+
+        elif mem[0] in ["-h", "--help"]: 
+            print HELP % { "script": scriptname }
+            return 0
+
+ 
     # the configuration properties are in a dict named "py" in
     # the config module
     printq("Trying to import the config module....")
@@ -1650,17 +1719,7 @@ def command_line_handler(scriptname, argv):
     headers = 0
 
     for mem in optlist:
-        if mem[0] in ["-v", "--version"]:
-            # we print the version already, so if we do it again here
-            # it'd be doing it twice.
-            # print get_version()
-            return 0
-
-        elif mem[0] in ["-h", "--help"]: 
-            print get_help()
-            return 0
-
-        elif mem[0] in ["--static", "-s"]:
+        if mem[0] in ["--static", "-s"]:
             if mem[1].startswith("incr"):
                 incremental = 1
             else:
