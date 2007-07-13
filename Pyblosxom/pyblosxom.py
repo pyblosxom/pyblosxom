@@ -1281,6 +1281,7 @@ def blosxom_process_path_info(args):
 
 
 def run_pyblosxom():
+    from config import py as cfg
     env = {}
 
     # if there's no REQUEST_METHOD, then this is being run on the
