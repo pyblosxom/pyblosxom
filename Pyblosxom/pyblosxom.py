@@ -35,8 +35,8 @@ import tools
 import plugin_utils
 from entries.fileentry import FileEntry
 
-VERSION = "1.4"
-VERSION_DATE = VERSION + " 7/2/2007"
+VERSION = "2.0"
+VERSION_DATE = VERSION + " dev"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
 
