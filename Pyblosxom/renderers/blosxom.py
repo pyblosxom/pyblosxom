@@ -53,9 +53,10 @@ def get_included_flavour(taste):
         template_files = os.listdir(path)
         template_d = {}
         for mem in template_files:
-            if not mem.endswith("." + taste):
+            name, ext = os.path.splitext(mem)
+            if ext not in ["." + taste, ""]:
                 continue
-            template_d[os.path.splitext(mem)[0]] = path + os.sep + mem
+            template_d[name] = os.path.join(path, mem)
         return template_d
 
     return None
@@ -83,9 +84,10 @@ def get_flavour_from_dir(path, taste):
         newpath = path + os.sep + taste + ".flav"
         template_files = os.listdir(newpath)
         for mem in template_files:
-            if not mem.endswith("." + taste):
+            name, ext = os.path.splitext(mem)
+            if ext not in ["." + taste, ""]:
                 continue
-            template_d[os.path.splitext(mem)[0]] = newpath + os.sep + mem
+            template_d[name] = os.path.join(path + os.sep + taste + ".flav", mem)
         return template_d
 
     # now we check the directory itself for flavour templates
