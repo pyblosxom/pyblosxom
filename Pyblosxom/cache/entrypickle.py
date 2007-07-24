@@ -22,13 +22,13 @@ with .entryplugin extention in the drectory.
 
 __revision__ = "$Revision$"
 
-from Pyblosxom import tools
-from Pyblosxom.cache.base import BlosxomCacheBase
-
 import cPickle as pickle
 import os
 from os import makedirs
 from os.path import normpath, dirname, exists, abspath
+
+from Pyblosxom import tools
+from Pyblosxom.cache.base import BlosxomCacheBase
 
 class BlosxomCache(BlosxomCacheBase):
     """

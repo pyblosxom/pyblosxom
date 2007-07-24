@@ -16,8 +16,6 @@ and default handlers are defined here.
 
 __revision__ = "$Revision$"
 
-
-# Python imports
 import os
 import time
 import re
@@ -30,10 +28,8 @@ try:
 except ImportError: 
     from StringIO import StringIO
 
-# Pyblosxom imports
-import tools
-import plugin_utils
-from entries.fileentry import FileEntry
+from Pyblosxom import tools, plugin_utils
+from Pyblosxom.entries.fileentry import FileEntry
 
 VERSION = "2.0"
 VERSION_DATE = VERSION + " dev"
@@ -1137,7 +1133,7 @@ def blosxom_process_path_info(args):
     if form.has_key("flav"):
         flav = form["flav"].value
 
-    data['flavour'] = flav
+    data["flavour"] = flav
 
     data['pi_yr'] = ''
     data['pi_mo'] = ''

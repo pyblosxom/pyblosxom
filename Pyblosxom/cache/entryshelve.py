@@ -22,9 +22,10 @@ to the cache file.
 
 __revision__ = "$Revision$"
 
-from Pyblosxom.cache.base import BlosxomCacheBase
 import shelve
 import os
+
+from Pyblosxom.cache.base import BlosxomCacheBase
 
 class BlosxomCache(BlosxomCacheBase):
     """

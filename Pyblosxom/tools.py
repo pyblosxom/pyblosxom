@@ -21,7 +21,6 @@ The swiss army knife for all things pyblosxom
 
 __revision__ = "$Revision$"
 
-# Python imports
 import sgmllib
 import re
 import os
@@ -39,7 +38,7 @@ except ImportError:
 
 
 # Pyblosxom imports
-import plugin_utils
+from Pyblosxom import plugin_utils
 
 # Month names tend to differ with locale
 month2num = None
