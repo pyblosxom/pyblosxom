@@ -21,7 +21,6 @@ The swiss army knife for all things pyblosxom
 
 __revision__ = "$Revision$"
 
-# Python imports
 import sgmllib
 import re
 import os
@@ -39,7 +38,7 @@ except ImportError:
 
 
 # Pyblosxom imports
-import plugin_utils
+from Pyblosxom import plugin_utils
 
 # Month names tend to differ with locale
 month2num = None
@@ -105,11 +104,12 @@ def cleanup():
     # except ImportError:
     #     import _logging as logging
 
-    try:
-        logging.shutdown()
-        _loghandler_registry = {}
-    except ValueError:
-        pass
+    # try:
+    #     logging.shutdown()
+    #     _loghandler_registry = {}
+    # except ValueError:
+    #     pass
+    pass
 
 
 def parse_args(args):
@@ -494,9 +494,7 @@ def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
         ignorere = None
 
     # must have at least root folder
-    try:
-        os.listdir(root)
-    except os.error:
+    if not os.path.isdir(root):
         return []
 
     return __walk_internal(root, recurse, pattern, ignorere, return_folders)
@@ -523,9 +521,9 @@ def __walk_internal( root, recurse, pattern, ignorere, return_folders ):
 
         # grab if it matches our pattern and entry type
         if pattern.match(name):
-            if (os.path.isfile(fullname) and not return_folders) or \
-                    (return_folders and os.path.isdir(fullname) and \
-                    (not ignorere or not ignorere.match(fullname))):
+            if ((os.path.isfile(fullname) and not return_folders) or
+                (return_folders and os.path.isdir(fullname) and
+                 (not ignorere or not ignorere.match(fullname)))):
                 result.append(fullname)
                 
         # recursively scan other folders, appending results
@@ -1122,7 +1120,6 @@ def log_caller(frame_num=1, log_file=None):
     log = getLogger(log_file)
     log.info("\n  module: %s\n  filename: %s\n  line: %s\n  subroutine: %s", 
         module, filename, line, subr)
-
 
 
 # %<-------------------------
