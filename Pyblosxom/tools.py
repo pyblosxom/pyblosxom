@@ -521,9 +521,9 @@ def __walk_internal( root, recurse, pattern, ignorere, return_folders ):
 
         # grab if it matches our pattern and entry type
         if pattern.match(name):
-            if (os.path.isfile(fullname) and not return_folders) or
-                    (return_folders and os.path.isdir(fullname) and
-                    (not ignorere or not ignorere.match(fullname))):
+            if ((os.path.isfile(fullname) and not return_folders) or
+                (return_folders and os.path.isdir(fullname) and
+                 (not ignorere or not ignorere.match(fullname)))):
                 result.append(fullname)
                 
         # recursively scan other folders, appending results
