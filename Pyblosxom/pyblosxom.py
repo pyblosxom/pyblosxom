@@ -464,6 +464,10 @@ class PyBlosxomWSGIApp:
                 _config[key] = int(value)
             else:
                 _config[key] = value
+
+        import config
+        self.config = dict(config.py)
+
         self.config = _config
         if "codebase" in _config:
             sys.path.insert(0, _config["codebase"])
@@ -495,17 +499,9 @@ def pyblosxom_app_factory(global_config, **local_config):
     conf.update(local_config)
     conf.update(dict(local_config=local_config, global_config=global_config))
 
-    # FIXME - should we allow people to do their entire configuration
-    # in an ini file?
-    try:
-        # update the config.py data with config.ini data
-        import config
-        configpy = dict(config.py)
-        configpy.update(conf)
-        conf = configpy
-    except:
-        pass
-    
+    if "configpydir" in conf:
+        sys.path.insert(0, conf["configpydir"])
+
     return cgitb_catcher.make_cgitb_middleware(PyBlosxomWSGIApp(conf),
                                                global_config)
 
