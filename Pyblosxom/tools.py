@@ -494,9 +494,7 @@ def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
         ignorere = None
 
     # must have at least root folder
-    try:
-        os.listdir(root)
-    except os.error:
+    if not os.path.isdir(root):
         return []
 
     return __walk_internal(root, recurse, pattern, ignorere, return_folders)
@@ -523,8 +521,8 @@ def __walk_internal( root, recurse, pattern, ignorere, return_folders ):
 
         # grab if it matches our pattern and entry type
         if pattern.match(name):
-            if (os.path.isfile(fullname) and not return_folders) or \
-                    (return_folders and os.path.isdir(fullname) and \
+            if (os.path.isfile(fullname) and not return_folders) or
+                    (return_folders and os.path.isdir(fullname) and
                     (not ignorere or not ignorere.match(fullname))):
                 result.append(fullname)
                 
