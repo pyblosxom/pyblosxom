@@ -190,7 +190,7 @@ class BlosxomRenderer(RendererBase):
         if not template_d:
             raise NoSuchFlavourException("Flavour '%s' does not exist." % taste)
 
-        for k in template_d:
+        for k in template_d.keys():
             flav_template = unicode(open(template_d[k]).read(), 
                     config.get('blog_encoding', 'iso-8859-1'))
             template_d[k] = flav_template

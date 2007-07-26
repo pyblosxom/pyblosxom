@@ -63,7 +63,6 @@ class BlosxomCache(BlosxomCacheBase):
         else:
             return None
 
-
     def saveEntry(self, entrydata):
         """
         Save data in the pickled file.
@@ -74,12 +73,11 @@ class BlosxomCache(BlosxomCacheBase):
         
         self._db[self._entryid] = payload
 
-
     def rmEntry(self):
         """
         Removes an entry from the shelf.
         """
-        if self._db.has_key(self._entryid):
+        if self._entryid in self._db:
             del self._db[self._entryid]
 
     def keys(self):
@@ -90,15 +88,14 @@ class BlosxomCache(BlosxomCacheBase):
         @rtype: list of strings
         """
         ret = []
-        for key in self._db:
+        for key in self._db.keys():
             self.load(key)
             if self.isCached():
                 ret.append(key)
             else:
                 # Remove this key, why is it there in the first place?
-                del self._db[self._entryid]
+                del self._db[key]
         return ret
-    
 
     def close(self):
         """
