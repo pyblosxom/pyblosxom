@@ -800,8 +800,10 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
         return s
 
     # format the metadata lines for the entry
+    # FIXME - metadatalines = ["#%s %s" % (key, metadata[key])
+    #                  for key in metadata.keys()]
     metadatalines = ["#%s %s" % (key, metadata[key])
-                     for key in metadata.keys()]
+                     for key in metadata]
 
     entry = addcr(title) + "\n".join(metadatalines) + body
 

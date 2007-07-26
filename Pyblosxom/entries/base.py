@@ -302,7 +302,7 @@ class EntryBase:
         @param newdict: the dict we're updating this one with
         @type newdict: dict
         """
-        for mem in newdict.keys():
+        for mem in newdict:
             if mem == CONTENT_KEY:
                 self.setData(newdict[mem])
             else:

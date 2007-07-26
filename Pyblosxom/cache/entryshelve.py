@@ -90,7 +90,7 @@ class BlosxomCache(BlosxomCacheBase):
         @rtype: list of strings
         """
         ret = []
-        for key in self._db.keys():
+        for key in self._db:
             self.load(key)
             if self.isCached():
                 ret.append(key)

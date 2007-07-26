@@ -308,7 +308,8 @@ class PyBlosxom:
         for mem in listing:
             # skip the ones that have bad extensions
             ext = mem[mem.rfind(".")+1:]
-            if not ext in data["extensions"].keys():
+            # FIXME - if not ext in data["extensions"].keys():
+            if not ext in data["extensions"]:
                 continue
 
             # grab the mtime of the entry file
@@ -714,15 +715,6 @@ class Request(object):
         """
         self._configuration.update(newdict)
 
-    def __repr__(self):
-        """
-        Returns a representation of this request which is "Request".
-
-        @returns: "Request"
-        @rtype: string
-        """
-        return "Request"
-
 
 class Response(object):
     """
@@ -825,8 +817,10 @@ class Response(object):
         @type out: file
         """
         out.write("Status: %s\n" % self.status)
+        # FIXME - out.write('\n'.join(['%s: %s' % (hkey, self.headers[hkey]) 
+        #                     for hkey in self.headers.keys()]))
         out.write('\n'.join(['%s: %s' % (hkey, self.headers[hkey]) 
-                for hkey in self.headers.keys()]))
+                             for hkey in self.headers]))
         out.write('\n\n')
         self._headers_sent = True
 
@@ -1081,7 +1075,8 @@ def blosxom_file_list_handler(args):
     if data['pi_yr']:
         # This is called when a date has been requested, e.g. 
         # /some/category/2004/Sep
-        month = (data['pi_mo'] in tools.month2num.keys() and \
+        # FIXME - month = (data['pi_mo'] in tools.month2num.keys() and \
+        month = (data['pi_mo'] in tools.month2num and \
                       tools.month2num[data['pi_mo']] or \
                       data['pi_mo'])
         matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
@@ -1298,7 +1293,8 @@ def run_pyblosxom():
     # figure out what the protocol is for the wsgi.url_scheme property.
     # we look at the base_url first and if there's nothing set there,
     # we look at environ.
-    if 'base_url' in cfg.keys():
+    # FIXME - if 'base_url' in cfg.keys():
+    if 'base_url' in cfg:
         env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
 
     else:
