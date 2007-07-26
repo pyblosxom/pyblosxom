@@ -777,17 +777,7 @@ class Request(object):
         """
         self.__populatedict(self._configuration, newdict)
 
-    def __getattr__(self, name, default=None):
-        """
-        Sort of simulates the dict except we only have three
-        valid attributes: config, data, and http.
-
-        @param name: the name of the attribute to get
-        @type  name: string
-
-        @param default: varies
-        @type  default: varies
-        """
+    def __getattr__(self, name):
         if name in ["config", "configuration", "conf"]:
             return self._configuration
 
@@ -797,7 +787,7 @@ class Request(object):
         if name == "http":
             return self._http
 
-        return default
+        raise AttributeError, name
 
     def __repr__(self):
         """
