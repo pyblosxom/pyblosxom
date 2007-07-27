@@ -48,14 +48,18 @@ Installation
 
    3.1. install PyBlosxom as a Python library by doing 
         ``python setup.py install``, OR
-   3.2. add ``PYTHONPATH`` = ``/path/to/Pyblosxom/parent/`` to your
+   3.2. add ``PYTHONPATH=/path/to/Pyblosxom/parent/`` to your
         environment variables
 
-4. Create a ``blog.ini`` file in the ``pyblosxom`` directory.
+4. Create a directory to hold your blog.  This will be a parent directory
+   of your ``datadir``.
 
-5. Copy ``config.py`` from ``pyblosxom/web`` into your current directory.
+4. Copy ``blog.ini`` from ``pyblosxom/web`` into your blog directory.
 
-6. Edit ``blog.ini`` and ``config.py`` -- see instructions in configuration.
+5. Copy ``config.py`` from ``pyblosxom/web`` into your blog directory.
+
+6. Edit ``blog.ini`` and ``config.py`` -- see instructions in configuration 
+   section.  Be sure to set the ``configpydir`` property.
 
 7. If you left ``use``, ``host``, and ``port`` at the defaults, then you
    can run your blog like this::
@@ -69,6 +73,20 @@ Installation
 
       If the host of your blog is ``0.0.0.0``, then the only place your
       blog will be visible is on the same machine it's running from.
+
+
+Example layout
+==============
+
+Here's an example directory layout::
+
+   /home/joe/
+      |- blog/
+         |- entries/
+         |- flavours/
+         |- plugins/
+         |- config.py
+         |- blog.ini
 
 
 Configuration
@@ -91,6 +109,7 @@ An example ``blog.ini`` is here::
 
    [app:main]
    paste.app_factory = Pyblosxom.pyblosxom:pyblosxom_app_factory
+   configpydir = /path/to/dir
 
    # PyBlosxom config here
    blog_title = Joe's Blog
@@ -119,7 +138,17 @@ There are several things to note here:
    defined--this tells Paste where the PyBlosxom WSGI app factory
    function is.  
 
-3. You can define PyBlosxom config properties in the ``[app:main]`` 
+3. Define the ``configpydir`` property in the ``[app:main]`` section.
+   The value of this property is the directory that your ``config.py``
+   file is in.  
+
+   For example, if you put your ``config.py`` file in 
+   ``/home/joe/blog/config.py``, then set your ``configpydir`` like
+   this::
+
+      configpydir = /home/joe/blog/
+
+4. You can define PyBlosxom config properties in the ``[app:main]`` 
    section as well.  Properties declared here will **override**
    properties declared in your ``config.py`` file.  This is really
    handy for building a testing environment blog on a different port.

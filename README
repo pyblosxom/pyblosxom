@@ -33,7 +33,7 @@ PyBlosxom supports plugins to modify the existing default behavior.
 How to install PyBlosxom
 ========================
 
-Look at the ``install*.txt`` documents in the ``docs/`` directory.
+Look at the ``install_*.txt`` documents in the ``docs/`` directory.
 Pick the one that matches the kind of installation you're looking
 for.
 

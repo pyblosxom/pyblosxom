@@ -1,3 +1,21 @@
+Changes between 1.4 and 1.4.1
+=============================
+
+Pertinent to users:
+
+1. Fixed a problem where running PyBlosxom under Paste won't pick up
+   the ``config.py`` file.  Be sure to add a ``configpydir`` property to
+   your ``blog.ini`` file which points to the directory your ``config.py``
+   file is in.
+
+2. Fixed a problem where running PyBlosxom in Python 2.5 won't pick up
+   the ``config.py`` file.
+
+3. Merged Ryan's optimization to Walk (removes an os.listdir call).
+
+4. Updated documentation.
+
+
 Changes between 1.3.2 and 1.4
 =============================
 
