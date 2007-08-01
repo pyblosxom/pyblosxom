@@ -64,116 +64,84 @@ For each bit of documentation, we have the text file as well as a link
 to the html file if you're using a web-browser to view this document.
 
 
-**about_pyblosxom** 
+* **about_pyblosxom** - Overview of PyBlosxom, goals, and covers where
+  to go for help.
 
-   docs/about_pyblosxom.txt: `about pyblosxom <about_pyblosxom.html>`_
-
-   This document covers what PyBlosxom is and the goals of the PyBlosxom
-   project.  It also has a section on who probably shouldn't use PyBlosxom.
-   Additionally, it has a section on where to go for help if you're having
-   problems with PyBlosxom.
-
-**installation**
-
-   These documents cover PyBlosxom installation, trouble-shooting tips, 
-   and where to go for help if PyBlosxom isn't working for you for a variety
-   of different setups.
-
-   **install_cgi.txt**
-
-      docs/install_cgi.txt: `install as CGI <install_cgi.html>`_
-
-      Covers installing PyBlosxom under CGI.  This is probably the most common
-      installation method.  It's the most comprehensive installation document
-      we have, too.
-
-   **install_paste.txt**
-
-      docs/install_paste.txt: `install under Paste <install_paste.html>`_
-
-      Covers installing PyBlosxom with Paste.
-
-   **install_wsgi.txt**
-
-      docs/install_wsgi.txt: `install under WSGI <install_wsgi.html>`_
-
-      Covers installing PyBlosxom under WSGI.
-
-   **install_debian.txt**
-
-      docs/install_debian.txt: `install on Debian <install_debian.html>`_
-
-      Covers installing PyBlosxom on Debian.
-
-**advanced installation**
-
-   docs/advanced_installation.txt: `advanced installation <advanced_installation.html>`_
+  docs/about_pyblosxom.txt: `about pyblosxom <about_pyblosxom.html>`_
 
 
-   This document covers "advanced" aspects of installation such as
-   tweaking your ``.htaccess`` file if you are using Apache to make
-   the url more user-friendly, ...
+* **installation** - There are several installation documents.  Each covers
+  a different way to install PyBlosxom:
 
-**flavours and templates**
+  * If you want to install PyBlosxom in a CGI environment: **install_cgi.txt**
 
-   docs/flavours_and_templates.txt: `flavours and templates <flavours_and_templates.html>`_
+    docs/install_cgi.txt: `install as CGI <install_cgi.html>`_
 
-   This document covers creating and editing flavours and templates.
-   Flavours and templates are part of PyBlosxom's templating system.
+  * If you want to install PyBlosxom with Paste: **install_paste.txt**
+
+    docs/install_paste.txt: `install under Paste <install_paste.html>`_
+
+  * If you want to install PyBlosxom with WSGI: **install_wsgi.txt**
+
+    docs/install_wsgi.txt: `install under WSGI <install_wsgi.html>`_
 
 
-**plugins**
+* **advanced installation** - Covers "advanced" aspects of installation such 
+  as tweaking your ``.htaccess`` file if you are using Apache to make the url 
+  more user-friendly, ...
 
-   docs/plugins.txt: `plugins <plugins.html>`_
+  docs/advanced_installation.txt: `advanced installation <advanced_installation.html>`_
 
-   This document covers installing and using plugins with PyBlosxom.
 
-**writing entries**
+* **flavours and templates** - Covers creating and editing flavours and templates.
+  Flavours and templates are part of PyBlosxom's templating system.
 
-   docs/writing_entries.txt: `writing entries <writing_entries.html>`_
+  docs/flavours_and_templates.txt: `flavours and templates <flavours_and_templates.html>`_
 
-   This document covers writing entries in your new blog.
 
-**static rendering**
+* **plugins** - Covers installing and using plugins with PyBlosxom.
 
-   docs/static_rendering.txt: `static rendering <static_rendering.html>`_
+  docs/plugins.txt: `plugins <plugins.html>`_
 
-   This document covers static rendering with PyBlosxom.  This allows
-   you to generate static pages that constitute your site and can be
-   served by any web-server without any need for CGI.
 
-**comments**
+* **writing entries** - This document covers writing entries in your new blog.
 
-   docs/comments.txt: `comments <comments.html>`_
+  docs/writing_entries.txt: `writing entries <writing_entries.html>`_
 
-   This document covers installing the comments plugin and related
-   plugins.  It also covers ways to reduce comment spam.
 
-**syndication**
+* **static rendering** - Covers static rendering with PyBlosxom.  This allows
+  you to generate static pages that constitute your site and can be
+  served by any web-server without any need for CGI.
 
-   docs/syndication.txt: `syndication <syndication.html>`_
+  docs/static_rendering.txt: `static rendering <static_rendering.html>`_
 
-   This document covers how to set up syndication in PyBlosxom.
-   PyBlosxom has built-in formats for Atom 1.0, RSS 2.0, and RSS 0.9.1.
 
-**dev architecture**
+* **comments** - Covers installing the comments plugin and related plugins.  
+  It also covers ways to reduce comment spam.
 
-   docs/dev_architecture.txt: `architecture <dev_architecture.html>`_
+  docs/comments.txt: `comments <comments.html>`_
 
-   This document covers how PyBlosxom is architected.  If you're writing
-   a plugin, then this document will help you know where things are and
-   how to use them.
 
-**dev writing plugins**
+* **syndication** - Covers how to set up syndication in PyBlosxom.
+  PyBlosxom has built-in formats for Atom 1.0, RSS 2.0, and RSS 0.9.1.
 
-   docs/dev_writing_plugins.txt: `writing plugins <dev_writing_plugins.html>`_
+  docs/syndication.txt: `syndication <syndication.html>`_
 
-   This document covers how to write PyBlosxom plugins.  It also covers
-   all the callbacks and their semantics.
 
-**config variables**
+* **dev architecture** - Covers how PyBlosxom is architected.  If you're 
+  writing a plugin, then this document will help you know where things are 
+  and how to use them.
 
-   docs/config_variables.txt: `config variables <config_variables.html>`_
+  docs/dev_architecture.txt: `architecture <dev_architecture.html>`_
 
-   This document covers all the variables that are available in your
-   ``config.py`` file.
+
+* **dev writing plugins** - Covers how to write PyBlosxom plugins.  It also 
+  covers all the callbacks and their semantics.
+
+  docs/dev_writing_plugins.txt: `writing plugins <dev_writing_plugins.html>`_
+
+
+* **config variables** - Covers all the variables that are available in your
+  ``config.py`` file.
+
+  docs/config_variables.txt: `config variables <config_variables.html>`_
