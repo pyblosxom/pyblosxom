@@ -1,3 +1,16 @@
+Changes between 1.4.1 and 1.4.2
+===============================
+
+Pertinent to users:
+
+1. Fixed another bug with the WSGI application creation code.  (Thanks
+   Christine!)
+
+2. Added instructions for installing PyBlosxom with mod_wsgi to
+   ``install_wsgi.txt``.  This includes a basic wsgi script for PyBlosxom.
+   (Thanks Christine!)
+
+
 Changes between 1.4 and 1.4.1
 =============================
 

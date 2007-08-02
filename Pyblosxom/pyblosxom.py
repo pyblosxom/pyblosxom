@@ -468,7 +468,7 @@ class PyBlosxomWSGIApp:
         import config
         self.config = dict(config.py)
 
-        self.config = _config
+        self.config.update(_config)
         if "codebase" in _config:
             sys.path.insert(0, _config["codebase"])
 
