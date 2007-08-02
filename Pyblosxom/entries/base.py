@@ -158,7 +158,7 @@ class EntryBase:
         cache = tools.get_cache(self._request)
 
         # cache.__getitem__ returns None if the id isn't there
-        if cache.has_key(entryid):
+        if entryid in cache:
             return cache[entryid]
 
         return None

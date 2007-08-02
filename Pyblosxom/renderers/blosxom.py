@@ -333,13 +333,13 @@ class BlosxomRenderer(RendererBase):
             self.showHeaders()
         
         if self._content:
-            if self.flavour.has_key('head'):
+            if "head" in self.flavour:
                 self._outputFlavour(parsevars,'head')
-            if self.flavour.has_key('story'):
+            if "story" in self.flavour:
                 self._processContent()
-            if self.flavour.has_key('date_foot'): 
+            if "date_foot" in self.flavour:
                 self._outputFlavour(parsevars,'date_foot')                
-            if self.flavour.has_key('foot'): 
+            if "foot" in self.flavour:
                 self._outputFlavour(parsevars,'foot')                
         
         self.rendered = 1

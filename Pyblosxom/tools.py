@@ -381,7 +381,7 @@ class Replacer:
         else:
             args = None
 
-        if self.var_dict.has_key(key):
+        if key in self.var_dict:
             r = self.var_dict[key]
 
             # if the value turns out to be a function, then we call it
@@ -556,7 +556,7 @@ def filestat(request, filename):
     data = request.getData()    
     filestat_cache = data.setdefault("filestat_cache", {})      
     
-    if filestat_cache.has_key(filename):    
+    if filename in filestat_cache:
         return filestat_cache[filename]     
     
     argdict = { "request": request,

@@ -82,7 +82,7 @@ class PyBlosxom:
         config = self._request.configuration
 
         # Initialize the locale, if wanted (will silently fail if locale 
-        # is not # available)
+        # is not available)
         if config.get('locale'):
             try: 
                 locale.setlocale(locale.LC_ALL, config['locale'])
@@ -97,8 +97,8 @@ class PyBlosxom:
         data['pi_bl'] = ''
 
         # Get our URL and configure the base_url param
-        if pyhttp.has_key('SCRIPT_NAME'):
-            if not config.has_key('base_url'):
+        if 'SCRIPT_NAME' in pyhttp:
+            if not 'base_url' in config:
                 # allow http and https
                 config['base_url'] = '%s://%s%s' % \
                                      (pyhttp['wsgi.url_scheme'], 
@@ -1124,7 +1124,7 @@ def blosxom_process_path_info(args):
     # query string variable, the "default_flavour" setting in the
     # config.py file, or "html"
     flav = config.get("default_flavour", "html")
-    if form.has_key("flav"):
+    if flav in form:
         flav = form["flav"].value
 
     data["flavour"] = flav
@@ -1276,7 +1276,7 @@ def run_pyblosxom():
 
     # if there's no REQUEST_METHOD, then this is being run on the
     # command line and we should execute the command_line_handler.
-    if not os.environ.has_key("REQUEST_METHOD"):
+    if not "REQUEST_METHOD" in os.environ:
         from Pyblosxom.pyblosxom import command_line_handler
 
         args = sys.argv[1:]
@@ -1481,15 +1481,24 @@ def test_installation(request):
     config_keys = [m
                    for m in config_keys
                    if m not in all_keys]
-    config_keys.sort()
+
+    def wrappify(ks):
+        ks.sort()
+        if len(ks) == 1:
+            return "   %s" % ks[0]
+        elif len(ks) == 2:
+            return "   %s and %s" % (ks[0], ks[1])
+
+        ks = ", ".join(ks[:-1]) + " and " + ks[-1]
+        import textwrap
+        return "   " + "\n   ".join( textwrap.wrap(ks, 72) )
     
     if missing_required_props:
         print ""
         print "Missing properties must be set in order for your blog to"
         print "work."
         print ""
-        for mem in missing_required_props:
-            print "   missing required property: '%s'" % mem
+        print wrappify(missing_required_props)
         print ""
         print "This must be done before we can go further.  Exiting."
         return
@@ -1500,8 +1509,7 @@ def test_installation(request):
         print "but some of them may interest you.  Refer to the documentation "
         print "for more information."
         print ""
-        for mem in missing_optional_props:
-            print "   missing optional property: '%s'" % mem
+        print wrappify(missing_optional_props)
 
     if config_keys:
         print ""
@@ -1509,8 +1517,7 @@ def test_installation(request):
         print "could be used by plugins or could be ones you've added."
         print "Remove them if you know they're not used."
         print ""
-        for mem in config_keys:
-            print "   i don't know about: '%s'" % mem
+        print wrappify(config_keys)
         print ""
         
     print "PASS: config file is fine."
@@ -1534,7 +1541,7 @@ def test_installation(request):
     print "------"
     print "Now we're going to verify your plugin configuration."
 
-    if config.has_key("plugin_dirs"):
+    if "plugin_dirs" in config:
         plugin_utils.initialize_plugins(config["plugin_dirs"],
                                         config.get("load_plugins", None))
 
@@ -1697,7 +1704,7 @@ def command_line_handler(scriptname, argv):
     # then we insert that into our sys.path because that's where the
     # PyBlosxom installation is.
     # NOTE: this _has_ to come before any PyBlosxom calls.
-    if cfg.has_key("codebase"):
+    if "codebase" in cfg:
         sys.path.append(cfg["codebase"])
 
     printq("PyBlosxom version: %s" % VERSION_DATE)

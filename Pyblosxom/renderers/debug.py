@@ -134,7 +134,7 @@ class Renderer(RendererBase):
                 print_map(printout, content)
 
         printout(hbar)
-        if not config.has_key("cacheDriver"):
+        if not "cacheDriver" in config:
             printout("No cache driver configured.")
         else:
             printout("Cached Titles:\n")
@@ -144,7 +144,7 @@ class Renderer(RendererBase):
                 if not isinstance(content, str):
                     filename = content['filename']
             
-                    if cache.has_key(filename):
+                    if filename in cache:
                         printout("%s\n" % escv(cache[filename]['title']))
                     cache.close()
 
@@ -154,7 +154,7 @@ class Renderer(RendererBase):
             for content in self._content:
                 if not isinstance(content, str):
                     filename = content['filename']
-                    if cache.has_key(filename):
+                    if filename in cache:
                         printout("%s\n" % escv(cache[filename]['title']))
                         printout(hbar.replace("-", "="))
                         printout("%s\n" % escv(cache[filename]['body']))

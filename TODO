@@ -20,24 +20,33 @@ pyblosxom-devel mailing list.
 Thanks!
 
 
-MILESTONE VERSION 1.5
+MILESTONE VERSION 2.0
 =====================
 
 Prospective release date: ?
 
 This release is in the early planning stages.
 
-UNIT TESTING
+REFACTORING
 
- - Continue adding unit and functional tests to PyBlosxom.
+ - go through and fix get/set stuff, ...
+ - switch to using shutils
+ - switch to using optparse
+ - fix request.http, request.data, request.config confusion
+ - remove caching stuff--move this to plugins
+ - adjust setup.py so that it builds the files in web/ from the
+   files in data/ and copies them over
+ - create man page for pyblcmd?
 
 MANUAL
 
- - Go through and fill in more FIXMEs.
+ - go through and fill in more FIXMEs.
+ - add some text to the plugin_writing documentation about writing
+   plugin packages -- look at webfront as an example
 
-ANYTHING ELSE?
+UNIT TESTING
 
- - ?
+ - continue adding unit and functional tests to PyBlosxom.
 
 
 
