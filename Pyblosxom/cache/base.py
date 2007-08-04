@@ -23,8 +23,8 @@ class BlosxomCacheBase:
     is in a fresh state.
 
     Drivers are to subclass this object, overriding methods defined in 
-    this class.  If there is an error in creating cache data, be as quite 
-    as possible, document how a user could check whether his cache works.
+    this class.  If there is an error in creating cache data, be as quiet
+    as possible.  Document how a user could check whether his cache works.
 
     Driver should expect empty caches and should attempt to create them from
     scratch.
@@ -51,7 +51,7 @@ class BlosxomCacheBase:
 
     def load(self, entryid):
         """
-        Try to load up the cache with entryid (a unique key for the entry)
+        Try to load up the cache with entryid (a unique key for the entry).
 
         @param entryid: The key identifier for your cache
         @type entryid: string
@@ -148,6 +148,7 @@ class BlosxomCache(BlosxomCacheBase):
     """
     A null cache.
     """
-    pass
+    def __getitem__(self, key):
+        return None
 
 # vim: tabstop=4 shiftwidth=4 expandtab
