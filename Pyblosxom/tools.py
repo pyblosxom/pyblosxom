@@ -189,7 +189,7 @@ class VariableDict:
         """
         self._dict = {}
 
-    def __getitem__(self, key, default=None):
+    def __getitem__(self, key):
         """
         If the key ends with _escaped, then this will retrieve
         the value for the key and escape it.
@@ -197,15 +197,11 @@ class VariableDict:
         If the key ends with _urlencoded, then this will retrieve
         the value for the key and urlencode it.
 
-        Otherwise, this calls get(key, default) on the wrapped
+        Otherwise, this calls __getitem__(key) on the wrapped
         dict.
 
         @param key: the key to retrieve
         @type  key: string
-
-        @param default: the default value to use if the key doesn't
-                        exist.
-        @type  default: string
 
         @returns: the value; escaped if the key ends in _escaped;
                   urlencoded if the key ends in _urlencoded.
@@ -213,13 +209,13 @@ class VariableDict:
         """
         if key.endswith("_escaped"):
             key = key[:-8]
-            return escape_text(self._dict.get(key, default))
+            return escape_text(self._dict.__getitem__(key))
 
         if key.endswith("_urlencoded"):
             key = key[:-11]
-            return urlencode_text(self._dict.get(key, default))
+            return urlencode_text(self._dict.__getitem__(key))
 
-        return self._dict.get(key, default)
+        return self._dict.__getitem__(key)
 
     def get(self, key, default=None):
         """
@@ -234,7 +230,11 @@ class VariableDict:
         @returns: __getitem__(key, default)
         @rtype: string
         """
-        return self.__getitem__(key, default)
+        try:
+            v = self.__getitem__(key)
+        except KeyError, ke:
+            return default
+        return v
 
     def __setitem__(self, key, value):
         """
@@ -374,38 +374,37 @@ class Replacer:
         request = self._request
         key = matchobj.group(1)
 
-        if key.find("(") != -1 and key.find(")"):
+        if key.find("(") != -1 and key.rfind(")") > key.find("("):
             args = key[key.find("(")+1:key.rfind(")")]
             key = key[:key.find("(")]
 
         else:
             args = None
 
-        if key in self.var_dict:
-            r = self.var_dict[key]
+        if not self.var_dict.has_key(key):
+            return u
 
-            # if the value turns out to be a function, then we call it
-            # with the args that we were passed.
-            if callable(r):
-                # FIXME - security issue here because we're using eval.
-                # course, the things it allows us to do can be done using
-                # plugins much more easily--so it's kind of a moot point.
-                if args:
-                    r = eval("r(request, " + args + ")")
-                else:
-                    r = r()
+        r = self.var_dict[key]
 
-            if not isinstance(r, str) and not isinstance(r, unicode):
-                r = str(r)
+        # if the value turns out to be a function, then we call it
+        # with the args that we were passed.
+        if callable(r):
+            # FIXME - security issue here because we're using eval.
+            # course, the things it allows us to do can be done using
+            # plugins much more easily--so it's kind of a moot point.
+            if args:
+                r = eval("r(request, " + args + ")")
+            else:
+                r = r()
 
-            if not isinstance(r, unicode):
-                # convert strings to unicode, assumes strings in iso-8859-1
-                r = unicode(r, self._encoding, 'replace')
+        if not isinstance(r, str) and not isinstance(r, unicode):
+            r = str(r)
 
-            return r
+        if not isinstance(r, unicode):
+            # convert strings to unicode, assumes strings in iso-8859-1
+            r = unicode(r, self._encoding, 'replace')
 
-        else:
-            return u''
+        return r
 
 def parse(request, encoding, var_dict, template):
     """
@@ -838,18 +837,20 @@ def get_cache(request):
     @rtype: L{Pyblosxom.cache.base.BlosxomCacheBase} subclass
     """
     data = request.getData()
-    mycache = data.get("data_cache", "")
+    mycache = data.get("data_cache", None)
 
-    if not mycache:
-        config = request.getConfiguration()
+    if mycache:
+        return mycache
 
-        cache_driver_config = config.get('cacheDriver', 'base')
-        cache_config = config.get('cacheConfig', '')
+    config = request.getConfiguration()
 
-        cache_driver = importname('Pyblosxom.cache', cache_driver_config)
-        mycache = cache_driver.BlosxomCache(request, cache_config)
+    cache_driver_config = config.get('cacheDriver', 'base')
+    cache_config = config.get('cacheConfig', '')
 
-        data["data_cache"] = mycache
+    cache_driver = importname('Pyblosxom.cache', cache_driver_config)
+    mycache = cache_driver.BlosxomCache(request, cache_config)
+
+    data["data_cache"] = mycache
 
     return mycache
 
