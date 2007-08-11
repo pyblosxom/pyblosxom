@@ -10,6 +10,12 @@ Pertinent to users:
    ``install_wsgi.txt``.  This includes a basic wsgi script for PyBlosxom.
    (Thanks Christine!)
 
+3. Fixed up the Python Paste installation document.  (Thanks Liz!)
+
+4. Fixed the ``month2num`` code in tools so that PyBlosxom runs on 
+   Windows (Windows doesn't have ``nl_langinfo`` in the ``locale`` 
+   module).  (Thanks Liz!)
+
 
 Changes between 1.4 and 1.4.1
 =============================

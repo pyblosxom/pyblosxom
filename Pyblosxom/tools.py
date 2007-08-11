@@ -28,7 +28,6 @@ import time
 import os.path
 import stat
 import sys
-import locale
 import urllib
 
 try:
@@ -58,24 +57,46 @@ def initialize(config):
     configuration from the pyblosxom config.py file.
     This should be called from Pyblosxom.pyblosxom.PyBlosxom.initialize.
     """
+    import locale
+
     global _config
     _config = config
 
     # Month names tend to differ with locale
     global month2num
-    month2num = { 'nil' : '00',
-                  locale.nl_langinfo(locale.ABMON_1) : '01',
-                  locale.nl_langinfo(locale.ABMON_2) : '02',
-                  locale.nl_langinfo(locale.ABMON_3) : '03',
-                  locale.nl_langinfo(locale.ABMON_4) : '04',
-                  locale.nl_langinfo(locale.ABMON_5) : '05',
-                  locale.nl_langinfo(locale.ABMON_6) : '06',
-                  locale.nl_langinfo(locale.ABMON_7) : '07',
-                  locale.nl_langinfo(locale.ABMON_8) : '08',
-                  locale.nl_langinfo(locale.ABMON_9) : '09',
-                  locale.nl_langinfo(locale.ABMON_10) : '10',
-                  locale.nl_langinfo(locale.ABMON_11) : '11',
-                  locale.nl_langinfo(locale.ABMON_12) : '12'}
+
+    try:
+        month2num = { 'nil' : '00',
+                      locale.nl_langinfo(locale.ABMON_1) : '01',
+                      locale.nl_langinfo(locale.ABMON_2) : '02',
+                      locale.nl_langinfo(locale.ABMON_3) : '03',
+                      locale.nl_langinfo(locale.ABMON_4) : '04',
+                      locale.nl_langinfo(locale.ABMON_5) : '05',
+                      locale.nl_langinfo(locale.ABMON_6) : '06',
+                      locale.nl_langinfo(locale.ABMON_7) : '07',
+                      locale.nl_langinfo(locale.ABMON_8) : '08',
+                      locale.nl_langinfo(locale.ABMON_9) : '09',
+                      locale.nl_langinfo(locale.ABMON_10) : '10',
+                      locale.nl_langinfo(locale.ABMON_11) : '11',
+                      locale.nl_langinfo(locale.ABMON_12) : '12'}
+
+    except:
+        # Windows doesn't have nl_langinfo, so we use one that 
+        # only return English.
+        # FIXME - need a better hack for this issue.
+        month2num = { 'nil' : '00',
+                      "Jan" : '01',
+                      "Feb" : '02',
+                      "Mar" : '03',
+                      "Apr" : '04',
+                      "May" : '05',
+                      "Jun" : '06',
+                      "Jul" : '07',
+                      "Aug" : '08',
+                      "Sep" : '09',
+                      "Oct" : '10',
+                      "Nov" : '11',
+                      "Dec" : '12'}
 
     # This is not python 2.1 compatible (Nifty though)
     # num2month = dict(zip(month2num.itervalues(), month2num))

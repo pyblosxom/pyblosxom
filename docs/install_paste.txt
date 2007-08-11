@@ -18,25 +18,67 @@ installing and using PyBlosxom with Paste.
 This document is in a "works for me" status.  Any help to flesh it out
 to be more generally useful is **greatly** appreciated.
 
+This installation assumes you have some understanding of Python Paste.
+If this doesn't sound like you, then you can read up on Paste on
+the `Paste web-site`_.
+
+Paste support is pretty new, still.  If you have problems, check our
+`web-site`_ and feel free to ask questions on the pyblosxom-users
+mailing list.  Details of the mailing list are on our web-site on the
+`Contact us`_ page.
+
+.. _Paste web-site: http://pythonpaste.org/
+.. _web-site: http://pyblosxom.sourceforge.net/
+.. _Contact us: http://pyblosxom.sourceforge.net/blog/static/contact
+
+.. Note::
+
+   A note about upgrading PyBlosxom:
+    
+   If you are upgrading your version of PyBlosxom, follow the
+   instructions here and also read the ``README`` that comes with
+   your PyBlosxom tarball for differences between this version and
+   the previous versions.  The ``README`` file contains instructions
+   on updating your ``config.py`` file, templates, and other parts of
+   your PyBlosxom installation which you will have to do by hand.
+
 
 Pre-requisites for installing PyBlosxom with Paste
 ==================================================
 
+You will need:
+
 * Pyblosxom 1.4 or a later version
-* If you're running a version of Python less than 2.5, then you need
-  the wsgiref library from http://svn.eby-sarna.com/wsgiref/
 * Python Paste which can be found at http://pythonpaste.org/
 
+Additionally, if you're using an earlier version of Python than
+Python 2.5, then you'll also need:
 
-A bit about Paste
-=================
+* wsgiref library from http://svn.eby-sarna.com/wsgiref/
 
-FIXME - write up a blurb about Paste to make it easier to understand
-what's going on and how PyBlosxom is being run.
+Additionally, if you are running PyBlosxom on Windows, you will
+also need:
+
+* Python for Windows extensions: http://sourceforge.net/projects/pywin32/
+
+
+Downloading
+===========
+
+You can find versions of PyBlosxom by going to the Download link at
+http://pyblosxom.sourceforge.net/ .
+
+Download the latest PyBlosxom ``.tar.gz`` file.
 
 
 Installation
 ============
+
+Installing PyBlosxom with Paste should take 5-10 minutes depending
+on what state your system is currently in.  The installation consists
+of a few steps.  Tweaking, styling, and adding content to your blog
+is covered in other parts of the documentation.
+
 
 1. Download PyBlosxom from the PyBlosxom site.
 
@@ -52,41 +94,40 @@ Installation
         environment variables
 
 4. Create a directory to hold your blog.  This will be a parent directory
-   of your ``datadir``.
+   of your ``datadir``.  Also create directories for ``entries``, 
+   ``flavours``, and ``plugins``.
 
-4. Copy ``blog.ini`` from ``pyblosxom/web`` into your blog directory.
+   Here's an example file-system layout::
 
-5. Copy ``config.py`` from ``pyblosxom/web`` into your blog directory.
+      /home/joe/
+         |- blog/
+            |- entries/
+            |- flavours/
+            |- plugins/
+            |- config.py
+            |- blog.ini
 
-6. Edit ``blog.ini`` and ``config.py`` -- see instructions in configuration 
+
+5. Copy ``blog.ini`` from ``pyblosxom/web`` into your blog directory.
+
+6. Copy ``config.py`` from ``pyblosxom/web`` into your blog directory.
+
+7. Edit ``blog.ini`` and ``config.py`` -- see instructions in configuration 
    section.  Be sure to set the ``configpydir`` property.
 
-7. If you left ``use``, ``host``, and ``port`` at the defaults, then you
+8. If you left ``use``, ``host``, and ``port`` at the defaults, then you
    can run your blog like this::
 
       paster serve blog.ini
 
 
-   paster will print the URL for your blog on the command line.
+   ``paster`` will print the URL for your blog on the command line.
 
    .. Note::
 
-      If the host of your blog is ``0.0.0.0``, then the only place your
-      blog will be visible is on the same machine it's running from.
-
-
-Example layout
-==============
-
-Here's an example directory layout::
-
-   /home/joe/
-      |- blog/
-         |- entries/
-         |- flavours/
-         |- plugins/
-         |- config.py
-         |- blog.ini
+      If the host of your blog is ``0.0.0.0`` or ``127.0.0.1``, then 
+      your blog will be visible ONLY from the same machine it is running
+      from.
 
 
 Configuration
