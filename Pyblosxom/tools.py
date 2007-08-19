@@ -382,7 +382,7 @@ class Replacer:
             args = None
 
         if not self.var_dict.has_key(key):
-            return u
+            return u''
 
         r = self.var_dict[key]
 

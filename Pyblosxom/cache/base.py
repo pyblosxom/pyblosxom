@@ -106,6 +106,12 @@ class BlosxomCacheBase:
             raise KeyError
         return self.getEntry()
 
+    def __contains__(self, key):
+        """
+        More dict emulation. This is for the in operator.
+        """
+        return self.has_key(key)
+
     def __setitem__(self, key, value):
         """
         Synonymous to L{saveEntry}
@@ -149,6 +155,9 @@ class BlosxomCache(BlosxomCacheBase):
     A null cache.
     """
     def __getitem__(self, key):
-        return None
+        raise KeyError
+
+    def __contains__(self, key):
+        return False
 
 # vim: tabstop=4 shiftwidth=4 expandtab
