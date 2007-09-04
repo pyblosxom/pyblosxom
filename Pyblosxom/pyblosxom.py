@@ -1124,7 +1124,7 @@ def blosxom_process_path_info(args):
     # query string variable, the "default_flavour" setting in the
     # config.py file, or "html"
     flav = config.get("default_flavour", "html")
-    if flav in form:
+    if 'flav' in form:
         flav = form["flav"].value
 
     data["flavour"] = flav
