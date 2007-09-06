@@ -14,8 +14,8 @@ from a file system.  Since pulling data from the file system and parsing
 it is expensive (especially when you have 100s of entries) we delay
 fetching data until it's demanded.
 
-The FileEntry calls EntryBase methods addToCache and getFromCache
-to handle caching.
+The FileEntry calls the entries.base.EntryBase.getFromCache to handle 
+entry-level caching.
 """
 
 __revision__ = "$Revision$"
@@ -170,7 +170,7 @@ class FileEntry(base.EntryBase):
 
         data = self._request.getData()
 
-        entrydict = self.getFromCache(self._filename)
+        entrydict = self.getFromCache(self._request, self._filename)
         if not entrydict:
             fileext = os.path.splitext(self._filename)
             if fileext:
@@ -178,7 +178,6 @@ class FileEntry(base.EntryBase):
 
             eparser = data['extensions'][fileext]
             entrydict = eparser(self._filename, self._request)
-            self.addToCache(self._filename, entrydict)
 
         self.update(entrydict)
         self._populated_data = 1

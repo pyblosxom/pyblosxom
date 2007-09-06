@@ -140,47 +140,66 @@ class EntryBase:
         """
         return self._metadata.keys()
 
-    def getFromCache(self, entryid):
-        """
-        Retrieves information from the cache that pertains to this
+    def getFromCache(self, request, entryid):
+        """Retrieves information from the cache that pertains to this
         specific entryid.
 
-        This is a helper method--call this to get data from the cache.
-        Do not override it.
+        This is a helper method--call this to get data from the 
+        entry-level cache.  Do not override it.
+
+        This turns around and calls the entrycache_get callback 
+        to handle retrieving the data from the cache.
+
+        @param request: the PyBlosxom Request
+        @type request: the PyBlosxom Request
 
         @param entryid: a unique key for the information you're retrieving
         @type  entryid: string
 
-        @returns: dict with the values or None if there's nothing for that
-            entryid
+        @returns: cached dict with the values or None if there's nothing 
+            cached for that entryid
         @rtype: dict or None
         """
-        cache = tools.get_cache(self._request)
+        argdict = { "request": request, "id": entryid }
+        cachedentry = tools.run_callback("entrycache_get",
+                                         argdict, 
+                                         mappingfunc = lambda x, y: x,
+                                         donefunc = lambda x: x != None,
+                                         defaultfunc = lambda x: None)
+        return cachedentry
 
-        if entryid in cache:
-            return cache[entryid]
+    def updateCache(self, request, entryid, data):
+        """Updates entry data in the entry-level cache.
 
-        return None
+        This is a helper method--call this to put data into the
+        entry-level cache.  Do not override it.
 
-    def addToCache(self, entryid, data):
-        """
-        Over-writes the cached dict for key entryid with the data dict.
+        This turns around and calls the entrycache_update callback to 
+        handle updating the entry data in the entry-level cache.
 
-        This is a helper method--call this to add data to the cache.
-        Do not override it.
+        Note: If the data dict is empty or None, remove the entry from
+        the cache.
+
+        @param request: the PyBlosxom Request
+        @type request: the PyBlosxom Request
 
         @param entryid: a unique key for the information you're storing
         @type  entryid: string
 
-        @param data: the data to store--this should probably be a dict
+        @param data: a dict of entry data--if empty or None, remove the
+            entry from the cache
         @type  data: dict
         """
-        mycache = tools.get_cache(self._request)
-        if mycache:
-            mycache[entryid] = data
+        argdict = { "request": request, "id": entryid, "data": data }
+        cachedentry = tools.run_callback("entrycache_update",
+                                         argdict, 
+                                         mappingfunc = lambda x, y: x,
+                                         donefunc = lambda x: 0,
+                                         defaultfunc = lambda x: x)
 
-    # everything below this point involves convenience functions
-    # that work with the above functions.
+
+    # everything below this point are convenience functions that
+    # work use the above methods.
 
     def setTime(self, timetuple):
         """
@@ -217,26 +236,16 @@ class EntryBase:
         # set the locale back
         locale.setlocale(locale.LC_ALL, loc)
 
-    def __getitem__(self, key, default=None):
+    def __getitem__(self, key):
         """
-        Retrieves an item from this dict based on the key given.  If 
-        the item does not exist, then we return the default.
-
         If the item is CONTENT_KEY then we return the result from 
         self.getData().
 
-        This is just a convenience method for getData(...) and 
-        getMetadata(...).
-
-        There's no reason to override this--override getData and
-        getMetadata instead.
+        This calls getData() and getMetadata()--there's no reason to 
+        override this; override getData and getMetadata instead.
 
         @param key: the key being sought
         @type  key: varies
-
-        @param default: the default to return if the key does not
-            exist
-        @type  default: varies
 
         @returns: the value of self._metadata.get(key, default) or 
             self.getData()
@@ -248,7 +257,7 @@ class EntryBase:
         if key == CONTENT_KEY + "_escaped":
             return tools.escape_text(self.getData())
 
-        return self.getMetadata(key, default)
+        return self.getMetadata(key)
 
     def get(self, key, default=None):
         """
@@ -271,7 +280,10 @@ class EntryBase:
             self.getData() (through __getitem__)
         @rtype: varies
         """
-        return self.__getitem__(key, default)
+        try:
+            return self.__getitem__(key)
+        except:
+            return default
 
     def __setitem__(self, key, value):
         """
