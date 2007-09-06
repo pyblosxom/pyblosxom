@@ -79,6 +79,12 @@ class TestgenerateRandStr():
 
 class TestEscapeText():
     """tools.escape_text"""
+    def test_none_to_none(self):
+        assert tools.escape_text(None) == None
+
+    def test_empty_string_to_empty_string(self):
+        assert tools.escape_text("") == ""
+
     def test_single_quote_to_pos(self):
         assert tools.escape_text("a'b") == "a&apos;b"
 
@@ -92,6 +98,12 @@ class TestEscapeText():
 
 class TestUrlencodeText():
     """tools.urlencode_text"""
+    def test_none_to_none(self):
+        assert tools.urlencode_text(None) == None
+
+    def test_empty_string_to_empty_string(self):
+        assert tools.urlencode_text("") == "" 
+
     def test_equals_to_3D(self):
         assert tools.urlencode_text("a=c") == "a%3Dc"
 
@@ -110,6 +122,8 @@ class TestVariableDict():
     """tools.VariableDict class"""
 
     def __init__(self):
+        # we use the same VariableDict instance through all
+        # the tests since none of them mutate the instance.
         self.vd = tools.VariableDict()
         self.vd.update( { "a": "b", \
                           "title": "This is my story", \
@@ -146,14 +160,14 @@ class TestVariableDict():
         assert self.vd.get("title_escaped") == "This is my story"
         assert self.vd.get("title2_escaped") == "Story: &quot;aha!&quot;"
         assert self.vd.get("badkey_escaped", "novalue") == "novalue"
-        assert self.vd.get("badkey_escaped", "no value") == "no value"
+        assert self.vd.get("badkey_escaped", 'no"value') == 'no"value'
 
     def test_can_urlencode_value(self):
         assert self.vd.get("a_urlencoded") == "b"
         assert self.vd.get("title_urlencoded") == "This%20is%20my%20story"
         assert self.vd.get("title2_urlencoded") == "Story%3A%20%22aha%21%22"
         assert self.vd.get("badkey_urlencoded", "novalue") == "novalue"
-        assert self.vd.get("badkey_urlencoded", "no value") == "no%20value"
+        assert self.vd.get("badkey_urlencoded", "no value") == "no value"
 
 class TestStripper:
     """tools.Stripper class"""
@@ -169,6 +183,7 @@ class TestStripper:
         assert self._strip("") == ""
         assert self._strip("abc") == "abc"
         assert self._strip("<b>abc</b>") == " abc "
+        assert self._strip("abc<br />") == "abc "
         assert self._strip("abc <b>def</b> ghi") == "abc  def  ghi"
         
 class TestWhatExt:
