@@ -1,35 +1,30 @@
-Changes between 1.4 and 2.0
+Changes between 1.4.2 and 2.0
 ===========================
 
 Pertinent to users:
 -------------------
 
-1. PyBlosxom now requires setuptools and Python 2.3 to install.
+1. PyBlosxom now requires setuptools and at least Python 2.3 to install.
 
-2. The pyblosxom.cgi file has changed significantly--if you're using it
-   you will have to update.  We've turned this into more of a stub so
-   that functional changes now happen in the PyBlosxom codebase rather
-   than in the pyblosxom.cgi file.  This will reduce the need for you
-   to update pyblosxom.cgi in the future when you upgrade PyBlosxom.
+2. The ``pyblosxom.cgi`` file has changed significantly--if you're using it
+   you should grab the new one that comes with this distribution.  We've
+   gutted the ``pyblosxom.cgi`` script and turned it into a stub.  This will
+   reduce the need for you to update your ``pyblosxom.cgi`` in the future
+   when you upgrade PyBlosxom.
 
 3. pyblcmd now has an option to create the blog directory structure
    and skeleton files for you.  This makes it much faster to get a new 
    blog up and running.  It works like this::
 
-      pyblcmd --create /path/to/new/blogdir
+      pyblcmd --create <path>
 
    For example::
 
       pyblcmd --create /home/joe/blog
 
-4. A minor bug with Paste support has been fixed.  You can specify a
-   ``configpydir`` in the ``[app:main]`` section which lets Paste know
-   where the ``config.py`` file is.  
-
-   .. Note:: 
-
-      You have to set this even if ``config.py`` is in the same directory 
-      as your ``blog.ini`` file.
+4. The entry cache drivers have been removed from PyBlosxom core.  If
+   you were using entryshelf or entrypickle, you'll need to pick up
+   their plugin replacements.
 
 
 Pertinent to developers:
@@ -42,6 +37,25 @@ Pertinent to developers:
    the documentation on the web-site for details.
 
 
+Changes between 1.4.1 and 1.4.2
+===============================
+
+Pertinent to users:
+
+1. Fixed another bug with the WSGI application creation code.  (Thanks
+   Christine!)
+
+2. Added instructions for installing PyBlosxom with mod_wsgi to
+   ``install_wsgi.txt``.  This includes a basic wsgi script for PyBlosxom.
+   (Thanks Christine!)
+
+3. Fixed up the Python Paste installation document.  (Thanks Liz!)
+
+4. Fixed the ``month2num`` code in tools so that PyBlosxom runs on 
+   Windows (Windows doesn't have ``nl_langinfo`` in the ``locale`` 
+   module).  (Thanks Liz!)
+
+
 Changes between 1.4 and 1.4.1
 =============================
 
@@ -51,6 +65,12 @@ Pertinent to users:
    the ``config.py`` file.  Be sure to add a ``configpydir`` property to
    your ``blog.ini`` file which points to the directory your ``config.py``
    file is in.
+
+   .. Note:: 
+
+      You have to set this even if ``config.py`` is in the same directory 
+      as your ``blog.ini`` file.
+
 
 2. Fixed a problem where running PyBlosxom in Python 2.5 won't pick up
    the ``config.py`` file.

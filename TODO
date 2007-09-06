@@ -27,19 +27,39 @@ Prospective release date: ?
 
 This release is in the early planning stages.
 
+BUGS
+
+ - why are we only showing entries at one depth?
+
 REFACTORING
 
+ - move all callback stuff to its own module with items in tools for
+   backwards compatability.  also, name all the lambda functions.
+   identiy, oldvalue, newvalue, defaultnone, defaultone, ...
+ - add __all__ to everything so that we're explicitly exporting things
  - go through and fix get/set stuff, ...
+ - fix VariableDict so that it's cleaner and faster
  - switch to using shutils
- - switch to using optparse
- - fix request.http, request.data, request.config confusion
- - remove caching stuff--move this to plugins
+ - switch argument handling to using optparse
+ - fix request.http, request.data, and request.config confusion
  - adjust setup.py so that it builds the files in web/ from the
    files in data/ and copies them over
- - create man page for pyblcmd?
+
+REFACTOR CACHING
+
+ - add index-level caching
+ - re-work the entry-level caching system to a callback and
+   remove caching code from the system.
+
+REFACTOR ENTRYPARSERS
+
+ - add function to tools that takes a file-like-object and returns
+   a {title = 'title', metadata = {}, body = 'body} dict.
+ - change all entryparsers to use this function
 
 MANUAL
 
+ - man page for pyblcmd?
  - go through and fill in more FIXMEs.
  - add some text to the plugin_writing documentation about writing
    plugin packages -- look at webfront as an example
@@ -48,6 +68,9 @@ UNIT TESTING
 
  - continue adding unit and functional tests to PyBlosxom.
 
+PYBLCMD
+
+ - add storing and resetting of mtimes across entries
 
 
 PROJECT INFRASTRUCTURE
