@@ -847,35 +847,6 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
     # set the mtime on the entry
     os.utime(fn, (mtime, mtime))
 
-def get_cache(request):
-    """
-    Retrieves the cache from the request or fetches a new CacheDriver
-    instance.
-
-    @param request: the Request object for this run
-    @type  request: Request
-
-    @returns: A BlosxomCache object reference
-    @rtype: L{Pyblosxom.cache.base.BlosxomCacheBase} subclass
-    """
-    data = request.getData()
-    mycache = data.get("data_cache", None)
-
-    if mycache:
-        return mycache
-
-    config = request.getConfiguration()
-
-    cache_driver_config = config.get('cacheDriver', 'base')
-    cache_config = config.get('cacheConfig', '')
-
-    cache_driver = importname('Pyblosxom.cache', cache_driver_config)
-    mycache = cache_driver.BlosxomCache(request, cache_config)
-
-    data["data_cache"] = mycache
-
-    return mycache
-
 
 def update_static_entry(cdict, entry_filename):
     """

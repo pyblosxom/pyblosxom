@@ -967,10 +967,6 @@ def blosxom_handler(request):
                      "Check your config files and verify that your " + \
                      "configuration is correct.\n")
 
-    cache = tools.get_cache(request)
-    if cache:
-        cache.close()
-
 
 def blosxom_entry_parser(filename, request):
     """
@@ -1454,10 +1450,9 @@ def test_installation(request):
     nice_to_have_config = ["blog_title", "blog_author", "blog_description",
                            "blog_language", "blog_encoding", "blog_icbm",
                            "base_url", "depth", "num_entries", "renderer", 
-                           "cacheDriver", "cacheConfig", "plugin_dirs", 
-                           "load_plugins", "blog_email", "blog_rights",
-                           "default_flavour", "flavourdir", "log_file",
-                           "log_level", "logdir", ]
+                           "plugin_dirs", "load_plugins", "blog_email", 
+                           "blog_rights", "default_flavour", "flavourdir", 
+                           "log_file", "log_level", "logdir", ]
 
     config_keys = config.keys()
 
