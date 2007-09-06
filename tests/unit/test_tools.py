@@ -3,7 +3,7 @@ import _path_pyblosxom
 import string
 import os
 import os.path
-from Pyblosxom import tools
+from Pyblosxom import tools, pyblosxom
 
 class TestVAR_REGEXP:
     """tools.VAR_REGEXP
@@ -33,7 +33,7 @@ class TestVAR_REGEXP:
 
     def test_delimiters(self):
         VR = tools.VAR_REGEXP
-        for c in ('|', '=', '+', ' ', '$'):
+        for c in ('|', '=', '+', ' ', '$', '<', '>'):
             assert self._get_match(VR, "$test%s1" % c) == "test"
 
     def test_namespace(self):
@@ -55,15 +55,45 @@ class TestVAR_REGEXP:
 
     def test_parens(self):
         VR = tools.VAR_REGEXP
-        assert self._get_match(VR, "$(foo)") == "foo"
-        assert self._get_match(VR, "$(foo())") == "foo()"
-        assert self._get_match(VR, "$(foo::bar)") == "foo::bar"
-        assert self._get_match(VR, "$(foo::bar())") == "foo::bar()"
-        assert self._get_match(VR, "$(foo::bar(1, 2, 3))") == "foo::bar(1, 2, 3)"
+        assert self._get_match(VR, "$(foo)") == "(foo)"
+        assert self._get_match(VR, "$(foo())") == "(foo())"
+        assert self._get_match(VR, "$(foo::bar)") == "(foo::bar)"
+        assert self._get_match(VR, "$(foo::bar())") == "(foo::bar())"
+        assert self._get_match(VR, "$(foo::bar(1, 2, 3))") == "(foo::bar(1, 2, 3))"
 
+
+class Testparse:
+    """tools.parse"""
+    def _get_req(self):
+        return pyblosxom.Request( {}, {}, {} )
+
+    def test_simple(self):
+        def pt(d, t):
+            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+
+        assert pt( { "foo": "FOO" }, "foo foo foo") == "foo foo foo"
+        assert pt( { "foo": "FOO" }, "foo $foo foo") == "foo FOO foo"
+
+    def test_functions(self):
+        def pt(d, t):
+            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+
+        assert pt( { "foo": lambda x: "FOO" }, "foo foo foo") == "foo foo foo"
+
+        assert pt( { "foo": lambda x: "FOO" }, "foo $foo() foo") == "foo FOO foo"
+        assert pt( { "foo": lambda x, y: y }, "foo $foo('a') foo") == "foo a foo"
+
+    def test_functions2(self):
+        def pt(d, t):
+            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+
+        # test the old behavior that allowed for functions that have no
+        # arguments--in this case we don't pass a request object in
+        assert pt( { "foo": (lambda : "FOO") }, "foo $foo() foo") == "foo FOO foo"
+
+ 
 class Testis_year:
     """tools.is_year"""
-
     def test_must_be_four_digits(self):
         assert tools.is_year("abab") == 0
         assert tools.is_year("ab") == 0

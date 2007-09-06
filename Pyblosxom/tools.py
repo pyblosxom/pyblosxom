@@ -28,6 +28,7 @@ import stat
 import sys
 import locale
 import urllib
+import inspect
 
 try:
     from xml.sax.saxutils import escape
@@ -44,7 +45,27 @@ num2month = None
 MONTHS    = None
 
 # regular expression for detection and substituion of variables.
-VAR_REGEXP = re.compile(ur'(?<!\\)\$((?:\w|\-|::\w)+(?:\(.*?(?<!\\)\))?)')
+VAR_REGEXP = re.compile(ur"""
+    (?<!\\)   # if the $ is escaped, then this isn't a variable
+    \$        # variables start with a $
+    (
+        (?:\w|\-|::\w)+       # word char, - or :: followed by a word char
+        (?:
+            \(                # an open paren
+            .*?               # followed by non-greedy bunch of stuff
+            (?<!\\)\)         # with an end paren that's not escaped
+        )?    # 0 or 1 of these ( ... ) blocks
+    |
+        \(
+        (?:\w|\-|::\w)+       # word char, - or :: followed by a word char
+        (?:
+            \(                # an open paren
+            .*?               # followed by non-greedy bunch of stuff
+            (?<!\\)\)         # with an end paren that's not escaped
+        )?    # 0 or 1 of these ( ... ) blocks
+        \)
+    ) 
+    """, re.VERBOSE)
 
 
 # reference to the pyblosxom config dict
@@ -396,6 +417,11 @@ class Replacer:
         request = self._request
         key = matchobj.group(1)
 
+        # if the variable is using $(foo) syntax, then we strip the
+        # outer parens here.
+        if key.startswith("(") and key.endswith(")"):
+            key = key[1:-1]
+
         if key.find("(") != -1 and key.rfind(")") > key.find("("):
             args = key[key.find("(")+1:key.rfind(")")]
             key = key[:key.find("(")]
@@ -411,17 +437,34 @@ class Replacer:
         # if the value turns out to be a function, then we call it
         # with the args that we were passed.
         if callable(r):
-            # FIXME - security issue here because we're using eval.
-            # course, the things it allows us to do can be done using
-            # plugins much more easily--so it's kind of a moot point.
             if args:
-                r = eval("r(request, " + args + ")")
+                # split the args by , and convert them into ints and
+                # strings
+                def fix(s):
+                    if s.isdigit(): 
+                        return int(s)
+                    return s[1:-1]
+                args = [fix(arg.strip()) for arg in args.split(",")]
+
+                # stick the request in as the first argument
+                args.insert(0, request)
+
+                r = r(*args)
+
+            elif len(inspect.getargspec(r)[0]) == 1:
+                r = r(request)
+
             else:
+                # this case is here for handling the old behavior where
+                # functions took no arguments
                 r = r()
 
+        # if the result is not a string or unicode object, we call str on 
+        # it.
         if not isinstance(r, str) and not isinstance(r, unicode):
             r = str(r)
 
+        # then we convert it to unicode
         if not isinstance(r, unicode):
             # convert strings to unicode, assumes strings in iso-8859-1
             r = unicode(r, self._encoding, 'replace')
