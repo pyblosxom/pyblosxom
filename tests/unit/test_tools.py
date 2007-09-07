@@ -83,7 +83,7 @@ class Testparse:
         assert pt( { "foo": lambda x: "FOO" }, "foo $foo() foo") == "foo FOO foo"
         assert pt( { "foo": lambda x, y: y }, "foo $foo('a') foo") == "foo a foo"
 
-    def test_functions2(self):
+    def test_functions_old(self):
         def pt(d, t):
             return tools.parse(self._get_req(), "iso-8859-1", d, t)
 
@@ -91,6 +91,16 @@ class Testparse:
         # arguments--in this case we don't pass a request object in
         assert pt( { "foo": (lambda : "FOO") }, "foo $foo() foo") == "foo FOO foo"
 
+    def test_functions_with_var_args(self):
+        def pt(d, t):
+            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+
+        vd = { "foo": lambda x, y: (y + "A"), "bar": "BAR" }
+        assert pt(vd, "foo $foo($bar) foo") == "foo BARA foo"
+
+        # FIXME - this doesn't work because we're using regexps and
+        # don't have a stack to handle nesting.
+        # assert pt(vd, "foo $foo( $foo($bar) ) foo") == "foo BARAA foo"
  
 class Testis_year:
     """tools.is_year"""

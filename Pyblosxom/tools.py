@@ -250,13 +250,14 @@ class VariableDict:
                   urlencoded if the key ends in _urlencoded.
         @rtype: string
         """
-        if key.endswith("_escaped"):
-            key = key[:-8]
-            return escape_text(self._dict.__getitem__(key))
+        if isinstance(key, str):
+            if key.endswith("_escaped"):
+                key = key[:-8]
+                return escape_text(self._dict.__getitem__(key))
 
-        if key.endswith("_urlencoded"):
-            key = key[:-11]
-            return urlencode_text(self._dict.__getitem__(key))
+            if key.endswith("_urlencoded"):
+                key = key[:-11]
+                return urlencode_text(self._dict.__getitem__(key))
 
         return self._dict.__getitem__(key)
 
@@ -438,12 +439,17 @@ class Replacer:
         # with the args that we were passed.
         if callable(r):
             if args:
+                # FIXME
                 # split the args by , and convert them into ints and
                 # strings
                 def fix(s):
+                    print s
+                    s = u'' + VAR_REGEXP.sub(self.replace, s)
                     if s.isdigit(): 
                         return int(s)
-                    return s[1:-1]
+                    if s.startswith("'") or s.startswith('"'):
+                        return s[1:-1]
+                    return s
                 args = [fix(arg.strip()) for arg in args.split(",")]
 
                 # stick the request in as the first argument
