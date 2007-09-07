@@ -443,7 +443,6 @@ class Replacer:
                 # split the args by , and convert them into ints and
                 # strings
                 def fix(s):
-                    print s
                     s = u'' + VAR_REGEXP.sub(self.replace, s)
                     if s.isdigit(): 
                         return int(s)
