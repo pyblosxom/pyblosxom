@@ -376,6 +376,63 @@ class Stripper(sgmllib.SGMLParser):
         """
         return "".join(self.data)
 
+def commasplit(s):
+    """
+    Splits a string that contains strings by comma.  This is
+    more involved than just an ``s.split(",")`` because this handles
+    commas in strings correctly.
+
+    Note: commasplit doesn't remove extranneous spaces.
+
+    >>> tools.commasplit(None)
+    []
+    >>> tools.commasplit("")
+    [""]
+    >>> tools.commasplit("a")
+    ["a"]
+    >>> tools.commasplit("a, b, c")
+    ["a", " b", " c"]
+    >>> tools.commasplit("'a', 'b, c'")
+    ["a", " 'b, c'"]
+    >>> tools.commasplit("'a', \"b, c\"")
+    ["a", " \"b, c\""]
+
+    This returns a list of strings.
+
+    :Parameters:
+       s : string
+          the string to split
+    """
+    if s is None:
+        return []
+
+    if not s:
+        return [""]
+
+    startstring = None
+    t = []
+    l = []
+
+    for c in s:
+        if c == startstring:
+            startstring = None
+            t.append(c)
+
+        elif c == "'" or c == '"':
+            startstring = c
+            t.append(c)
+
+        elif not startstring and c == ",":
+            l.append("".join(t))
+            t = []
+
+        else:
+            t.append(c)
+
+    if t:
+        l.append("".join(t))
+
+    return l
 
 class Replacer:
     """
@@ -404,17 +461,38 @@ class Replacer:
 
     def replace(self, matchobj):
         """
-        The replacement method. 
-        
-        This is passed a match object by re.sub(), which it uses to index the
-        replacement dictionary and find the replacement string.
+        This is passed a match object by ``re.sub()`` which represents a
+        template variable without the ``$``.  parse manipulates the variable
+        and returns the expansion of that variable using the following
+        rules:
 
-        @param matchobj: A C{re} object containing substitutions
-        @type  matchobj: C{re} object
+        1. if the variable ``v`` is an identifier, but not in the variable
+           dict, then we return the empty string, or
 
-        @returns: Substitutions
-        @rtype: string
+        2. if the variable ``v`` is an identifier in the variable dict, then
+           we return ``var_dict[v]``, or
+
+        3. if the variable ``v`` is a function call where the function is
+           an identifier in the variable dict, then
+
+           - if ``v`` has no passed arguments and the function takes no
+             arguments we return ``var_dict[v]()`` (this is the old
+             behavior
+
+           - if ``v`` has no passed arguments and the function takes two
+             arguments we return ``var_dict[v](request, vd)``
+
+           - if ``v`` has passed arguments, we return 
+             ``var_dict[v](request, vd, *args)`` after some mild 
+             processing of the arguments
+
+        It returns the substituted string.
+
+        :Parameters:
+           matchobj : re.matchobj
+              regular expression match object
         """
+        vd = self.var_dict
         request = self._request
         key = matchobj.group(1)
 
@@ -430,34 +508,39 @@ class Replacer:
         else:
             args = None
 
-        if not self.var_dict.has_key(key):
+        if not vd.has_key(key):
             return u''
 
-        r = self.var_dict[key]
+        r = vd[key]
 
         # if the value turns out to be a function, then we call it
         # with the args that we were passed.
         if callable(r):
             if args:
-                # FIXME
-                # split the args by , and convert them into ints and
-                # strings
-                def fix(s):
-                    s = u'' + VAR_REGEXP.sub(self.replace, s)
+                def fix(s, vd=vd):
+                    # if it's an int, return an int
                     if s.isdigit(): 
                         return int(s)
+                    # if it's a string, return a string
                     if s.startswith("'") or s.startswith('"'):
                         return s[1:-1]
+                    # otherwise it might be an identifier--check
+                    # the vardict and return the value if it's in
+                    # there
+                    if s in vd:
+                        return vd[s]
                     return s
-                args = [fix(arg.strip()) for arg in args.split(",")]
+                args = [fix(arg.strip()) for arg in commasplit(args)]
 
-                # stick the request in as the first argument
+                # stick the request and var_dict in as the first and second
+                # arguments
+                args.insert(0, vd)
                 args.insert(0, request)
 
                 r = r(*args)
 
-            elif len(inspect.getargspec(r)[0]) == 1:
-                r = r(request)
+            elif len(inspect.getargspec(r)[0]) == 2:
+                r = r(request, vd)
 
             else:
                 # this case is here for handling the old behavior where
@@ -475,6 +558,7 @@ class Replacer:
             r = unicode(r, self._encoding, 'replace')
 
         return r
+
 
 def parse(request, encoding, var_dict, template):
     """
@@ -693,30 +777,40 @@ def is_year(checks):
         return 1
     return 0
 
-
 def importname(modulename, name):
     """
-    Imports modules for modules that can only be determined during 
-    runtime.
+    Safely imports modules for runtime importing.
 
-    @param modulename: The base name of the module to import from
-    @type modulename: string
+    Returns the module object or ``None`` if there were problems
+    importing.
 
-    @param name: The name of the module to import from the modulename
-    @type name: string
-
-    @returns: If successful, returns an imported object reference, else
-              C{None}
-    @rtype: object
+    :Parameters:
+       modulename : string
+          The package name of the module to import from
+       name : string
+          The name of the module to import
     """
+    logger = getLogger()
+    if not modulename:
+        m = name
+    else:
+        m = "%s.%s" % (modulename, name)
+
     try:
-        module = __import__(modulename, globals(), locals(), [name])
-    except ImportError:
-        return None
-    try:
-        return vars(module)[name]
-    except:
-        return None
+        module = __import__(m)
+        for c in m.split(".")[1:]:
+            module = getattr(module, c)
+        return module
+
+    except ImportError, ie:
+        logger.error("Module %s in package %s won't import: %s" % \
+                     (repr(modulename), repr(name), ie))
+
+    except Exception, e:
+        logger.error("Module %s not in in package %s: %s" % \
+                     (repr(modulename), repr(name), e))
+
+    return None
 
 
 def generateRandStr(minlen=5, maxlen=10):

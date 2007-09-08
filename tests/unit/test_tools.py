@@ -42,7 +42,7 @@ class TestVAR_REGEXP:
         assert self._get_match(VR, " $foo::bar ") == "foo::bar"
         assert self._get_match(VR, "other $foo::bar stuff") == "foo::bar"
 
-    def test_function(self):
+    def test_single_function(self):
         VR = tools.VAR_REGEXP
         assert self._get_match(VR, "$foo()") == "foo()"
         assert self._get_match(VR, " $foo() ") == "foo()"
@@ -51,7 +51,8 @@ class TestVAR_REGEXP:
 
     def test_function_with_arguments(self):
         VR = tools.VAR_REGEXP
-        assert self._get_match(VR, '$foo("arg1", 1, {"foo": "bar"})') == 'foo("arg1", 1, {"foo": "bar"})'
+        assert self._get_match(VR, '$foo("arg1")') == 'foo("arg1")'
+        assert self._get_match(VR, '$foo("arg1", 1)') == 'foo("arg1", 1)'
 
     def test_parens(self):
         VR = tools.VAR_REGEXP
@@ -78,12 +79,12 @@ class Testparse:
         def pt(d, t):
             return tools.parse(self._get_req(), "iso-8859-1", d, t)
 
-        assert pt( { "foo": lambda x: "FOO" }, "foo foo foo") == "foo foo foo"
+        assert pt( { "foo": lambda req, vd: "FOO" }, "foo foo foo") == "foo foo foo"
+        assert pt( { "foo": lambda req, vd: "FOO" }, "foo $foo() foo") == "foo FOO foo"
+        assert pt( { "foo": lambda req, vd, z: z }, "foo $foo('a') foo") == "foo a foo"
+        assert pt( { "foo": lambda req, vd, z: z, "bar": "BAR" }, "foo $foo(bar) foo") == "foo BAR foo"
 
-        assert pt( { "foo": lambda x: "FOO" }, "foo $foo() foo") == "foo FOO foo"
-        assert pt( { "foo": lambda x, y: y }, "foo $foo('a') foo") == "foo a foo"
-
-    def test_functions_old(self):
+    def test_functions_old_behavior(self):
         def pt(d, t):
             return tools.parse(self._get_req(), "iso-8859-1", d, t)
 
@@ -91,17 +92,45 @@ class Testparse:
         # arguments--in this case we don't pass a request object in
         assert pt( { "foo": (lambda : "FOO") }, "foo $foo() foo") == "foo FOO foo"
 
+    def test_functions_with_args_that_have_commas(self):
+        def pt(d, t):
+            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+
+        vd = { "foo": lambda req, vd, x: (x + "A"),
+               "foo2": lambda req, vd, x, y: (y + x) }
+
+        assert pt(vd, '$foo("ba,ar")') == "ba,arA"
+        assert pt(vd, '$foo2("a,b", "c,d")') == "c,da,b"
+
     def test_functions_with_var_args(self):
         def pt(d, t):
             return tools.parse(self._get_req(), "iso-8859-1", d, t)
 
-        vd = { "foo": lambda x, y: (y + "A"), "bar": "BAR" }
-        assert pt(vd, "foo $foo($bar) foo") == "foo BARA foo"
+        vd = { "foo": lambda req, vd, x: (x + "A"), "bar": "BAR" }
 
-        # FIXME - this doesn't work because we're using regexps and
-        # don't have a stack to handle nesting.
-        # assert pt(vd, "foo $foo( $foo($bar) ) foo") == "foo BARAA foo"
+        # this bar is a string
+        assert pt(vd, "foo $foo('bar') foo") == "foo barA foo"
+
+        # this bar is also a string
+        assert pt(vd, 'foo $foo("bar") foo') == "foo barA foo"
+
+        # this bar is an identifier which we lookup in the var_dict and pass
+        # into the foo function
+        assert pt(vd, "foo $foo(bar) foo") == "foo BARA foo"
+
+class Testcommasplit:
+    """tools.commasplit"""
+    def test_commasplit(self):
+        tcs = tools.commasplit
+        assert tcs( None ) == []
+        assert tcs( "" ) == [""]
+        assert tcs( "a" ) == ["a"]
+        assert tcs( "a b c" ) == ["a b c"]
+        assert tcs( "a, b, c" ) == ["a", " b", " c"]
+        assert tcs( "a, 'b, c'" ) == ["a", " 'b, c'"]
+        assert tcs( "a, \"b, c\"" ) == ["a", " \"b, c\""]
  
+
 class Testis_year:
     """tools.is_year"""
     def test_must_be_four_digits(self):
@@ -173,7 +202,7 @@ class TestgenerateRandStr():
         self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
         self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
 
-class TestEscapeText():
+class Testescape_text():
     """tools.escape_text"""
     def test_none_to_none(self):
         assert tools.escape_text(None) == None
@@ -192,7 +221,7 @@ class TestEscapeText():
         assert tools.escape_text("") == ""
         assert tools.escape_text("abc") == "abc"
 
-class TestUrlencodeText():
+class Testurlencode_text():
     """tools.urlencode_text"""
     def test_none_to_none(self):
         assert tools.urlencode_text(None) == None
@@ -281,8 +310,34 @@ class TestStripper:
         assert self._strip("<b>abc</b>") == " abc "
         assert self._strip("abc<br />") == "abc "
         assert self._strip("abc <b>def</b> ghi") == "abc  def  ghi"
+
+class Testimportname:
+    """tools.importname"""
+    def _setup(self):
+        tools._config = {}
+
+    def _teardown(self):
+        del tools.__dict__["_config"]
+
+    def _c(self, mn, n):
+        m = tools.importname(mn, n)
+        print repr(m)
+        return m
+
+    def test_goodimport(self):
+        self._setup()
+
+        import string
+        assert self._c("", "string") == string
+
+        import os.path
+        from os import path
+        assert self._c("os", "path") == path
+
+        self._teardown()
+
         
-class TestWhatExt:
+class Testwhat_ext:
     """tools.what_ext"""
     def __init__(self):
         self._files = ["a.txt", "b.html", "c.txtl"]
