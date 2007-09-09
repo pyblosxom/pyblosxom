@@ -303,7 +303,7 @@ class PyBlosxom:
         categories = {}
 
         # first we handle entries and categories
-        listing = tools.Walk(self._request, datadir)
+        listing = tools.walk(self._request, datadir)
 
         for mem in listing:
             # skip the ones that have bad extensions
@@ -1049,7 +1049,7 @@ def blosxom_file_list_handler(args):
     config = request.config
 
     if data['bl_type'] == 'dir':
-        filelist = tools.Walk(request, 
+        filelist = tools.walk(request, 
                               data['root_datadir'], 
                               int(config.get("depth", "0")))
     elif data['bl_type'] == 'file':
