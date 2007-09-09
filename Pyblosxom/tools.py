@@ -841,22 +841,38 @@ def generateRandStr(minlen=5, maxlen=10):
 
 def passoriginal(x, y): 
     """
-    mappingfunc for callbacks.
+    mappingfunc for callbacks which takes the original input, the
+    output from the last function and returns the original input.
 
-    The mappingfunc takes the original args and the return value
-    of the last func and returns the original args.  Thus every
-    function sees the original args dict rather than the mutated
-    args dict.
+    All functions in the callback chain get the original input
+    as input.
     """
-    x
+    return x
+
+def passmutated(x, y):
+    """
+    mappingfunc for callbacks which takes the original input,
+    the output from the last function and returns the output from
+    the last function.
+
+    Functions in the callback get the output from the previous function
+    as input.
+    """
+    return y
 
 def neverdone(x): 
     """
-    donefunc for callbacks.
-
-    This causes the callback to poll all functions in the list.
+    donefunc for callbacks which always returns ``False`` causing all
+    functions in the callback chain to run.
     """
-    0
+    return False
+
+def donewhentrue(x):
+    """
+    donefunc for callbacks which stops the callback when the
+    last function returned a True value.
+    """
+    return x
 
 def run_callback(chain, input, 
         mappingfunc = passoriginal,
@@ -897,9 +913,9 @@ def run_callback(chain, input,
           recent iteration.  If this function returns true (1) then 
           we'll drop out of the loop.  For example, if you wanted a 
           callback to stop running when one of the registered functions 
-          returned a 1, then you would pass in::
+          returned a True, then you would pass in::
 
-              donefunc=lambda x:x .
+              donefunc = lambda x : x
 
        defaultfunc : function
           if this is set and we finish going through all the functions 
@@ -919,9 +935,9 @@ def run_callback(chain, input,
         output = func(input)
 
         # we fun the output through our donefunc to see if we should stop
-        # iterating through the loop.  the donefunc should return a 1
-        # if we're done--all other values cause us to continue.
-        if donefunc(output) == 1:
+        # iterating through the loop.  if the donefunc returns something
+        # true, then we're all done; otherwise we continue.
+        if donefunc(output):
             break
 
         # we pass the input we just used and the output we just got
@@ -934,7 +950,7 @@ def run_callback(chain, input,
     # if we have a defaultfunc and we haven't satisfied the donefunc
     # conditions, then we return whatever the defaultfunc returns
     # when given the current version of the input.
-    if callable(defaultfunc) and donefunc(output) != 1:
+    if callable(defaultfunc) and not donefunc(output):
         return defaultfunc(input)
         
     # we didn't call the defaultfunc--so we return the most recent
