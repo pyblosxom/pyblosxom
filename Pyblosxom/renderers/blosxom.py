@@ -307,7 +307,7 @@ class BlosxomRenderer(RendererBase):
         data = self._request.getData()
         config = self._request.getConfiguration()
 
-        parsevars = tools.VariableDict()
+        parsevars = dict(tools.STANDARD_FILTERS)
         parsevars.update(config)
         parsevars.update(data)
 

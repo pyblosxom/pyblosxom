@@ -26,6 +26,12 @@ Pertinent to users:
    you were using entryshelf or entrypickle, you'll need to pick up
    their plugin replacements.
 
+   FIXME - note location of plugin replacements here.
+
+5. Template variable syntax ``$id_escaped`` and ``$id_urlencoded``
+   has been deprecated.  Use ``$escape(id)`` and ``$urlencode(id)``
+   instead.
+
 
 Pertinent to developers:
 ------------------------
@@ -35,6 +41,10 @@ Pertinent to developers:
    to provide a list of things you'll need to do to update your plugin
    for PyBlosxom 2.0 while continuing to work with PyBlosxom 1.4.  See
    the documentation on the web-site for details.
+
+2. ``Pyblosxom.tools.VariableDict`` is no more.
+
+3. ``Pyblosxom.cache`` is no more.
 
 
 Changes between 1.4.1 and 1.4.2

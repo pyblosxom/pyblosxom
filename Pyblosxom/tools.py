@@ -228,126 +228,9 @@ def urlencode_text(s):
 
     return urllib.quote(s)
 
-class VariableDict:
-    """
-    Wraps around a standard dict allowing for escaped and urlencoding
-    of internal data by tacking on a _urlencoded or a _escaped
-    to the end of the key name.
-    """
-    def __init__(self):
-        """
-        Initializes the internal dict.
-        """
-        self._dict = {}
+STANDARD_FILTERS = { "escape": lambda req, vd, s : escape_text(s),
+                     "urlencode": lambda req, vd, s : urlencode_text(s) }
 
-    def __getitem__(self, key):
-        """
-        If the key ends with _escaped, then this will retrieve
-        the value for the key and escape it.
-
-        If the key ends with _urlencoded, then this will retrieve
-        the value for the key and urlencode it.
-
-        Otherwise, this calls __getitem__(key) on the wrapped
-        dict.
-
-        @param key: the key to retrieve
-        @type  key: string
-
-        @returns: the value; escaped if the key ends in _escaped;
-                  urlencoded if the key ends in _urlencoded.
-        @rtype: string
-        """
-        if isinstance(key, str):
-            if key.endswith("_escaped"):
-                key = key[:-8]
-                return escape_text(self._dict.__getitem__(key))
-
-            if key.endswith("_urlencoded"):
-                key = key[:-11]
-                return urlencode_text(self._dict.__getitem__(key))
-
-        return self._dict.__getitem__(key)
-
-    def get(self, key, default=None):
-        """
-        This turns around and calls __getitem__(key, default).
-
-        @param key: the key to retrieve
-        @type  key: string
-
-        @param default: the default value to use if the key doesn't exist.
-        @type  default: string
-
-        @returns: __getitem__(key, default)
-        @rtype: string
-        """
-        try:
-            v = self.__getitem__(key)
-        except KeyError, ke:
-            return default
-        return v
-
-    def __setitem__(self, key, value):
-        """
-        This calls __setitem__(key, value) on the wrapped dict.
-
-        @param key: the key
-        @type  key: string
-
-        @param value: the value
-        @type  value: string
-        """
-        self._dict.__setitem__(key, value)
-
-    def update(self, newdict):
-        """
-        This calls update(newdict) on the wrapped dict.
-        """
-        self._dict.update(newdict)
-
-    def has_key(self, key):
-        """
-        If the key ends with _encoded or _urlencoded, we strip that off
-        and then check the wrapped dict to see if it has the adjusted key.
-
-        Otherwise we call has_key(key) on the wrapped dict.
-
-        @param key: the key to check for
-        @type  key: string
-
-        @returns: 1 if the key exists, 0 if not
-        @rtype: boolean
-        """
-        if key.endswith("_encoded"):
-            key = key[:-8]
-
-        if key.endswith("_urlencoded"):
-            key = key[:-11]
-
-        return self._dict.has_key(key)
-
-    def keys(self):
-        """
-        Returns a list of the keys that can be accessed through
-        __getitem__.
-
-        Note: this does not include the _encoded and _urlencoded
-        versions of these keys.
-
-        @returns: list of key names
-        @rtype: list of varies
-        """
-        return self._dict.keys()
-
-    def values(self):
-        """
-        Returns a list of the values in this dict.
-
-        @returns: list of values
-        @rtype: list of strings
-        """
-        return self._dict.values()
 
 class Stripper(sgmllib.SGMLParser):
     """
@@ -497,6 +380,18 @@ class Replacer:
              ``var_dict[v](request, vd, *args)`` after some mild 
              processing of the arguments
 
+        Also, for backwards compatability reasons, we convert things like::
+
+            $id_escaped
+            $id_urlencoded
+            $(id_escaped)
+            $(id_urlencoded)
+
+        to::
+
+            $escape(id)
+            $urlencode(id)
+
         It returns the substituted string.
 
         :Parameters:
@@ -512,10 +407,15 @@ class Replacer:
         if key.startswith("(") and key.endswith(")"):
             key = key[1:-1]
 
+        # do this for backwards-compatability reasons
+        if key.endswith("_escaped"):
+            key = "escape(%s)" % key[:-8]
+        elif key.endswith("_urlencoded"):
+            key = "urlencode(%s)" % key[:-11]
+
         if key.find("(") != -1 and key.rfind(")") > key.find("("):
             args = key[key.find("(")+1:key.rfind(")")]
             key = key[:key.find("(")]
-
         else:
             args = None
 
@@ -538,7 +438,7 @@ class Replacer:
                     # otherwise it might be an identifier--check
                     # the vardict and return the value if it's in
                     # there
-                    if s in vd:
+                    if vd.has_key(s):
                         return vd[s]
                     return s
                 args = [fix(arg.strip()) for arg in commasplit(args)]

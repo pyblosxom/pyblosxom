@@ -37,7 +37,7 @@ class EntryBase:
     """
     def __init__(self, request):
         self._data = None
-        self._metadata = tools.VariableDict()
+        self._metadata = dict(tools.STANDARD_FILTERS)
         self._id = ""
         self._mtime = BIGNUM
         self._request = request
@@ -254,9 +254,6 @@ class EntryBase:
         if key == CONTENT_KEY:
             return self.getData()
 
-        if key == CONTENT_KEY + "_escaped":
-            return tools.escape_text(self.getData())
-
         return self.getMetadata(key)
 
     def get(self, key, default=None):
@@ -330,7 +327,7 @@ class EntryBase:
         @returns: whether (1) or not (0) the key exists
         @rtype: boolean
         """
-        if key == CONTENT_KEY or key == CONTENT_KEY + "_escaped":
+        if key == CONTENT_KEY:
             return 1
 
         value = self.getMetadata(key, DOESNOTEXIST)
@@ -352,7 +349,6 @@ class EntryBase:
         keys = self.getMetadataKeys()
         if CONTENT_KEY not in keys:
             keys.append(CONTENT_KEY)
-            keys.append(CONTENT_KEY + "_escaped")
         return keys
 
 

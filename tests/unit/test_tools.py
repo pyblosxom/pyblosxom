@@ -118,6 +118,20 @@ class Testparse:
         # into the foo function
         assert pt(vd, "foo $foo(bar) foo") == "foo BARA foo"
 
+    def test_escaped(self):
+        def pt(d, t):
+            ret = tools.parse(self._get_req(), "iso-8859-1", d, t)
+            print ret
+            return ret
+
+        vd = dict(tools.STANDARD_FILTERS)
+        vd.update( { "foo": "'foo'" } )
+        # this is old behavior
+        assert pt(vd, "$foo_escaped") == "&apos;foo&apos;"
+
+        # this is the new behavior using the escape filter
+        assert pt(vd, "$escape(foo)") == "&apos;foo&apos;"
+
 class Testcommasplit:
     """tools.commasplit"""
     def test_commasplit(self):
@@ -242,57 +256,6 @@ class Testurlencode_text():
         assert tools.urlencode_text(None) == None
         assert tools.urlencode_text("") == ""
         assert tools.urlencode_text("abc") == "abc"
-
-class TestVariableDict():
-    """tools.VariableDict class"""
-
-    def __init__(self):
-        # we use the same VariableDict instance through all
-        # the tests since none of them mutate the instance.
-        self.vd = tools.VariableDict()
-        self.vd.update( { "a": "b", \
-                          "title": "This is my story", \
-                          "title2": "Story: \"aha!\"", \
-                          "filename": "joe.txt" } )
-
-    def _compare_unordered_lists(self, lista, listb):
-        assert len(lista) == len(listb)
-
-        lista.sort()
-        listb.sort()
-
-        for mem in lista:
-            print "comparing '" + mem + "' and '" + listb[0] + "'"
-            assert mem == listb[0]
-            listb.pop(0)
-
-        assert len(listb) == 0
-
-    def test_extends_dicts(self):
-        assert self.vd.get("a") == "b"
-        assert self.vd.get("title") == "This is my story"
-        assert self.vd.get("title2") == "Story: \"aha!\""
-        assert self.vd.get("badkey", "novalue") == "novalue"
-        
-        self._compare_unordered_lists(self.vd.keys(),
-                                      ["a", "title", "title2", "filename"])
-        self._compare_unordered_lists(self.vd.values(),
-                                      ["b", "This is my story",
-                                       "Story: \"aha!\"", "joe.txt"])
-
-    def test_can_escape_value(self):
-        assert self.vd.get("a_escaped") == "b"
-        assert self.vd.get("title_escaped") == "This is my story"
-        assert self.vd.get("title2_escaped") == "Story: &quot;aha!&quot;"
-        assert self.vd.get("badkey_escaped", "novalue") == "novalue"
-        assert self.vd.get("badkey_escaped", 'no"value') == 'no"value'
-
-    def test_can_urlencode_value(self):
-        assert self.vd.get("a_urlencoded") == "b"
-        assert self.vd.get("title_urlencoded") == "This%20is%20my%20story"
-        assert self.vd.get("title2_urlencoded") == "Story%3A%20%22aha%21%22"
-        assert self.vd.get("badkey_urlencoded", "novalue") == "novalue"
-        assert self.vd.get("badkey_urlencoded", "no value") == "no value"
 
 class TestStripper:
     """tools.Stripper class"""
