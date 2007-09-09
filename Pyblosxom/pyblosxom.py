@@ -61,7 +61,7 @@ class PyBlosxom:
         config['pyblosxom_version'] = VERSION_DATE
 
         # wbg 10/6/2005 - the plugin changes won't happen until
-        # PyBlosxom 1.4.  so i'm commenting this out until then.
+        # PyBlosxom 2.0.  so i'm commenting this out until then.
         # add the included plugins directory
         # p = config.get("plugin_dirs", [])
         # f = __file__[:__file__.rfind(os.sep)] + os.sep + "plugins"
@@ -74,7 +74,7 @@ class PyBlosxom:
     def initialize(self):
         """
         The initialize step further initializes the Request by setting
-        additional information in the _data dict, registering plugins,
+        additional information in the ``data`` dict, registering plugins,
         and entryparsers.
         """
         data = self._request.data
@@ -1071,7 +1071,6 @@ def blosxom_file_list_handler(args):
     if data['pi_yr']:
         # This is called when a date has been requested, e.g. 
         # /some/category/2004/Sep
-        # FIXME - month = (data['pi_mo'] in tools.month2num.keys() and \
         month = (data['pi_mo'] in tools.month2num and \
                       tools.month2num[data['pi_mo']] or \
                       data['pi_mo'])
@@ -1086,7 +1085,6 @@ def blosxom_file_list_handler(args):
     maxe = config.get("num_entries", 5)
     if maxe and not data["pi_yr"]:
         valid_list = valid_list[:maxe]
-        data["debugme"] = "done"
 
     valid_list = [x[1] for x in valid_list]
 
@@ -1094,19 +1092,17 @@ def blosxom_file_list_handler(args):
 
 def blosxom_process_path_info(args):
     """ 
-    Process HTTP PATH_INFO for URI according to path specifications, fill in
-    data dict accordingly.
+    Process HTTP ``PATH_INFO`` for URI according to path specifications, 
+    fill in data dict accordingly.
     
     The paths specification looks like this:
-        - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
-        - C{/cat} - category
-        - C{/2002} - category
-        - C{/2002} - year
-        - C{/2002/Feb} (or 02) - Year and Month
-        - C{/cat/2002/Feb/31} - year and month day in category.
 
-    @param args: dict containing the incoming Request object
-    @type args: object
+    - ``/foo.html`` and C{/cat/foo.html} - file foo.* in / and /cat
+    - ``/cat`` - category
+    - ``/2002`` - category
+    - ``/2002`` - year
+    - ``/2002/Feb`` or ``/2002/02`` - Year and Month
+    - ``/cat/2002/Feb/31`` - year and month day in category.
     """
     request = args['request']
     config = request.config
@@ -1289,7 +1285,6 @@ def run_pyblosxom():
     # figure out what the protocol is for the wsgi.url_scheme property.
     # we look at the base_url first and if there's nothing set there,
     # we look at environ.
-    # FIXME - if 'base_url' in cfg.keys():
     if 'base_url' in cfg:
         env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
 
@@ -1405,16 +1400,15 @@ def test_installation(request):
     """
     This function gets called when someone starts up pyblosxom.cgi
     from the command line with no REQUEST_METHOD environment variable.
-
     It:
 
-      1. tests properties in their config.py file
-      2. verifies they have a datadir and that it exists
-      3. initializes all the plugins they have installed
-      4. runs "cb_verify_installation"--plugins can print out whether
-         they are installed correctly (i.e. have valid config property
-         settings and can read/write to data files)
-      5. exits
+    1. tests properties in their config.py file
+    2. verifies they have a datadir and that it exists
+    3. initializes all the plugins they have installed
+    4. runs "cb_verify_installation"--plugins can print out whether
+       they are installed correctly (i.e. have valid config property
+       settings and can read/write to data files)
+    5. exits
 
     The goal is to be as useful and informative to the user as we can be
     without being overly verbose and confusing.
@@ -1423,8 +1417,9 @@ def test_installation(request):
     verify their PyBlosxom installation is working and also to install
     new plugins and verify that their configuration is correct.
 
-    @param request: the Request object
-    @type request: object
+    :Parameters:
+       request : Request object
+          the request object
     """
     config = request.config
 
@@ -1452,7 +1447,7 @@ def test_installation(request):
                            "base_url", "depth", "num_entries", "renderer", 
                            "plugin_dirs", "load_plugins", "blog_email", 
                            "blog_rights", "default_flavour", "flavourdir", 
-                           "log_file", "log_level", "logdir", ]
+                           "log_file", "log_level"]
 
     config_keys = config.keys()
 
