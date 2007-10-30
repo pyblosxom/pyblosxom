@@ -625,7 +625,7 @@ def filestat(request, filename):
 
     argdict = run_callback("filestat",      
                            argdict,     
-                           mappingfunc = lambda x,y:y,    
+                           mappingfunc = passmutated,
                            donefunc = lambda x:x and x["mtime"][MT] != 0,
                            defaultfunc = lambda x:x)
 
@@ -777,7 +777,8 @@ def donewhentrue(x):
 def run_callback(chain, input, 
         mappingfunc = passoriginal,
         donefunc = neverdone,
-        defaultfunc = None):
+        defaultfunc = None,
+        exclude = None):
     """
     Executes a callback chain on a given piece of data.
     passed in is a dict of name/value pairs.  Consult the documentation
@@ -797,8 +798,9 @@ def run_callback(chain, input,
     the function chain.
 
     :Parameters:
-       chain : string
-          the name of the callback to run
+       chain : string or list of functions
+          the name of the callback to run or the list of functions
+          to run the callback on
        input : dict
           the initial args dict filled with key/value pairs that
           gets passed to the first function in the callback chain
@@ -822,15 +824,25 @@ def run_callback(chain, input,
           in the chain and none of them have returned something that 
           satisfies the donefunc, then we'll execute the defaultfunc with 
           the latest version of the input dict.
+       exclude : list of functions
+          this is the list of functions to skip over when executing the
+          callback.
 
     @returns: the transformed dict
     @rtype: dict
     """
-    chain = plugin_utils.get_callback_chain(chain)
+    if exclude == None:
+        exclude = []
+
+    if type(chain) == type(""):
+        chain = plugin_utils.get_callback_chain(chain)
 
     output = None
 
     for func in chain:
+        if func in exclude:
+            continue
+
         # we call the function with the input dict it returns an output.
         output = func(input)
 
