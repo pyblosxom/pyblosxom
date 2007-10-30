@@ -144,7 +144,6 @@ class Testcommasplit:
         assert tcs( "a, 'b, c'" ) == ["a", " 'b, c'"]
         assert tcs( "a, \"b, c\"" ) == ["a", " \"b, c\""]
  
-
 class Testis_year:
     """tools.is_year"""
     def test_must_be_four_digits(self):
@@ -165,7 +164,6 @@ class Testis_year:
         assert tools.is_year("ab") == 0
         assert tools.is_year("97") == 0
 
-
 class Testparse_args:
     """tools.parse_args"""
     def test_args_can_be_len_0(self):
@@ -176,6 +174,7 @@ class Testparse_args:
         assert tools.parse_args( ["-a", "-b", "--c"] ) == [ ("-a", ""),
                                                             ("-b", ""),
                                                             ("--c", "") ]
+
     def test_key_value_args(self):
         assert tools.parse_args( ["--test", "foo"] ) == [ ("--test", "foo") ]
         assert tools.parse_args( ["--test", "foo",
@@ -299,7 +298,6 @@ class Testimportname:
 
         self._teardown()
 
-        
 class Testwhat_ext:
     """tools.what_ext"""
     def __init__(self):
@@ -355,3 +353,26 @@ class Testwhat_ext:
                                           os.path.join(self._d, "a"))
         finally:
             self._teardown()
+
+class Testrun_callback:
+    """tools.run_callback
+
+    This tests run_callback functionality.
+    """
+    def test_run_callback(self):
+        def fun1(args):
+            assert args["x"] == 0
+            return { "x": 1 }
+
+        def fun2(args):
+            assert args["x"] == 1
+            return { "x": 2 }
+
+        def fun3(args):
+            assert args["x"] == 2
+            return { "x": 3 }
+
+        args = { "x": 0 }
+        ret = tools.run_callback( [fun1, fun2, fun3], args, 
+                                  mappingfunc = lambda x,y: y )
+        assert ret["x"] == 3
