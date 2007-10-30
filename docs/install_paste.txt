@@ -88,10 +88,10 @@ is covered in other parts of the documentation.
 
 3. Either:
 
-   3.1. install PyBlosxom as a Python library by doing 
-        ``python setup.py install``, OR
-   3.2. add ``PYTHONPATH=/path/to/Pyblosxom/parent/`` to your
-        environment variables
+   1. install PyBlosxom as a Python library by doing 
+      ``python setup.py install``, OR
+   2. add ``PYTHONPATH=/path/to/Pyblosxom/parent/`` to your
+      environment variables
 
 4. Create a directory to hold your blog.  This will be a parent directory
    of your ``datadir``.  Also create directories for ``entries``, 
