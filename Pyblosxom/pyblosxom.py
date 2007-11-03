@@ -169,8 +169,7 @@ class PyBlosxom:
         """
         This is the main loop for PyBlosxom.  This method will run the 
         handle callback to allow registered handlers to handle the request.  
-        If nothing handles the request, then we use the
-        default_blosxom_handler.
+        If nothing handles the request, then we use the default blosxom_handler.
 
         @param static: True if we should execute in "static rendering mode"
             and False otherwise
@@ -453,17 +452,30 @@ class PyBlosxomWSGIApp:
         if configini == None:
             configini = {}
 
+        def s_or_i(s):
+            if (s.startswith('"') and s.endswith('"')) or \
+                (s.startswith("'") and s.endswith("'")):
+                return s[1:-1]
+            elif s.isdigit():
+                return int(s)
+            return s
+
         _config = {}
         for key, value in configini.items():
-            if isinstance(value, basestring) and value.isdigit():
-                _config[key] = int(value)
+            # in configini.items, we pick up a local_config which seems
+            # to be a copy of what's in configini.items--puzzling.
+            if type(value) == type( {} ):
+                continue
+            value = value.strip()
+            if value.startswith("[") and value.endswith("]"):
+                _config[key] = [s_or_i(s.strip()) for s in value[1:-1].split(",")]
             else:
-                _config[key] = value
+                _config[key] = s_or_i(value)
 
         import config
-        self.config = dict(config.py)
+        self._config = dict(config.py)
 
-        self.config.update(_config)
+        self._config.update(_config)
         if "codebase" in _config:
             sys.path.insert(0, _config["codebase"])
 
@@ -476,7 +488,7 @@ class PyBlosxomWSGIApp:
         if "PATH_INFO" not in env:
             env["PATH_INFO"] = ""
 
-        p = PyBlosxom(self.config, env)
+        p = PyBlosxom(dict(self._config), env)
         p.run()
 
         pyresponse = p.getResponse()
@@ -894,19 +906,35 @@ def blosxom_handler(request):
     # process the path info to determine what kind of blog entry(ies) 
     # this is
     tools.run_callback("pathinfo",
-                           {"request": request},
-                           donefunc=lambda x:x != None,
-                           defaultfunc=blosxom_process_path_info)
+                       {"request": request},
+                       donefunc=lambda x:x != None,
+                       defaultfunc=blosxom_process_path_info)
 
     # call the filelist callback to generate a list of entries
-    data["entry_list"] = tools.run_callback("filelist",
-                               {"request": request},
-                               donefunc=lambda x:x != None,
-                               defaultfunc=blosxom_file_list_handler)
+    entry_list = tools.run_callback("filelist",
+                       {"request": request},
+                       donefunc=lambda ret: ret != None,
+                       defaultfunc=blosxom_file_list_handler)
+
+    data["entry_list"] = entry_list
+
+    # call the sortlist callback to truncate and sort the list of entries
+    # FIXME - should this be a handler or a transformer?
+    entry_list = tools.run_callback("sortlist",
+                       {"request": request, "entry_list": entry_list},
+                       donefunc = lambda ret: ret != None,
+                       defaultfunc = blosxom_sort_list_handler)
+
+    # truncate the list if the user has set num_entries and the request
+    # is not an archive request
+    maxe = config.get("num_entries", 5)
+    if maxe and not data["pi_yr"]:
+        entry_list = entry_list[:maxe]
+
+    data["entry_list"] = entry_list
 
     # figure out the blog-level mtime which is the mtime of the head of
     # the entry_list
-    entry_list = data["entry_list"]
     if isinstance(entry_list, list) and len(entry_list) > 0:
         mtime = entry_list[0].get("mtime", time.time())
     else:
@@ -1057,17 +1085,10 @@ def blosxom_file_list_handler(args):
     else:
         filelist = []
 
-    entrylist = []
-    for ourfile in filelist:
-        e = FileEntry(request, ourfile, data['root_datadir'])
-        entrylist.append((e._mtime, e))
+    entrylist = [FileEntry(request, e, data["root_datadir"]) for e in filelist]
 
-    # this sorts entries by mtime in reverse order.  entries that have
-    # no mtime get sorted to the top.
-    entrylist.sort()
-    entrylist.reverse()
-    
-    # Match dates with files if applicable
+    # if we're looking at a set of archives, remove all the entries
+    # that aren't in the archive
     if data['pi_yr']:
         # This is called when a date has been requested, e.g. 
         # /some/category/2004/Sep
@@ -1075,20 +1096,38 @@ def blosxom_file_list_handler(args):
                       tools.month2num[data['pi_mo']] or \
                       data['pi_mo'])
         matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
-        valid_list = [x for x in entrylist if re.match(matchstr, 
-                                                       x[1]._fulltime)]
-    else:
-        valid_list = entrylist
+        entrylist = [x for x in entrylist if re.match(matchstr, x._fulltime)]
 
-    # This is the maximum number of entries we can show on the front page
-    # (zero indicates show all entries)
-    maxe = config.get("num_entries", 5)
-    if maxe and not data["pi_yr"]:
-        valid_list = valid_list[:maxe]
+    return entrylist
 
-    valid_list = [x[1] for x in valid_list]
 
-    return valid_list
+def blosxom_sort_list_handler(args):
+    """
+    This sorts the entries by mtime and then trims them based on num_entries.
+
+    @param args: dict containing the incoming Request object
+    @type args: object
+
+    @returns: 1
+    @rtype: int
+    """
+    request = args["request"]
+
+    data = request.data
+    config = request.config
+
+    entrylist = data["entry_list"]
+    entrylist = [ (e._mtime, e) for e in entrylist ]
+
+    # this sorts entries by mtime in reverse order.  entries that have
+    # no mtime get sorted to the top.
+    entrylist.sort()
+    entrylist.reverse()
+
+    entrylist = [x[1] for x in entrylist]
+
+    return entrylist
+    
 
 def blosxom_process_path_info(args):
     """ 
@@ -1315,13 +1354,12 @@ def run_pyblosxom():
                     "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING"]:
             env[mem] = os.environ.get(mem, "")
 
-        p = PyBlosxom(cfg, env)
+        p = PyBlosxom(dict(cfg), env)
 
         p.run()
         response = p.getResponse()
         response.sendHeaders(sys.stdout)
         response.sendBody(sys.stdout)
-
 
 
 #
