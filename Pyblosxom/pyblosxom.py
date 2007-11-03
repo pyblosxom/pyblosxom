@@ -928,7 +928,7 @@ def blosxom_handler(request):
     # truncate the list if the user has set num_entries and the request
     # is not an archive request
     maxe = config.get("num_entries", 5)
-    if maxe and not data["pi_yr"]:
+    if maxe and data.get("truncate", 0):
         entry_list = entry_list[:maxe]
 
     data["entry_list"] = entry_list
@@ -1279,6 +1279,10 @@ def blosxom_process_path_info(args):
                     data["bl_type"] = "dir"
                     data["root_datadir"] = absolute_path
 
+
+    # if this isn't a set of archives, we set truncate to 1
+    if not data["pi_yr"]:
+        data["truncate"] = 1
 
     # figure out the blog_title_with_path data variable
     blog_title = config["blog_title"]
