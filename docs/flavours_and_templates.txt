@@ -260,6 +260,19 @@ from your ``config.py`` file.
 
    Example: ``37.448089,-122.159259``
 
+``base_url``
+   This is the url up to and including the portion that kicks off PyBlosxom.
+   If you do not specify this in your ``config.py`` file, then it will be
+   generated based on information your web-server passes PyBlosxom in
+   the environment.
+
+   Example: ``http://www.example.com/~joe/cgi-bin/pyblosxom.cgi``
+
+   Example: ``http://www.example.com/~joe/blog``
+
+   You should use ``$base_url`` at the beginning of any links that should
+   be handled by PyBlosxom.
+
 
 Additionally, any other properties you set in ``config.py`` are available 
 in your templates.  If you wanted to create a ``blog_images`` variable 
