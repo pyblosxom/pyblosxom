@@ -496,6 +496,12 @@ class PyBlosxomWSGIApp:
         pyresponse.seek(0)
         return [pyresponse.read()]
 
+def wsgi_application(env, start_response):
+    """
+    Wrapper function for mod_python wsgi wrappers that expect a function.
+    """
+    return PyBlosxomWSGIApp()(env, start_response)
+
 def pyblosxom_app_factory(global_config, **local_config):
     """
     App factory for paste.
@@ -1136,10 +1142,10 @@ def blosxom_process_path_info(args):
     
     The paths specification looks like this:
 
-    - ``/foo.html`` and C{/cat/foo.html} - file foo.* in / and /cat
+    - ``/foo.html`` and ``/cat/foo.html`` - file ``foo.*`` in ``/`` and ``/cat``
     - ``/cat`` - category
-    - ``/2002`` - category
-    - ``/2002`` - year
+    - ``/2002`` - as a category
+    - ``/2002`` - as a year (if no such category exists)
     - ``/2002/Feb`` or ``/2002/02`` - Year and Month
     - ``/cat/2002/Feb/31`` - year and month day in category.
     """
@@ -1285,7 +1291,7 @@ def blosxom_process_path_info(args):
         data["truncate"] = 1
 
     # figure out the blog_title_with_path data variable
-    blog_title = config["blog_title"]
+    blog_title = config.get("blog_title", "My blog has no title!")
 
     if data['pi_bl'] != '':
         data['blog_title_with_path'] = '%s : %s' % (blog_title, data['pi_bl'])
