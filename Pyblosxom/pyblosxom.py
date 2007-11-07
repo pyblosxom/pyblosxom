@@ -503,7 +503,7 @@ class PyBlosxomWSGIApp:
         return [self.run_pyblosxom(env, start_response)]
 
     def __iter__(self):
-        yield self.run_pyblosxom(self.env, self.start_response) 
+        yield self.run_pyblosxom(self.environ, self.start_response) 
         
 def pyblosxom_app_factory(global_config, **local_config):
     """
