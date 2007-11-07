@@ -440,7 +440,7 @@ class PyBlosxomWSGIApp:
     """
     This class is the WSGI application for PyBlosxom.
     """
-    def __init__(self, configini=None):
+    def __init__(self, environ=None, start_response=None, configini=None):
         """
         Make WSGI app for PyBlosxom
 
@@ -449,6 +449,9 @@ class PyBlosxomWSGIApp:
             file.
         @type  configini: dict
         """
+        self.environ = environ
+        self.start_response = start_response
+
         if configini == None:
             configini = {}
 
@@ -479,7 +482,7 @@ class PyBlosxomWSGIApp:
         if "codebase" in _config:
             sys.path.insert(0, _config["codebase"])
 
-    def __call__(self, env, start_response):
+    def run_pyblosxom(self, env, start_response):
         """
         Runs the WSGI app.
         """
@@ -494,14 +497,14 @@ class PyBlosxomWSGIApp:
         pyresponse = p.getResponse()
         start_response(pyresponse.status, list(pyresponse.headers.items()))
         pyresponse.seek(0)
-        return [pyresponse.read()]
+        return pyresponse.read()
 
-def wsgi_application(env, start_response):
-    """
-    Wrapper function for mod_python wsgi wrappers that expect a function.
-    """
-    return PyBlosxomWSGIApp()(env, start_response)
+    def __call__(self, env, start_response):
+        return [self.run_pyblosxom(env, start_response)]
 
+    def __iter__(self):
+        yield self.run_pyblosxom(self.env, self.start_response) 
+        
 def pyblosxom_app_factory(global_config, **local_config):
     """
     App factory for paste.
