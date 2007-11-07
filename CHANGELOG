@@ -29,8 +29,11 @@ Pertinent to users:
    FIXME - note location of plugin replacements here.
 
 5. Template variable syntax ``$id_escaped`` and ``$id_urlencoded``
-   has been deprecated.  Use ``$escape(id)`` and ``$urlencode(id)``
+   has been removed.  Use ``$escape(id)`` and ``$urlencode(id)``
    instead.
+
+6. The PyBlosxomWSGIApp class has been fixed so that it's more in line
+   with the WSGI PEP.  Thanks Michael!
 
 
 Pertinent to developers:
@@ -45,6 +48,11 @@ Pertinent to developers:
 2. ``Pyblosxom.tools.VariableDict`` is no more.
 
 3. ``Pyblosxom.cache`` is no more.
+
+4. If you have template variables that end in ``_urlencoded`` and
+   ``_escaped``, it's better to instead call ``tools.escape_text(...)``
+   and ``tools.urlencode_text(...)`` or use filter functions
+   ``$escape(var)`` and ``$urlencode(var)``.
 
 
 Changes between 1.4.1 and 1.4.2
