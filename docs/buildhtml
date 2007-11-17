@@ -7,10 +7,13 @@ This assumes you have docutils installed on your system.
 import os, sys
 
 def buildhtml():
-    if os.system("rst2html --version") != 0:
-        print "I can't seem to find rst2html.  Try installing it "
-        print "or adding the directory to your path."
-        print "Exiting."
+    if os.system("rst2html.py --version") == 0:
+        rstcmd = "rst2html.py"
+    elif os.system("rst2html --version") == 0:
+        rstcmd = "rst2html"
+    else:
+        print "I can't seem to find rst2html.  Try installing docutils "
+        print "or adding the directory to your path.  Exiting."
         sys.exit(1)
 
     newdir = os.path.join(os.getcwd(), "html")
@@ -18,8 +21,7 @@ def buildhtml():
     try:
         os.mkdir(newdir)
     except:
-        print "There's an html directory there already."
-        print "Exiting."
+        print "There's an html directory there already.  Exiting."
         sys.exit(1)
 
     files = os.listdir(os.getcwd())
@@ -27,7 +29,7 @@ def buildhtml():
 
     for mem in files:
         print "building %s" % mem
-        os.system("rst2html %s %s" % (mem, os.path.join(newdir, "%s.html" % mem[:-4])))
+        os.system("%s %s %s" % (rstcmd, mem, os.path.join(newdir, "%s.html" % mem[:-4])))
 
 if __name__ == "__main__":
     buildhtml()
