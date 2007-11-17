@@ -18,3 +18,14 @@ Several installation methods are in the ``docs/`` directory.
 
 If you don't see an installation file that matches your needs, ask us on
 the pyblosxom-users mailing list (http://pyblosxom.sourceforge.net/blog/static/contact).
+
+
+Post-install
+============
+
+After you finish installing PyBlosxom, you should sign up on the 
+pyblosxom-users mailing list.
+
+Additionally, please hop on the #pyblosxom IRC channel on irc.freenode.net 
+and say hi.  It'll almost certainly help you get acquainted with PyBlosxom 
+and it'll reduce the amount of time it takes to get your blog up and going.
