@@ -435,19 +435,24 @@ class PyBlosxom:
         test_installation(self._request)
         tools.cleanup()
 
-
 class PyBlosxomWSGIApp:
     """
     This class is the WSGI application for PyBlosxom.
     """
     def __init__(self, environ=None, start_response=None, configini=None):
         """
-        Make WSGI app for PyBlosxom
+        Make WSGI app for PyBlosxom.
+
+        @param environ: FIXME
+
+        @param start_response: FIXME
 
         @param configini: dict encapsulating information from a config.ini
             file or any other property file that will override the config.py
             file.
         @type  configini: dict
+
+        @raises tools.ConfigSyntaxErrorException: if the value syntax is bad
         """
         self.environ = environ
         self.start_response = start_response
@@ -455,25 +460,7 @@ class PyBlosxomWSGIApp:
         if configini == None:
             configini = {}
 
-        def s_or_i(s):
-            if (s.startswith('"') and s.endswith('"')) or \
-                (s.startswith("'") and s.endswith("'")):
-                return s[1:-1]
-            elif s.isdigit():
-                return int(s)
-            return s
-
-        _config = {}
-        for key, value in configini.items():
-            # in configini.items, we pick up a local_config which seems
-            # to be a copy of what's in configini.items--puzzling.
-            if type(value) == type( {} ):
-                continue
-            value = value.strip()
-            if value.startswith("[") and value.endswith("]"):
-                _config[key] = [s_or_i(s.strip()) for s in value[1:-1].split(",")]
-            else:
-                _config[key] = s_or_i(value)
+        _config = tools.convert_configini_values(configini)
 
         import config
         self._config = dict(config.py)

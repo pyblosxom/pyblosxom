@@ -184,6 +184,54 @@ def parse_args(args):
         i = i + 1
     return optlist
 
+class ConfigSyntaxErrorException(Exception):
+    pass
+
+def convert_configini_values(configini):
+    """Takes a dict containing config.ini style keys and values, converts
+    the values, and returns a new config dict.
+
+    :Parameters:
+       configini : dict
+          dict containing config.ini style keys and values
+
+    :Exceptions:
+       ConfigSyntaxErrorException
+          raised when there's a syntax error
+    """
+    def s_or_i(s):
+        if s.startswith('"'):
+            if s.endswith('"'):
+                return s[1:-1]
+            else:
+                raise ConfigSyntaxErrorException("config syntax error: string '%s' missing end \"" % s)
+        elif s.startswith("'"):
+            if s.endswith("'"):
+                return s[1:-1]
+            else:
+                raise ConfigSyntaxErrorException("config syntax error: string '%s' missing end '" % s)
+        elif s.isdigit():
+            return int(s)
+        return s
+
+    _config = {}
+    for key, value in configini.items():
+        # in configini.items, we pick up a local_config which seems
+        # to be a copy of what's in configini.items--puzzling.
+        if type(value) == type( {} ):
+            continue
+        value = value.strip()
+        if value.startswith("["):
+            if value.endswith("]"):
+                _config[key] = [s_or_i(s.strip()) for s in value[1:-1].split(",")]
+            else:
+                raise ConfigSyntaxErrorException("config syntax error: list '%s' missing end ]" % value)
+        else:
+            _config[key] = s_or_i(value)
+
+    return _config
+
+
 def escape_text(s):
     """Takes in a string and converts ``'`` to ``&apos;`` and ``"`` to 
     ``&quot;``.
@@ -198,7 +246,6 @@ def escape_text(s):
     "a&apos;b"
     >>> escape_text('a"b')
     "a&quot;b"
-
     """
     if not s: 
         return s

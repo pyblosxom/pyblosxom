@@ -376,3 +376,102 @@ class Testrun_callback:
         ret = tools.run_callback( [fun1, fun2, fun3], args, 
                                   mappingfunc = lambda x,y: y )
         assert ret["x"] == 3
+
+class Testconvert_configini_values:
+    """tools.convert_configini_values
+
+    This tests config.ini -> config conversions.
+    """
+    def cmp(self, a, b):
+        print "comparing %s with %s" % (repr(a), repr(b))
+        if not a and not b: 
+            return True
+        if (not a and b) or (a and not b): 
+            return False
+
+        if not type(a) == type(b):
+            return False
+
+        # this handles strings and integers
+        if a == b:
+            return True
+
+        if type(a) == type( [] ) or type(a) == type( () ):
+            if not len(a) == len(b):
+                return False
+            for i in range(len(a)):
+                if not self.cmp(a[i], b[i]):
+                    return False
+            return True
+                
+        if type(a) == type( {} ):
+            if not len(a) == len(b):
+                return False
+
+            for k in a.keys():
+                if not self.cmp(a[k], b[k]):
+                    return False
+            return True        
+
+        return False
+
+    def test_cmp(self):
+        assert self.cmp( {}, {} )
+        assert self.cmp( {"a": 1}, {"a": 1} )
+        assert self.cmp( {"a": "b"}, {"a": "b"} )
+        assert (not self.cmp( {"a": 1}, {"a": 2} ))
+
+    def test_empty(self):
+        assert self.cmp(tools.convert_configini_values( {} ),
+                        {})
+
+    def test_no_markup(self):
+        assert self.cmp(tools.convert_configini_values( { "a": "b" } ),
+                        { "a": "b" })
+
+    def test_integers(self):
+        assert self.cmp(tools.convert_configini_values( { "a": "1" } ),
+                        { "a": 1 })
+        assert self.cmp(tools.convert_configini_values( { "a": "1", "b": "2" } ),
+                        { "a": 1, "b": 2 })
+        assert self.cmp(tools.convert_configini_values( { "a": "10" } ),
+                        { "a": 10 })
+        assert self.cmp(tools.convert_configini_values( { "a": "100" } ),
+                        { "a": 100 })
+        assert self.cmp(tools.convert_configini_values( { "a": " 100  " } ),
+                        { "a": 100 })
+
+    def test_strings(self):
+        assert self.cmp(tools.convert_configini_values( { "a": "'b'" } ),
+                        { "a": "b" })
+        assert self.cmp(tools.convert_configini_values( { "a": "\"b\"" } ),
+                        { "a": "b" })
+        assert self.cmp(tools.convert_configini_values( { "a": "   \"b\" " } ),
+                        { "a": "b" })
+
+    def test_lists(self):
+        assert self.cmp(tools.convert_configini_values( { "a": "[1]" } ),
+                        { "a": [ 1 ] })
+        assert self.cmp(tools.convert_configini_values( { "a": "[1, 2]" } ),
+                        { "a": [ 1, 2 ] })
+        assert self.cmp(tools.convert_configini_values( { "a": "  [1 ,2 , 3]  " } ),
+                        { "a": [ 1, 2, 3 ] })
+        assert self.cmp(tools.convert_configini_values( { "a": "['1' ,\"2\" , 3]" } ),
+                        { "a": [ "1", "2", 3 ] })
+
+    def test_syntax_exceptions(self):
+        def checkbadsyntax(d):
+            try:
+                tools.convert_configini_values( d )
+            except tools.ConfigSyntaxErrorException, csee:
+                assert True
+            except Exception, e:
+                print repr(e)
+                assert False
+
+        checkbadsyntax( { "a": "'b" } )
+        checkbadsyntax( { "a": "b'" } )
+        checkbadsyntax( { "a": "\"b" } )
+        checkbadsyntax( { "a": "b\"" } )
+        checkbadsyntax( { "a": "[b" } )
+        checkbadsyntax( { "a": "b]" } )
