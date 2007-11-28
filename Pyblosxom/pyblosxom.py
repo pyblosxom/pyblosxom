@@ -478,7 +478,7 @@ class PyBlosxomWSGIApp:
         if "PATH_INFO" not in env:
             env["PATH_INFO"] = ""
 
-        p = PyBlosxom(dict(self._config), env)
+        p = PyBlosxom(dict(self.config), env)
         p.run()
 
         pyresponse = p.getResponse()
