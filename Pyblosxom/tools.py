@@ -214,7 +214,7 @@ def convert_configini_values(configini):
             return int(s)
         return s
 
-    _config = {}
+    config = {}
     for key, value in configini.items():
         # in configini.items, we pick up a local_config which seems
         # to be a copy of what's in configini.items--puzzling.
@@ -223,13 +223,13 @@ def convert_configini_values(configini):
         value = value.strip()
         if value.startswith("["):
             if value.endswith("]"):
-                _config[key] = [s_or_i(s.strip()) for s in value[1:-1].split(",")]
+                config[key] = [s_or_i(s.strip()) for s in value[1:-1].split(",")]
             else:
                 raise ConfigSyntaxErrorException("config syntax error: list '%s' missing end ]" % value)
         else:
-            _config[key] = s_or_i(value)
+            config[key] = s_or_i(value)
 
-    return _config
+    return config
 
 
 def escape_text(s):
