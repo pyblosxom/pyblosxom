@@ -441,29 +441,30 @@ class PyBlosxom:
         test_installation(self._request)
         tools.cleanup()
 
-
 class PyBlosxomWSGIApp:
     """
     This class is the WSGI application for PyBlosxom.
     """
-    def __init__(self, configini=None):
+    def __init__(self, environ=None, start_response=None, configini=None):
         """
-        Make WSGI app for PyBlosxom
+        Make WSGI app for PyBlosxom.
+
+        @param environ: FIXME
+
+        @param start_response: FIXME
 
         @param configini: dict encapsulating information from a config.ini
             file or any other property file that will override the config.py
             file.
         @type  configini: dict
         """
+        self.environ = environ
+        self.start_response = start_response
+
         if configini == None:
             configini = {}
 
-        _config = {}
-        for key, value in configini.items():
-            if isinstance(value, basestring) and value.isdigit():
-                _config[key] = int(value)
-            else:
-                _config[key] = value
+        _config = tools.convert_configini_values(configini)
 
         import config
         self.config = dict(config.py)
@@ -472,7 +473,7 @@ class PyBlosxomWSGIApp:
         if "codebase" in _config:
             sys.path.insert(0, _config["codebase"])
 
-    def __call__(self, env, start_response):
+    def run_pyblosxom(self, env, start_response):
         """
         Runs the WSGI app.
         """
@@ -481,14 +482,20 @@ class PyBlosxomWSGIApp:
         if "PATH_INFO" not in env:
             env["PATH_INFO"] = ""
 
-        p = PyBlosxom(self.config, env)
+        p = PyBlosxom(dict(self.config), env)
         p.run()
 
         pyresponse = p.getResponse()
         start_response(pyresponse.status, list(pyresponse.headers.items()))
         pyresponse.seek(0)
-        return [pyresponse.read()]
+        return pyresponse.read()
 
+    def __call__(self, env, start_response):
+        return [self.run_pyblosxom(env, start_response)]
+
+    def __iter__(self):
+        yield self.run_pyblosxom(self.environ, self.start_response) 
+ 
 def pyblosxom_app_factory(global_config, **local_config):
     """
     App factory for paste.
