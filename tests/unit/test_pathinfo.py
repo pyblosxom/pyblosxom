@@ -16,6 +16,8 @@ class Testpathinfo:
         # sort so that we're building the directories in order
         files.sort()
 
+        os.makedirs(os.path.join(os.getcwd(), "entries"))
+
         for fn in files:
             d, f = os.path.split(fn)
 
@@ -45,10 +47,12 @@ class Testpathinfo:
                     pass
              
             try:
-                os.makedirs(d)
+                os.rmdir(d)
 
             except OSError, e:
                 pass
+
+        os.rmdir(os.path.join(os.getcwd(), "entries"))
 
     def _buildfileset(self, filelist):
         return [ os.path.join(os.getcwd(), "entries/%s" % fn) for fn in filelist ]
