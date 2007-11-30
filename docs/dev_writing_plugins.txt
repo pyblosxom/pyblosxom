@@ -30,6 +30,7 @@ in detail:
 3. how to configure it
 4. the license the plugin is distributed under
 5. and any copyright information you have
+6. any notes about requirements (e.g. "Requires Python 2.3 or greater")
 
 For example, this is at the top of Will's wbgpager plugin::
 
