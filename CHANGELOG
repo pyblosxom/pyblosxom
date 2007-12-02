@@ -1,7 +1,36 @@
+Changes between 1.4.2 and 1.4.3
+===============================
+
+Pertinent to users:
+-------------------
+
+1. Adjusted the code that parses blog.ini values so that it can take values
+   like::
+
+      foo = 'a'                 # string
+      foo = "a"                 # string
+      foo = 23                  # integer
+      foo = [ "a", 23, "b" ]    # list of strings and integers
+
+   as well as::
+
+      foo = a                   # string
+
+2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an application.
+
+Pertinent to developers:
+------------------------
+
+1. Fixed tools.importname--it now logs errors to the logger.
+
+2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an application.
+
+
 Changes between 1.4.1 and 1.4.2
 ===============================
 
 Pertinent to users:
+-------------------
 
 1. Fixed another bug with the WSGI application creation code.  (Thanks
    Christine!)
@@ -21,6 +50,7 @@ Changes between 1.4 and 1.4.1
 =============================
 
 Pertinent to users:
+-------------------
 
 1. Fixed a problem where running PyBlosxom under Paste won't pick up
    the ``config.py`` file.  Be sure to add a ``configpydir`` property to
