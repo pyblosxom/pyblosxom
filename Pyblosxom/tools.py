@@ -695,7 +695,7 @@ def is_year(checks):
 def importname(modulename, name):
     """
     Imports modules for modules that can only be determined during 
-    runtime.
+    runtime.  It logs any import errors.
 
     @param modulename: The base name of the module to import from
     @type modulename: string
@@ -707,14 +707,27 @@ def importname(modulename, name):
               C{None}
     @rtype: object
     """
+    logger = getLogger()
+    if not modulename:
+        m = name
+    else:
+        m = "%s.%s" % (modulename, name)
+
     try:
-        module = __import__(modulename, globals(), locals(), [name])
-    except ImportError:
-        return None
-    try:
-        return vars(module)[name]
-    except:
-        return None
+        module = __import__(m)
+        for c in m.split(".")[1:]:
+            module = getattr(module, c)
+        return module
+
+    except ImportError, ie:
+        logger.error("Module %s in package %s won't import: %s" % \
+                     (repr(modulename), repr(name), ie))
+
+    except Exception, e:
+        logger.error("Module %s not in in package %s: %s" % \
+                     (repr(modulename), repr(name), e))
+
+    return None
 
 
 def generateRandStr(minlen=5, maxlen=10):
