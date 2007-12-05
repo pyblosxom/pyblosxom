@@ -459,15 +459,16 @@ class PyBlosxomWSGIApp:
 
         if configini == None:
             configini = {}
-
-        _config = tools.convert_configini_values(configini)
+        else:
+            configini = tools.convert_configini_values(configini)
 
         import config
-        self._config = dict(config.py)
+        self.config = dict(config.py)
 
-        self._config.update(_config)
-        if "codebase" in _config:
-            sys.path.insert(0, _config["codebase"])
+        self.config.update(configini)
+
+        if "codebase" in configini:
+            sys.path.insert(0, configini["codebase"])
 
     def run_pyblosxom(self, env, start_response):
         """
@@ -478,7 +479,7 @@ class PyBlosxomWSGIApp:
         if "PATH_INFO" not in env:
             env["PATH_INFO"] = ""
 
-        p = PyBlosxom(dict(self._config), env)
+        p = PyBlosxom(dict(self.config), env)
         p.run()
 
         pyresponse = p.getResponse()
@@ -505,7 +506,7 @@ def pyblosxom_app_factory(global_config, **local_config):
     if "configpydir" in conf:
         sys.path.insert(0, conf["configpydir"])
 
-    return cgitb_catcher.make_cgitb_middleware(PyBlosxomWSGIApp(conf),
+    return cgitb_catcher.make_cgitb_middleware(PyBlosxomWSGIApp(configini=conf),
                                                global_config)
 
 
