@@ -54,6 +54,16 @@ Pertinent to developers:
    and ``tools.urlencode_text(...)`` or use filter functions
    ``$escape(var)`` and ``$urlencode(var)``.
 
+5. The blosxom renderer has undergone a bunch of fixes.  If you
+   depended on functions that started with ``_``, then you'll probably
+   need to rework your plugin.  These functions were not intended
+   for outside use.
+
+   Additionally, we fixed the bug where the renderer was adding the
+   contents of the config and data dicts to each entry when it was
+   rendered as a story.  Now the items in the entrylist are untouched 
+   during rendering.
+
 
 Changes between 1.4.1 and 1.4.2
 ===============================
