@@ -117,12 +117,8 @@ class BlosxomRenderer(RendererBase):
         self._encoding = config.get("blog_encoding", "iso-8859-1")
         self.flavour = None
 
-        self._parsevars = dict(tools.STANDARD_FILTERS)
-        # NOTE: we update self._parsevars with the data dict in the render
-        # method.  doing it here is too early.
-
     def getParseVars(self):
-        parsevars = dict(self._parsevars)
+        parsevars = dict(tools.STANDARD_FILTERS)
         parsevars.update(self._request.config)
         parsevars.update(self._request.data)
         return parsevars
