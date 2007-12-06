@@ -118,12 +118,14 @@ class BlosxomRenderer(RendererBase):
         self.flavour = None
 
         self._parsevars = dict(tools.STANDARD_FILTERS)
-        self._parsevars.update(config)
         # NOTE: we update self._parsevars with the data dict in the render
         # method.  doing it here is too early.
 
-    def _getParseVars(self):
-        return dict(self._parsevars)
+    def getParseVars(self):
+        parsevars = dict(self._parsevars)
+        parsevars.update(self._request.config)
+        parsevars.update(self._request.data)
+        return parsevars
 
     def _getflavour(self, taste='html'):
         """
@@ -227,7 +229,7 @@ class BlosxomRenderer(RendererBase):
         elif isinstance(content, dict):
             # if the content is a dict, then we parse it as if it were an
             # entry--except it's distinctly not an EntryBase derivative
-            var_dict = self._getParseVars()
+            var_dict = self.getParseVars()
             var_dict.update(content)
 
             output = tools.parse(self._request, self._encoding, var_dict,
@@ -240,20 +242,20 @@ class BlosxomRenderer(RendererBase):
                 current_date = content[0]["date"]
 
                 if current_date and "date_head" in self.flavour:
-                    vars = self._getParseVars()
+                    vars = self.getParseVars()
                     vars.update( { "date": current_date } )
                     outputbuffer.append(self.renderTemplate(vars, "date_head"))
 
                 for entry in content:
                     if entry["date"] and entry["date"] != current_date:
                         if "date_foot" in self.flavour:
-                            vars = self._getParseVars()
+                            vars = self.getParseVars()
                             vars.update( { "date": current_date } )
                             outputbuffer.append(self.renderTemplate(vars, "date_foot"))
 
                         if "date_head" in self.flavour:
                             current_date = entry["date"]
-                            vars = self._getParseVars()
+                            vars = self.getParseVars()
                             vars.update( { "date": current_date } )
                             outputbuffer.append(self.renderTemplate(vars, "date_head"))
 
@@ -264,7 +266,7 @@ class BlosxomRenderer(RendererBase):
                         p = ['  ' + line for line in s.gettext().split('\n')]
                         entry.setData('\n'.join(p))
 
-                    vars = self._getParseVars()
+                    vars = self.getParseVars()
                     vars.update(entry)
 
                     outputbuffer.append(self.renderTemplate(vars, "story", override=1))
@@ -274,7 +276,7 @@ class BlosxomRenderer(RendererBase):
                     outputbuffer.append( args["template"] )
 
                 if current_date and "date_foot" in self.flavour:
-                    vars = self._getParseVars()
+                    vars = self.getParseVars()
                     vars.update( { "date": current_date } )
                     outputbuffer.append(self.renderTemplate(vars, "date_foot"))
 
@@ -294,10 +296,6 @@ class BlosxomRenderer(RendererBase):
 
         data = self._request.getData()
         config = self._request.getConfiguration()
-
-        # update it with data here because at this point, the data dict should
-        # have all the data needed to render.
-        self._parsevars.update(data)
 
         try:
             self.flavour = self._getflavour(data.get("flavour", "html"))
@@ -322,11 +320,11 @@ class BlosxomRenderer(RendererBase):
         
         if self._content:
             if "head" in self.flavour:
-                self.write(self.renderTemplate(self._getParseVars(), "head"))
+                self.write(self.renderTemplate(self.getParseVars(), "head"))
             if "story" in self.flavour:
                 self.write(u"".join(self.renderContent(self._content)))
             if "foot" in self.flavour:
-                self.write(self.renderTemplate(self._getParseVars(), "foot"))
+                self.write(self.renderTemplate(self.getParseVars(), "foot"))
 
         self.rendered = 1
 
