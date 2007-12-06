@@ -81,12 +81,23 @@ How to run unit tests
 We use nose_ for test discovery.  You'll need to have that installed to 
 run our tests.
 
-.. _nose: http://somethingaboutorange.com/mrl/projects/nose/
+.. _nose: http://code.google.com/p/python-nose/
 
 To run the tests, execute::
 
    nosetests --verbose --include unit
    nosetests --verbose --include functional
+
+To run tests with coverage_, you'll need coverage, too.
+
+.. _coverage: http://nedbatchelder.com/code/modules/coverage.html
+
+To run the tests with coverage, execute::
+
+   nosetests --verbose --with-coverage --cover-package=Pyblosxom \
+             --include unit
+   nosetests --verbose --with-coverage --cover-package=Pyblosxom \
+             --include functional
 
 If you would like to add tests to the test suite, please do and send us
 patches!
