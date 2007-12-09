@@ -153,11 +153,11 @@ An example ``blog.ini`` is here::
    configpydir = /path/to/dir
 
    # PyBlosxom config here
-   blog_title = Joe's Blog
-   blog_description = This is Joe's test blog.
-   blog_author = Joe
-   blog_email = joe@example.com
-   datadir = /home/joe/blog/entries/
+   blog_title = "Joe's Blog"
+   blog_description = "This is Joe's test blog."
+   blog_author = "Joe"
+   blog_email = "joe@example.com"
+   datadir = "/home/joe/blog/entries/"
    num_entries = 5
 
 
@@ -197,11 +197,26 @@ There are several things to note here:
    You don't have to define any config properties in the ``blog.ini``
    file--you can define them all in your ``config.py`` file.
 
-   .. Note::
 
-      Defining PyBlosxom config properties in an .ini file is a bit
-      of a trick since .ini files treat all keys and values as
-      strings but not all config properties have string values.
+
+Syntax for blog.ini configuration values
+========================================
+
+Integers have no syntactic markup::
+
+   num_entries = 5
+
+Strings are bounded by quotes::
+
+   blog_title = "This is my blog"
+   blog_title = 'This is my blog'
+
+Lists are bounded by square brackets::
+
+   plugin_dirs = [ "/home/joe/blog/plugins", "/home/joe/blog/plugins2" ]
+   load_plugins = [ "plugininfo", "pycategories", "pycalendar" ]
+
+If there are syntactical errors, then PyBlosxom will throw an exception.
 
 
 Trouble-shooting
@@ -237,6 +252,6 @@ a directory tree like this::
                |- ...
 
 
-I then set ``PYTHONPATH`` like this::
+Then I set ``PYTHONPATH`` like this::
 
    % export PYTHONPATH=${PYTHONPATH}:/home/joe/pyblosxom/
