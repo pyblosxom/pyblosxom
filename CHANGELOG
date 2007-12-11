@@ -16,7 +16,17 @@ Pertinent to users:
 
       foo = a                   # string
 
+   Note: if you want the string "23", then you MUST enclose it in quotes,
+   otherwise it will be parsed as an integer.
+
 2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an application.
+
+3. Template variables can now be delimited.  Examples::
+
+      $foo                      - variable is "foo"
+      $(foo)                    - variable is "foo"
+      $(url)index.atom          - variable is "url"
+
 
 Pertinent to developers:
 ------------------------
@@ -24,6 +34,8 @@ Pertinent to developers:
 1. Fixed tools.importname--it now logs errors to the logger.
 
 2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an application.
+
+3. Added more unit tests.
 
 
 Changes between 1.4.1 and 1.4.2
