@@ -1,10 +1,10 @@
 <item>
-   <title>$title</title>
-   <guid isPermaLink="false">$file_path</guid>
-   <link>$base_url/$file_path_urlencoded.$default_flavour</link>
+   <title>$(title)</title>
+   <guid isPermaLink="false">$(file_path)</guid>
+   <link>$(base_url)/$(file_path_urlencoded).$(default_flavour)</link>
    <description><![CDATA[
-$body
+$(body)
 ]]></description>
-   <category domain="$base_url">$path</category>
-   <pubDate>$rfc822date</pubDate>
+   <category domain="$(base_url)">$(path)</category>
+   <pubDate>$(rfc822date)</pubDate>
 </item>
