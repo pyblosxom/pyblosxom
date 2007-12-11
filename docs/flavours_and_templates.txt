@@ -190,6 +190,20 @@ For example, this would expand to the blog's title as a h2::
 
    <h2>$title</h2>
 
+Additionally, you can wrap the variable name in parentheses so that PyBlosxom
+correctly identifies it and expands it::
+
+   <h2>$(title)</h2>
+
+This helps in situations where a natural delimiter (space, punctuation, ...)
+doesn't follow the variable.  So this won't work::
+
+   $urlindex.atom
+
+but this will::
+
+   $(url)index.atom
+
 
 To get a complete list of what variables are available in your blog, use 
 the debug renderer by changing the renderer property in your 
