@@ -3,6 +3,7 @@ import _path_pyblosxom
 import string
 import os
 import os.path
+
 from Pyblosxom import tools, pyblosxom
 
 class TestVAR_REGEXP:
@@ -74,6 +75,14 @@ class Testparse:
 
         assert pt( { "foo": "FOO" }, "foo foo foo") == "foo foo foo"
         assert pt( { "foo": "FOO" }, "foo $foo foo") == "foo FOO foo"
+        assert pt( { "foo": "FOO" }, "foo $foor foo") == "foo  foo"
+
+    def test_delimited(self):
+        def pt(d, t):
+            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+
+        assert pt( { "foo": "FOO" }, "foo $(foo) foo") == "foo FOO foo"
+        assert pt( { "foo": "FOO" }, "foo $(foor) foo") == "foo  foo"
 
     def test_functions(self):
         def pt(d, t):
