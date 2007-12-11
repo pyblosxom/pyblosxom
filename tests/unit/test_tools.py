@@ -6,6 +6,88 @@ import os.path
 
 from Pyblosxom import tools, pyblosxom
 
+class TestVAR_REGEXP:
+    """tools.VAR_REGEXP
+
+    This tests the various syntaxes for variables in PyBlosxom templates.
+    """
+    def _get_match(self, compiled_regexp, s):
+        r = compiled_regexp.search(s)
+        print repr(r)
+        return r and r.group(1)
+
+    def test_escaped_variables(self):
+        VR = tools.VAR_REGEXP
+        assert self._get_match(VR, "\\$test") == None
+        # FIXME - this is bad behavior
+        assert self._get_match(VR, "\\\\$test") == None
+
+    def test_dollar_then_string(self):
+        VR = tools.VAR_REGEXP
+        assert self._get_match(VR, "$test") == "test"
+        assert self._get_match(VR, "$test-test") == "test-test"
+        assert self._get_match(VR, "$test_test") == "test_test"
+        assert self._get_match(VR, " $test ") == "test"
+        assert self._get_match(VR, "other stuff $test ") == "test"
+        assert self._get_match(VR, "other $test stuff") == "test"
+        assert self._get_match(VR, "other $test $test2 stuff") == "test"
+
+    def test_delimiters(self):
+        VR = tools.VAR_REGEXP
+        for c in ('|', '=', '+', ' ', '$', '<', '>'):
+            assert self._get_match(VR, "$test%s1" % c) == "test"
+
+    def test_namespace(self):
+        VR = tools.VAR_REGEXP
+        assert self._get_match(VR, "$foo::bar") == "foo::bar"
+        assert self._get_match(VR, " $foo::bar ") == "foo::bar"
+        assert self._get_match(VR, "other $foo::bar stuff") == "foo::bar"
+
+    def test_single_function(self):
+        VR = tools.VAR_REGEXP
+        assert self._get_match(VR, "$foo()") == "foo()"
+        assert self._get_match(VR, " $foo() ") == "foo()"
+        assert self._get_match(VR, "other $foo() stuff") == "foo()"
+        assert self._get_match(VR, "other $foo::bar() stuff") == "foo::bar()"
+
+    def test_function_with_arguments(self):
+        VR = tools.VAR_REGEXP
+        assert self._get_match(VR, '$foo("arg1")') == 'foo("arg1")'
+        assert self._get_match(VR, '$foo("arg1", 1)') == 'foo("arg1", 1)'
+
+    def test_parens(self):
+        VR = tools.VAR_REGEXP
+        assert self._get_match(VR, "$(foo)") == "(foo)"
+        assert self._get_match(VR, "$(foo())") == "(foo())"
+        assert self._get_match(VR, "$(foo::bar)") == "(foo::bar)"
+        assert self._get_match(VR, "$(foo::bar())") == "(foo::bar())"
+        assert self._get_match(VR, "$(foo::bar(1, 2, 3))") == "(foo::bar(1, 2, 3))"
+
+class Testparse:
+    """tools.parse"""
+    def _get_req(self):
+        return pyblosxom.Request( {}, {}, {} )
+
+    def test_simple(self):
+        def pt(d, t):
+            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+
+        assert pt( { "foo": "FOO" }, "foo foo foo") == "foo foo foo"
+        assert pt( { "foo": "FOO" }, "foo $foo foo") == "foo FOO foo"
+
+    def test_delimited(self):
+        def pt(d, t):
+            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+
+        assert pt( { "foo": "FOO" }, "foo $(foo) foo") == "foo FOO foo"
+        assert pt( { "foo": "FOO" }, "foo $(foor) foo") == "foo  foo"
+
+    def test_functions(self):
+        def pt(d, t):
+            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+
+        assert pt( { "foo": (lambda : "FOO") }, "foo $foo() foo") == "foo FOO foo"
+
 class Testis_year:
     """tools.is_year"""
 
@@ -26,7 +108,6 @@ class Testis_year:
         assert tools.is_year("") == 0
         assert tools.is_year("ab") == 0
         assert tools.is_year("97") == 0
-
 
 class Testparse_args:
     """tools.parse_args"""

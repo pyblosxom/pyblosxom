@@ -45,8 +45,27 @@ num2month = None
 MONTHS    = None
 
 # regular expression for detection and substituion of variables.
-VAR_REGEXP = re.compile(ur'(?<!\\)\$((?:\w|\-|::\w)+(?:\(.*?(?<!\\)\))?)')
-
+VAR_REGEXP = re.compile(ur"""
+    (?<!\\)   # if the $ is escaped, then this isn't a variable
+    \$        # variables start with a $
+    (
+        (?:\w|\-|::\w)+       # word char, - or :: followed by a word char
+        (?:
+            \(                # an open paren
+            .*?               # followed by non-greedy bunch of stuff
+            (?<!\\)\)         # with an end paren that's not escaped
+        )?    # 0 or 1 of these ( ... ) blocks
+    |
+        \(
+        (?:\w|\-|::\w)+       # word char, - or :: followed by a word char
+        (?:
+            \(                # an open paren
+            .*?               # followed by non-greedy bunch of stuff
+            (?<!\\)\)         # with an end paren that's not escaped
+        )?    # 0 or 1 of these ( ... ) blocks
+        \)
+    )
+    """, re.VERBOSE)
 
 # reference to the pyblosxom config dict
 _config = None
@@ -440,6 +459,11 @@ class Replacer:
         """
         request = self._request
         key = matchobj.group(1)
+
+        # if the variable is using $(foo) syntax, then we strip the
+        # outer parens here.
+        if key.startswith("(") and key.endswith(")"):
+            key = key[1:-1]
 
         if key.find("(") != -1 and key.find(")"):
             args = key[key.find("(")+1:key.rfind(")")]
