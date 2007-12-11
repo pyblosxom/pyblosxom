@@ -343,25 +343,10 @@ class BlosxomRenderer(RendererBase):
         self.rendered = 1
 
     def _outputFlavour(self, entry, template_name):
-        """
-        Find the flavour template for template_name, run any blosxom callbacks, 
-        substitute vars into it and write the template to the output
-        
-        @param entry: the EntryBase object
-        @type entry: L{Pyblosxom.entries.base.EntryBase}
+        output = []
+        self.outputTemplate(output, entry, template_name)
+        self.write(u"".join(output))
 
-        @param template_name: - name of the flavour template 
-        @type template_name: string
-        """
-        template = self.flavour[template_name]
-
-        args = self._run_callback(template_name, 
-                                  { "entry": entry, "template": template }) 
-        template = args["template"]
-        entry = args["entry"]
-
-        self.write(tools.parse(self._request, self._encoding, entry, template))
-            
     def outputTemplate(self, output, entry, template_name, override=0):
         """
         Find the flavour template for template_name, run any blosxom callbacks,
