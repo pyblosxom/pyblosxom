@@ -459,6 +459,8 @@ class Testconvert_configini_values:
                         { "a": "b" })
 
     def test_lists(self):
+        assert self.cmp(tools.convert_configini_values( { "a": "[]" } ),
+                        { "a": [ ] })
         assert self.cmp(tools.convert_configini_values( { "a": "[1]" } ),
                         { "a": [ 1 ] })
         assert self.cmp(tools.convert_configini_values( { "a": "[1, 2]" } ),

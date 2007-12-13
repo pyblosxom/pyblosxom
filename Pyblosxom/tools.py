@@ -223,7 +223,12 @@ def convert_configini_values(configini):
         value = value.strip()
         if value.startswith("["):
             if value.endswith("]"):
-                config[key] = [s_or_i(s.strip()) for s in value[1:-1].split(",")]
+                value2 = value[1:-1].strip().split(",")
+                if len(value2) == 1 and value2[0] == "":
+                    # handle the foo = [] case
+                    config[key] = []
+                else:
+                    config[key] = [s_or_i(s.strip()) for s in value2]
             else:
                 raise ConfigSyntaxErrorException("config syntax error: list '%s' missing end ]" % value)
         else:
