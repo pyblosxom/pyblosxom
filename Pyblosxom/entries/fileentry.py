@@ -180,6 +180,8 @@ class FileEntry(base.EntryBase):
             entrydict = eparser(self._filename, self._request)
 
         self.update(entrydict)
+        self.updateCache(self._request, self._filename, entrydict)
+
         self._populated_data = 1
 
 # vim: tabstop=4 shiftwidth=4
