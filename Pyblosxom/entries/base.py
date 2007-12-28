@@ -338,6 +338,13 @@ class EntryBase:
 
         return 1
 
+    def __contains__(self, key):
+        """
+        Returns whether a given key is in the metadata dict. Implements the
+        membership test operators 'in' and 'not in'.
+        """
+        return self.has_key(key)
+
     def keys(self):
         """
         Returns a list of the keys that can be accessed through

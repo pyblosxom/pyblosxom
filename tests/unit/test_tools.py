@@ -192,7 +192,7 @@ class Testparse_args:
                                                          ("-a", ""),
                                                          ("--bar", "baz") ]
 
-class TestgenerateRandStr():
+class TestgenerateRandStr:
     """tools.generateRandStr
 
     Note: This is a mediocre test because generateRandStr produces
@@ -224,7 +224,7 @@ class TestgenerateRandStr():
         self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
         self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
 
-class Testescape_text():
+class Testescape_text:
     """tools.escape_text"""
     def test_none_to_none(self):
         assert tools.escape_text(None) == None
@@ -243,7 +243,7 @@ class Testescape_text():
         assert tools.escape_text("") == ""
         assert tools.escape_text("abc") == "abc"
 
-class Testurlencode_text():
+class Testurlencode_text:
     """tools.urlencode_text"""
     def test_none_to_none(self):
         assert tools.urlencode_text(None) == None

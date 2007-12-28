@@ -133,7 +133,14 @@ class RendererBase:
             mtime = time.time()
         self._content_mtime = mtime
 
-    
+    def getContent(self):
+        """
+        Gets the content
+
+        @return entry or list of entries
+        """
+        return self._content
+
     def needsContentType(self, flag):
         """
         Use the renderer to determine 'Content-Type: x/x' default is to use the
