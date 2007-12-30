@@ -302,6 +302,20 @@ class EntryBase:
         else:
             self.setMetadata(key, value)
 
+    def __delitem__(self, key):
+        """
+        Deletes metadata[key].
+
+        If key is CONTENT_KEY, raises ValueError.
+
+        @param key: the given key name
+        @type key: varies
+        """
+        if key == CONTENT_KEY:
+            raise ValueError()
+        else:
+            del self._metadata[key]
+
     def update(self, newdict):
         """
         Updates the contents in this entry with the contents in the
