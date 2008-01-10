@@ -19,13 +19,19 @@ Pertinent to users:
    Note: if you want the string "23", then you MUST enclose it in quotes,
    otherwise it will be parsed as an integer.
 
-2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an application.
+   blog.ini is used when you set up PyBlosxom using Paste.
 
-3. Template variables can now be delimited.  Examples::
+2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an application.
+   Thanks Michael!
+
+3. Template variables can be parenthesized.  Examples::
 
       $foo                      - variable is "foo"
       $(foo)                    - variable is "foo"
       $(url)index.atom          - variable is "url"
+
+   This reduces ambiguity which was causing problems with recognition of 
+   variables.
 
 
 Pertinent to developers:
@@ -34,8 +40,10 @@ Pertinent to developers:
 1. Fixed tools.importname--it now logs errors to the logger.
 
 2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an application.
+   Thanks Michael!
 
-3. Added more unit tests.
+3. Added more unit tests and corrected more behavior.  Details on running
+   unit tests are in the REDAME.
 
 
 Changes between 1.4.1 and 1.4.2

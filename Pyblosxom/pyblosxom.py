@@ -36,8 +36,8 @@ import tools
 import plugin_utils
 from entries.fileentry import FileEntry
 
-VERSION = "1.4.3"
-VERSION_DATE = VERSION + " dev"
+VERSION = "1.4.3-rc1"
+VERSION_DATE = VERSION + " 12/11/2007"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
 
@@ -88,8 +88,8 @@ class PyBlosxom:
         config = self._request.getConfiguration()
 
         # Initialize the locale, if wanted (will silently fail if locale 
-        # is not # available)
-        if config.get('locale'):
+        # is not available)
+        if config.get('locale', None):
             try: 
                 locale.setlocale(locale.LC_ALL, config['locale'])
             except locale.Error: 
@@ -466,6 +466,7 @@ class PyBlosxomWSGIApp:
 
         _config = tools.convert_configini_values(configini)
 
+        # FIXME - what if config is not named config?
         import config
         self.config = dict(config.py)
 
@@ -1155,7 +1156,7 @@ def blosxom_file_list_handler(args):
     # no mtime get sorted to the top.
     entrylist.sort()
     entrylist.reverse()
-    
+
     # Match dates with files if applicable
     if data['pi_yr']:
         # This is called when a date has been requested, e.g. 
@@ -1619,6 +1620,7 @@ def command_line_handler(scriptname, argv):
     # the config module
     printq("Trying to import the config module....")
     try:
+        # FIXME - what if config is not named config?
         from config import py as cfg
     except:
         print "Error: Cannot find your config.py file.  Please execute %s in\n" \

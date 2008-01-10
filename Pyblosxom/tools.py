@@ -211,27 +211,28 @@ def convert_configini_values(configini):
             return int(s)
         return s
 
-    _config = {}
+    config = {}
     for key, value in configini.items():
         # in configini.items, we pick up a local_config which seems
         # to be a copy of what's in configini.items--puzzling.
         if type(value) == type( {} ):
             continue
+
         value = value.strip()
         if value.startswith("["):
             if value.endswith("]"):
                 value2 = value[1:-1].strip().split(",")
                 if len(value2) == 1 and value2[0] == "":
                     # handle the foo = [] case
-                    _config[key] = []
+                    config[key] = []
                 else:
-                    _config[key] = [s_or_i(s.strip()) for s in value2]
+                    config[key] = [s_or_i(s.strip()) for s in value2]
             else:
                 raise ConfigSyntaxErrorException("config syntax error: list '%s' missing end ]" % value)
         else:
-            _config[key] = s_or_i(value)
+            config[key] = s_or_i(value)
 
-    return _config
+    return config
 
 
 
