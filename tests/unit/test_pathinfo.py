@@ -42,7 +42,7 @@ class Testpathinfo:
     def _buildfileset(self, filelist):
         return [ os.path.join(Testpathinfo._tempdir, "entries/%s" % fn) for fn in filelist ]
 
-    def _build_request(self, cfg={}, http={}, data={}, inputstream=""):
+    def _build_request(self, cfg=None, http=None, data=None, inputstream=""):
         """
         process_path_info uses:
         - req.pyhttp["PATH_INFO"]         - string
@@ -63,15 +63,15 @@ class Testpathinfo:
                     "datadir": os.path.join(Testpathinfo._tempdir, "entries"),
                     "blog_title": "Joe's blog",
                     "base_url": "http://www.example.com/" }
-        _config.update(cfg)
+        if cfg: _config.update(cfg)
 
         _data = { "extensions": { "txt": 0 } }
-        _data.update(data)
+        if data: _data.update(data)
 
         _http = { "wsgi.input": StringIO.StringIO(inputstream),
                   "REQUEST_METHOD": len(inputstream) and "GET" or "POST",
                   "CONTENT_LENGTH": len(inputstream) }
-        _http.update(http)
+        if http: _http.update(http)
 
         return Request(_config, _http, _data)
         
@@ -95,8 +95,10 @@ class Testpathinfo:
         for mem in expected.keys():
             assert expected[mem] == actual[mem]
 
-    def _basic_test(self, pathinfo, expected):
-        req = self._build_request(http={ "PATH_INFO": pathinfo })
+    def _basic_test(self, pathinfo, expected, cfg=None, http=None, data=None):
+        _http = { "PATH_INFO": pathinfo }
+        if http: _http.update(http)
+        req = self._build_request(cfg=cfg, http=_http, data=data)
         blosxom_process_path_info(args={"request": req})
         print repr(expected), repr(req.data)
         self.cmpdict( expected, req.data )
@@ -237,6 +239,39 @@ class Testpathinfo:
                               { "bl_type": "file",
                                 "pi_yr": "", "pi_mo": "", "pi_da": "",
                                 "flavour": "html" } )
+
+        finally:
+            self._teardown()
+
+    def test_flavour(self):
+        """flavour var tests
+
+        The flavour is the default flavour, the extension of the request,
+        or the flav= querystring.
+        """
+        root = Testpathinfo._tempdir
+
+        tools.initialize( {} )
+        entries = self._buildfileset( [ "2007/entry1.txt", 
+                                        "2007/05/entry3.txt", 
+                                        "cata/entry2.txt" ] )
+
+        self._setup(entries)
+
+        try:
+            self._basic_test( "/", { "flavour": "html" } )
+            self._basic_test( "/index.xml", { "flavour": "xml" } )
+            self._basic_test( "/cata/index.foo", { "flavour": "foo" } )
+
+            # FIXME - need a test for querystring
+            # self._basic_test( "/cata/index.foo", http={ "QUERY_STRING": "flav=bar" },
+            #                   expected={ "flavour": "bar" } )
+
+            # test that we pick up the default_flavour config variable
+            self._basic_test( "/", cfg={ "default_flavour": "foo" },
+                              expected={ "flavour": "foo" } )
+
+            # FIXME - need tests for precedence of flavour indicators
 
         finally:
             self._teardown()
