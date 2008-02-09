@@ -1084,9 +1084,9 @@ def render_url(cdict, pathinfo, querystring=""):
 _use_custom_logger = False
 
 try:
+    import logging
     if _use_custom_logger:
         raise ImportError, "whatever"
-    import logging
 except ImportError:
     from Pyblosxom import _logging as logging
 
