@@ -1084,11 +1084,11 @@ def render_url(cdict, pathinfo, querystring=""):
 _use_custom_logger = False
 
 try:
-    import logging
     if _use_custom_logger:
         raise ImportError, "whatever"
+    import logging
 except ImportError:
-    import _logging as logging
+    from Pyblosxom import _logging as logging
 
 # A dict to keep track of created log handlers.
 # Used to prevent multiple handlers from beeing added to the same logger.
