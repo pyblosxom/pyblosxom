@@ -1,99 +1,15 @@
 import _path_pyblosxom
 
-import os
-import os.path
-import shutil
-import tempfile
-import StringIO
-
-from Pyblosxom.pyblosxom import Request, blosxom_process_path_info
+from Pyblosxom.pyblosxom import blosxom_process_path_info
 from Pyblosxom import tools
 
-class Testpathinfo:
+from helpers import UnitTestBase
+
+class Testpathinfo(UnitTestBase):
     """pyblosxom.blosxom_process_path_info
 
     This tests default parsing of the path.
     """
-
-    _tempdir = tempfile.mkdtemp()
-
-    def _setup(self, files):
-        # sort so that we're building the directories in order
-        files.sort()
-
-        os.makedirs(os.path.join(Testpathinfo._tempdir, "entries"))
-
-        for fn in files:
-            d, f = os.path.split(fn)
-
-            try:
-                os.makedirs(d)
-            except OSError, e:
-                pass
-
-            if f:
-                f = open(fn, "w")
-                f.write("test file: %s\n" % fn)
-                f.close()
-            
-    def _teardown(self):
-        shutil.rmtree(Testpathinfo._tempdir)
-
-    def _buildfileset(self, filelist):
-        return [ os.path.join(Testpathinfo._tempdir, "entries/%s" % fn) for fn in filelist ]
-
-    def _build_request(self, cfg=None, http=None, data=None, inputstream=""):
-        """
-        process_path_info uses:
-        - req.pyhttp["PATH_INFO"]         - string
-
-        - req.config["default_flavour"]   - string
-        - req.config["datadir"]           - string
-        - req.config["blog_title"]        - string
-        - req.config["base_url"]          - string
-
-        - req.data["extensions"]          - dict of string -> func
-
-        if using req.getForm():
-        - req.pyhttp["wsgi.input"]        - StringIO instance
-        - req.pyhttp["REQUEST_METHOD"]    - GET or POST
-        - req.pyhttp["CONTENT_LENGTH"]    - integer
-        """
-        _config = { "default_flavour": "html", 
-                    "datadir": os.path.join(Testpathinfo._tempdir, "entries"),
-                    "blog_title": "Joe's blog",
-                    "base_url": "http://www.example.com/" }
-        if cfg: _config.update(cfg)
-
-        _data = { "extensions": { "txt": 0 } }
-        if data: _data.update(data)
-
-        _http = { "wsgi.input": StringIO.StringIO(inputstream),
-                  "REQUEST_METHOD": len(inputstream) and "GET" or "POST",
-                  "CONTENT_LENGTH": len(inputstream) }
-        if http: _http.update(http)
-
-        return Request(_config, _http, _data)
-        
-    def test_setup_teardown(self):
-        fileset1 = self._buildfileset( [ "file.txt",
-                                         "cata/file.txt",
-                                         "cata/subcatb/file.txt" ] )
-
-        self._setup(fileset1)
-        try:
-            for mem in fileset1:
-                assert os.path.isfile( mem )
-
-        finally:
-            self._teardown()
-
-        for mem in fileset1:
-            assert not os.path.isfile( mem )
-
-    def cmpdict(self, expected, actual):
-        for mem in expected.keys():
-            assert expected[mem] == actual[mem]
 
     def _basic_test(self, pathinfo, expected, cfg=None, http=None, data=None):
         _http = { "PATH_INFO": pathinfo }
@@ -249,7 +165,7 @@ class Testpathinfo:
         The flavour is the default flavour, the extension of the request,
         or the flav= querystring.
         """
-        root = Testpathinfo._tempdir
+        root = self._gettempdir()
 
         tools.initialize( {} )
         entries = self._buildfileset( [ "2007/entry1.txt", 
@@ -272,6 +188,49 @@ class Testpathinfo:
                               expected={ "flavour": "foo" } )
 
             # FIXME - need tests for precedence of flavour indicators
+
+        finally:
+            self._teardown()
+
+    def test_url(self):
+        """url var tests
+
+        The url is the HTTP PATH_INFO env variable.
+        """
+        tools.initialize( {} )
+        entries = self._buildfileset( [ "2007/entry1.txt", 
+                                        "2007/05/entry3.txt", 
+                                        "cata/entry2.txt" ] )
+
+        self._setup(entries)
+
+        try:
+            self._basic_test( "/", { "url": "http://www.example.com/" } )
+            self._basic_test( "/index.xml", { "url": "http://www.example.com/index.xml" } )
+            self._basic_test( "/cata/index.foo", { "url": "http://www.example.com/cata/index.foo" } )
+
+        finally:
+            self._teardown()
+
+    def test_pi_bl(self):
+        """pi_bl var tests
+
+        pi_bl is the entry the user requested to see if the request indicated
+        a specific entry.  It's the empty string otherwise.
+        """
+        tools.initialize( {} )
+        entries = self._buildfileset( [ "2007/entry1.txt", 
+                                        "2007/05/entry3.txt", 
+                                        "cata/entry2.txt" ] )
+
+        self._setup(entries)
+
+        try:
+            self._basic_test( "", { "pi_bl": "" } )
+            self._basic_test( "/", { "pi_bl": "/" } )
+            self._basic_test( "/index.xml", { "pi_bl": "/index.xml" } )
+            self._basic_test( "/2007/index.xml", { "pi_bl": "/2007/index.xml" } )
+            self._basic_test( "/cata/entry2", { "pi_bl": "/cata/entry2" } )
 
         finally:
             self._teardown()
