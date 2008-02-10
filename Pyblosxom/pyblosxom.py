@@ -307,7 +307,6 @@ class PyBlosxom:
         for mem in listing:
             # skip the ones that have bad extensions
             ext = mem[mem.rfind(".")+1:]
-            # FIXME - if not ext in data["extensions"].keys():
             if not ext in data["extensions"]:
                 continue
 
@@ -672,7 +671,6 @@ class Request(object):
         """
         self._configuration.update(newdict)
 
-
     def setResponse(self, response):
         """
         Sets the L{Response} object.
@@ -906,21 +904,6 @@ def blosxom_handler(request):
 
     data["entry_list"] = entry_list
 
-    # call the sortlist callback to truncate and sort the list of entries
-    # FIXME - should this be a handler or a transformer?
-    entry_list = tools.run_callback("sortlist",
-                       {"request": request, "entry_list": entry_list},
-                       donefunc = lambda ret: ret != None,
-                       defaultfunc = blosxom_sort_list_handler)
-
-    # truncate the list if the user has set num_entries and the request
-    # is not an archive request
-    maxe = config.get("num_entries", 5)
-    if maxe and data.get("truncate", 0):
-        entry_list = entry_list[:maxe]
-
-    data["entry_list"] = entry_list
-
     # figure out the blog-level mtime which is the mtime of the head of
     # the entry_list
     if isinstance(entry_list, list) and len(entry_list) > 0:
@@ -1039,10 +1022,11 @@ def blosxom_entry_parser(filename, request):
     entryData['body'] = otmp
 
     # Call the postformat callbacks
-    tools.run_callback('postformat',
-                      {'request': request,
-                       'entry_data': entryData})
-        
+    # FIXME - shouldn't be calling postformat here--this will get cached!
+    args = {'request': request,
+            'entry_data': entryData}
+    tools.run_callback('postformat', args)
+
     return entryData
 
 
@@ -1050,8 +1034,9 @@ def blosxom_file_list_handler(args):
     """
     This is the default handler for getting entries.  It takes the
     request object in and figures out which entries based on the
-    default behavior that we want to show and generates a list of
-    EntryBase subclass objects which it returns.
+    default behavior that we want to show, generates a list of 
+    EntryBase subclass objects, sorts them, truncates them and
+    returns the final list.
 
     @param args: dict containing the incoming Request object
     @type args: object
@@ -1086,6 +1071,20 @@ def blosxom_file_list_handler(args):
         matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
         entrylist = [x for x in entrylist if re.match(matchstr, x._fulltime)]
 
+    # call the sortlist callback to sort the list of entries
+    # FIXME - should this be a handler or a transformer?
+    entrylist = tools.run_callback("sortlist",
+                       {"request": request, "entry_list": entrylist},
+                       donefunc = lambda ret: ret != None,
+                       defaultfunc = blosxom_sort_list_handler)
+
+    # truncate the list if the user has set num_entries and the request
+    # is not an archive request
+    entrylist = tools.run_callback("truncatelist",
+                       {"request": request, "entry_list": entrylist},
+                       donefunc = lambda ret: ret != None,
+                       defaultfunc = blosxom_truncate_list_handler)
+
     return entrylist
 
 
@@ -1096,15 +1095,14 @@ def blosxom_sort_list_handler(args):
     @param args: dict containing the incoming Request object
     @type args: object
 
-    @returns: 1
-    @rtype: int
+    @returns: the new entry list
+    @rtype: list of EntryBase
     """
     request = args["request"]
+    entrylist = args["entry_list"]
 
-    data = request.data
     config = request.config
 
-    entrylist = data["entry_list"]
     entrylist = [ (e._mtime, e) for e in entrylist ]
 
     # this sorts entries by mtime in reverse order.  entries that have
@@ -1116,6 +1114,27 @@ def blosxom_sort_list_handler(args):
 
     return entrylist
     
+def blosxom_truncate_list_handler(args):
+    """
+    Truncates the entry list by num_entries.
+
+    @param args: dict containing the incoming Request object
+    @type args: object
+
+    @returns: the new entry list
+    @rtype: list of EntryBase
+    """
+    request = args["request"]
+    entrylist = args["entry_list"]
+
+    data = request.data
+    config = request.config
+
+    maxe = config.get("num_entries", 5)
+    if maxe and data.get("truncate", 0):
+        entrylist = entrylist[:maxe]
+
+    return entrylist
 
 def blosxom_process_path_info(args):
     """ 
@@ -1281,9 +1300,10 @@ def blosxom_process_path_info(args):
         data['blog_title_with_path'] = blog_title
 
     # construct our final URL
-    data['url'] = '%s%s' % (config['base_url'], data['pi_bl'])
     url = config['base_url']
-    if data['pi_bl'].startswith("/"):
+    if data['pi_bl'].startswith("/") and url.endswith("/"):
+        url = url[:-1] + data['pi_bl']
+    elif data['pi_bl'].startswith("/") or url.endswith("/"):
         url = url + data['pi_bl']
     else:
         url = url + "/" + data['pi_bl']
