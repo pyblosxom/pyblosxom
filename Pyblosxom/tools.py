@@ -643,7 +643,7 @@ def __walk_internal( root, recurse, pattern, ignorere, return_folders ):
                     (not ignorere or not ignorere.match(fullname)):
                 result = result + \
                          __walk_internal(fullname, 
-                                        (recurse > 1 and recurse -  1 or 0), 
+                                        (recurse > 1 and [recurse - 1] or [0])[0], 
                                         pattern, ignorere, return_folders)
 
     return result
