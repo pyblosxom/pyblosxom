@@ -92,19 +92,17 @@ run our tests.
 
 To run the tests, execute::
 
-   nosetests --verbose --include unit
-   nosetests --verbose --include functional
+   nosetests --verbose --where pyblosxom/tests/
 
-To run tests with coverage_, you'll need coverage, too.
+from the root directory. To run tests with coverage_, you'll need coverage,
+too.
 
 .. _coverage: http://nedbatchelder.com/code/modules/coverage.html
 
 To run the tests with coverage, execute::
 
    nosetests --verbose --with-coverage --cover-package=Pyblosxom \
-             --include unit
-   nosetests --verbose --with-coverage --cover-package=Pyblosxom \
-             --include functional
+             --where contrib/tests/plugins/comments/plugins/
 
-If you would like to add tests to the test suite, please do and send us
-patches!
+See http://pyblosxom.sourceforge.net/wiki/index.php/Tests for details. If you
+would like to add tests to the test suite, please do and send us patches!
