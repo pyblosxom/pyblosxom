@@ -60,7 +60,7 @@ class UnitTestBase:
         _config = { "default_flavour": "html", 
                     "datadir": os.path.join(self._gettempdir(), "entries"),
                     "blog_title": "Joe's blog",
-                    "base_url": "http://www.example.com" }
+                    "base_url": "http://www.example.com/" }
         if cfg: _config.update(cfg)
 
         _data = { "extensions": { "txt": 0 } }
