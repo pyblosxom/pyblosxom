@@ -1090,7 +1090,7 @@ def blosxom_file_list_handler(args):
 
 def blosxom_sort_list_handler(args):
     """
-    This sorts the entries by mtime and then trims them based on num_entries.
+    This sorts the entries by mtime: newest to oldest.
 
     @param args: dict containing the incoming Request object
     @type args: object
@@ -1623,7 +1623,7 @@ def create_blog(d):
     template variables.
     """
     if d == ".":
-        d = "./blog"
+        d = "." + os.sep + "blog"
 
     d = os.path.abspath(d)
     
@@ -1638,46 +1638,56 @@ def create_blog(d):
     mkdir(d)
     mkdir(os.path.join(d, "entries"))
     mkdir(os.path.join(d, "plugins"))
-    # mkdir(os.path.join(d, "flavours"))
 
-    def copyfile(frompath, topath, fn, fix=0):
-        print "Creating '%s'..." % os.path.join(topath, fn)
+    source = os.path.join(os.path.dirname(__file__), "flavours")
+
+    for root, dirs, files in os.walk(source):
+        if ".svn" in root:
+            continue
+
+        dest = os.path.join(d, root[len(source)+1:])
+        if not os.path.isdir(dest):
+            print "Creating '%s'..." % dest
+            os.mkdir(dest)
+
+        for mem in files:
+            print "Creating file '%s'..." % os.path.join(dest, mem)
+            fpin = open(os.path.join(root, mem), "r")
+            fpout = open(os.path.join(dest, mem), "w")
+
+            fpout.write(fpin.read())
+
+            fpout.close()
+            fpin.close()
+ 
+    def copyfile(frompath, topath, fn, fix=False):
+        print "Creating file '%s'..." % os.path.join(topath, fn)
         fp = open(os.path.join(frompath, fn), "r")
         filedata = fp.readlines()
         fp.close()
 
         if fix:
-            datamap = { "basedir": topath }
+            basedir = topath
+            if not basedir.endswith(os.sep):
+                basedir = basedir + os.sep
+            if os.sep == "\\":
+                basedir = basedir.replace(os.sep, os.sep + os.sep)
+            datamap = { "basedir": basedir }
             filedata = [line % datamap for line in filedata]
 
         fp = open(os.path.join(topath, fn), "w")
         fp.write("".join(filedata))
         fp.close()
 
-    def copydir(arg, dirname, names):
-        frompath = dirname
-        topath = os.path.join(os.path.join(d, "flavours"),
-                              dirname[len(path)+1:])
-        mkdir(topath)
-        for name in names:
-            fn = os.path.join(frompath, name)
-            
-            if os.path.isfile(fn):
-                copyfile(frompath, topath, name, 0)
+    source = os.path.join(os.path.dirname(__file__), "data")
 
-    path = os.path.join(os.path.dirname(__file__), "flavours")
-
-    os.path.walk(path, copydir, [])
-
-    path = os.path.join(os.path.dirname(__file__), "data")
-
-    copyfile(path, d, "config.py", 1)
-    copyfile(path, d, "blog.ini", 1)
-    copyfile(path, d, "pyblosxom.cgi", 0)
+    copyfile(source, d, "config.py", fix=True)
+    copyfile(source, d, "blog.ini", fix=True)
+    copyfile(source, d, "pyblosxom.cgi")
 
     datadir = os.path.join(d, "entries")
     firstpost = os.path.join(datadir, "firstpost.txt")
-    print "Creating '%s'..." % firstpost
+    print "Creating file '%s'..." % firstpost
     fp = open(firstpost, "w")
     fp.write("""First post!
 <p>
@@ -1686,6 +1696,8 @@ def create_blog(d):
 </p>
 """)
     fp.close()
+
+    print "Done!"
 
 
 def command_line_handler(scriptname, argv):

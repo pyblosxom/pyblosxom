@@ -61,10 +61,10 @@ py["blog_encoding"] = "iso-8859-1"
 #py["blog_icbm"] = '37.448089,-122.159259'
 
 # Where are this blog's entries kept?
-py["datadir"] = "%(basedir)s/entries"
+py["datadir"] = "%(basedir)sentries"
 
 # Where are this blog's flavours kept?
-py["flavourdir"] = "%(basedir)s/flavours"
+py["flavourdir"] = "%(basedir)sflavours"
 
 # List of strings with directories that should be ignored (e.g. "CVS")
 # ex: py['ignore_directories'] = ["CVS", "temp"]
@@ -121,7 +121,7 @@ py["default_flavour"] = "html"
 # should only contain the related plugins.
 # Example: py['plugin_dirs'] = [ "/home/joe/blog/plugins",
 #                                "/var/lib/pyblosxom/plugins" ]
-py["plugin_dirs"] = [ "%(basedir)s/plugins" ]
+py["plugin_dirs"] = [ "%(basedir)splugins" ]
 
 # There are two ways for PyBlosxom to load plugins.  The first is the
 # default way which involves loading all the plugins in the lib/plugins
