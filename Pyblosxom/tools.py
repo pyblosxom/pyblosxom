@@ -492,6 +492,8 @@ class Replacer:
                     # there
                     if vd.has_key(s):
                         return vd[s]
+                    if s.startswith("$") and vd.has_key(s[1:]):
+                        return vd[s[1:]]
                     return s
                 args = [fix(arg.strip()) for arg in commasplit(args)]
 
