@@ -92,6 +92,7 @@ class Testparse:
         assert pt( { "foo": lambda req, vd: "FOO" }, "foo $foo() foo") == "foo FOO foo"
         assert pt( { "foo": lambda req, vd, z: z }, "foo $foo('a') foo") == "foo a foo"
         assert pt( { "foo": lambda req, vd, z: z, "bar": "BAR" }, "foo $foo(bar) foo") == "foo BAR foo"
+        assert pt( { "foo": lambda req, vd, z: z, "bar": "BAR" }, "foo $foo($bar) foo") == "foo BAR foo"
 
     def test_functions_old_behavior(self):
         def pt(d, t):
