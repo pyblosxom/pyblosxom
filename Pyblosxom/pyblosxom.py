@@ -264,7 +264,7 @@ class PyBlosxom:
         # we're done, clean up
         self.cleanup()
  
-    def runStaticRenderer(self, incremental=0):
+    def runStaticRenderer(self, incremental=False, verbose=True):
         """
         This will go through all possible things in the blog and statically 
         render everything to the "static_dir" specified in the config file.
@@ -272,18 +272,18 @@ class PyBlosxom:
         This figures out all the possible path_info settings and calls 
         self.run() a bazillion times saving each file.
 
-        @param incremental: whether (1) or not (0) to incrementally
-            render the pages.  if we're incrementally rendering pages,
-            then we render only the ones that have changed.
+        @param incremental: whether or not to incrementally render 
+            the pages.  if we're incrementally rendering pages, then we 
+            render only the ones that have changed.
         @type  incremental: boolean
         """
         self.initialize()
 
         config = self._request.config
         data = self._request.data
-        print "Performing static rendering."
+        if verbose: print "Performing static rendering."
         if incremental:
-            print "Incremental is set."
+            if verbose: print "Incremental is set."
 
         staticdir = config.get("static_dir", "")
         datadir = config["datadir"]
@@ -356,7 +356,7 @@ class PyBlosxom:
                 for f in flavours:
                     renderme.append( (mem + "." + f, "") )
 
-        print "rendering %d entries." % len(renderme)
+        if verbose: print "rendering %d entries." % len(renderme)
 
         # handle categories
         categories = categories.keys()
@@ -368,7 +368,7 @@ class PyBlosxom:
         if "/" in categories:
             categories.remove("/")
 
-        print "rendering %d category indexes." % len(categories)
+        if verbose: print "rendering %d category indexes." % len(categories)
 
         for mem in categories:
             mem = os.path.normpath( mem + "/index." )
@@ -381,7 +381,7 @@ class PyBlosxom:
 
         dates = ["/" + d for d in dates]
 
-        print "rendering %d date indexes." % len(dates)
+        if verbose: print "rendering %d date indexes." % len(dates)
 
         for mem in dates:
             mem = os.path.normpath( mem + "/index." )
@@ -390,7 +390,7 @@ class PyBlosxom:
             
         # now we handle arbitrary urls
         additional_stuff = config.get("static_urls", [])
-        print "rendering %d arbitrary urls." % len(additional_stuff)
+        if verbose: print "rendering %d arbitrary urls." % len(additional_stuff)
 
         for mem in additional_stuff:
             if mem.find("?") != -1:
@@ -405,22 +405,23 @@ class PyBlosxom:
         # now we pass the complete render list to all the plugins
         # via cb_staticrender_filelist and they can add to the filelist
         # any ( url, query ) tuples they want rendered.
-        print "(before) building %s files." % len(renderme)
+        if verbose: print "(before) building %s files." % len(renderme)
         tools.run_callback("staticrender_filelist",
                            {'request': self._request, 
                             'filelist': renderme,
                             'flavours': flavours})
 
-        print "building %s files." % len(renderme)
+        if verbose: print "building %s files." % len(renderme)
 
         for url, q in renderme:
             url = url.replace(os.sep, "/")
-            print "rendering '%s' ..." % url
+            if verbose: print "rendering '%s' ..." % url
 
             tools.render_url_statically(config, url, q)
 
         # we're done, clean up
         self.cleanup()
+        return 0
 
     def testInstallation(self):
         """
@@ -815,8 +816,6 @@ class Response(object):
         @type out: file
         """
         out.write("Status: %s\n" % self.status)
-        # FIXME - out.write('\n'.join(['%s: %s' % (hkey, self.headers[hkey]) 
-        #                     for hkey in self.headers.keys()]))
         out.write('\n'.join(['%s: %s' % (hkey, self.headers[hkey]) 
                              for hkey in self.headers]))
         out.write('\n\n')
@@ -1322,10 +1321,9 @@ def run_pyblosxom():
     if not "REQUEST_METHOD" in os.environ:
         from Pyblosxom.pyblosxom import command_line_handler
 
-        args = sys.argv[1:]
-
-        if len(args) == 0:
-            args = ["--test"]
+        args = sys.argv
+        if len(args) <= 1:
+            args.append("--test")
 
         sys.exit(command_line_handler("pyblosxom.cgi", args))
 
@@ -1474,13 +1472,15 @@ def test_installation(request):
     config = request.config
 
     # BASE STUFF
+    print ""
     print "Welcome to PyBlosxom's installation verification system."
     print "------"
     print "]] printing diagnostics [["
     print "pyblosxom:   %s" % VERSION_DATE
     print "sys.version: %s" % sys.version.replace("\n", " ")
     print "os.name:     %s" % os.name
-    print "codebase:    %s" % config.get("codebase", "--default--")
+    print "codebase:    %s" % config.get("codebase", 
+                              os.path.dirname(os.path.dirname(__file__)))
     print "------"
 
     # CONFIG FILE
@@ -1508,19 +1508,13 @@ def test_installation(request):
     missing_required_props = []
     missing_optionsal_props = []
 
-    missing_required_props = [m
-                              for m in required_config
-                              if m not in config_keys]
+    missing_required_props = [ m for m in required_config if m not in config_keys ]
 
-    missing_optional_props = [m
-                              for m in nice_to_have_config
-                              if m not in config_keys]
+    missing_optional_props = [ m for m in nice_to_have_config if m not in config_keys ]
 
     all_keys = nice_to_have_config + required_config
     
-    config_keys = [m
-                   for m in config_keys
-                   if m not in all_keys]
+    config_keys = [ m for m in config_keys if m not in all_keys ]
 
     def wrappify(ks):
         ks.sort()
@@ -1535,8 +1529,7 @@ def test_installation(request):
     
     if missing_required_props:
         print ""
-        print "Missing properties must be set in order for your blog to"
-        print "work."
+        print "Missing properties must be set in order for your blog to work."
         print ""
         print wrappify(missing_required_props)
         print ""
@@ -1545,17 +1538,15 @@ def test_installation(request):
 
     if missing_optional_props:
         print ""
-        print "You're missing optional properties.  These are not required, "
-        print "but some of them may interest you.  Refer to the documentation "
-        print "for more information."
+        print "You're missing optional properties.  These are not required, but some of them"
+        print "may interest you.  Refer to the documentation for more information."
         print ""
         print wrappify(missing_optional_props)
 
     if config_keys:
         print ""
-        print "These are properties PyBlosxom doesn't know about.  They "
-        print "could be used by plugins or could be ones you've added."
-        print "Remove them if you know they're not used."
+        print "These are properties PyBlosxom doesn't know about.  They could be used by plugins" 
+        print "or could be ones you've added.  Remove them if you know they're not used."
         print ""
         print wrappify(config_keys)
         print ""
@@ -1564,6 +1555,7 @@ def test_installation(request):
 
     print "------"
     print "]] checking datadir [["
+    print "Note: this does NOT check whether your webserver has permissions to view files therein."
 
     # DATADIR
     if not os.path.isdir(config["datadir"]):
@@ -1575,11 +1567,9 @@ def test_installation(request):
         return
 
     print "PASS: datadir is there."
-    print "      Note: this does NOT check whether your webserver has "
-    print "      permissions to view files therein!"
 
     print "------"
-    print "Now we're going to verify your plugin configuration."
+    print "]] checking plugins [["
 
     if "plugin_dirs" in config:
         plugin_utils.initialize_plugins(config["plugin_dirs"],
@@ -1587,36 +1577,41 @@ def test_installation(request):
 
         no_verification_support = []
 
-        for mem in plugin_utils.plugins:
-            if hasattr(mem, "verify_installation"):
-                print "=== plugin: '%s'" % mem.__name__
-                print "    file: %s" % mem.__file__
-                print "    version: %s" % (str(getattr(mem, "__version__")))
+        if len(plugin_utils.plugins) == 0:
+            print "There are no plugins installed."
 
-                try:
-                    if mem.verify_installation(request) == 1:
-                        print "    PASS"
-                    else:
-                        print "    FAIL!!!"
-                except AssertionError, error_message:
-                    print " FAIL!!! ", error_message
+        else:
+            for mem in plugin_utils.plugins:
+                if hasattr(mem, "verify_installation"):
+                    print "=== plugin: '%s'" % mem.__name__
+                    print "    file: %s" % mem.__file__
+                    print "    version: %s" % (str(getattr(mem, "__version__")))
 
-            else:
-                mn = mem.__name__
-                mf = mem.__file__
-                no_verification_support.append( "'%s' (%s)" % (mn, mf))
+                    try:
+                        if mem.verify_installation(request) == 1:
+                            print "    PASS"
+                        else:
+                            print "    FAIL!!!"
+                    except AssertionError, error_message:
+                        print " FAIL!!! ", error_message
 
-        if len(no_verification_support) > 0:
-            print ""
-            print "The following plugins do not support installation " + \
-                  "verification:"
-            for mem in no_verification_support:
-                print "   %s" % mem
+                else:
+                    mn = mem.__name__
+                    mf = mem.__file__
+                    no_verification_support.append( "'%s' (%s)" % (mn, mf))
+
+            if len(no_verification_support) > 0:
+                print ""
+                print "The following plugins do not support installation " + \
+                      "verification:"
+                for mem in no_verification_support:
+                    print "   %s" % mem
+
     else:
         print "You have chosen not to load any plugins."
 
 
-def create_blog(d):
+def create_blog(d, verbose):
     """
     Creates a blog in the specified directory.  Mostly this involves
     copying things over, but there are a few cases where we expand
@@ -1628,11 +1623,11 @@ def create_blog(d):
     d = os.path.abspath(d)
     
     if os.path.isfile(d) or os.path.isdir(d):
-        print "Cannot create '%s'--something is in the way." % d
+        if verbose: print "Cannot create '%s'--something is in the way." % d
         return 0
 
     def mkdir(d):
-        print "Creating '%s'..." % d
+        if verbose: print "Creating '%s'..." % d
         os.makedirs(d)
 
     mkdir(d)
@@ -1647,11 +1642,11 @@ def create_blog(d):
 
         dest = os.path.join(d, root[len(source)+1:])
         if not os.path.isdir(dest):
-            print "Creating '%s'..." % dest
+            if verbose: print "Creating '%s'..." % dest
             os.mkdir(dest)
 
         for mem in files:
-            print "Creating file '%s'..." % os.path.join(dest, mem)
+            if verbose: print "Creating file '%s'..." % os.path.join(dest, mem)
             fpin = open(os.path.join(root, mem), "r")
             fpout = open(os.path.join(dest, mem), "w")
 
@@ -1661,7 +1656,7 @@ def create_blog(d):
             fpin.close()
  
     def copyfile(frompath, topath, fn, fix=False):
-        print "Creating file '%s'..." % os.path.join(topath, fn)
+        if verbose: print "Creating file '%s'..." % os.path.join(topath, fn)
         fp = open(os.path.join(frompath, fn), "r")
         filedata = fp.readlines()
         fp.close()
@@ -1687,7 +1682,7 @@ def create_blog(d):
 
     datadir = os.path.join(d, "entries")
     firstpost = os.path.join(datadir, "firstpost.txt")
-    print "Creating file '%s'..." % firstpost
+    if verbose: print "Creating file '%s'..." % firstpost
     fp = open(firstpost, "w")
     fp.write("""First post!
 <p>
@@ -1697,8 +1692,8 @@ def create_blog(d):
 """)
     fp.close()
 
-    print "Done!"
-
+    if verbose: print "Done!"
+    return 0
 
 def command_line_handler(scriptname, argv):
     """
@@ -1713,85 +1708,105 @@ def command_line_handler(scriptname, argv):
 
     @returns: the exit code
     """
+    from optparse import OptionParser, OptionGroup
+    parser = OptionParser(version="%prog " + VERSION_DATE )
+    parser.add_option("-q", "--quiet",
+                      action="store_false", dest="verbose", default=True,
+                      help="If the quiet flag is specified, then PyBlosxom will "
+                           "run quietly.")
+    parser.add_option("--config",
+                      help="This specifies the location of the config.py file "
+                           "for the blog you want to work with.  If the "
+                           "config.py file is in the current directory, then "
+                           "you don't need to specify this.")
+
+    startgroup = OptionGroup(parser, "Starting out")
+    startgroup.add_option("--create",
+                          help="Creates the blog structure complete with "
+                               "config.py file, directories, flavour files and "
+                               "an initial blog post.")
+    startgroup.add_option("--test",
+                          action="store_true", dest="test", default=False,
+                          help="Verifies your config.py file and blog.")
+    parser.add_option_group(startgroup)
+
+    staticgroup = OptionGroup(parser, "Static rendering")
+    staticgroup.add_option("--static",
+                           action="store_true", dest="static", default=False,
+                           help="Statically renders your blog.")
+    staticgroup.add_option("--incremental",
+                           action="store_true", dest="incremental", default=False,
+                           help="Causes static rendering to be incremental.")
+    parser.add_option_group(staticgroup)
+
+    commandsgroup = OptionGroup(parser, "Other commands")
+    commandsgroup.add_option("-r", "--render",
+                             help="Renders a single url of your blog.")
+    commandsgroup.add_option("--headers",
+                             action="store_true", dest="headers", default=False,
+                             help="Causes headers to be displayed when rendering "
+                                  "a single url.")
+    parser.add_option_group(commandsgroup)
+
     def printq(s):
         print s
 
-    # parse initial command line variables that don't require config
-    optlist = tools.parse_args(argv)
-    for mem in optlist:
-        if mem[0] in ["-c", "--config"]:
-            m = mem[1]
-            if m.endswith("config.py"):
-                m = m[0:-9]
-            printq("Appending %s to sys.path for config.py location." % m)
-            sys.path.append(m)
+    (options, args) = parser.parse_args()
 
-        elif mem[0] in ["-C", "--create"]:
-            return create_blog(mem[1])
+    print "options: %s" % repr(options)
+    print "args: %s" % repr(args)
 
-        elif mem[0] in ["-q", "--quiet"]:
-            # this quiets the printing by doing nothing with the input
-            printq = lambda s : s
+    if not options.verbose:
+        printq = lambda s : s
 
-        elif mem[0] in ["-v", "--version"]:
-            return 0
+    printq("%s version %s" % (scriptname, VERSION_DATE))
 
-        elif mem[0] in ["-h", "--help"]: 
-            print HELP % { "script": scriptname }
-            return 0
+    if options.create:
+        return create_blog(options.create, options.verbose)
 
- 
-    # the configuration properties are in a dict named "py" in
-    # the config module
-    printq("Trying to import the config module....")
-    try:
-        from config import py as cfg
-    except:
-        print "Error: Cannot find your config.py file.  Please execute %s in\n" \
-              % scriptname
-        print "the directory with your config.py file in it."
-        return 0
+    if options.config:
+        m = options.config
+        if m.endswith("config.py"):
+            m = m[0:-9]
+        printq("Appending %s to sys.path for importing config.py." % m)
+        sys.path.append(m)
 
-    # If the user defined a "codebase" property in their config file,
-    # then we insert that into our sys.path because that's where the
-    # PyBlosxom installation is.
-    # NOTE: this _has_ to come before any PyBlosxom calls.
-    if "codebase" in cfg:
-        sys.path.append(cfg["codebase"])
+    # after this point, we need a config.py dict to do things
 
-    printq("PyBlosxom version: %s" % VERSION_DATE)
+    def get_p():
+        printq("Trying to import the config module....")
+        try:
+            from config import py as cfg
+        except:
+            print "Error: Cannot find your config.py file.  Please execute %s in" % scriptname
+            print "the directory with your config.py file in it or use the --config"
+            print "flag.  See \"%s --help\" for more details." % scriptname
+            return None
 
-    if len(argv) == 0:
-        print HELP % { "script": scriptname }
-        return 0
+        return PyBlosxom(cfg, {})
 
-    p = PyBlosxom(cfg, {})
-    headers = 0
+    if options.test:
+        p = get_p()
+        if not p: return 0
+        return p.testInstallation()
 
-    for mem in optlist:
-        if mem[0] in ["--static", "-s"]:
-            if mem[1].startswith("incr"):
-                incremental = 1
-            else:
-                incremental = 0
+    if options.static:
+        p = get_p()
+        if not p: return 0
+        return p.runStaticRenderer(options.incremental, options.verbose)
 
-            p.runStaticRenderer(incremental)
+    if options.render:
+        url = mem[1]
+        if url.startswith(cfg.get("base_url", "")):
+            url = url[len(cfg.get("base_url", "")):]
 
-        elif mem[0] in ["--headers", "-h"]:
-            headers = 1
+        printq("Rendering '%s'" % url)
 
-        elif mem[0] in ["--render", "-r"]:
-            url = mem[1]
-            if url.startswith(cfg.get("base_url", "")):
-                url = url[len(cfg.get("base_url", "")):]
+        p = get_p()
+        if not p: return 0
+        return p.runRenderOne(url, options.headers)
 
-            printq("Rendering '%s'" % url)
-
-            p.runRenderOne(url, headers)
-
-        elif mem[0] in ["--test", "-t"]:
-            p.testInstallation()
-
+    parser.print_help()
     return 0
 
 # vim: shiftwidth=4 tabstop=4 expandtab

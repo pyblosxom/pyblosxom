@@ -154,36 +154,6 @@ def cleanup():
     #     pass
     pass
 
-def parse_args(args):
-    """Parses command line arguments into a hashmap of arg -> value items.
-
-    FIXME - remove this and use optparse instead
-
-    This returns a list of tuples of ``(arg, value)`` pairings.
-
-    :Parameters:
-       args : list of strings
-          the list of command-line arguments to parse
-    """
-    i = 0
-    optlist = []
-    while (i < len(args)):
-        if args[i].startswith("-"):
-            if (i+1 < len(args)):
-                if not args[i+1].startswith("-"):
-                    optlist.append((args[i], args[i+1]))
-                    i = i + 1
-                else:
-                    optlist.append((args[i], ""))
-            else:
-                optlist.append((args[i], ""))
-
-        else:
-            optlist.append(("", args[i]))
-
-        i = i + 1
-    return optlist
-
 class ConfigSyntaxErrorException(Exception):
     pass
 

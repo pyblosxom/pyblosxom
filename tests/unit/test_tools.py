@@ -174,25 +174,6 @@ class Testis_year:
         assert tools.is_year("ab") == 0
         assert tools.is_year("97") == 0
 
-class Testparse_args:
-    """tools.parse_args"""
-    def test_args_can_be_len_0(self):
-        assert tools.parse_args( [] ) == []
-
-    def test_single_args(self):
-        assert tools.parse_args( ["--test"] ) == [ ("--test", "") ]
-        assert tools.parse_args( ["-a", "-b", "--c"] ) == [ ("-a", ""),
-                                                            ("-b", ""),
-                                                            ("--c", "") ]
-
-    def test_key_value_args(self):
-        assert tools.parse_args( ["--test", "foo"] ) == [ ("--test", "foo") ]
-        assert tools.parse_args( ["--test", "foo",
-                                  "-a",
-                                  "--bar", "baz"] ) == [ ("--test", "foo"),
-                                                         ("-a", ""),
-                                                         ("--bar", "baz") ]
-
 class TestgenerateRandStr:
     """tools.generateRandStr
 

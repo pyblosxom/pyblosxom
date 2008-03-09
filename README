@@ -33,6 +33,12 @@ PyBlosxom supports flavours to change the look and feel of your blog.
 PyBlosxom supports plugins to modify the existing default behavior.
 
 
+Requirements
+============
+
+* Python 2.3 or later to run PyBloxsxom.
+
+
 How to install PyBlosxom
 ========================
 
