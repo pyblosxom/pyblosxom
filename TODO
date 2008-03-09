@@ -35,30 +35,34 @@ REFACTORING
   ``urlencode(...)``
 - DONE: enhance template variables allowing for function calling with
   identifiers
+- DONE: remove VariableDict
+- DONE: switch argument handling to using optparse?
+
+- fix request.http, request.data, and request.config confusion
+- go through and fix get/set stuff, ...
+- adjust setup.py so that it builds the files in web/ from the
+  files in data/ and copies them over
+
 - move all callback stuff to its own module with items in tools for
   backwards compatability?  
 - name all the callback helper lambda functions.  identiy, oldvalue, 
   newvalue, defaultnone, defaultone, ...?
-- add __all__ to everything so that we're explicitly exporting things
-- go through and fix get/set stuff, ...
-- remove VariableDict
-- switch to using shutils?
-- switch argument handling to using optparse?
-- fix request.http, request.data, and request.config confusion
-- adjust setup.py so that it builds the files in web/ from the
-  files in data/ and copies them over
 
 REFACTOR CACHING
 
-- add index-level caching
 - DONE: re-work the entry-level caching system to a callback and
   remove caching code from the system.
 
-REFACTOR ENTRYPARSERS
+- add index-level caching callback?
 
-- add function to tools that takes a file-like-object and returns
-  a {title = 'title', metadata = {}, body = 'body} dict.
-- change all entryparsers to use this function
+FLAVOUR FILES
+
+- flavours have style sheets and images--figure out a way of sourcing
+  these bits
+
+PYBLCMD
+
+- add storing and resetting of mtimes across entries
 
 MANUAL
 
@@ -70,10 +74,6 @@ MANUAL
 UNIT TESTING
 
 - continue adding unit and functional tests to PyBlosxom.
-
-PYBLCMD
-
-- add storing and resetting of mtimes across entries
 
 
 PROJECT INFRASTRUCTURE
