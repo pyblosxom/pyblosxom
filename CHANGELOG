@@ -1,39 +1,42 @@
-Changes between 1.4.2 and 2.0
-===========================
+Changes between 1.4.3 and 2.0
+=============================
 
 Pertinent to users:
 -------------------
 
-1. PyBlosxom now requires setuptools and at least Python 2.3 to install.
+1. PyBlosxom now requires Python 2.3.
 
-2. The ``pyblosxom.cgi`` file has changed significantly--if you're using it
+2. To install PyBlosxom, you need setuptools.
+
+3. The ``pyblosxom.cgi`` file has changed significantly--if you're using it
    you should grab the new one that comes with this distribution.  We've
    gutted the ``pyblosxom.cgi`` script and turned it into a stub.  This will
    reduce the need for you to update your ``pyblosxom.cgi`` in the future
    when you upgrade PyBlosxom.
 
-3. pyblcmd now has an option to create the blog directory structure
+4. pyblcmd now has an option to create the blog directory structure
    and skeleton files for you.  This makes it much faster to get a new 
-   blog up and running.  It works like this::
+   blog up and running.  Syntax is this::
 
       pyblcmd --create <path>
 
-   For example::
+   Some examples::
 
+      pyblcmd --create .
       pyblcmd --create /home/joe/blog
 
-4. The entry cache drivers have been removed from PyBlosxom core.  If
+5. The entry cache drivers have been removed from PyBlosxom core.  If
    you were using entryshelf or entrypickle, you'll need to pick up
    their plugin replacements.
 
    FIXME - note location of plugin replacements here.
 
-5. Template variable syntax ``$id_escaped`` and ``$id_urlencoded``
+6. Template variable syntax ``$id_escaped`` and ``$id_urlencoded``
    has been removed.  Use ``$escape(id)`` and ``$urlencode(id)``
    instead.
 
-6. The PyBlosxomWSGIApp class has been fixed so that it's more in line
-   with the WSGI PEP.  Thanks Michael!
+7. Switched to using Python's optparse module instead of our home-brewed
+   one.  There are some changes in command line syntax.
 
 
 Pertinent to developers:
@@ -63,6 +66,57 @@ Pertinent to developers:
    contents of the config and data dicts to each entry when it was
    rendered as a story.  Now the items in the entrylist are untouched 
    during rendering.
+
+6. The ``config.py`` dict is now stored in an ``ImmutableDict`` and
+   will prevent you from making changes to values inside it.
+
+
+Changes between 1.4.2 and 1.4.3
+===============================
+
+Pertinent to users:
+-------------------
+
+1. Adjusted the code that parses blog.ini values so that it can take values
+   like::
+
+      foo = 'a'                 # string
+      foo = "a"                 # string
+      foo = 23                  # integer
+      foo = [ "a", 23, "b" ]    # list of strings and integers
+
+   as well as::
+
+      foo = a                   # string
+
+   Note: if you want the string "23", then you MUST enclose it in quotes,
+   otherwise it will be parsed as an integer.
+
+   blog.ini is used when you set up PyBlosxom using Paste.
+
+2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an application.
+   Thanks Michael!
+
+3. Template variables can be parenthesized.  Examples::
+
+      $foo                      - variable is "foo"
+      $(foo)                    - variable is "foo"
+      $(url)index.atom          - variable is "url"
+
+   This reduces ambiguity which was causing problems with recognition of 
+   variables.
+
+
+Pertinent to developers:
+------------------------
+
+1. Fixed tools.importname--it now logs errors to the logger.
+
+2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an application.
+   Thanks Michael!
+
+3. Added more unit tests and corrected more behavior.  Details on running
+   unit tests are in the REDAME.
 
 
 Changes between 1.4.1 and 1.4.2
