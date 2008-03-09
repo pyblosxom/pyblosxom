@@ -160,11 +160,9 @@ class Testpathinfo(UnitTestBase):
             self._teardown()
 
     def test_flavour(self):
-        """flavour var tests
-
-        The flavour is the default flavour, the extension of the request,
-        or the flav= querystring.
-        """
+        # flavour var tests
+        # The flavour is the default flavour, the extension of the request,
+        # or the flav= querystring.
         root = self._gettempdir()
 
         tools.initialize( {} )
@@ -193,10 +191,8 @@ class Testpathinfo(UnitTestBase):
             self._teardown()
 
     def test_url(self):
-        """url var tests
-
-        The url is the HTTP PATH_INFO env variable.
-        """
+        # url var tests
+        # The url is the HTTP PATH_INFO env variable.
         tools.initialize( {} )
         entries = self._buildfileset( [ "2007/entry1.txt", 
                                         "2007/05/entry3.txt", 
@@ -213,11 +209,9 @@ class Testpathinfo(UnitTestBase):
             self._teardown()
 
     def test_pi_bl(self):
-        """pi_bl var tests
-
-        pi_bl is the entry the user requested to see if the request indicated
-        a specific entry.  It's the empty string otherwise.
-        """
+        # pi_bl var tests
+        # pi_bl is the entry the user requested to see if the request indicated
+        # a specific entry.  It's the empty string otherwise.
         tools.initialize( {} )
         entries = self._buildfileset( [ "2007/entry1.txt", 
                                         "2007/05/entry3.txt", 
