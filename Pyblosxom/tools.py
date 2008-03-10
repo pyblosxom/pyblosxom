@@ -521,7 +521,6 @@ def parse(request, encoding, var_dict, template):
 
     return u'' + VAR_REGEXP.sub(replacer.replace, template)
 
-
 def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
     """
     This function walks a directory tree starting at a specified root folder,
@@ -588,6 +587,10 @@ def __walk_internal( root, recurse, pattern, ignorere, return_folders ):
     """
     Note: This is an internal function--don't use it and don't expect it to
     stay the same between PyBlosxom releases.
+
+    FIXME - we should either ditch this function and use os.walk or something
+    similar, or optimize this version by removing the multiple stat calls
+    that happen as a result of islink, isdir and isfile.
     """
     # initialize
     result = []
