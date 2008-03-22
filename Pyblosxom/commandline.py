@@ -310,7 +310,8 @@ def create_blog(d, verbose):
                 basedir = basedir + os.sep
             if os.sep == "\\":
                 basedir = basedir.replace(os.sep, os.sep + os.sep)
-            datamap = { "basedir": basedir }
+            datamap = { "basedir": basedir,
+                        "codedir": os.path.dirname(os.path.dirname(__file__)) }
             filedata = [line % datamap for line in filedata]
 
         fp = open(os.path.join(topath, fn), "w")

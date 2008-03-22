@@ -19,7 +19,7 @@ py = {}
 # directory.
 # Note, this should be the directory that holds the "Pyblosxom" 
 # directory (note the case--uppercase P lowercase b!).
-#py["codebase"] = "/path/to/pyblosxom/installation"
+#py["codebase"] = "%(codedir)s"
 
 
 

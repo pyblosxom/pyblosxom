@@ -2,7 +2,7 @@ from __future__ import nested_scopes, generators
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# Copyright (c) 2003-2008 Wari Wahab
 # 
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
@@ -35,7 +35,6 @@ VERSION = "2.0"
 VERSION_DATE = VERSION + " dev"
 VERSION_SPLIT = tuple(VERSION.split('.'))
 
-
 class PyBlosxom:
     """
     This is the main class for PyBlosxom functionality.  It handles
@@ -59,15 +58,6 @@ class PyBlosxom:
         """
         config['pyblosxom_name'] = "pyblosxom"
         config['pyblosxom_version'] = VERSION_DATE
-
-        # wbg 10/6/2005 - the plugin changes won't happen until
-        # PyBlosxom 2.0.  so i'm commenting this out until then.
-        # add the included plugins directory
-        # p = config.get("plugin_dirs", [])
-        # f = __file__[:__file__.rfind(os.sep)] + os.sep + "plugins"
-        # p.append(f)
-        # config['plugin_dirs'] = p
-
         self._configuration = config
         self._request = Request(config, environ, data)
 
@@ -145,24 +135,9 @@ class PyBlosxom:
         tools.cleanup()
 
     def getRequest(self):
-        """
-        Returns the L{Request} object for this PyBlosxom instance.
-        
-        @returns: the request object 
-        @rtype: L{Request}
-        """
         return self._request
 
     def getResponse(self):
-        """
-        Returns the L{Response} object which handles all output 
-        related functionality for this PyBlosxom instance.
-        
-        @see: L{Response}
-
-        @returns: the reponse object 
-        @rtype: L{Response}
-        """
         return self._request.getResponse()
 
     def run(self, static=False):
@@ -470,7 +445,7 @@ class PyBlosxomWSGIApp:
         if "codebase" in configini:
             sys.path.insert(0, configini["codebase"])
 
-    def run_pyblosxom(self, env, start_response):
+    def run(self, env, start_response):
         """
         Runs the WSGI app.
         """
@@ -488,10 +463,10 @@ class PyBlosxomWSGIApp:
         return pyresponse.read()
 
     def __call__(self, env, start_response):
-        return [self.run_pyblosxom(env, start_response)]
+        return [self.run(env, start_response)]
 
     def __iter__(self):
-        yield self.run_pyblosxom(self.environ, self.start_response) 
+        yield self.run(self.environ, self.start_response) 
         
 def pyblosxom_app_factory(global_config, **local_config):
     """
@@ -533,10 +508,14 @@ class EnvironmentDict(dict):
 
 class Request(object):
     """
-    This class holds the PyBlosxom request.  It holds configuration
-    information (``config``), HTTP/CGI information (``http``), and 
-    data that we calculate and transform over the course of execution
-    (``data``).
+    This class holds the PyBlosxom request.  It holds:
+
+    * ``config`` - configuration information
+
+    * ``http`` - HTTP/CGI information from the environment
+
+    * ``data`` - information calculated and transformed during the
+      course of a PyBlosxom iteration
 
     There should be only one instance of this class floating around
     and it should get created by pyblosxom.cgi and passed into the
@@ -673,24 +652,11 @@ class Request(object):
         self._configuration.update(newdict)
 
     def setResponse(self, response):
-        """
-        Sets the L{Response} object.
-
-        @param response: A pyblosxom Response object
-        @type response: L{Response}
-        """
         self._response = response
         # for backwards compatibility
         self.config['stdoutput'] = response
 
     def getResponse(self):
-        """
-        Returns the L{Response} object which handles all output 
-        related functionality.
-        
-        @returns: L{Response}
-        @rtype: object
-        """
         return self._response
 
     def getForm(self):
@@ -756,20 +722,9 @@ class Response(object):
         return self._out
 
     def setStatus(self, status):
-        """
-        Sets the status code for this response.
-        
-        @param status: A status code and message like '200 OK'.
-        @type status: str
-        """
         self.status = status
 
     def getStatus(self):
-        """
-        Returns the status code and message of this response.
-        
-        @returns: str
-        """
         return self.status
 
     def addHeader(self, *args):
@@ -800,12 +755,6 @@ class Response(object):
                 self.headers.update({key: str(value)})
 
     def getHeaders(self):
-        """
-        Returns the headers of this response.
-        
-        @returns: the HTTP response headers
-        @rtype: dict
-        """
         return self.headers
 
     def sendHeaders(self, out):
