@@ -70,22 +70,6 @@ to the html file if you're using a web-browser to view this document.
   docs/about_pyblosxom.txt: `about pyblosxom <about_pyblosxom.html>`_
 
 
-* **installation** - There are several installation documents.  Each covers
-  a different way to install PyBlosxom:
-
-  * If you want to install PyBlosxom in a CGI environment: **install_cgi.txt**
-
-    docs/install_cgi.txt: `install as CGI <install_cgi.html>`_
-
-  * If you want to install PyBlosxom with Paste: **install_paste.txt**
-
-    docs/install_paste.txt: `install under Paste <install_paste.html>`_
-
-  * If you want to install PyBlosxom with WSGI: **install_wsgi.txt**
-
-    docs/install_wsgi.txt: `install under WSGI <install_wsgi.html>`_
-
-
 * **advanced installation** - Covers "advanced" aspects of installation such 
   as tweaking your ``.htaccess`` file if you are using Apache to make the url 
   more user-friendly, ...
