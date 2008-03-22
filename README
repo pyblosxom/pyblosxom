@@ -9,6 +9,12 @@ PyBlosxom README
 .. contents::
 
 
+Note
+====
+
+Please read this file.  It's short but points you in the right places.
+
+
 Summary
 =======
 
@@ -30,28 +36,19 @@ blog into html files.
 
 PyBlosxom supports flavours to change the look and feel of your blog.
 
-PyBlosxom supports plugins to modify the existing default behavior.
+PyBlosxom supports plugins to modify the behavior.
 
 
-Requirements
-============
+How to upgrade PyBlosxom
+========================
 
-* Python 2.3 or later to run PyBloxsxom.
+See the ``UPGRADE`` file.
 
 
 How to install PyBlosxom
 ========================
 
-Look at the ``install*.txt`` documents in the ``docs/`` directory.  Pick 
-the one that matches the kind of installation you're looking for.
-
-Additionally, community members maintain recipes for installing PyBlosxom
-in other environments.  These recipes are on the PyBlosxom web-site in the
-wiki.
-
-If you're upgrading PyBlosxom versions, read ``CHANGELOG`` which will 
-describe the differences between PyBlosxom versions and point out things 
-that you'll need to do when upgrading from one version to the next.
+See the ``INSTALL`` file.
 
 
 How to find comprehensive documentation
@@ -100,15 +97,15 @@ To run the tests, execute::
 
    nosetests --verbose --where pyblosxom/tests/
 
-from the root directory. To run tests with coverage_, you'll need coverage,
-too.
+from the root directory (that's the directory with ``setup.py`` in it).  To 
+run tests with coverage_, you'll need coverage, too.
 
 .. _coverage: http://nedbatchelder.com/code/modules/coverage.html
 
 To run the tests with coverage, execute::
 
-   nosetests --verbose --with-coverage --cover-package=Pyblosxom \
-             --where contrib/tests/plugins/comments/plugins/
+   nosetests --verbose --with-coverage --cover-package=Pyblosxom
+
 
 See http://pyblosxom.sourceforge.net/wiki/index.php/Tests for details. If you
 would like to add tests to the test suite, please do and send us patches!

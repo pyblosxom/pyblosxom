@@ -36,7 +36,10 @@ Pertinent to users:
    instead.
 
 7. Switched to using Python's optparse module instead of our home-brewed
-   one.  There are some changes in command line syntax.
+   one.  There are some changes in command line syntax.  Do
+   ``pyblcmd --help`` for command line help.
+
+8. Changed around ``INSTALL``, ``README`` and added ``UPGRADE``.
 
 
 Pertinent to developers:
