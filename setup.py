@@ -21,21 +21,20 @@ Summary
 
 PyBlosxom is a file-based weblog engine originally inspired by Blosxom.  
 It supports user-created plugins to augment and extend the default 
-PyBlosxom behavior.  It supports Paste, WSGI, and CGI and can run
-in a variety of environments.
+behavior.  It supports Paste, WSGI, and CGI and can run in a variety of 
+environments.
 
 
 Download and installation
 -------------------------
 
-To download and install PyBlosxom you can go to::
+To download and install PyBlosxom you can get the .tar.gz file at::
 
    http://pyblosxom.sourceforge.net/
 
-to download the .tar.gz file, or you can use easy_install::
+Or you can use easy_install::
 
    easy_install PyBlosxom
-
 """,
       license='MIT',
       author = "Will Guaraldi, et al",
@@ -55,9 +54,5 @@ to download the .tar.gz file, or you can use easy_install::
                      "Programming Language :: Python",
                      "Topic :: Internet :: WWW/HTTP",
                      "Topic :: Internet :: WWW/HTTP :: Dynamic Content"
-                     ],
-      # entry_points="""
-      # [paste.paster_create_template]
-      # pyblosxom=Pyblosxom.tools:PyBlosxomTemplate
-      # """
+                     ]
       )
