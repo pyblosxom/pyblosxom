@@ -7,11 +7,14 @@
 # Uncomment this if something goes wrong (for debugging)
 #import cgitb; cgitb.enable()
 
+import os, sys
+
+# Uncomment this line to add the directory your config.py file is in to the
+# python path:
+#sys.path.append("/path/to/directory/")
 
 # You shouldn't have to adjust anything below this line.
 # ------------------------------------------------------
-
-import os, sys
 
 # this allows for a config.py override
 script = os.environ.get('SCRIPT_FILENAME', None)
