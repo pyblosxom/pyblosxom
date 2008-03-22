@@ -1640,7 +1640,7 @@ def create_blog(d, verbose):
         if ".svn" in root:
             continue
 
-        dest = os.path.join(d, root[len(source)+1:])
+        dest = os.path.join(d, "flavours", root[len(source)+1:])
         if not os.path.isdir(dest):
             if verbose: print "Creating '%s'..." % dest
             os.mkdir(dest)
