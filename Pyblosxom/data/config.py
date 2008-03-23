@@ -37,7 +37,7 @@ py["blog_author"] = "name"
 
 # What is the email address through which readers of the blog may contact
 # the authors?
-py["blog_email"] = "email@blah.com"
+py["blog_email"] = "email@example.com"
 
 # These are the rights you give to others in regards to the content
 # on your blog.  Generally, this is the copyright information.
@@ -48,8 +48,8 @@ py["blog_rights"] = "Copyright 2005 Joe Bobb"
 # What is this blog's primary language (for outgoing RSS feed)?
 py["blog_language"] = "en"
 
-# Encoding for output.  This defaults to iso-8859-1.
-py["blog_encoding"] = "iso-8859-1"
+# Encoding for output.  This defaults to utf-8.
+py["blog_encoding"] = "utf-8"
 
 # What is the locale for this blog?  This is used when formatting dates
 # and other locale-sensitive things.  Make sure the locale is valid for
@@ -142,7 +142,7 @@ py["load_plugins"] = []
 # ======================
 
 # What should this blog use as its base url?
-#py["base_url"] = "http://www.some.host/weblog"
+#py["base_url"] = "http://www.example.com/weblog"
 
 # Default parser/preformatter. Defaults to plain (does nothing)
 #py["parser"] = "plain"
@@ -167,8 +167,8 @@ py["load_plugins"] = []
 # ================
 
 # Doing static rendering?  Static rendering essentially "compiles" your
-# blog into a series of static html pages.  For more details, read:
-# http://pyblosxom.sourceforge.net/1.3.1/manual/c797.html
+# blog into a series of static html pages.  For more details, see the
+# documentation.
 # 
 # What directory do you want your static html pages to go into?
 #py["static_dir"] = "/path/to/static/dir"
