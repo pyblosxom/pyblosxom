@@ -933,7 +933,7 @@ def blosxom_entry_parser(filename, request):
     """
     config = request.config
 
-    entryData = {}
+    metadata = {}
 
     f = open(filename, "r")
     lines = f.readlines()
@@ -944,38 +944,36 @@ def blosxom_entry_parser(filename, request):
     if len(lines) == 0:
         return { "title": "", "body": "" }
 
-    # NOTE: you can probably use the next bunch of lines verbatim
-    # for all entryparser plugins.  this pulls the first line off as
-    # the title, the next bunch of lines that start with # as 
-    # metadata lines, and then everything after that is the body
-    # of the entry.
-    title = lines.pop(0).strip()
-    entryData['title'] = title
+    # the first line is the title
+    metadata['title'] = lines.pop(0).strip()
 
-    # absorb meta data lines which begin with a #
+    # absorb metadata lines which start with a #
     while lines and lines[0].startswith("#"):
         meta = lines.pop(0)
         meta = meta[1:].strip()     # remove the hash
         meta = meta.split(" ", 1)
-        entryData[meta[0].strip()] = meta[1].strip()
+        metadata[meta[0].strip()] = meta[1].strip()
 
-    # Call the preformat function
-    args = {'parser': entryData.get('parser', config.get('parser', 'plain')),
-            'story': lines,
-            'request': request}
-    otmp = tools.run_callback('preformat', 
-                              args,
-                              donefunc = lambda x:x != None,
-                              defaultfunc = lambda x: ''.join(x['story']))
-    entryData['body'] = otmp
+    # the rest of the lines are the body of the entry
+    body = StringIO(''.join(lines))
 
-    # Call the postformat callbacks
-    # FIXME - shouldn't be calling postformat here--this will get cached!
-    args = {'request': request,
-            'entry_data': entryData}
-    tools.run_callback('postformat', args)
+    # call the preformat callback (sorry about the mappingfunc)
+    body = tools.run_callback('preformat', 
+                              {'request': request, 'body': body, 'metadata': metadata},
+                              mappingfunc = tools.passupdated('body'),
+                              donefunc = tools.neverdone,
+                              defaultfunc = tools.returnitem('body'))
 
-    return entryData
+    # call the format callback
+    body = tools.run_callback('format', 
+                              {'request': request, 'body': body, 'metadata': metadata},
+                              mappingfunc = tools.passupdated('body'),
+                              donefunc = tools.donewhentrue,
+                              defaultfunc = tools.returnitem('body'))
+
+    metadata['body'] = body
+
+    return metadata
 
 
 def blosxom_file_list_handler(args):

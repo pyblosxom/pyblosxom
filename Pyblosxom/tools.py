@@ -787,6 +787,16 @@ def passmutated(x, y):
     """
     return y
 
+def passupdated(item):
+    """
+    Takes a key and returns a function that updates the original dict with the
+    output from the previous function.
+    """
+    def __passupdated(x, y):
+        x.update( { item: y } )
+        return x
+    return __passupdated
+
 def neverdone(x): 
     """
     donefunc for callbacks which always returns ``False`` causing all
@@ -800,6 +810,15 @@ def donewhentrue(x):
     last function returned a True value.
     """
     return x
+
+def returnitem(item):
+    """
+    Returns a function that returns a specific item from the args
+    dict.
+    """
+    def __returnitem(x):
+        return x[item]
+    return __returnitem
 
 def run_callback(chain, input, 
         mappingfunc = passoriginal,

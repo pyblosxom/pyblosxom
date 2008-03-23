@@ -102,7 +102,7 @@ class FileEntry(base.EntryBase):
         """
         if self._populated_data == 0:
             self.__populatedata()
-        return self._data
+        return self._data.read()
 
     def getMetadata(self, key, default=None):
         """
@@ -181,6 +181,17 @@ class FileEntry(base.EntryBase):
 
         self.update(entrydict)
         self.updateCache(self._request, self._filename, entrydict)
+
+        body = entrydict['body']
+        del entrydict['body']
+
+        # call the postformat callbacks
+        body = tools.run_callback('postformat',
+                                  {'request': self._request, 'body': body, 'metadata': entrydict },
+                                  mappingfunc = tools.passupdated("body"),
+                                  defaultfunc = tools.returnitem("body"),
+                                  donefunc = tools.neverdone)
+        self.update( { "body": body } )
 
         self._populated_data = 1
 
