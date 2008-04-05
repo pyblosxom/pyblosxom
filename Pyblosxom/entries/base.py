@@ -23,6 +23,11 @@ __revision__ = "$Revision$"
 import time, locale
 from Pyblosxom import tools
 
+try:
+    from cStringIO import StringIO
+except:
+    from StringIO import StringIO
+
 BIGNUM = 2000000000
 CONTENT_KEY = "body"
 DOESNOTEXIST = "THISKEYDOESNOTEXIST"
@@ -74,20 +79,27 @@ class EntryBase:
         @returns: the data as a string
         @rtype: string
         """
-        return str(self._data)
+        return self._data.read()
 
     def setData(self, data):
         """
-        Sets the data content for this entry.  If you are not
-        creating the entry, then you have no right to set the data
-        of the entry.  Doing so could be hazardous depending on what
-        EntryBase subclass you're dealing with.
+        Sets the data content for this entry.  If you are not creating the 
+        entry, then you have no right to set the data of the entry.  Doing 
+        so could be hazardous depending on what EntryBase subclass you're 
+        dealing with.
 
-        Override this.
+        If s is a string, we wrap it in StringIO.
+        If s is a unicode, we encode it to utf-8, then wrap it in StringIO.
+
+        Override this if you need to.
 
         @param data: the data
-        @type  data: string
+        @type  data: string, unicode or file-like
         """
+        if type(data) == type(""):
+            data = StringIO(data)
+        if type(data) == type(u""):
+            data = StringIO(data.encode("utf-8"))
         self._data = data
 
     def getMetadata(self, key, default=None):

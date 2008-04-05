@@ -26,11 +26,6 @@ import re
 from Pyblosxom import tools
 from Pyblosxom.entries import base
 
-try:
-    from cStringIO import StringIO
-except:
-    from StringIO import StringIO
-
 class FileEntry(base.EntryBase):
     """
     This class gets it's data and metadata from the file specified
@@ -94,17 +89,6 @@ class FileEntry(base.EntryBase):
         @rtype: string
         """
         return self._filename
-
-    def setData(self, s):
-        """
-        If s is a string, we wrap it in StringIO.
-        If s is a unicode, we encode it to utf-8, then wrap it in StringIO.
-        """
-        if type(s) == type(""):
-            s = StringIO(s)
-        if type(s) == type(u""):
-            s = StringIO(s.encode("utf-8"))
-        self._data = s
 
     def getData(self):
         """
