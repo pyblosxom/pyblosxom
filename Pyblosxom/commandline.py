@@ -396,9 +396,6 @@ def command_line_handler(scriptname, argv):
 
     (options, args) = parser.parse_args()
 
-    print "options: %s" % repr(options)
-    print "args: %s" % repr(args)
-
     if not options.verbose:
         printq = lambda s : s
 
