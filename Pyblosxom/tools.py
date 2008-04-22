@@ -74,7 +74,7 @@ VAR_REGEXP = re.compile(ur"""
 
 
 # reference to the pyblosxom config dict
-_config = None
+_config = {}
 
 def initialize(config):
     """Initializes the tools module.
@@ -139,19 +139,6 @@ def cleanup():
 
     This should be called from Pyblosxom.pyblosxom.PyBlosxom.cleanup.
     """
-    global _loghandler_registry
-    # try:
-    #     import logging
-    #     if _use_custom_logger:
-    #         raise ImportError, "whatever"
-    # except ImportError:
-    #     import _logging as logging
-
-    # try:
-    #     logging.shutdown()
-    #     _loghandler_registry = {}
-    # except ValueError:
-    #     pass
     pass
 
 class ConfigSyntaxErrorException(Exception):
@@ -1073,16 +1060,7 @@ def render_url(cdict, pathinfo, querystring=""):
 # Logging
 #******************************
 
-# If you have Python >=2.3 and want to use/test the custom logging 
-# implementation set this flag to True.
-_use_custom_logger = False
-
-try:
-    import logging
-    if _use_custom_logger:
-        raise ImportError, "whatever"
-except ImportError:
-    from Pyblosxom import _logging as logging
+import logging
 
 # A dict to keep track of created log handlers.
 # Used to prevent multiple handlers from beeing added to the same logger.
