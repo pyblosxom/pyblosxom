@@ -917,24 +917,31 @@ def blosxom_handler(request):
 
 def blosxom_entry_parser(filename, request):
     """
-    Open up a *.txt file and read its contents.  The first line
-    becomes the title of the entry.  The other lines are the
-    body of the entry.
+    Opens an entry file, reads in the contents, parses the contents, calls
+    preformat and format callbacks, and returns a dict with the title, body
+    and metadata.
+
+    The title of an entry is a utf-8 encoded string.
+    
+    The metadata is utf-8 encoded strings.
+    
+    The body is a file-like object (file, StringIO, ...).
 
     @param filename: A filename to extract data and metadata from
-    @type filename: string
+    @type filename: string (utf-8)
 
     @param request: A standard request object
     @type request: L{Pyblosxom.pyblosxom.Request} object
 
-    @returns: A dict containing parsed data and meta data with the 
-            particular file (and plugin)
+    @returns: dict containing 'title' (string), 'body' (file-like), and
+              a bunch of metadata.
     @rtype: dict
     """
     config = request.config
 
     metadata = {}
 
+    # we open the file and read it in as a string--hopefully it's utf-8.
     f = open(filename, "r")
     lines = f.readlines()
     f.close()
@@ -964,13 +971,14 @@ def blosxom_entry_parser(filename, request):
                               donefunc = tools.neverdone,
                               defaultfunc = tools.returnitem('body'))
 
-    # call the format callback
+    # call the format callback which returns a file-like object
     body = tools.run_callback('format', 
                               {'request': request, 'body': body, 'metadata': metadata},
                               mappingfunc = tools.passupdated('body'),
                               donefunc = tools.donewhentrue,
                               defaultfunc = tools.returnitem('body'))
 
+    # body here is a file-like object
     metadata['body'] = body
 
     return metadata
@@ -1036,7 +1044,8 @@ def blosxom_file_list_handler(args):
 
 def blosxom_sort_list_handler(args):
     """
-    This sorts the entries by mtime: newest to oldest.
+    This sorts the entry objects in args["entry_list"] by _mtime attribute
+    from newest to oldest.
 
     @param args: dict containing the incoming Request object
     @type args: object
@@ -1046,8 +1055,6 @@ def blosxom_sort_list_handler(args):
     """
     request = args["request"]
     entrylist = args["entry_list"]
-
-    config = request.config
 
     entrylist = [ (e._mtime, e) for e in entrylist ]
 
@@ -1062,13 +1069,14 @@ def blosxom_sort_list_handler(args):
     
 def blosxom_truncate_list_handler(args):
     """
-    Truncates the entry list by num_entries.
+    If config["num_entries"] is not 0 and data["truncate"] is not 0, then this
+    truncates args["entry_list"] by config["num_entries"].
 
-    @param args: dict containing the incoming Request object
-    @type args: object
+    @param args: args dict with "request" (object) and "entry_list" (list)
+    @type args: dict
 
-    @returns: the new entry list
-    @rtype: list of EntryBase
+    @returns: the entry_list, possibly truncated
+    @rtype: list
     """
     request = args["request"]
     entrylist = args["entry_list"]
@@ -1095,6 +1103,22 @@ def blosxom_process_path_info(args):
     - ``/2002`` - as a year (if no such category exists)
     - ``/2002/Feb`` or ``/2002/02`` - Year and Month
     - ``/cat/2002/Feb/31`` - year and month day in category.
+    
+    Variables created here are:
+    
+    - ``pi_yr`` - four-digit year
+    - ``pi_mo`` - two-digit month
+    - ``pi_da`` - two-digit day of month
+    - ``pi_bl`` - ?
+    - ``flavour`` - flavour to use
+    - ``url`` - url
+    - ``pathinfo`` - pathinfo
+    
+    Data variables:
+    
+    - ``bl_type`` - None, ``dir`` or ``file``
+    - ``truncate`` - 0 or 1
+    - ``root_datadir`` - ?
     """
     request = args['request']
     config = request.config
@@ -1232,18 +1256,11 @@ def blosxom_process_path_info(args):
                     data["bl_type"] = "dir"
                     data["root_datadir"] = absolute_path
 
-
-    # if this isn't a set of archives, we set truncate to 1
+    # if this isn't a set of date archives, we set truncate to 1
     if not data["pi_yr"]:
         data["truncate"] = 1
-
-    # figure out the blog_title_with_path data variable
-    blog_title = config.get("blog_title", "My blog has no title!")
-
-    if data['pi_bl'] != '':
-        data['blog_title_with_path'] = '%s : %s' % (blog_title, data['pi_bl'])
     else:
-        data['blog_title_with_path'] = blog_title
+        data["truncate"] = 0
 
     # construct our final URL
     url = config['base_url']
@@ -1257,7 +1274,6 @@ def blosxom_process_path_info(args):
 
     # set path_info to our latest path_info
     data['path_info'] = path_info
-
 
 def run_pyblosxom():
     from config import py as cfg
