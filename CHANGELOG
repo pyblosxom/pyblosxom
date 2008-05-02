@@ -4,7 +4,8 @@ Changes between 1.4.3 and 2.0
 Pertinent to users:
 -------------------
 
-1. PyBlosxom now requires Python 2.3.
+1. PyBlosxom now requires Python 2.3.  We've removed the _logging module that
+   provided logging facilities to pre-Python 2.3 versions.
 
 2. To install PyBlosxom, you need setuptools.
 
@@ -40,6 +41,15 @@ Pertinent to users:
    ``pyblcmd --help`` for command line help.
 
 8. Changed around ``INSTALL``, ``README`` and added ``UPGRADE``.
+
+9. Removed blog_title_with_path variable.  If you were using this variable in
+   your templates, replace it.  i.e. instead of::
+   
+       $blog_title_with_path
+    
+   do::
+
+       $blog_title : $pi_bl
 
 
 Pertinent to developers:
