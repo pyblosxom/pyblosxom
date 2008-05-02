@@ -207,16 +207,17 @@ class PyBlosxom:
 
         return handled
 
-    def runRenderOne(self, url, headers):
+    def runRenderOne(self, url, headers=False):
         """
         Renders a single page from the blog.
 
         @param url: the url to render--this has to be relative to
-        PyBlosxom
+                    the blog root
         @type url: string
 
-        @param headers: 1 if you want the headers rendered and 0 if not.
-        @type headers: int
+        @param headers: flag specifying whether you want HTTP headers printed
+                        or not
+        @type headers: boolean
         """ 
         self.initialize()
 
@@ -231,7 +232,8 @@ class PyBlosxom:
 
         url = url.replace(os.sep, "/")
         response = tools.render_url(config, url, query)
-        response.sendHeaders(sys.stdout)
+        if headers:
+            response.sendHeaders(sys.stdout)
         response.sendBody(sys.stdout)
 
         print response.read()

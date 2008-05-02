@@ -352,43 +352,56 @@ def command_line_handler(scriptname, argv):
 
     @returns: the exit code
     """
-    parser = OptionParser(version="%prog " + VERSION_DATE )
+    parser = OptionParser(usage="%prog [options] [command]",
+                          version="%prog " + VERSION_DATE )
+    
     parser.add_option("-q", "--quiet",
                       action="store_false", dest="verbose", default=True,
                       help="If the quiet flag is specified, then PyBlosxom will "
                            "run quietly.")
     parser.add_option("--config",
-                      help="This specifies the location of the config.py file "
-                           "for the blog you want to work with.  If the "
+                      help="This specifies the directory that the config.py "
+                           "for the blog you want to work with is in.  If the "
                            "config.py file is in the current directory, then "
                            "you don't need to specify this.")
 
-    startgroup = OptionGroup(parser, "Starting out")
-    startgroup.add_option("--create",
-                          help="Creates the blog structure complete with "
-                               "config.py file, directories, flavour files and "
-                               "an initial blog post.")
-    startgroup.add_option("--test",
-                          action="store_true", dest="test", default=False,
-                          help="Verifies your config.py file and blog.")
-    parser.add_option_group(startgroup)
+    newbloggroup = OptionGroup(parser, "Commands for creating a new blog",
+                               "Note: Blog creation commands don't require a "
+                               "config.py file.")
+    newbloggroup.add_option("--create",
+                            dest="blogdir",
+                            help="Creates the blog structure complete with "
+                                 "config.py file, directories, flavour files and "
+                                 "an initial blog post.")
+    parser.add_option_group(newbloggroup)
+    
+    testgroup = OptionGroup(parser, "Commands for testing a blog")
+    testgroup.add_option("--test",
+                         action="store_true", dest="test", default=False,
+                         help="Provides some verification of your config.py "
+                              "and points out some common errors.")
+    parser.add_option_group(testgroup)
 
-    staticgroup = OptionGroup(parser, "Static rendering")
+    staticgroup = OptionGroup(parser, "Commands for static rendering")
     staticgroup.add_option("--static",
                            action="store_true", dest="static", default=False,
-                           help="Statically renders your blog.")
+                           help="Command for 'compiling' your blog using "
+                                "static rendering.  This allows you to use "
+                                "PyBlosxom even if your web host doesn't allow "
+                                "for CGI or other dynamic content scripts.")
     staticgroup.add_option("--incremental",
                            action="store_true", dest="incremental", default=False,
-                           help="Causes static rendering to be incremental.")
+                           help="Option that causes static rendering to be "
+                                "incremental.")
     parser.add_option_group(staticgroup)
 
     commandsgroup = OptionGroup(parser, "Other commands")
-    commandsgroup.add_option("-r", "--render",
-                             help="Renders a single url of your blog.")
+    commandsgroup.add_option("-r", "--render", dest="url",
+                             help="Command to renders a single url of your blog.")
     commandsgroup.add_option("--headers",
                              action="store_true", dest="headers", default=False,
-                             help="Causes headers to be displayed when rendering "
-                                  "a single url.")
+                             help="Option that causes headers to be displayed "
+                                  "when rendering a single url.")
     parser.add_option_group(commandsgroup)
 
     def printq(s):
@@ -401,8 +414,8 @@ def command_line_handler(scriptname, argv):
 
     printq("%s version %s" % (scriptname, VERSION_DATE))
 
-    if options.create:
-        return create_blog(options.create, options.verbose)
+    if options.blogdir:
+        return create_blog(options.blogdir, options.verbose)
 
     if options.config:
         m = options.config
@@ -418,9 +431,13 @@ def command_line_handler(scriptname, argv):
         try:
             from config import py as cfg
         except:
-            print "Error: Cannot find your config.py file.  Please execute %s in" % scriptname
-            print "the directory with your config.py file in it or use the --config"
-            print "flag.  See \"%s --help\" for more details." % scriptname
+            print \
+"""
+Error: Cannot find your config.py file.  Please execute %s in the
+directory with the config.py file in it or use the --config flag.
+
+See "%s --help" for more details.
+""" % (scriptname, scriptname)
             return None
 
         return PyBlosxom(cfg, {})
@@ -435,15 +452,18 @@ def command_line_handler(scriptname, argv):
         if not p: return 0
         return p.runStaticRenderer(options.incremental, options.verbose)
 
-    if options.render:
-        url = mem[1]
-        if url.startswith(cfg.get("base_url", "")):
-            url = url[len(cfg.get("base_url", "")):]
-
-        printq("Rendering '%s'" % url)
+    if options.url:
+        url = options.url
 
         p = get_p()
-        if not p: return 0
+        if not p:
+            return 0
+        
+        base_url = p.getRequest().config.get("base_url", "")
+        if url.startswith(base_url):
+            url = url[len(base_url)]
+
+        printq("Rendering '%s'\n" % url)
         return p.runRenderOne(url, options.headers)
 
     parser.print_help()
