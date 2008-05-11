@@ -18,75 +18,6 @@ from Pyblosxom.pyblosxom import VERSION_DATE, PyBlosxom
 from optparse import OptionParser, OptionGroup
 
 
-
-HELP = """Syntax: %(script)s [path-opts] [args]
-
-PATH OPTIONS:
-
-  -c, --config
-
-     This specifies the location of the config.py file for the blog 
-     you want to work with.  If the config.py file is in the current 
-     directory, then you don't need to specify this.
-
-     Note: %(script)s will use the "codebase" parameter in your config.py
-     file to locate the version of PyBlosxom you're using if there
-     is one.  If there isn't one, then %(script)s expects PyBlosxom to
-     be installed as a Python package on your system.
-
-ARGUMENTS:
-
-  -v, --version
-
-     Prints the PyBlosxom version and some other information.
-
-  -h, --help
-
-     Prints this help text
-
-  -C, --create <dir>
-
-     Creates a PyBlosxom "installation" by building the directory hierarchy
-     and copying necessary files into it.  This is an easy way to create
-     a new blog.
-
-  -h, --headers
-
-     When rendering a url, this will also render the HTTP headers.
-
-  -r, --render <url>
-
-     Renders a url of your blog.
-
-        %(script)s -r http://www.joesblog.com/cgi-bin/pyblosxom.cgi/index.html
-
-     will pull off the base_url from the front leaving "/index.html" and
-     will render "/index.html" to stdout.
-
-        %(script)s -c ~/cgi-bin/config.py -r /index.html
-
-     will use the config.py file located in ~/cgi-bin/ and render
-     "/index.html" from the PyBlosxom root.
-
-  -s, --static [incremental]
-
-     Statically renders your blog.  Use "incremental" to do an incremental 
-     rendering.
-
-  -t, --test
-
-     Tests your installation.
-     
-
-EXAMPLES:
-
-
-Additional flags and options may be available through plugins that
-you have installed.  Refer to plugin documentation (usually found
-at the top of the plugin file) for more information.
-"""
-     
-
 def test_installation(request):
     """
     This function gets called when someone starts up pyblosxom.cgi
@@ -114,116 +45,54 @@ def test_installation(request):
     """
     config = request.config
 
-    # BASE STUFF
+    print "== System information =="
+    print "   pyblosxom:    %s" % VERSION_DATE
+    print "   sys.version:  %s" % sys.version.replace("\n", " ")
+    print "   os.name:      %s" % os.name
+    print "   codebase:     %s" % config.get("codebase", 
+                                  os.path.dirname(os.path.dirname(__file__)))
+
     print ""
-    print "Welcome to PyBlosxom's installation verification system."
-    print "------"
-    print "]] printing diagnostics [["
-    print "pyblosxom:   %s" % VERSION_DATE
-    print "sys.version: %s" % sys.version.replace("\n", " ")
-    print "os.name:     %s" % os.name
-    print "codebase:    %s" % config.get("codebase", 
-                              os.path.dirname(os.path.dirname(__file__)))
-    print "------"
-
-    # CONFIG FILE
-    print "]] checking config file [["
-    print "config has %s properties set." % len(config)
-    print ""
-
-    # these are required by the blog
-    required_config = ["datadir"]
-
-    # these are nice to have optional properties
-    nice_to_have_config = ["blog_title", "blog_author", "blog_description",
-                           "blog_language", "blog_encoding", "blog_icbm",
-                           "base_url", "depth", "num_entries", "renderer", 
-                           "plugin_dirs", "load_plugins", "blog_email", 
-                           "blog_rights", "default_flavour", "flavourdir", 
-                           "log_file", "log_level"]
+    print "== Checking config.py file =="
+    print "   properties set: %s" % len(config)
 
     config_keys = config.keys()
 
-    # remove keys that are auto-generated
-    config_keys.remove("pyblosxom_version")
-    config_keys.remove("pyblosxom_name")
+    if "datadir" not in config_keys:
+        print "ERROR: 'datadir' must be set.  Refer to installation " + \
+              "documentation."
 
-    missing_required_props = []
-    missing_optionsal_props = []
+    elif not os.path.isdir(config["datadir"]):
+        print "ERROR: datadir '%s' does not exist.  You need to create your " + \
+              "datadir and give it appropriate permissions."
 
-    missing_required_props = [ m for m in required_config if m not in config_keys ]
+    else:
+        print "   datadir '%s' exists." % config["datadir"]
 
-    missing_optional_props = [ m for m in nice_to_have_config if m not in config_keys ]
+    if "blog_encoding" in config_keys and config["blog_encoding"].lower() != "utf-8":
+        print "WARNING: 'blog_encoding' is set to something other than " + \
+              "'utf-8'.  As of PyBlosxom 2.0, this isn't a good idea unless " + \
+              "you're absolutely certain it's going to work for your blog."
 
-    all_keys = nice_to_have_config + required_config
-    
-    config_keys = [ m for m in config_keys if m not in all_keys ]
-
-    def wrappify(ks):
-        ks.sort()
-        if len(ks) == 1:
-            return "   %s" % ks[0]
-        elif len(ks) == 2:
-            return "   %s and %s" % (ks[0], ks[1])
-
-        ks = ", ".join(ks[:-1]) + " and " + ks[-1]
-        import textwrap
-        return "   " + "\n   ".join( textwrap.wrap(ks, 72) )
-    
-    if missing_required_props:
-        print ""
-        print "Missing properties must be set in order for your blog to work."
-        print ""
-        print wrappify(missing_required_props)
-        print ""
-        print "This must be done before we can go further.  Exiting."
-        return
-
-    if missing_optional_props:
-        print ""
-        print "You're missing optional properties.  These are not required, but some of them"
-        print "may interest you.  Refer to the documentation for more information."
-        print ""
-        print wrappify(missing_optional_props)
-
-    if config_keys:
-        print ""
-        print "These are properties PyBlosxom doesn't know about.  They could be used by plugins" 
-        print "or could be ones you've added.  Remove them if you know they're not used."
-        print ""
-        print wrappify(config_keys)
-        print ""
-        
-    print "PASS: config file is fine."
-
-    print "------"
-    print "]] checking datadir [["
-    print "Note: this does NOT check whether your webserver has permissions to view files therein."
-
-    # DATADIR
-    if not os.path.isdir(config["datadir"]):
-        print "datadir '%s' does not exist." % config["datadir"]          
-        print "You need to create your datadir and give it appropriate"
-        print "permissions."
-        print ""
-        print "This must be done before we can go further.  Exiting."
-        return
-
-    print "PASS: datadir is there."
-
-    print "------"
-    print "]] checking plugins [["
+    print ""
+    print "== Checking plugin configuration =="
+    print "   This goes through your plugins and asks each of them to verify " + \
+          "configuration and installation."
 
     if "plugin_dirs" in config:
+        from Pyblosxom import plugin_utils
+        import traceback
+
         plugin_utils.initialize_plugins(config["plugin_dirs"],
                                         config.get("load_plugins", None))
 
         no_verification_support = []
 
         if len(plugin_utils.plugins) == 0:
-            print "There are no plugins installed."
+            print "   There are no plugins installed."
 
         else:
+            print ""
             for mem in plugin_utils.plugins:
                 if hasattr(mem, "verify_installation"):
                     print "=== plugin: '%s'" % mem.__name__
@@ -234,9 +103,10 @@ def test_installation(request):
                         if mem.verify_installation(request) == 1:
                             print "    PASS"
                         else:
-                            print "    FAIL!!!"
-                    except AssertionError, error_message:
-                        print " FAIL!!! ", error_message
+                            print "    FAIL"
+                    except Exception, e:
+                        print "    FAIL: Exception thrown:"
+                        traceback.print_exc(file=sys.stdout)
 
                 else:
                     mn = mem.__name__
@@ -252,6 +122,9 @@ def test_installation(request):
 
     else:
         print "You have chosen not to load any plugins."
+
+    print ""
+    print "Verification complete.  Correct any errors and warnings above."
 
 
 def create_blog(d, verbose):
@@ -444,8 +317,9 @@ See "%s --help" for more details.
 
     if options.test:
         p = get_p()
-        if not p: return 0
-        return p.testInstallation()
+        if not p: 
+            return 0
+        return test_installation(p.getRequest())
 
     if options.static:
         p = get_p()
