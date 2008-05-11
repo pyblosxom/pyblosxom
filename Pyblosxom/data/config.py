@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # =============================================================
 # This is the config file for PyBlosxom.  You should go through 
 # the file and fill in values for the various properties.  This 

@@ -111,10 +111,10 @@ class BlosxomRenderer(RendererBase):
     def __init__(self, request, stdoutput = sys.stdout):
         RendererBase.__init__(self, request, stdoutput)
         config = request.getConfiguration()
-        sw = codecs.lookup(config.get('blog_encoding', 'iso-8859-1'))[3]
+        sw = codecs.lookup(config.get("blog_encoding", "utf-8"))[3]
         self._out = sw(self._out)
         self._request = request
-        self._encoding = config.get("blog_encoding", "iso-8859-1")
+        self._encoding = config.get("blog_encoding", "utf-8")
         self.flavour = None
 
     def getParseVars(self):
@@ -198,7 +198,7 @@ class BlosxomRenderer(RendererBase):
 
         for k in template_d.keys():
             flav_template = unicode(open(template_d[k]).read(), 
-                    config.get('blog_encoding', 'iso-8859-1'))
+                    config.get("blog_encoding", "utf-8"))
             template_d[k] = flav_template
 
         return template_d
