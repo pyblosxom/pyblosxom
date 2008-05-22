@@ -959,14 +959,14 @@ def blosxom_entry_parser(filename, request):
     # absorb metadata lines which start with a #
     while lines and lines[0].startswith("#"):
         meta = lines.pop(0)
-        meta = meta[1:].strip()     # remove the hash
+        meta = meta[1:].strip()
         meta = meta.split(" ", 1)
         metadata[meta[0].strip()] = meta[1].strip()
 
     # the rest of the lines are the body of the entry
     body = StringIO(''.join(lines))
 
-    # call the preformat callback (sorry about the mappingfunc)
+    # call the preformat callback
     body = tools.run_callback('preformat', 
                               {'request': request, 'body': body, 'metadata': metadata},
                               mappingfunc = tools.passupdated('body'),
