@@ -30,37 +30,27 @@ except:
 
 BIGNUM = 2000000000
 CONTENT_KEY = "body"
-DOESNOTEXIST = "THISKEYDOESNOTEXIST"
-DOESNOTEXIST2 = "THISKEYDOESNOTEXIST2"
 
 class EntryBase:
     """
     EntryBase is the base class for all the Entry classes.  Each 
     instance of an Entry class represents a single entry in the weblog, 
-    whether it came from a file, or a database, or even somewhere off 
-    the InterWeeb.
+    whether it came from a file, database, generated, or elsewhere.
     """
     def __init__(self, request):
-        self._data = None
+        self._data = StringIO()
         self._metadata = dict(tools.STANDARD_FILTERS)
         self._id = ""
         self._mtime = BIGNUM
         self._request = request
 
     def __repr__(self):
-        """
-        Returns a friendly debuggable representation of self. Useful to know on
-        what entry pyblosxom fails on you (though unlikely)
-
-        returns: Identifiable representation of object
-        rtype: string
-        """
         return "<Entry instance: %s>\n" % self.getId()
 
     def getId(self):
         """
-        This should return an id that's unique enough for caching 
-        purposes.
+        Returns an id that's unique for caching purposes.  No two entries can
+        have the same id.
 
         Override this.
 
@@ -71,33 +61,32 @@ class EntryBase:
 
     def getData(self):
         """
-        Returns the data string.  This method should be overridden to
-        provide from pulling the data from other places.
+        Returns the content of the entry as a string.
 
-        Override this.
+        Override this.  It should match setData.
 
         @returns: the data as a string
         @rtype: string
         """
-        return self._data.read()
+        foo = self._data.read()
+        self._data.seek(0)
+        return foo
 
     def setData(self, data):
         """
-        Sets the data content for this entry.  If you are not creating the 
-        entry, then you have no right to set the data of the entry.  Doing 
-        so could be hazardous depending on what EntryBase subclass you're 
-        dealing with.
+        Sets the data content for this entry.
 
         If s is a string, we wrap it in StringIO.
         If s is a unicode, we encode it to utf-8, then wrap it in StringIO.
 
-        Override this if you need to.
+        Override this if you need to.  It should match getData.
 
         @param data: the data
         @type  data: string, unicode or file-like
         """
         if isinstance(data, str):
             data = StringIO(data)
+        # FIXME
         if isinstance(data, unicode):
             data = StringIO(data.encode("utf-8"))
         self._data = data
@@ -210,8 +199,8 @@ class EntryBase:
                                          defaultfunc = lambda x: x)
 
 
-    # everything below this point are convenience functions that
-    # work use the above methods.
+    # everything below this point are convenience functions that work use the
+    # above methods.
 
     def setTime(self, timetuple):
         """
@@ -314,6 +303,9 @@ class EntryBase:
         else:
             self.setMetadata(key, value)
 
+    def set(self, key, value):
+        self.__setitem__(key, value)
+
     def __delitem__(self, key):
         """
         Deletes metadata[key].
@@ -356,11 +348,10 @@ class EntryBase:
         if key == CONTENT_KEY:
             return 1
 
-        value = self.getMetadata(key, DOESNOTEXIST)
-        if value == DOESNOTEXIST:
-            value = self.getMetadata(key, DOESNOTEXIST2)
-            if value == DOESNOTEXIST2:
-                return 0
+        try:
+            value = self.getMetadata[key]
+        except KeyError:
+            return 0
 
         return 1
 
