@@ -8,15 +8,17 @@
 #
 # $Id: pyblosxom.py 1226 2008-03-22 04:01:05Z willhelm $
 #######################################################################
+"""
+This module holds commandline related stuff.  Installation verification,
+blog creation, commandline argument parsing, ...
+"""
 
 import os
 import os.path
 import sys
-
-from Pyblosxom.pyblosxom import VERSION_DATE, PyBlosxom
-
 from optparse import OptionParser, OptionGroup
 
+from Pyblosxom.pyblosxom import VERSION_DATE, PyBlosxom
 
 def test_installation(request):
     """
@@ -24,20 +26,18 @@ def test_installation(request):
     from the command line with no REQUEST_METHOD environment variable.
     It:
 
-    1. tests properties in their config.py file
-    2. verifies they have a datadir and that it exists
-    3. initializes all the plugins they have installed
-    4. runs "cb_verify_installation"--plugins can print out whether
+    1. verifies config.py file properties
+    2. initializes all the plugins they have installed
+    3. runs ``cb_verify_installation``--plugins can print out whether
        they are installed correctly (i.e. have valid config property
        settings and can read/write to data files)
-    5. exits
 
     The goal is to be as useful and informative to the user as we can be
     without being overly verbose and confusing.
 
-    This is designed to make it much much much easier for a user to
-    verify their PyBlosxom installation is working and also to install
-    new plugins and verify that their configuration is correct.
+    This is designed to make it easier for a user to verify their PyBlosxom
+    installation is working and also to install new plugins and verify that
+    their configuration is correct.
 
     :Parameters:
        request : Request object
