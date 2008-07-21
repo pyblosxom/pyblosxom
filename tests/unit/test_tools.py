@@ -7,6 +7,8 @@ import string
 import os
 import os.path
 
+from nose.tools import eq_
+
 from Pyblosxom import tools, pyblosxom
 
 class TestVAR_REGEXP:
@@ -20,9 +22,9 @@ class TestVAR_REGEXP:
         return r and r.group(1)
 
     def test_escaped_variables(self):
-        assert self._get_match(tools.VAR_REGEXP, "\\$test") == None
+        yield eq_, self._get_match(tools.VAR_REGEXP, "\\$test"), None
         # FIXME - this is bad behavior
-        assert self._get_match(tools.VAR_REGEXP, "\\\\$test") == None
+        yield eq_, self._get_match(tools.VAR_REGEXP, "\\\\$test"), None
 
     def test_dollar_then_string(self):
         for mem in (("$test", "test"),
@@ -209,23 +211,15 @@ class TestgenerateRandStr:
             assert c in string.letters or c in string.digits
 
     def test_generates_a_random_string(self):
-        self._gen_checker(tools.generateRandStr(), 5, 10)
-        self._gen_checker(tools.generateRandStr(), 5, 10)
-        self._gen_checker(tools.generateRandStr(), 5, 10)
-        self._gen_checker(tools.generateRandStr(), 5, 10)
-        self._gen_checker(tools.generateRandStr(), 5, 10)
+        for i in range(5):
+            self._gen_checker(tools.generateRandStr(), 5, 10)
 
     def test_generates_a_random_string_between_minlen_and_maxlen(self):
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
+        for i in range(5):
+             self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
+
+        for i in range(5):
+            self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
 
 class Testescape_text:
     """tools.escape_text"""
