@@ -96,9 +96,9 @@ class EntryBase:
         @param data: the data
         @type  data: string, unicode or file-like
         """
-        if type(data) == type(""):
+        if isinstance(data, str):
             data = StringIO(data)
-        if type(data) == type(u""):
+        if isinstance(data, unicode):
             data = StringIO(data.encode("utf-8"))
         self._data = data
 

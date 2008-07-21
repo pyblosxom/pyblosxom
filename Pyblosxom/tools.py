@@ -175,7 +175,7 @@ def convert_configini_values(configini):
     for key, value in configini.items():
         # in configini.items, we pick up a local_config which seems
         # to be a copy of what's in configini.items--puzzling.
-        if type(value) == type( {} ):
+        if isinstance(value, dict):
             continue
         value = value.strip()
         if value.startswith("["):
@@ -867,7 +867,7 @@ def run_callback(chain, input,
     if exclude == None:
         exclude = []
 
-    if type(chain) == type(""):
+    if isinstance(chain, str):
         chain = plugin_utils.get_callback_chain(chain)
 
     output = None
