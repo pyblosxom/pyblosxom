@@ -54,7 +54,7 @@ class EntryBase:
 
         Override this.
 
-        @returns: string id
+        @returns: id string
         @rtype: string
         """
         return self._id
@@ -105,7 +105,7 @@ class EntryBase:
         @type  default: varies
 
         @return: either the default (if the key did not exist) or the
-            value of the key in the metadata dict
+            value of the key in the metadata dict or None
         @rtype: varies
         """
         return self._metadata.get(key, default)
@@ -317,8 +317,8 @@ class EntryBase:
         """
         if key == CONTENT_KEY:
             raise ValueError()
-        else:
-            del self._metadata[key]
+
+        del self._metadata[key]
 
     def update(self, newdict):
         """
@@ -340,20 +340,12 @@ class EntryBase:
         is the CONTENT_KEY, then we automatically return true.
 
         @param key: the key to check in the metadata dict for
-        @type  key: varies
+        @type  key: string
 
-        @returns: whether (1) or not (0) the key exists
+        @returns: whether or not the key exists
         @rtype: boolean
         """
-        if key == CONTENT_KEY:
-            return 1
-
-        try:
-            value = self.getMetadata[key]
-        except KeyError:
-            return 0
-
-        return 1
+        return key in self.keys()
 
     def __contains__(self, key):
         """
@@ -364,11 +356,10 @@ class EntryBase:
 
     def keys(self):
         """
-        Returns a list of the keys that can be accessed through
-        __getitem__.
+        Returns a list of keys for metadata items and "body" for the content.
 
         @returns: list of key names
-        @rtype: list of varies
+        @rtype: list of strings
         """
         keys = self.getMetadataKeys()
         if CONTENT_KEY not in keys:
@@ -376,16 +367,16 @@ class EntryBase:
         return keys
 
 
-def generate_entry(request, properties, data, mtime):
+def generate_entry(request, metadata, data, mtime):
     """
-    Takes a properties dict and a data string and generates a generic
-    entry using the data you provided.
+    Takes a metadata dict full of properties and a data string and generates 
+    a generic entry using the data you provided.
 
     @param request: the Request object
     @type  request: Request
 
-    @param properties: the dict of properties for the entry
-    @type  properties: dict
+    @param metadata: the dict of properties for the entry
+    @type  metadata: dict
 
     @param data: the data content for the entry
     @type  data: string
@@ -396,7 +387,7 @@ def generate_entry(request, properties, data, mtime):
     """
     entry = EntryBase(request)
 
-    entry.update(properties)
+    entry.update(metadata)
     entry.setData(data)
     if mtime:
         entry.setTime(mtime)

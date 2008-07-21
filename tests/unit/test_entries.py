@@ -6,7 +6,7 @@ from nose.tools import eq_
 
 from Pyblosxom.tools import STANDARD_FILTERS
 from Pyblosxom.pyblosxom import Request
-from Pyblosxom.entries.base import EntryBase
+from Pyblosxom.entries.base import EntryBase, generate_entry
 
 TIME1 = (2008, 7, 21, 12, 51, 47, 0, 203, 1)
 
@@ -78,5 +78,25 @@ class TestEntryBase:
         yield eq_, e["body"], "entry body", "e[\"body\"]"
         yield eq_, e.get("body"), "entry body", "e.get(\"body\")"
         yield eq_, e.getData(), "entry body", "e.getData()"
+
+        yield eq_, e.has_key("foo"), True
+        yield eq_, e.has_key("foo2"), False
+        yield eq_, e.has_key("body"), True
+        yield eq_, "foo" in e, True
+        yield eq_, "foo2" in e, False
+        yield eq_, "foo2" not in e, True
+        yield eq_, "body" in e, True
+
+        e.update({"foo": "bah", "faux": "pearls"})
+        yield eq_, e["foo"], "bah"
+        yield eq_, e["faux"], "pearls"
+
+    def test_generate_entry(self):
+        e = generate_entry(req_(), {"foo": "bar"}, "entry body", TIME1)
+
+        yield eq_, e["foo"], "bar"
+        yield eq_, e["body"], "entry body"
+        yield eq_, e["rfc822date"], "Mon, 21 Jul 2008 16:51 GMT"
+
 
     # FIXME - test caching
