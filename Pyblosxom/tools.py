@@ -429,7 +429,7 @@ class Replacer:
             args = None
 
         if not vd.has_key(key):
-            return u''
+            return ""
 
         r = vd[key]
 
@@ -469,19 +469,16 @@ class Replacer:
                 # functions took no arguments
                 r = r()
 
-        # if the result is not a string or unicode object, we call str on 
-        # it.
-        if not isinstance(r, str) and not isinstance(r, unicode):
-            r = str(r)
-
-        # then we convert it to unicode
-        if not isinstance(r, unicode):
-            # convert strings to unicode, assumes strings in iso-8859-1
-            r = unicode(r, self._encoding, 'replace')
+        # convert non-strings to strings
+        if not isinstance(r, str):
+            if isinstance(r, unicode):
+                r = r.encode(self._encoding)
+            else:
+                r = str(r)
 
         return r
 
-def parse(request, encoding, var_dict, template):
+def parse(request, var_dict, template):
     """
     This method parses the ``template`` passed in using ``Replacer`` to 
     expand template variables using values in the ``var_dict``.
@@ -493,20 +490,14 @@ def parse(request, encoding, var_dict, template):
     :Parameters:
        request : Request object
           the request object context
-       encoding : string
-          the encoding to use for ascii -> unicode conversions
        var_dict : dict
           the name value pair list containing variable replacements
        template : string
           the template we're expanding template variables in
     """
-    if not isinstance(template, unicode):
-        # convert strings to unicode using the user's defined encoding
-        template = unicode(template, encoding, 'replace')
-
+    encoding = request.config.get("blog_encoding", "utf-8")
     replacer = Replacer(request, encoding, var_dict)
-
-    return u'' + VAR_REGEXP.sub(replacer.replace, template)
+    return VAR_REGEXP.sub(replacer.replace, template)
 
 def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
     """

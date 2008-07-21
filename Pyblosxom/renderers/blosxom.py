@@ -17,7 +17,6 @@ __revision__ = "$Revision$"
 
 import os
 import sys
-import codecs
 import time
 
 from Pyblosxom import tools
@@ -108,13 +107,10 @@ class BlosxomRenderer(RendererBase):
     This is the default blosxom renderer.  It tries to match the behavior 
     of the blosxom renderer.
     """
-    def __init__(self, request, stdoutput = sys.stdout):
+    def __init__(self, request, stdoutput=sys.stdout):
         RendererBase.__init__(self, request, stdoutput)
         config = request.getConfiguration()
-        sw = codecs.lookup(config.get("blog_encoding", "utf-8"))[3]
-        self._out = sw(self._out)
         self._request = request
-        self._encoding = config.get("blog_encoding", "utf-8")
         self.flavour = None
 
     def getParseVars(self):
@@ -197,8 +193,7 @@ class BlosxomRenderer(RendererBase):
             raise NoSuchFlavourException("Flavour '%s' does not exist." % taste)
 
         for k in template_d.keys():
-            flav_template = unicode(open(template_d[k]).read(), 
-                    config.get("blog_encoding", "utf-8"))
+            flav_template = open(template_d[k]).read()
             template_d[k] = flav_template
 
         return template_d
@@ -228,8 +223,7 @@ class BlosxomRenderer(RendererBase):
             var_dict = self.getParseVars()
             var_dict.update(content)
 
-            output = tools.parse(self._request, self._encoding, var_dict,
-                                 self.flavour['story'])
+            output = tools.parse(self._request, var_dict, self.flavour['story'])
             outputbuffer.append(output)
 
         elif isinstance(content, list):
@@ -267,7 +261,7 @@ class BlosxomRenderer(RendererBase):
 
                     outputbuffer.append(self.renderTemplate(vars, "story", override=1))
 
-                    args = { "entry": vars, "template": u"" }
+                    args = { "entry": vars, "template": "" }
                     args = self._run_callback("story_end", args)
                     outputbuffer.append( args["template"] )
 
@@ -318,7 +312,7 @@ class BlosxomRenderer(RendererBase):
             if "head" in self.flavour:
                 self.write(self.renderTemplate(self.getParseVars(), "head"))
             if "story" in self.flavour:
-                self.write(u"".join(self.renderContent(self._content)))
+                self.write("".join(self.renderContent(self._content)))
             if "foot" in self.flavour:
                 self.write(self.renderTemplate(self.getParseVars(), "foot"))
 
@@ -358,11 +352,10 @@ class BlosxomRenderer(RendererBase):
         args = self._run_callback(template_name, 
                                   { "entry": entry, "template": template })
 
-        template = unicode(args["template"])
+        template = args["template"]
         entry = args["entry"]
 
-        template = unicode(template)
-        finaltext = tools.parse(self._request, self._encoding, entry, template)
+        finaltext = tools.parse(self._request, entry, template)
         return finaltext.replace(r'\$', '$')
 
     def _run_callback(self, chain, input):

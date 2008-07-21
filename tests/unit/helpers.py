@@ -90,6 +90,8 @@ class UnitTestBase:
             assert not os.path.isfile( mem )
 
     def cmpdict(self, expected, actual):
+        """expected <= actual
+        """
         for mem in expected.keys():
             if mem in actual:
                 assert expected[mem] == actual[mem]
