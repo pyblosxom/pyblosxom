@@ -611,16 +611,16 @@ class Request(object):
 
     def getConfiguration(self):
         return self._config
+    configuration = property(getConfiguration)
+    config = configuration
+    conf = configuration
     
     def getHttp(self):
         return self._http
+    http = property(getHttp)
 
     def getData(self):
         return self._data
-
-    configuration = property(getConfiguration)
-    config = configuration
-    http = property(getHttp)
     data = property(getData)
 
     def addHttp(self, d):
@@ -925,9 +925,9 @@ def blosxom_entry_parser(filename, request):
 
     The title of an entry is a utf-8 encoded string.
     
-    The metadata is utf-8 encoded strings.
+    The metadata is utf-8 encoded key/value strings.
     
-    The body is a file-like object (file, StringIO, ...).
+    The body is a utf-8 encoded string.
 
     @param filename: A filename to extract data and metadata from
     @type filename: string (utf-8)
