@@ -170,7 +170,7 @@ class FileEntry(base.EntryBase):
 
         data = self._request.getData()
 
-        entrydict = self.getFromCache(self._request, self._filename)
+        entrydict = self.getFromCache()
         if not entrydict:
             fileext = os.path.splitext(self._filename)
             if fileext:
@@ -180,7 +180,7 @@ class FileEntry(base.EntryBase):
             entrydict = eparser(self._filename, self._request)
 
         self.update(entrydict)
-        self.updateCache(self._request, self._filename, entrydict)
+        self.updateCache(entrydict)
 
         body = entrydict['body']
         del entrydict['body']

@@ -98,4 +98,5 @@ class UnitTestBase:
             else:
                 assert False
 
-
+def req_():
+    return Request({}, {}, {})

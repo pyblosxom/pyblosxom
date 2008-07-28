@@ -108,7 +108,10 @@ class EntryBase:
             value of the key in the metadata dict or None
         @rtype: varies
         """
-        return self._metadata.get(key, default)
+        try:
+            return self._metadata[key]
+        except KeyError:
+            return default
 
     def setMetadata(self, key, value):
         """
@@ -141,35 +144,29 @@ class EntryBase:
         """
         return self._metadata.keys()
 
-    def getFromCache(self, request, entryid):
+    def getFromCache(self):
         """Retrieves information from the cache that pertains to this
         specific entryid.
 
-        This is a helper method--call this to get data from the 
-        entry-level cache.  Do not override it.
+        This is a helper method--call this to get data from the entry-level 
+        cache.  Do not override it.
 
-        This turns around and calls the entrycache_get callback 
-        to handle retrieving the data from the cache.
-
-        @param request: the PyBlosxom Request
-        @type request: the PyBlosxom Request
-
-        @param entryid: a unique key for the information you're retrieving
-        @type  entryid: string
+        This turns around and calls the entrycache_get callback to handle 
+        retrieving the data from the cache.
 
         @returns: cached dict with the values or None if there's nothing 
             cached for that entryid
         @rtype: dict or None
         """
-        argdict = { "request": request, "id": entryid }
+        argdict = {"request": self._request, "id": self.getId()}
         cachedentry = tools.run_callback("entrycache_get",
                                          argdict, 
-                                         mappingfunc = lambda x, y: x,
-                                         donefunc = lambda x: x != None,
-                                         defaultfunc = lambda x: None)
+                                         mappingfunc=lambda x, y: x,
+                                         donefunc=lambda x: x != None,
+                                         defaultfunc=lambda x: None)
         return cachedentry
 
-    def updateCache(self, request, entryid, data):
+    def updateCache(self, data):
         """Updates entry data in the entry-level cache.
 
         This is a helper method--call this to put data into the
@@ -181,25 +178,19 @@ class EntryBase:
         Note: If the data dict is empty or None, remove the entry from
         the cache.
 
-        @param request: the PyBlosxom Request
-        @type request: the PyBlosxom Request
-
-        @param entryid: a unique key for the information you're storing
-        @type  entryid: string
-
         @param data: a dict of entry data--if empty or None, remove the
             entry from the cache
         @type  data: dict
         """
-        argdict = { "request": request, "id": entryid, "data": data }
+        argdict = {"request": self._request, "id": self.getId(), "data": data}
         cachedentry = tools.run_callback("entrycache_update",
                                          argdict, 
-                                         mappingfunc = lambda x, y: x,
-                                         donefunc = lambda x: 0,
-                                         defaultfunc = lambda x: x)
+                                         mappingfunc=lambda x, y: x,
+                                         donefunc=lambda x: 0,
+                                         defaultfunc=lambda x: x)
 
 
-    # everything below this point are convenience functions that work use the
+    # everything below this point are convenience functions that use the
     # above methods.
 
     def setTime(self, timetuple):
@@ -255,7 +246,7 @@ class EntryBase:
         if key == CONTENT_KEY:
             return self.getData()
 
-        return self.getMetadata(key)
+        return self._metadata[key]
 
     def get(self, key, default=None):
         """
@@ -367,7 +358,7 @@ class EntryBase:
         return keys
 
 
-def generate_entry(request, metadata, data, mtime):
+def generate_entry(request, metadata, data, mtime=None):
     """
     Takes a metadata dict full of properties and a data string and generates 
     a generic entry using the data you provided.

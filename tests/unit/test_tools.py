@@ -7,8 +7,6 @@ import string
 import os
 import os.path
 
-from nose.tools import eq_
-
 from Pyblosxom import tools, pyblosxom
 
 class TestVAR_REGEXP:
