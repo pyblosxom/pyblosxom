@@ -14,8 +14,8 @@ from a file system.  Since pulling data from the file system and parsing
 it is expensive (especially when you have 100s of entries) we delay
 fetching data until it's demanded.
 
-The FileEntry calls the entries.base.EntryBase.getFromCache to handle 
-entry-level caching.
+The FileEntry calls the entries.base.EntryBase.getFromCache and
+entries.base.EntryBase.updateCache to handle entry-level caching.
 """
 
 __revision__ = "$Revision$"
@@ -40,7 +40,7 @@ class FileEntry(base.EntryBase):
             including path
         @type  filename: string
 
-        @param root: i have no clue what this is
+        @param root: FIXME - i have no clue what this is
         @type  root: string
 
         @param datadir: the datadir
@@ -55,78 +55,17 @@ class FileEntry(base.EntryBase):
         if self._datadir.endswith(os.sep):
             self._datadir = self._datadir[:-1]
 
-        self._timetuple = tools.filestat(self._request, self._filename)
-        self._mtime = time.mktime(self._timetuple)
-        self._fulltime = time.strftime("%Y%m%d%H%M%S", self._timetuple)
+        self._mtimetuple = tools.filestat(self._request, self._filename)
+        self._mtime = time.mktime(self._mtimetuple)
 
         self._populated_data = 0
 
     def __repr__(self):
-        """
-        Returns a representation of this instance with the filename
-        and root.
-        """
         return "<fileentry f'%s' r'%s'>" % (self._filename, self._root)
 
-    def setTimeLazy(self, timetuple):
-        """
-        Set the time without populating the entry.
-
-        @param timetuple: the mtime of the file (same as returned by 
-                          time.localtime(...))   
-        @type  timetuple: tuple of 9 ints     
-        """
-        self._timetuple = timetuple
-        self._mtime = time.mktime(timetuple)
-        self._fulltime = time.strftime("%Y%m%d%H%M%S", timetuple)
-
     def getId(self):
-        """
-        Returns the id for this content item--in this case, it's the
-        filename.
-
-        @returns: the id of the fileentry (the filename)
-        @rtype: string
-        """
         return self._filename
 
-    def getData(self):
-        """
-        Returns the data for this file entry.  The data is the parsed
-        (via the entryparser) content of the entry.  We do this on-demand
-        by checking to see if we've gotten it and if we haven't then
-        we get it at that point.
-
-        @returns: the content for this entry
-        @rtype: string
-        """
-        if self._populated_data == 0:
-            self.__populatedata()
-        return self._data.read()
-
-    def getMetadata(self, key, default=None):
-        """
-        This overrides the L{base.EntryBase} getMetadata method.
-
-        Note: We populate our metadata lazily--only when it's requested.
-        This delays parsing of the file as long as we can.
-
-        @param key: the key being sought
-        @type  key: varies
-
-        @param default: the default to return if the key does not
-            exist
-        @type  default: varies
-
-        @return: either the default (if the key did not exist) or the
-            value of the key in the metadata dict
-        @rtype: varies
-        """
-        if self._populated_data == 0:
-            self.__populatedata()
-
-        return self._metadata.get(key, default)
-        
     def __populatedata(self):
         """
         Fills the metadata dict with metadata about the given file.  This
@@ -165,8 +104,7 @@ class FileEntry(base.EntryBase):
         self['fn'] = filenamenoext
         self['filename'] = self._filename
 
-        # timetuple is set at __init__ time or by setTimeLazy
-        self.setTime(self._timetuple)
+        self.setTime(self._mtimetuple)
 
         data = self._request.getData()
 
@@ -188,11 +126,50 @@ class FileEntry(base.EntryBase):
         # call the postformat callbacks
         body = tools.run_callback('postformat',
                                   {'request': self._request, 'body': body, 'metadata': entrydict },
-                                  mappingfunc = tools.passupdated("body"),
-                                  defaultfunc = tools.returnitem("body"),
-                                  donefunc = tools.neverdone)
+                                  mappingfunc=tools.pass_updated("body"),
+                                  defaultfunc=tools.default_returnitem("body"),
+                                  donefunc=tools.done_never)
         self.update( { "body": body } )
 
         self._populated_data = 1
 
-# vim: tabstop=4 shiftwidth=4
+    def lazily_populate(func):
+        def lazy_decorator(self, *args, **kwargs):
+            if self._populated_data == 0:
+                self.__populatedata()
+            return func(self, *args, **kwargs)
+        return lazy_decorator
+
+    @lazily_populate
+    def getData(self):
+        """
+        Returns the data for this file entry.  The data is the parsed
+        (via the entryparser) content of the entry.  We do this on-demand
+        by checking to see if we've gotten it and if we haven't then
+        we get it at that point.
+
+        @returns: the content for this entry
+        @rtype: string
+        """
+        return self._data.read()
+
+    @lazily_populate
+    def getMetadata(self, key, default=None):
+        """
+        This overrides the L{base.EntryBase} getMetadata method.
+
+        Note: We populate our metadata lazily--only when it's requested.
+        This delays parsing of the file as long as we can.
+
+        @param key: the key being sought
+        @type  key: varies
+
+        @param default: the default to return if the key does not
+            exist
+        @type  default: varies
+
+        @return: either the default (if the key did not exist) or the
+            value of the key in the metadata dict
+        @rtype: varies
+        """
+        return self._metadata.get(key, default)

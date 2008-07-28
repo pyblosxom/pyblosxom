@@ -1019,13 +1019,11 @@ def blosxom_file_list_handler(args):
     # if we're looking at a set of archives, remove all the entries
     # that aren't in the archive
     if data['pi_yr']:
-        # This is called when a date has been requested, e.g. 
-        # /some/category/2004/Sep
-        month = (data['pi_mo'] in tools.month2num and \
-                      tools.month2num[data['pi_mo']] or \
-                      data['pi_mo'])
-        matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
-        entrylist = [x for x in entrylist if re.match(matchstr, x._fulltime)]
+        datestr = "%s%s%s" % (data["pi_yr"],
+                              tools.month2num.get(data['pi_mo'], data['pi_mo']),
+                              data["pi_da"])
+        entrylist = [x for x in entrylist 
+                     if time.strftime("%Y%m%d%H%M%S", x._mtimetuple).startswith(datestr)]
 
     # call the sortlist callback to sort the list of entries
     # FIXME - should this be a handler or a transformer?
