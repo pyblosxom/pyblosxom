@@ -92,6 +92,12 @@ Pertinent to developers:
 
 6. Added a lot of tests.
 
+7. Removed setTimeLazy from FileEntry in Pyblosxom/entries/fileentry.py .
+
+8. Fixed a lot of bugs in the dict-like behavior of EntryBase in
+   Pyblosxom/entries/base.py .  This might cause some problems with plugins
+   that were relying on the older totally broken behavior.
+
 
 Changes between 1.4.2 and 1.4.3
 ===============================
