@@ -4,11 +4,11 @@ from StringIO import StringIO
 
 from nose.tools import eq_, raises
 
+from helpers import req_
+
 from Pyblosxom.tools import STANDARD_FILTERS
 from Pyblosxom.pyblosxom import Request
 from Pyblosxom.entries.base import EntryBase, generate_entry
-
-from helpers import req_
 
 TIME1 = (2008, 7, 21, 12, 51, 47, 0, 203, 1)
 
@@ -55,7 +55,8 @@ class TestEntryBase:
                     ("date", "Mon, 21 Jul 2008"),
                     ("w3cdate", "2008-07-21T16:51:47Z"),
                     ("rfc822date", "Mon, 21 Jul 2008 16:51 GMT")):
-            yield eq_, e[mem[0]], mem[1]
+            yield eq_, e[mem[0]], mem[1], \
+                  "%s != %s (note: this is a locale dependent test)" % (mem[0], mem[1])
 
     def test_dictlike(self):
         e = EntryBase(req_())
@@ -103,7 +104,6 @@ class TestEntryBase:
         del e["foo"]
         yield eq_, e.get("foo"), None
 
-
     @raises(KeyError)
     def test_delitem_keyerror(self):
         e = EntryBase(req_())
@@ -113,7 +113,6 @@ class TestEntryBase:
     def test_delitem_valueerror(self):
         e = EntryBase(req_())
         del e["body"]
-
 
     def test_generate_entry(self):
         e = generate_entry(req_(), {"foo": "bar"}, "entry body", TIME1)
