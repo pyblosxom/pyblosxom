@@ -94,6 +94,8 @@ class Testparse:
         for mem in (({"foo": lambda req, vd: "FOO"}, "foo foo foo", "foo foo foo"),
                     ({"foo": lambda req, vd: "FOO"}, "foo $foo() foo", "foo FOO foo"),
                     ({"foo": lambda req, vd, z: z}, "foo $foo('a') foo", "foo a foo"),
+                    ({"foo": lambda req, vd, z: z}, "foo $foo(1) foo", "foo 1 foo"),
+                    ({"foo": lambda req, vd, z: z}, "foo $foo($money) foo", "foo $money foo"),
                     ({"foo": lambda req, vd, z: z, "bar": "BAR"}, "foo $foo(bar) foo", "foo BAR foo"),
                     ({"foo": lambda req, vd, z: z, "bar": "BAR"}, "foo $foo($bar) foo", "foo BAR foo"),
                     ({"lang": lambda req, vd: "español"}, "foo $(lang) foo", "foo español foo"),
@@ -299,11 +301,13 @@ class Testimportname:
 
     def test_goodimport(self):
         import string
-        assert self._c("", "string") == string
+        yield eq_, tools.importname("", "string"), string
 
         import os.path
-        from os import path
-        assert self._c("os", "path") == path
+        yield eq_, tools.importname("os", "path"), os.path
+
+    def test_badimport(self):
+        yield eq_, tools.importname("", "foo"), None
 
 class Testwhat_ext:
     """tools.what_ext"""
@@ -425,3 +429,7 @@ class Testconvert_configini_values:
                     { "a": "[b" },
                     { "a": "b]" }):
             yield checkbadsyntax, mem
+
+    # FIXME - test tools.walk
+
+    # FIXME - test filestat
