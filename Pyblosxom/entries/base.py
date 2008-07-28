@@ -172,9 +172,9 @@ class EntryBase:
         argdict = {"request": self._request, "id": self.getId()}
         cachedentry = tools.run_callback("entrycache_get",
                                          argdict, 
-                                         mappingfunc=lambda x, y: x,
-                                         donefunc=lambda x: x != None,
-                                         defaultfunc=lambda x: None)
+                                         mappingfunc=tools.pass_original,
+                                         donefunc=tools.done_whenhandled,
+                                         defaultfunc=tools.default_returnnone)
         return cachedentry
 
     def updateCache(self, data):
@@ -196,9 +196,9 @@ class EntryBase:
         argdict = {"request": self._request, "id": self.getId(), "data": data}
         cachedentry = tools.run_callback("entrycache_update",
                                          argdict, 
-                                         mappingfunc=lambda x, y: x,
-                                         donefunc=lambda x: 0,
-                                         defaultfunc=lambda x: x)
+                                         mappingfunc=tools.pass_original,
+                                         donefunc=tools.done_never,
+                                         defaultfunc=tools.default_returninput)
 
 
     # everything below this point are convenience functions that use the

@@ -114,8 +114,8 @@ class PyBlosxom:
         # register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
                                         {'txt': blosxom_entry_parser},
-                                        mappingfunc=lambda x,y:y,
-                                        defaultfunc=lambda x:x)
+                                        mappingfunc=tools.pass_mutated,
+                                        defaultfunc=tools.default_returninput)
 
     def cleanup(self):
         """
@@ -131,8 +131,6 @@ class PyBlosxom:
         response = self.getResponse()
         log.debug("status = %s" % response.status)
         log.debug("headers = %s" % response.headers)
-
-        tools.cleanup()
 
     def getRequest(self):
         return self._request
@@ -164,8 +162,8 @@ class PyBlosxom:
         # allow anyone else to handle the request at this point
         handled = tools.run_callback("handle", 
                         {'request': self._request},
-                        mappingfunc=lambda x,y:x,
-                        donefunc=lambda x:x)
+                        mappingfunc=tools.pass_original,
+                        donefunc=tools.done_whentrue)
 
         if not handled == 1:
             blosxom_handler(self._request)
@@ -197,10 +195,12 @@ class PyBlosxom:
         tools.run_callback("start", {'request': self._request})
 
         # invoke all callbacks for the 'callback'
+        # FIXME - this is probably wrong because not all callbacks behave
+        # this way.
         handled = tools.run_callback(callback,
                         {'request': self._request},
-                        mappingfunc=lambda x,y:x,
-                        donefunc=lambda x:x)
+                        mappingfunc=tools.pass_original,
+                        donefunc=tools.done_whentrue)
 
         # do end callback
         tools.run_callback("end", {'request': self._request})
@@ -410,7 +410,6 @@ class PyBlosxom:
         """
         tools.initialize(self._configuration)
         test_installation(self._request)
-        tools.cleanup()
 
 class PyBlosxomWSGIApp:
     """
@@ -821,8 +820,8 @@ def blosxom_handler(request):
     # for downstream processing.
     rend = tools.run_callback('renderer', 
                               {'request': request},
-                              donefunc = lambda x: x != None, 
-                              defaultfunc = lambda x: None)
+                              donefunc=tools.done_whenhandled,
+                              defaultfunc=tools.default_returnnone)
 
     if not rend:
         # get the renderer we want to use
@@ -843,13 +842,13 @@ def blosxom_handler(request):
     # this is
     tools.run_callback("pathinfo",
                        {"request": request},
-                       donefunc=lambda x:x != None,
+                       donefunc=tools.done_whenhandled,
                        defaultfunc=blosxom_process_path_info)
 
     # call the filelist callback to generate a list of entries
     entry_list = tools.run_callback("filelist",
                        {"request": request},
-                       donefunc=lambda ret: ret != None,
+                       donefunc=tools.done_whenhandled,
                        defaultfunc=blosxom_file_list_handler)
 
     data["entry_list"] = entry_list
@@ -969,16 +968,16 @@ def blosxom_entry_parser(filename, request):
     # call the preformat callback
     body = tools.run_callback('preformat', 
                               {'request': request, 'body': body, 'metadata': metadata},
-                              mappingfunc = tools.passupdated('body'),
-                              donefunc = tools.neverdone,
-                              defaultfunc = tools.returnitem('body'))
+                              mappingfunc=tools.pass_updated('body'),
+                              donefunc=tools.done_never,
+                              defaultfunc=tools.default_returnitem('body'))
 
     # call the format callback which returns a file-like object
     body = tools.run_callback('format', 
                               {'request': request, 'body': body, 'metadata': metadata},
-                              mappingfunc = tools.passupdated('body'),
-                              donefunc = tools.donewhentrue,
-                              defaultfunc = tools.returnitem('body'))
+                              mappingfunc=tools.pass_updated('body'),
+                              donefunc=tools.done_whentrue,
+                              defaultfunc=tools.default_returnitem('body'))
 
     # body here is a file-like object
     metadata['body'] = body
@@ -1022,22 +1021,22 @@ def blosxom_file_list_handler(args):
         datestr = "%s%s%s" % (data["pi_yr"],
                               tools.month2num.get(data['pi_mo'], data['pi_mo']),
                               data["pi_da"])
-        entrylist = [x for x in entrylist 
+        entrylist = [x for x in entrylist
                      if time.strftime("%Y%m%d%H%M%S", x._mtimetuple).startswith(datestr)]
 
     # call the sortlist callback to sort the list of entries
     # FIXME - should this be a handler or a transformer?
     entrylist = tools.run_callback("sortlist",
                        {"request": request, "entry_list": entrylist},
-                       donefunc = lambda ret: ret != None,
-                       defaultfunc = blosxom_sort_list_handler)
+                       donefunc=tools.done_whenhandled,
+                       defaultfunc=blosxom_sort_list_handler)
 
     # truncate the list if the user has set num_entries and the request
     # is not an archive request
     entrylist = tools.run_callback("truncatelist",
                        {"request": request, "entry_list": entrylist},
-                       donefunc = lambda ret: ret != None,
-                       defaultfunc = blosxom_truncate_list_handler)
+                       donefunc=tools.done_whenhandled,
+                       defaultfunc=blosxom_truncate_list_handler)
 
     return entrylist
 

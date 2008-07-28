@@ -134,13 +134,6 @@ def initialize(config):
     global MONTHS
     MONTHS = num2month.keys() + month2num.keys()
 
-def cleanup():
-    """Cleanup the tools module.
-
-    This should be called from Pyblosxom.pyblosxom.PyBlosxom.cleanup.
-    """
-    pass
-
 class ConfigSyntaxErrorException(Exception):
     pass
 
@@ -499,7 +492,7 @@ def parse(request, var_dict, template):
     replacer = Replacer(request, encoding, var_dict)
     return VAR_REGEXP.sub(replacer.replace, template)
 
-def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
+def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     """
     This function walks a directory tree starting at a specified root folder,
     and returns a list of all of the files (and optionally folders) that match
@@ -630,9 +623,9 @@ def filestat(request, filename):
 
     argdict = run_callback("filestat",      
                            argdict,     
-                           mappingfunc = passmutated,
-                           donefunc = lambda x:x and x["mtime"][MT] != 0,
-                           defaultfunc = lambda x:x)
+                           mappingfunc=pass_mutated,
+                           donefunc=lambda x:x and x["mtime"][MT] != 0,
+                           defaultfunc=default_returninput)
 
     # no plugin handled cb_filestat; we default to asking the
     # filesystem
@@ -744,7 +737,10 @@ def generateRandStr(minlen=5, maxlen=10):
         x += 1
     return "".join(randstr)
 
-def passoriginal(x, y): 
+
+# these are callback helpers
+
+def pass_original(x, y):
     """
     mappingfunc for callbacks which takes the original input, the
     output from the last function and returns the original input.
@@ -754,7 +750,7 @@ def passoriginal(x, y):
     """
     return x
 
-def passmutated(x, y):
+def pass_mutated(x, y):
     """
     mappingfunc for callbacks which takes the original input,
     the output from the last function and returns the output from
@@ -765,44 +761,62 @@ def passmutated(x, y):
     """
     return y
 
-def passupdated(item):
+def pass_updated(item):
     """
-    Takes a key and returns a function that updates the original dict with the
-    output from the previous function.
+    mappingfunc that takes a key and returns a function that updates the
+    original dict with the output from the previous function.
     """
     def __passupdated(x, y):
         x.update( { item: y } )
         return x
     return __passupdated
 
-def neverdone(x): 
+def done_never(x):
     """
-    donefunc for callbacks which always returns ``False`` causing all
-    functions in the callback chain to run.
+    donefunc for callbacks that execute all functions in the chain regardless
+    of return values.
     """
     return False
 
-def donewhentrue(x):
+def done_whentrue(x):
     """
-    donefunc for callbacks which stops the callback when the
-    last function returned a True value.
+    donefunc for callbacks that stop when a function returns a true value.
     """
     return x
 
-def returnitem(item):
+def done_whenhandled(x):
     """
-    Returns a function that returns a specific item from the args
-    dict.
+    donefunc that returns True if the function has returned an output
+    indicating that it handled the callback and that no further functions in
+    the chain should execute.
     """
-    def __returnitem(x):
-        return x[item]
-    return __returnitem
+    return x != None
+
+def default_returnitem(item):
+    """
+    defaultfunc that returns a function that returns a specific item from the
+    args dict.
+    """
+    return lambda x : x[item]
+
+def default_returninput(input_args):
+    """
+    defaultfunc that returns the input args dict that was originally
+    passed to the callback chain.
+    """
+    return input_args
+
+def default_returnnone(x):
+    """
+    defaultfunc that returns None.
+    """
+    return None
 
 def run_callback(chain, input, 
-        mappingfunc = passoriginal,
-        donefunc = neverdone,
-        defaultfunc = None,
-        exclude = None):
+        mappingfunc=pass_original,
+        donefunc=done_never,
+        defaultfunc=None,
+        exclude=None):
     """
     Executes a callback chain on a given piece of data.
     passed in is a dict of name/value pairs.  Consult the documentation

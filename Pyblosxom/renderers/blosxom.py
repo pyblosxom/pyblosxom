@@ -373,8 +373,8 @@ class BlosxomRenderer(RendererBase):
         input.update( { "request": self._request } )
 
         return tools.run_callback(chain, input, 
-                            mappingfunc=lambda x,y: x,
-                            defaultfunc=lambda x:x)
+                                  mappingfunc=tools.pass_original,
+                                  defaultfunc=tools.default_returninput)
         
     def getContent(self):
         """
