@@ -123,3 +123,10 @@ class TestEntryBase:
         yield eq_, e["rfc822date"], "Mon, 21 Jul 2008 16:51 GMT"
 
         e = generate_entry(req_(), {"foo": "bar"}, "entry body")
+
+    def test_repr(self):
+        # it doesn't really matter what __repr__ sends back--it's only used
+        # for logging/debugging.  so this test adds coverage for that line to
+        # make sure it doesn't error out.
+        e = EntryBase(req_())
+        repr(e)
