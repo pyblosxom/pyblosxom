@@ -31,6 +31,17 @@ except:
 BIGNUM = 2000000000
 CONTENT_KEY = "body"
 
+TIME_STRINGS = ( ('ti', '%H:%M'),
+                 ('mo', '%b'),
+                 ('mo_num', '%m'),
+                 ('da', '%d'),
+                 ('dw', '%A'),
+                 ('yr', '%Y'),
+                 ('fulltime', '%Y%m%d%H%M%S'),
+                 ('date', '%a, %d %b %Y') )
+_TIME_STRINGS_IDS = [mem[0] for mem in TIME_STRINGS]
+_TIME_STRINGS_FORMATS = [mem[1] for mem in TIME_STRINGS]
+
 class EntryBase:
     """
     EntryBase is the base class for all the Entry classes.  Each 
@@ -206,26 +217,20 @@ class EntryBase:
         self._mtime = time.mktime(timetuple)
         gmtimetuple = time.gmtime(self._mtime)
         self['mtime'] = self._mtime
-        self['ti'] = time.strftime('%H:%M', timetuple)
-        self['mo'] = time.strftime('%b', timetuple)
-        self['mo_num'] = time.strftime('%m', timetuple)
-        self['da'] = time.strftime('%d', timetuple)
-        self['dw'] = time.strftime('%A', timetuple)
-        self['yr'] = time.strftime('%Y', timetuple)
-        self['fulltime'] = time.strftime('%Y%m%d%H%M%S', timetuple)
-        self['date'] = time.strftime('%a, %d %b %Y', timetuple)
 
-        # Temporarily disable the set locale, so RFC-compliant dates are
-        # really RFC-compliant
+        # set all the time strings that we set
+        self.update(zip(_TIME_STRINGS_IDS,
+                        time.strftime('*'.join(_TIME_STRINGS_FORMATS), timetuple).split("*")))
+
+        # temporarily change the locale to C so RFC-compliant dates are really
+        # RFC-compliant, do our stuff, then set it back to whatever it was
         loc = locale.getlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'C')
 
-        # YYYY-MM-DDThh:mm:ssZ
         self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', gmtimetuple)
         self['rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', \
                                            gmtimetuple)
         
-        # set the locale back
         locale.setlocale(locale.LC_ALL, loc)
 
     def __getitem__(self, key):
@@ -246,7 +251,7 @@ class EntryBase:
         if key == CONTENT_KEY:
             return self.getData()
 
-        return self._metadata[key]
+        return self.getMetadata(key)
 
     def get(self, key, default=None):
         """
@@ -266,13 +271,13 @@ class EntryBase:
         @type  default: varies
 
         @returns: the value of self._metadata.get(key, default) or 
-            self.getData() (through __getitem__)
+            self.getData()
         @rtype: varies
         """
-        try:
-            return self.__getitem__(key)
-        except:
-            return default
+        if key == CONTENT_KEY:
+            return self.getData()
+
+        return self.getMetadata(key, default)
 
     def __setitem__(self, key, value):
         """
@@ -319,11 +324,12 @@ class EntryBase:
         @param newdict: the dict we're updating this one with
         @type newdict: dict
         """
-        for mem in newdict:
-            if mem == CONTENT_KEY:
-                self.setData(newdict[mem])
-            else:
-                self.setMetadata(mem, newdict[mem])
+        d = dict(newdict)
+        if CONTENT_KEY in d:
+            self.setData(newdict[CONTENT_KEY])
+            del d[CONTENT_KEY]
+
+        self._metadata.update(d)
 
     def has_key(self, key):
         """
