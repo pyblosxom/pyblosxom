@@ -32,9 +32,9 @@ except ImportError:
     from StringIO import StringIO
 
 # Pyblosxom imports
-import tools
-import plugin_utils
-from entries.fileentry import FileEntry
+from Pyblosxom import tools
+from Pyblosxom import plugin_utils
+from Pyblosxom.entries.fileentry import FileEntry
 
 VERSION = "1.5"
 VERSION_DATE = VERSION + " dev"
