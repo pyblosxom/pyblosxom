@@ -1,0 +1,353 @@
+=============================
+Installing PyBlosxom with CGI
+=============================
+
+:Author: PyBlosxom Development Team
+:Version: $Id$
+:Copyright: This document is distributed under the MIT license.
+
+.. contents::
+
+
+
+Summary
+=======
+
+While there are many ways to install PyBlosxom, the most common one is
+to install PyBlosxom as a CGI script for a single user.  This
+installation guide will cover that.  For other ways to install
+PyBlosxom, refer to the docs directory, mailing lists and the `web-site`_.
+
+This installation assumes you have some understanding of CGI, Apache
+configuration, and know how to manipulate files and directories.  If
+this doesn't sound like you, maybe you should get a friend to help out
+or ask for help on the pyblosxom-users mailing list.  Details of the
+mailing list are on our web-site on the `Contact us`_ page.
+
+.. _web-site: http://pyblosxom.sourceforge.net/
+.. _Contact us: http://pyblosxom.sourceforge.net/blog/static/contact
+
+
+.. Note::
+
+   A note about upgrading PyBlosxom:
+    
+   If you are upgrading your version of PyBlosxom, follow the
+   instructions here and also read the ``README`` that comes with
+   your PyBlosxom tarball for differences between this version and
+   the previous versions.  The ``README`` file contains instructions
+   on updating your ``config.py`` file, templates, and other parts of
+   your PyBlosxom installation which you will have to do by hand.
+
+
+
+Pre-requisites for installing PyBlosxom
+=======================================
+
+You will need:
+
+* a web-server that runs CGI
+* Python version 2.2 or later
+* a text editor (notepad, vi, emacs, nano, ...) 
+
+Additionally, if you are running PyBlosxom on Windows, you will 
+also need:
+
+* Python for Windows extensions: http://sourceforge.net/projects/pywin32/
+
+
+Downloading
+===========
+
+You can find versions of PyBlosxom by going to the Download link at
+http://pyblosxom.sourceforge.net/ .
+
+Download the latest PyBlosxom ``.tar.gz`` file.
+
+
+Installing PyBlosxom
+====================
+
+Installing PyBlosxom should take 5-10 minutes depending on what state
+your system is currently in.  The installation consists of seven
+steps.  Tweaking, styling, and adding content to your blog is covered
+afterwards and in other parts of the documentation.
+
+
+Untar
+-----
+
+Create a working temporary directory, move the PyBlosxom tar ball 
+into it, and then untar the tar ball (something like 
+``tar -xzvf pyblosxom.version.tar.gz``).
+
+
+Install as library or not
+-------------------------
+
+There are two ways to install PyBlosxom on your system:
+
+1. You can install PyBlosxom as a Python library.  To do this, change
+   directory into the pyblosxom directory and run::
+
+      python setup.py install
+
+   After you do this, PyBlosxom will be installed as a Python library
+   and you can move on to *Setting up a blog*.
+
+2. If you don't want to or can't install PyBlosxom as a Python library,
+   just untar it into your directory and be sure to follow the instructions
+   on setting the ``codebase`` parameter later.
+
+
+
+Setting up a blog
+-----------------
+
+To set up a blog do the following:
+
+1. Copy the ``config.py`` and ``pyblosxom.cgi`` files from the ``web/`` 
+   directory into your ``cgi-bin/`` directory or some directory that 
+   has CGI permissions.
+
+2. First create a directory for holding all your PyBlosxom files.
+   Call this directory ``myblog/`` and put it in your userdir.
+
+   Then create a sub-directory ``entries/`` under ``myblog/``.
+
+   The entries for your blog are text files in your datadir.  The 
+   datadir can contain directories each of which will be a category 
+   for PyBlosxom.  In general, it's good to use one-word names that
+   don't have spaces or punctuation in them for your directories.
+
+   Then create a sub-directory ``flavours/`` under ``myblog/``.
+
+   Flavours are collections of template files for a single look and
+   feel for your blog.  You can store these flavours in the flavourdir.
+
+   Then create a sub-directory ``plugins/`` under ``myblog/``.
+
+   This directory will hold plugins that augment and extend the
+   PyBlosxom's default behavior to meet your specific needs.
+
+   The resulting tree would look like this (if your name was joe)::
+
+      /home/joe/
+         |- myblog/
+              |- entries/
+              |- flavours/
+              |- plugins/
+
+
+3. Open the ``config.py`` file up in your favorite editor.  Go through 
+   and change the values of the configuration settings according to 
+   the instructions in the ``config.py`` file.
+
+   Make sure to set:
+
+   * the ``datadir`` property to the datadir directory you created, 
+   * the ``flavourdir`` property to the flavourdir directory you created, 
+   * the ``plugins_dir`` property to the plugins directory you created,
+   * and ``load_plugins`` to the empty list ``[ ]``.
+
+
+   .. Note::
+
+      If you did NOT install PyBlosxom as a Python library, then you must
+      also set the ``codebase`` property to the directory you untarred 
+      PyBlosxom into.  This should be the directory that holds the 
+      ``Pyblosxom`` directory (note the case!).
+
+
+   Plugins will require you to add new variables to your ``config.py``
+   file in order to direct the plugin's behavior.  Additionally, you 
+   can add variables to your ``config.py`` and these variables will be 
+   available to you in your flavour templates.
+
+4. You want to verify that your blog is set up correctly.  Change directory
+   into your ``cgi-bin`` directory and run from the command line::
+
+      ./pyblosxom.cgi
+
+
+   PyBlosxom will go through a series of checks on your ``config.py`` 
+   file to make sure that things are set up correctly and that required
+   properties are set.
+
+   If there are any problems, follow the instructions that it gives you.
+
+   .. Note::
+
+      Because you're running this check from the command line, there
+      could still be problems with your setup.  However, if you get
+      through the verify step, then it's likely any further problems
+      are related to your web-server setup and whether it can execute
+      pyblosxom.cgi.
+      
+
+5. Now it's time to write your first post and test your blog.  Change 
+   directories to your datadir, launch your favorite editor and create 
+   a file called ``firstpost.txt``.  Copy the following text into it::
+
+       This is my first post
+       <p>
+           This is my first post with PyBlosxom.
+       </p>
+
+
+   The first line "First Post" becomes the title of the blog entry. 
+   The date of the blog entry is the mtime on the file.  The body of 
+   the blog entry starts with the HTML paragraph tag in the second 
+   line and extends to the end paragraph tag in the last line.  Your 
+   blog entries can be as long as you want.  The first line is plain 
+   text--everything after that is HTML.
+
+   .. Note::
+
+      If you want to use a different markup like reST or Textile or 
+      Moinmoin or something like that, see the documentation on 
+      *Writing Entries* for how to set that up.
+
+
+   Open up a web-browser and go to the URL
+   ``http://your_server_here/path/to/cgi-bin/pyblosxom.cgi``
+
+   If you're running GNU/Linux with Apache and you have user folders
+   set up and your username was ``joe``, then the url for your PyBlosxom
+   blog might be something like this::
+   
+      http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi
+
+
+   If everything is configured correctly, you should see your first
+   post rendered with the default HTML flavour.  If not, you'll either
+   see a Python stack trace or a message along the lines of Internal
+   Server Error.  See below for help on trouble-shooting.
+
+
+
+Trouble-shooting
+================
+
+We're going to try to break this down a bit into categories.  Bear
+with us and keep trying things.  If you have problems and have gone
+through this section to no avail, then come talk to us on the
+`Pyblosxom users list`_.  Details of the mailing list are located at
+our `Contact us`_ page.
+
+.. _Pyblosxom users list: mailto:pyblosxom-users@lists.sourceforge.net
+.. _Contact us: http://pyblosxom.sourceforge.net/blog/static/contact
+
+
+Running ./pyblosxom.cgi doesn't work
+------------------------------------
+
+First, you should check to see if you have Python installed on your
+system.  If not, then please install Python.
+
+If Python is installed on your system, make sure the first line in
+``pyblosxom.cgi`` points to your Python interpreter.  If not, fix that
+and try running ``./pyblosxom.cgi`` again.
+
+If Python is installed on your system and the first line of
+``pyblosxom.cgi`` is correct, then check for permissions issues:
+``pyblosxom.cgi`` is a script--so it needs execute permission
+in order to function.  If those aren't set, then fix that and try
+running ``./pyblosxom.cgi`` again.
+
+
+I see a HTTP 404 error when I try to bring up my blog
+-----------------------------------------------------
+
+When you try to look at your blog and you get a HTTP 404 error, then
+you're using the wrong URL.  Are you futzing with ``.htaccess``?  Does
+your server allow you to run CGI scripts?  Do other CGI scripts work?
+Does the URL you're trying to use to access PyBlosxom look like other
+URLs that work on your system?
+
+
+I see a HTTP 500 error when I try to bring up my blog
+-----------------------------------------------------
+
+.. Note::
+
+   Please read the installation chapter:
+    
+   At this point, running ``./pyblosxom.cgi`` at the command prompt
+   should work fine.  If you haven't done that and you're busy
+   trouble-shooting, go back to the *installation guide* and make
+   sure you did all the steps.
+
+
+When you try to look at your blog in a web-browser and get a HTTP 500 error, 
+the first thing you should do is uncomment the line in ``pyblosxom.cgi`` 
+(remove the # at the beginning of the line) that looks like this::
+
+   #import cgitb; cgitb.enable()
+
+so that it looks like this::
+
+   import cgitb; cgitb.enable()
+
+Then refresh the page in your browser.  If the problem is with PyBlosxom
+and not your web-server, then you should see a pretty traceback that will
+help you figure out what the specific problem is.
+
+If it doesn't make any sense to you, you can copy and paste that into
+an email to the pyblosxom-users mailing list and we're in a better position
+to help you out.
+
+If you don't see a traceback, then you either have a configuration problem
+with your web-server or a configuration problem with Python.  The first
+thing you should do is check your web-server's error logs.  For Apache, 
+look for the ``error.log`` file in a place like ``/var/logs/apache`` or 
+``/var/logs/httpd``.
+
+Does the account your web-server runs as have execute access to your
+``pyblosxom.cgi`` script?  If your web-server does not have the permissions
+to read and execute your pyblosxom.cgi script, then your blog will not
+work.
+
+Do you have plugins loaded?  If you do, try unloading all your plugins
+and see if the problem persists.  Sometimes there are issues with plugins
+that only show up in certain situations.
+
+
+I have other issues
+-------------------
+
+Try changing the renderer for your blog to the debug renderer.  You
+can do this by setting the ``renderer`` property in your ``config.py``
+file to ``debug``.  That will show a lot more detail about your configuration,
+what the web-server passes PyBlosxom in environment variables, and other
+data about your blog that might help you figure out what your problem is.
+
+
+
+UGH!  My blog looks UGLY!
+-------------------------
+
+Read the chapter on *Flavours and Templates* to help you out.
+
+
+
+I hate writing in HTML!
+-----------------------
+
+That's ok.  PyBlosxom supports entry parsers which allow you to format
+your blog entries in any formatting markup that someone has written
+a plugin for.  See the documentation on *Writing Entries* for more 
+information.
+
+
+
+Conclusion
+==========
+
+That's it!  If you have problems, visit our web-site and read through
+the updated documentation including the Trouble-shooting section of
+the PyBlosxom Manual.
+
+Happy blogging!
+
+-- PyBlosxom Development Team

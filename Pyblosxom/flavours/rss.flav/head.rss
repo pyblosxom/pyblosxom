@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="$(blog_encoding)"?>
+<!-- name="generator" content="$(pyblosxom_name)/$(pyblosxom_version)" -->
+<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN" "http://my.netscape.com/publish/formats/rss-0.91.dtd">
+
+<rss version="0.91">
+<channel>
+<title>$(blog_title) $(pi_da) $(pi_mo) $(pi_yr)</title>
+<link>$(base_url)</link>
+<description>$(blog_description)</description>
+<language>$(blog_language)</language>

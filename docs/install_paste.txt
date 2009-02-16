@@ -1,0 +1,242 @@
+===============================
+Installing PyBlosxom with Paste
+===============================
+
+:Author: PyBlosxom Development Team
+:Version: $Id: advanced_installation.txt 1029 2007-06-07 02:33:12Z willhelm $
+:Copyright: This document is distributed under the MIT license.
+
+.. contents::
+
+
+Summary
+=======
+
+As of PyBlosxom 1.4, we have support for Paste.  This document covers
+installing and using PyBlosxom with Paste.
+
+This document is in a "works for me" status.  Any help to flesh it out
+to be more generally useful is **greatly** appreciated.
+
+This installation assumes you have some understanding of Python Paste.
+If this doesn't sound like you, then you can read up on Paste on
+the `Paste web-site`_.
+
+Paste support is pretty new, still.  If you have problems, check our
+`web-site`_ and feel free to ask questions on the pyblosxom-users
+mailing list.  Details of the mailing list are on our web-site on the
+`Contact us`_ page.
+
+.. _Paste web-site: http://pythonpaste.org/
+.. _web-site: http://pyblosxom.sourceforge.net/
+.. _Contact us: http://pyblosxom.sourceforge.net/blog/static/contact
+
+.. Note::
+
+   A note about upgrading PyBlosxom:
+    
+   If you are upgrading your version of PyBlosxom, follow the
+   instructions here and also read the ``README`` that comes with
+   your PyBlosxom tarball for differences between this version and
+   the previous versions.  The ``README`` file contains instructions
+   on updating your ``config.py`` file, templates, and other parts of
+   your PyBlosxom installation which you will have to do by hand.
+
+
+Pre-requisites for installing PyBlosxom with Paste
+==================================================
+
+You will need:
+
+* Pyblosxom 1.4 or a later version
+* Python Paste which can be found at http://pythonpaste.org/
+
+Additionally, if you're using an earlier version of Python than
+Python 2.5, then you'll also need:
+
+* wsgiref library from http://svn.eby-sarna.com/wsgiref/
+
+Additionally, if you are running PyBlosxom on Windows, you will
+also need:
+
+* Python for Windows extensions: http://sourceforge.net/projects/pywin32/
+
+
+Downloading
+===========
+
+You can find versions of PyBlosxom by going to the Download link at
+http://pyblosxom.sourceforge.net/ .
+
+Download the latest PyBlosxom ``.tar.gz`` file.
+
+
+Installation
+============
+
+Installing PyBlosxom with Paste should take 5-10 minutes depending
+on what state your system is currently in.  The installation consists
+of a few steps.  Tweaking, styling, and adding content to your blog
+is covered in other parts of the documentation.
+
+
+1. Download PyBlosxom from the PyBlosxom site.
+
+2. Untar PyBlosxom::
+
+      tar -xzvf pyblosxom*.tar.gz
+
+3. Either:
+
+   3.1. install PyBlosxom as a Python library by doing 
+        ``python setup.py install``, OR
+   3.2. add ``PYTHONPATH=/path/to/Pyblosxom/parent/`` to your
+        environment variables
+
+4. Create a directory to hold your blog.  This will be a parent directory
+   of your ``datadir``.  Also create directories for ``entries``, 
+   ``flavours``, and ``plugins``.
+
+   Here's an example file-system layout::
+
+      /home/joe/
+         |- blog/
+            |- entries/
+            |- flavours/
+            |- plugins/
+            |- config.py
+            |- blog.ini
+
+
+5. Copy ``blog.ini`` from ``pyblosxom/web`` into your blog directory.
+
+6. Copy ``config.py`` from ``pyblosxom/web`` into your blog directory.
+
+7. Edit ``blog.ini`` and ``config.py`` -- see instructions in configuration 
+   section.  Be sure to set the ``configpydir`` property.
+
+8. If you left ``use``, ``host``, and ``port`` at the defaults, then you
+   can run your blog like this::
+
+      paster serve blog.ini
+
+
+   ``paster`` will print the URL for your blog on the command line.
+
+   .. Note::
+
+      If the host of your blog is ``0.0.0.0`` or ``127.0.0.1``, then 
+      your blog will be visible ONLY from the same machine it is running
+      from.
+
+
+Configuration
+=============
+
+Paste configuration is done in an ``.ini`` file.
+
+Create a ``blog.ini`` that holds information that Paste needs to
+run your blog.
+
+An example ``blog.ini`` is here::
+
+   [DEFAULT]
+   debug = True
+
+   [server:main]
+   use = egg:Paste#http
+   host = 0.0.0.0
+   port = 5000
+
+   [app:main]
+   paste.app_factory = Pyblosxom.pyblosxom:pyblosxom_app_factory
+   configpydir = /path/to/dir
+
+   # PyBlosxom config here
+   blog_title = Joe's Blog
+   blog_description = This is Joe's test blog.
+   blog_author = Joe
+   blog_email = joe@example.com
+   datadir = /home/joe/blog/entries/
+   num_entries = 5
+
+
+There are several things to note here:
+
+1. In the ``[server:main]`` section, define the ``host`` and ``port``
+   of your blog.  Using ``0.0.0.0`` and ``5000`` is really useful
+   for building a test environment that only someone on the machine
+   the blog is running on can see.  When you want to make your blog
+   public, you can set the host to your ip address and the port to
+   something more reasonable.
+
+   There's more information on configuring Paste on the `Paste Deployment`_
+   site.
+
+   .. _Paste Deployment: http://pythonpaste.org/deploy/
+
+2. The ``[app:main]`` section needs to have the ``paste.app_factory``
+   defined--this tells Paste where the PyBlosxom WSGI app factory
+   function is.  
+
+3. Define the ``configpydir`` property in the ``[app:main]`` section.
+   The value of this property is the directory that your ``config.py``
+   file is in.  
+
+   For example, if you put your ``config.py`` file in 
+   ``/home/joe/blog/config.py``, then set your ``configpydir`` like
+   this::
+
+      configpydir = /home/joe/blog/
+
+4. You can define PyBlosxom config properties in the ``[app:main]`` 
+   section as well.  Properties declared here will **override**
+   properties declared in your ``config.py`` file.  This is really
+   handy for building a testing environment blog on a different port.
+
+   You don't have to define any config properties in the ``blog.ini``
+   file--you can define them all in your ``config.py`` file.
+
+   .. Note::
+
+      Defining PyBlosxom config properties in an .ini file is a bit
+      of a trick since .ini files treat all keys and values as
+      strings but not all config properties have string values.
+
+
+Trouble-shooting
+================
+
+Import Error: No module named Pyblosxom.pyblosxom
+-------------------------------------------------
+
+If you installed PyBlosxom as a Python library (i.e. you did
+``python setup.py install``), then the problem is probably that
+you have multiple versions of Python on your system and paster
+is using a different one than the one you install PyBlosxom into.
+
+Run::
+
+   paster --version
+
+and see if that matches the version of Python you installed PyBlosxom
+into.  If it doesn't match, then you need to install PyBlosxom into
+the version of Python that paster is using.
+
+If you didn't install PyBlosxom as a Python library, then you need
+to add the directory that the PyBlosxom code is in to the Python
+sys.path.  The easiest way to do that is to set the ``PYTHONPATH``
+environment variable to the directory that PyBlosxom is in.
+
+For example, I untarred PyBlosxom into ``/home/joe/`` and I have
+a directory tree like this::
+
+   /home/joe/
+         |- pyblosxom/
+            |- Pyblosxom/
+               |- ...
+
+
+I then set ``PYTHONPATH`` like this::
+
+   % export PYTHONPATH=${PYTHONPATH}:/home/joe/pyblosxom/

@@ -1,0 +1,10 @@
+
+<entry>
+<title type="html">$(title_escaped)</title>
+<category term="$(path_urlencoded)" />
+<id>$(base_url)/$(yr)/$(mo_num)/$(da)/$(fn)</id>
+<updated>$(w3cdate)</updated>
+<published>$(w3cdate)</published>
+<link rel="alternate" type="text/html" href="$(base_url)/$(file_path_urlencoded).$(default_flavour)" />
+<content type="html">$(body_escaped)</content>
+</entry>
