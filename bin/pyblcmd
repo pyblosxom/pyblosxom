@@ -17,12 +17,9 @@ import os, sys
 script = os.environ.get('SCRIPT_FILENAME', None)
 if script is not None:
     sys.path.insert(0, os.path.dirname(script))
-
 sys.path.insert(0, os.getcwd())
 
+from Pyblosxom.commandline import command_line_handler
 
 if __name__ == '__main__':
-    from Pyblosxom.pyblosxom import command_line_handler
-
-    sys.exit(command_line_handler("pyblcmd", sys.argv[1:]))
-
+    sys.exit(command_line_handler("pyblcmd", sys.argv))

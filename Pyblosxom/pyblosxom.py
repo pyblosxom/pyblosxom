@@ -1354,330 +1354,61 @@ def blosxom_process_path_info(args):
     # set path_info to our latest path_info
     data['path_info'] = path_info
 
+def run_pyblosxom():
+    from config import py as cfg
+    env = {}
 
+    # if there's no REQUEST_METHOD, then this is being run on the
+    # command line and we should execute the command_line_handler.
+    if not "REQUEST_METHOD" in os.environ:
+        from Pyblosxom.commandline import command_line_handler
 
-#
-# command line stuff
-#
+        args = sys.argv
+        if len(args) <= 1:
+            args.append("--test")
 
-HELP = """Syntax: %(script)s [path-opts] [args]
+        sys.exit(command_line_handler("pyblosxom.cgi", args))
 
-PATH OPTIONS:
+    # names taken from wsgi instead of inventing something new
+    env['wsgi.input'] = sys.stdin
+    env['wsgi.errors'] = sys.stderr
 
-  -c, --config
+    # figure out what the protocol is for the wsgi.url_scheme property.
+    # we look at the base_url first and if there's nothing set there,
+    # we look at environ.
+    if 'base_url' in cfg:
+        env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
 
-     This specifies the location of the config.py file for the blog 
-     you want to work with.  If the config.py file is in the current 
-     directory, then you don't need to specify this.
-
-     Note: %(script)s will use the "codebase" parameter in your config.py
-     file to locate the version of PyBlosxom you're using if there
-     is one.  If there isn't one, then %(script)s expects PyBlosxom to
-     be installed as a Python package on your system.
-
-ARGUMENTS:
-
-  -v, --version
-
-     Prints the PyBlosxom version and some other information.
-
-  -h, --help
-
-     Prints this help text
-
-  -h, --headers
-
-     When rendering a url, this will also render the HTTP headers.
-
-  -r, --render <url>
-
-     Renders a url of your blog.
-
-        %(script)s -r http://www.joesblog.com/cgi-bin/pyblosxom.cgi/index.html
-
-     will pull off the base_url from the front leaving "/index.html" and
-     will render "/index.html" to stdout.
-
-        %(script)s -c ~/cgi-bin/config.py -r /index.html
-
-     will use the config.py file located in ~/cgi-bin/ and render
-     "/index.html" from the PyBlosxom root.
-
-  -s, --static [incremental]
-
-     Statically renders your blog.  Use "incremental" to do an incremental 
-     rendering.
-
-  -t, --test
-
-     Tests your installation.
-     
-
-EXAMPLES:
-
-
-Additional flags and options may be available through plugins that
-you have installed.  Refer to plugin documentation (usually found
-at the top of the plugin file) for more information.
-"""
-     
-
-def test_installation(request):
-    """
-    This function gets called when someone starts up pyblosxom.cgi
-    from the command line with no REQUEST_METHOD environment variable.
-
-    It:
-
-      1. tests properties in their config.py file
-      2. verifies they have a datadir and that it exists
-      3. initializes all the plugins they have installed
-      4. runs "cb_verify_installation"--plugins can print out whether
-         they are installed correctly (i.e. have valid config property
-         settings and can read/write to data files)
-      5. exits
-
-    The goal is to be as useful and informative to the user as we can be
-    without being overly verbose and confusing.
-
-    This is designed to make it much much much easier for a user to
-    verify their PyBlosxom installation is working and also to install
-    new plugins and verify that their configuration is correct.
-
-    @param request: the Request object
-    @type request: object
-    """
-    config = request.getConfiguration()
-
-    # BASE STUFF
-    print "Welcome to PyBlosxom's installation verification system."
-    print "------"
-    print "]] printing diagnostics [["
-    print "pyblosxom:   %s" % VERSION_DATE
-    print "sys.version: %s" % sys.version.replace("\n", " ")
-    print "os.name:     %s" % os.name
-    print "codebase:    %s" % config.get("codebase", "--default--")
-    print "------"
-
-    # CONFIG FILE
-    print "]] checking config file [["
-    print "config has %s properties set." % len(config)
-    print ""
-
-    # these are required by the blog
-    required_config = ["datadir"]
-
-    # these are nice to have optional properties
-    nice_to_have_config = ["blog_title", "blog_author", "blog_description",
-                           "blog_language", "blog_encoding", "blog_icbm",
-                           "base_url", "depth", "num_entries", "renderer", 
-                           "cacheDriver", "cacheConfig", "plugin_dirs", 
-                           "load_plugins", "blog_email", "blog_rights",
-                           "default_flavour", "flavourdir", "log_file",
-                           "log_level", "logdir", ]
-
-    config_keys = config.keys()
-
-    # remove keys that are auto-generated
-    config_keys.remove("pyblosxom_version")
-    config_keys.remove("pyblosxom_name")
-
-    missing_required_props = []
-    missing_optionsal_props = []
-
-    missing_required_props = [m
-                              for m in required_config
-                              if m not in config_keys]
-
-    missing_optional_props = [m
-                              for m in nice_to_have_config
-                              if m not in config_keys]
-
-    all_keys = nice_to_have_config + required_config
-    
-    config_keys = [m
-                   for m in config_keys
-                   if m not in all_keys]
-    config_keys.sort()
-    
-    if missing_required_props:
-        print ""
-        print "Missing properties must be set in order for your blog to"
-        print "work."
-        print ""
-        for mem in missing_required_props:
-            print "   missing required property: '%s'" % mem
-        print ""
-        print "This must be done before we can go further.  Exiting."
-        return
-
-    if missing_optional_props:
-        print ""
-        print "You're missing optional properties.  These are not required, "
-        print "but some of them may interest you.  Refer to the documentation "
-        print "for more information."
-        print ""
-        for mem in missing_optional_props:
-            print "   missing optional property: '%s'" % mem
-
-    if config_keys:
-        print ""
-        print "These are properties PyBlosxom doesn't know about.  They "
-        print "could be used by plugins or could be ones you've added."
-        print "Remove them if you know they're not used."
-        print ""
-        for mem in config_keys:
-            print "   i don't know about: '%s'" % mem
-        print ""
-        
-    print "PASS: config file is fine."
-
-    print "------"
-    print "]] checking datadir [["
-
-    # DATADIR
-    if not os.path.isdir(config["datadir"]):
-        print "datadir '%s' does not exist." % config["datadir"]          
-        print "You need to create your datadir and give it appropriate"
-        print "permissions."
-        print ""
-        print "This must be done before we can go further.  Exiting."
-        return
-
-    print "PASS: datadir is there."
-    print "      Note: this does NOT check whether your webserver has "
-    print "      permissions to view files therein!"
-
-    print "------"
-    print "Now we're going to verify your plugin configuration."
-
-    if config.has_key("plugin_dirs"):
-        plugin_utils.initialize_plugins(config["plugin_dirs"],
-                                        config.get("load_plugins", None))
-
-        no_verification_support = []
-
-        for mem in plugin_utils.plugins:
-            if hasattr(mem, "verify_installation"):
-                print "=== plugin: '%s'" % mem.__name__
-                print "    file: %s" % mem.__file__
-                print "    version: %s" % (str(getattr(mem, "__version__")))
-
-                try:
-                    if mem.verify_installation(request) == 1:
-                        print "    PASS"
-                    else:
-                        print "    FAIL!!!"
-                except AssertionError, error_message:
-                    print " FAIL!!! ", error_message
-
-            else:
-                mn = mem.__name__
-                mf = mem.__file__
-                no_verification_support.append( "'%s' (%s)" % (mn, mf))
-
-        if len(no_verification_support) > 0:
-            print ""
-            print "The following plugins do not support installation " + \
-                  "verification:"
-            for mem in no_verification_support:
-                print "   %s" % mem
     else:
-        print "You have chosen not to load any plugins."
+        if os.environ.get("HTTPS", "off") in ("on", "1"):
+            env["wsgi.url_scheme"] = "https"
 
+        else:
+            env['wsgi.url_scheme'] = "http"
 
-def command_line_handler(scriptname, argv):
-    """
-    Handles calling PyBlosxom from the command line.  This can be
-    called from two different things: pyblosxom.cgi and pyblcmd.
-
-    @param scriptname: the name of the script (ex. "pyblcmd")
-    @type  scriptname: string
-
-    @param argv: the arguments passed in
-    @type  argv: list of strings
-
-    @returns: the exit code
-    """
-    def printq(s):
-        print s
-
-    # parse initial command line variables
-    optlist = tools.parse_args(argv)
-    for mem in optlist:
-        if mem[0] in ["-c", "--config"]:
-            m = mem[1]
-            if m.endswith("config.py"):
-                m = m[0:-9]
-            printq("Appending %s to sys.path for config.py location." % m)
-            sys.path.append(m)
-
-        elif mem[0] in ["-q", "--quiet"]:
-            # this quiets the printing by doing nothing with the input
-            printq = lambda s : s
-
-    # the configuration properties are in a dict named "py" in
-    # the config module
-    printq("Trying to import the config module....")
     try:
-        # FIXME - what if config is not named config?
-        from config import py as cfg
-    except:
-        print "Error: Cannot find your config.py file.  Please execute %s in\n" \
-              % scriptname
-        print "the directory with your config.py file in it."
-        return 0
+        # try running as a WSGI-CGI
+        from wsgiref.handlers import CGIHandler
+        from Pyblosxom.pyblosxom import PyBlosxomWSGIApp
+        CGIHandler().run(PyBlosxomWSGIApp())
 
-    # If the user defined a "codebase" property in their config file,
-    # then we insert that into our sys.path because that's where the
-    # PyBlosxom installation is.
-    # NOTE: this _has_ to come before any PyBlosxom calls.
-    if cfg.has_key("codebase"):
-        sys.path.append(cfg["codebase"])
+    except ImportError:
+        # run as a regular CGI
 
-    printq("PyBlosxom version: %s" % VERSION_DATE)
+        if os.environ.get("HTTPS") in ("yes", "on", "1"):
+            env['wsgi.url_scheme'] = "https"
 
-    if len(argv) == 0:
-        print HELP % { "script": scriptname }
-        return 0
+        for mem in ["HTTP_HOST", "HTTP_USER_AGENT", "HTTP_REFERER",
+                    "PATH_INFO", "QUERY_STRING", "REMOTE_ADDR",
+                    "REQUEST_METHOD", "REQUEST_URI", "SCRIPT_NAME",
+                    "HTTP_IF_NONE_MATCH", "HTTP_IF_MODIFIED_SINCE",
+                    "HTTP_COOKIE", "CONTENT_LENGTH", "CONTENT_TYPE",
+                    "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING"]:
+            env[mem] = os.environ.get(mem, "")
 
-    p = PyBlosxom(cfg, {})
-    headers = 0
+        p = PyBlosxom(dict(cfg), env)
 
-    for mem in optlist:
-        if mem[0] in ["-v", "--version"]:
-            # we print the version already, so if we do it again here
-            # it'd be doing it twice.
-            # print get_version()
-            return 0
-
-        elif mem[0] in ["-h", "--help"]: 
-            print get_help()
-            return 0
-
-        elif mem[0] in ["--static", "-s"]:
-            if mem[1].startswith("incr"):
-                incremental = 1
-            else:
-                incremental = 0
-
-            p.runStaticRenderer(incremental)
-
-        elif mem[0] in ["--headers", "-h"]:
-            headers = 1
-
-        elif mem[0] in ["--render", "-r"]:
-            url = mem[1]
-            if url.startswith(cfg.get("base_url", "")):
-                url = url[len(cfg.get("base_url", "")):]
-
-            printq("Rendering '%s'" % url)
-
-            p.runRenderOne(url, headers)
-
-        elif mem[0] in ["--test", "-t"]:
-            p.testInstallation()
-
-    return 0
-
-# vim: shiftwidth=4 tabstop=4 expandtab
+        p.run()
+        response = p.getResponse()
+        response.sendHeaders(sys.stdout)
+        response.sendBody(sys.stdout)
