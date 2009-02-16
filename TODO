@@ -20,10 +20,30 @@ pyblosxom-devel mailing list.
 Thanks!
 
 
+MILESTONE VERSION 1.5
+=====================
+
+CODE CLEANUP
+
+ - port over code cleanup from experimental
+
+UNIT TESTING
+
+ - add more tests
+
+MANUAL
+
+ - re-work this, use sphinx, tie documentation with api docs
+
+COMMAND-LINE
+
+ - port over command line changes from experimental
+
+
 MILESTONE VERSION 1.4
 =====================
 
-Prospective release date: February sometime (ha!).
+Prospective release date: 
 
 UNIT TESTING
 
