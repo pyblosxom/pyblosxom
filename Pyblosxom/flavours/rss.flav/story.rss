@@ -1,8 +1,0 @@
-<item>
-  <title>$title_escaped</title>
-  <link>$base_url/$file_path_urlencoded.html</link>
-  <description><![CDATA[
-$body
-]]></description>
-</item>
-
