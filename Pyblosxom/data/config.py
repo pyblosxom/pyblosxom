@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # =============================================================
 # This is the config file for PyBlosxom.  You should go through 
 # the file and fill in values for the various properties.  This 
@@ -19,17 +20,12 @@ py = {}
 # directory.
 # Note, this should be the directory that holds the "Pyblosxom" 
 # directory (note the case--uppercase P lowercase b!).
-#py["codebase"] = "/path/to/pyblosxom/installation"
+#py["codebase"] = "%(codedir)s"
 
 
 
 # Blog configuration
 # ==================
-
-# What is the locale for this blog?  This is used when formatting dates
-# and other locale-sensitive things.  Make sure the locale is valid for
-# your system.  See the PyBlosxom documentation for details.
-#py["locale"] = "en_US.iso-8859-1"
 
 # What is the title of this blog?
 py["blog_title"] = "Another pyblosxom blog"
@@ -42,13 +38,7 @@ py["blog_author"] = "name"
 
 # What is the email address through which readers of the blog may contact
 # the authors?
-py["blog_email"] = "email@blah.com"
-
-# What is this blog's primary language (for outgoing RSS feed)?
-py["blog_language"] = "en"
-
-# Encoding for output.  This defaults to iso-8859-1.
-py["blog_encoding"] = "iso-8859-1"
+py["blog_email"] = "email@example.com"
 
 # These are the rights you give to others in regards to the content
 # on your blog.  Generally, this is the copyright information.
@@ -56,12 +46,26 @@ py["blog_encoding"] = "iso-8859-1"
 # it in correctly could result in a feed that doesn't validate.
 py["blog_rights"] = "Copyright 2005 Joe Bobb"
 
+# What is this blog's primary language (for outgoing RSS feed)?
+py["blog_language"] = "en"
+
+# Encoding for output.  This defaults to utf-8.
+py["blog_encoding"] = "utf-8"
+
+# What is the locale for this blog?  This is used when formatting dates
+# and other locale-sensitive things.  Make sure the locale is valid for
+# your system.  See the PyBlosxom documentation for details.
+#py["locale"] = "en_US.iso-8859-1"
+
 # Where is this blog geographically located?  This is used by geocoding 
 # (aka geotagging crawlers) and sites like http://geourl.org/ .
-py["blog_icbm"] = '37.448089,-122.159259'
+#py["blog_icbm"] = '37.448089,-122.159259'
 
 # Where are this blog's entries kept?
-py["datadir"] = "/path/to/blog/entries"
+py["datadir"] = "%(basedir)sentries"
+
+# Where are this blog's flavours kept?
+py["flavourdir"] = "%(basedir)sflavours"
 
 # List of strings with directories that should be ignored (e.g. "CVS")
 # ex: py['ignore_directories'] = ["CVS", "temp"]
@@ -79,7 +83,8 @@ py["depth"] = 0
 # Note: this doesn't affect date-based archive pages.
 py["num_entries"] = 5
 
-# What should the default flavour you want used be?
+# What is the default flavour you want to use when the user doesn't
+# specify a flavour in the request?
 py["default_flavour"] = "html"
 
 
@@ -106,17 +111,6 @@ py["default_flavour"] = "html"
 #py["log_filter"] = ["root", "plugin1", "plugin2"]
 
 
-# ======================
-# Optional Configuration
-# ======================
-
-# What should this blog use as its base url?
-#py["base_url"] = "http://www.some.host/weblog"
-
-# Default parser/preformatter. Defaults to plain (does nothing)
-#py["parser"] = "plain"
-
-
 
 # Plugin configuration
 # ====================
@@ -126,8 +120,9 @@ py["default_flavour"] = "html"
 # of plugindirectories, the standard pyblosxom plugins, and the xmlrpc
 # plugins.  You can list out as many directories you want, but they
 # should only contain the related plugins.
-# Example: py['plugin_dirs'] = ["/opt", "/usr/bin"]
-#py["plugin_dirs"] = ["/path/to/my/plugins"]
+# Example: py['plugin_dirs'] = [ "/home/joe/blog/plugins",
+#                                "/var/lib/pyblosxom/plugins" ]
+py["plugin_dirs"] = [ "%(basedir)splugins" ]
 
 # There are two ways for PyBlosxom to load plugins.  The first is the
 # default way which involves loading all the plugins in the lib/plugins
@@ -137,8 +132,21 @@ py["default_flavour"] = "html"
 # The "load_plugins" key is a list of strings where each string is
 # the name of a plugin module (i.e. the filename without the .py at
 # the end).
+# If you specify an empty list, then this will load no plugins.
 # ex: py["load_plugins"] = ["pycalendar", "pyfortune", "pyarchives"]
-#py["load_plugins"] = []
+py["load_plugins"] = []
+
+
+
+# ======================
+# Optional Configuration
+# ======================
+
+# What should this blog use as its base url?
+#py["base_url"] = "http://www.example.com/weblog"
+
+# Default parser/preformatter. Defaults to plain (does nothing)
+#py["parser"] = "plain"
 
 
 
@@ -160,8 +168,8 @@ py["default_flavour"] = "html"
 # ================
 
 # Doing static rendering?  Static rendering essentially "compiles" your
-# blog into a series of static html pages.  For more details, read:
-# http://pyblosxom.sourceforge.net/1.3.1/manual/c797.html
+# blog into a series of static html pages.  For more details, see the
+# documentation.
 # 
 # What directory do you want your static html pages to go into?
 #py["static_dir"] = "/path/to/static/dir"
