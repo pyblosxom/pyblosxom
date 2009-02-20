@@ -1,3 +1,4 @@
+include ez_setup.py
 include setup.py
 include CHANGELOG
 include README
@@ -6,9 +7,10 @@ include LICENSE
 include TODO
 include THANKS
 include AUTHORS
+include UPGRADE
 recursive-include bin *
-recursive-include Pyblosxom *.py
-recursive-include web *
+recursive-include Pyblosxom *
+recursive-include Pyblosxom/data *
 recursive-include Pyblosxom/flavours *
-recursive-include docs *.txt
-recursive-include tests *.py
+recursive-include docs/source *
+recursive-include tests *
