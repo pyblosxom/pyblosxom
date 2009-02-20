@@ -6,14 +6,11 @@ Flavours and Templates
 Summary
 =======
 
-PyBlosxom takes the data provided in the entries and by the plugins and
-transforms it into output using renderers.  Output can be in html, xhtml, 
-xml, or anything else--anything that you could get back from a CGI 
-script or web application.  The default renderer can be set in your 
-config file like this::
+PyBlosxom renderers take a bunch of entries and data accumulated over
+the course of handling the request and renders it into some kind
+of output which is delivered to the browser.
 
-   py["renderer"] = "blosxom"
-
+Output can be in a variety of text-based formats: html, xhtml, xml, ...
 
 PyBlosxom comes with two renderers: blosxom and debug.
 
@@ -23,6 +20,12 @@ are at your disposal and also to debug problems you might be having with
 plugins you've installed.
 
 The blosxom renderer renders entries just like Blosxom does.
+
+The renderer can be set in your config file like this::
+
+   py["renderer"] = "blosxom"
+
+If you don't specify a renderer, then the ``blosxom`` renderer is used.
 
 If you want your blog rendered using a different template system--say
 Cheetah or htmltmpl--implement a renderer that renders the output.  This
@@ -37,21 +40,11 @@ the blosxom renderer which comes with PyBlosxom.
 Flavours and Templates
 ======================
 
-The blosxom renderer uses the same template style that Blosxom uses.  As
-such, you can use most Blosxom flavour templates and only have to make some
-minor modifications.
+Each flavour specifies how the blosxom renderer should render the page.
+A flavour consists of a group of templates.  A template specifies the
+output for a portion of the page: the header, the footer, an entry, ...
 
-A flavour can be thought of as a theme or an output format.  For example,
-you could have an "html" flavour that renders the blog data in html format.
-You could have an "xhtml" flavour that renders the blog in a strict xhtml
-format.  You could have a "happy-sunshine" flavour that renders the blog
-in html format using a happy sunshiney look and feel.  You can have an
-"rss" flavour that renders the output in RSS 2.0 format with enclosures.
-So on and so forth.
-
-A flavour consists of a series of templates each of which is a part of 
-the page that finally gets rendered.  The minimum set of templates are
-these:
+A flavour consists of at least the following templates:
 
 * **content_type** - holds the content type of the flavour
 * **head** - holds everything before all the entries
@@ -60,8 +53,90 @@ these:
 * **date_head** - shows at the start of a date
 * **date_foot** - shows at the end of a date
 
-You can have other templates as well.  Many plugins require additional
-templates in order to work.
+Many plugins require additional templates to render their output in
+addition ot the standard templates listed above.
+
+PyBlosxom allows you to manage the flavours and templates for your blog
+in several different ways: in directories int he flavourdir, in directories
+in the datadir, or in the datadir along with your entries.
+
+.. Note::
+
+   PyBlosxom is backwards compatible with previous versions of
+   PyBlosxom.  You can put your flavour files iny our datadir.  You
+   can also put your flavour files in the categories of your 
+   datadir.  However you cannot have a flavourdir and put flavour files in 
+   your datadir--PyBlosxom will look at EITHER your datadir OR your
+   flavourdir for flavour files.
+
+
+In the flavourdir
+-----------------
+
+If you specify the ``flavourdir`` directory in your ``config.py`` file,
+you can store each flavour in a directory in the flavourdir.
+
+For example, if your ``config.py`` file had this::
+
+   py["flavourdir"] = "/home/joe/blog/flavours/"
+
+Then the blog directory structure might look like this::
+
+   /home/joe/blog/
+             |- entries/             <-- datadir
+             |  |- work/             <-- work category of entries
+             |  |- home/             <-- home category of entries
+             |
+             |- flavours/
+                |- html.flav/        <-- html flavour
+                |  |- content_type
+                |  |- head
+                |  |- foot
+                |  |- story
+                |  |- ...
+                |
+                |- rss.flav/         <-- rss flavour
+                |  |- content_type
+                |  |- head
+                |  |- foot
+                |  |- story
+                |  |- ...
+                |
+                |- work/
+                   |- html.flav/     <-- html flavour for the work category
+
+
+This is the easiest way to store your flavours separately from the entries
+in your blog.
+
+You can parallel the category directories in your datadir allowing you to have 
+different flavours apply to different directories.  In the example above, the 
+work category has a different html flavour than the root and home categories.
+
+This structure also makes it easier to use flavour packs found in the flavour
+registry on the `PyBlosxom website`_.
+
+.. _PyBlosxom website: http://pyblosxom.sourceforge.net/
+
+Flavour directories must end in ``.flav``.
+
+
+In flavour directories in the datadir
+-------------------------------------
+
+Flavours can be stored in directories in the directory specified by your 
+datadir.  This works similarly to the flavourdir method except that the 
+flavourdir is not a separate directory, it's the same as your datadir.  
+In this way your entries are intermixed with your flavour directories.
+
+Flavour directories must end in ``.flav``.
+
+
+In the datadir
+--------------
+
+You can also put flavour templates alongside the blog entries.  If you do this,
+then the flavour template files must end in the flavour name.
 
 The template files for a given flavour all have the same file extension which
 is the flavour's name.  For example, if you were using an "html" flavour,
@@ -83,66 +158,84 @@ If you want to create a "joy" flavour, you would have the following files:
 * date_head.joy
 * date_foot.joy
 
-You can have as many flavours as you want in your blog.
 
 .. Warning::
 
-   A warning about flavour names:
-
-   The one thing to be aware of is creating a flavour where the name is 
-   the same extension as file extensions of your blog entries.  For example,
-   the default extension for pyblosxom blog entries is 
-   ``.txt``.  Don't create a **txt** flavour.
-
-
-PyBlosxom comes with a series of flavours: html, rss (RSS 0.9.1), rss20
-(RSS 2.0), and atom (Atom 1.0).  These flavours come as part of PyBlosxom
-and they will work out of the box with no modifications and no configuration
-changes.  Additionally, you can override all or portions of these flavours.
-We'll talk about this a little later.
-
-Additionally, there is a flavour registry on the PyBlosxom web-site
-(http://pyblosxom.sourceforge.net/).  This is where you can submit flavours 
-that you have created and see flavours other people have created and 
-submitted.
+   If you intermix flavour templates with entries, then one thing
+   you need to be aware of is creating a flavour where the name is the
+   same as the extension of your blog entries.  For example, the default
+   extension for PyBlosxom blog entries is ``.txt``.  Don't create a
+   **txt** flavour.
 
 
+Included flavours
+=================
 
-Where to Put Your Flavour Files
-===============================
+PyBlosxom comes with the following flavours:
 
-If you want to override the existing flavours, add new flavours, or
-develop your own flavours, you should set the ``flavourdir`` property of 
-your ``config.py`` file.  I have this directory parallel to my datadir.  
-In my flavourdir, I have flavour directories--one for each flavour in my 
-blog::
+* ``html`` - an html flavour
+* ``rss`` - an RSS 2.0 flavour for syndication
+* ``atom`` - an Atom 1.0 flavour for syndication
 
-   home
-    |-- willg/
-       |-- myblog/
-          |-- entries/        <-- my datadir
-          |  |-- content/        <-- category
-          |  |-- dev/            <-- category
-          |  |-- links/          <-- category
-          |
-          |-- flavours/       <-- my flavourdir
-             |-- html.flav/      <-- defines the html flavour
-             |-- xml.flav/       <-- defines the xml flavour
-             |-- links/          <-- parallels the links category
-                |-- html.flav/   <-- defines the html flavour for the 
-                                     links category
+These flavours are included with PyBlosxom and they will work out of the
+box with no modifications and no configuration changes.
 
 
-In my flavourdir, I have two flavour directories ``html.flav``
-and ``xml.flav``.  The ``xml.flav`` is a copy of the ``atom.flav`` directory 
-that comes with PyBlosxom.  I copied it so that I could use "xml" for the 
-flavour name.  This isn't necessarily a wonderful idea, but it helped me 
-upgrade my blog without disturbing planets and writing lots of ``.htaccess``
-redirects and such.
+Overriding included flavours
+============================
 
-You'll notice there's an ``html.flav`` directory in the ``links`` directory.  
-When someone is looking at items in the links directory, then PyBlosxom 
-will use this html flavour.
+You can override all or portions of the included flavours by providing
+the template files you want to override in your flavourdir (or datadir).
+
+For example::
+
+   blog/
+     |- flavours/
+        |- html.flav
+           |- head
+
+When rendering the ``html`` flavour, the ``head`` template will be taken
+from ``flavours/html.flav/`` and the rest of the templates will be taken
+from the included html flavour.
+
+Second example::
+
+   blog/
+     |- entries/
+     |  |- math/
+     |
+     |- flavours/
+        |- html.flav/
+        |  |- content_type
+        |  |- head
+        |  |- date_head
+        |  |- story
+        |  |- date_foot
+        |  |- foot
+        |
+        |- math/
+           |- html.flav/
+              |- story
+
+If the request is for an entry in the math category, then the ``story``
+file will be taken from the ``flavours/math/html.flav/`` directory and
+the rest of the templates will be taken from ``flavours/html.flav/``.
+
+
+Finding new flavours
+====================
+
+There is a flavour registry on the `PyBlosxom website`_.  You can find
+flavours here that have been created by other people and submit flavours
+that you've created and want to share.
+
+.. _PyBlosxom website: http://pyblosxom.sourceforge.net/
+
+Additionally, you can use flavours from `Blosxom`_ and themes from `WordPress`_
+after spending some time converting them.
+
+.. _Blosxom: http://www.blosxom.com/
+.. _WordPress: http://wordpress.org/
 
 The order of overiding works like this:
 
@@ -159,48 +252,42 @@ This allows you to easily override specific templates in your blog
 (like the header or footer) depending on what category the user is looking
 at.
 
-.. Note::
-
-   A note about the datadir and flavourdir:
-
-   PyBlosxom is backwards compatible with previous versions of
-   PyBlosxom.  You can put your flavour files in your datadir.  You
-   can also put your flavour files in the categories of your datadir.
-   However you cannot have a flavourdir and put flavour files in your
-   datadir--PyBlosxom will look at EITHER your datadir OR your
-   flavourdir for flavour files.
-
-
 
 Template Variables
 ==================
 
 This is the list of variables that are available to your templates.
-Additionally, plugins that you are using will add additional variables.
+Templates contain variables that are expanded when the template is rendered.
+Plugins may add additional variables--refer to plugin documentationfor a
+list of which variables they add and in which templates they're available.
+
+
+Syntax
+------
 
 To use a variable in a template, prefix the variable name with a $.
 For example, this would expand to the blog's title as a h2::
 
    <h2>$title</h2>
 
-Additionally, you can wrap the variable name in parentheses so that PyBlosxom
-correctly identifies it and expands it::
+PyBlosxom 1.4.3 and later support parenthesized variables, too::
 
    <h2>$(title)</h2>
 
-This helps in situations where a natural delimiter (space, punctuation, ...)
-doesn't follow the variable.  So this won't work::
+This reduced ambiguity.
 
-   $urlindex.atom
+PyBlosxom 1.5 also supports variables that expand into functions which
+are evaluated::
 
-but this will::
-
-   $(url)index.atom
+   <h2>$(escape(title))</h2>
 
 
-To get a complete list of what variables are available in your blog, use 
-the debug renderer by changing the renderer property in your 
-``config.py`` file to debug like this::
+Getting a complete list of variables
+------------------------------------
+
+To get a complete list of what variables are available in your blog, use
+the debug renderer by changing the value of the ``renderer`` property 
+in your ``config.py`` file to ``debug`` like this::
 
    py["renderer"] = "debug"
 
@@ -213,77 +300,40 @@ in the request.  Don't forget to change it back when you're done!
 URL Encoding and Escaping of Template Variables
 -----------------------------------------------
 
-PyBlosxom versions 1.3 and later allows you to escape and URL encode 
-any variables by adding ``_escaped`` or ``_urlencoded`` to the end of 
-the variable name.
+PyBlosxom 1.5 and later has two filters allowing for escaped and urlencoded
+values::
 
-For example, ``title_escaped`` is an escaped form of the title with 
-' (single-quote) replaced with ``&apos;`` and " (double-quote) replaced 
-with ``&quot;``.
+   $escape(title)    - escapes $title
+   $urlencode(title) - urlencoded $title
 
-``title_urlencoded`` is a URL encoded form of the title which uses 
-the Python urllib.
 
+Plugins can add additional filters.
+
+PyBlosxom versions 1.3 and 1.4 escaped and urlencoded variables that 
+ended with ``_escaped`` and ``_urlencoded``.  This method is now
+deprecated.
 
 
 Variables from config.py
 ------------------------
 
-These template variables are available to all templates.  They come directly 
-from your ``config.py`` file.
+Anything in your ``config.py`` file is a variable available to all of
+your templates.  For example, these standard properties in your ``config.py``
+file are available:
 
-``blog_description``
-   The description of the blog.
-
-   Example: ``blosxom with a touch of python``
-
-``blog_title``
-   The title of the blog.
-
-   Example: ``RoughingIT - pyblosxom : /weblogs/tools/pyblosxom``
-
-``blog_language``
-   The primary language of the blog.
-
-   Example: ``en``
-
-``blog_encoding``
-   The encoding of the blog.
-
-   Example: ``iso8859-1``
-
-``blog_author``
-   The author of the blog (probably you).
-
-   Example: ``Joe Dirt``
-
-``blog_email``
-   The email address of the author of the blog (feel free to obfuscate it).
-
-   Example: ``joe at joe dot com``
-
-``blog_icbm``
-   The geographical location of your blog as a latitude/longitude pair.
-
-   Example: ``37.448089,-122.159259``
-
-``base_url``
-   This is the url up to and including the portion that kicks off PyBlosxom.
-   If you do not specify this in your ``config.py`` file, then it will be
-   generated based on information your web-server passes PyBlosxom in
-   the environment.
-
-   Example: ``http://www.example.com/~joe/cgi-bin/pyblosxom.cgi``
-
-   Example: ``http://www.example.com/~joe/blog``
-
-   You should use ``$base_url`` at the beginning of any links that should
-   be handled by PyBlosxom.
+* ``blog_description``
+* ``blog_title``
+* ``blog_language``
+* ``blog_encoding``
+* ``blog_author``
+* ``blog_email``
+* ``base_url`` (if you provided it)
+* ...
 
 
-Additionally, any other properties you set in ``config.py`` are available 
-in your templates.  If you wanted to create a ``blog_images`` variable 
-holding the base url of the directory with all your images::
+Additionally, any other properties you set in ``config.py`` are available
+in your templates.  If you wanted to create a ``blog_images`` variable
+holding the base url of the directory with all your images in it::
 
    py["blog_images"] = "http://www.joe.com/~joe/images/"
 
@@ -291,8 +341,7 @@ holding the base url of the directory with all your images::
 to your ``config.py`` file and it would be available in all your templates.
 
 
-
-Calculated Template Variables
+Calculated template variables
 -----------------------------
 
 These template variables are available to all templates as well.  They are 
@@ -358,8 +407,18 @@ calculated based on the request.
    Example: ``1.2 3/25/2005``
 
 
+Template variables only available in the date_head and date_foot templates
+--------------------------------------------------------------------------
 
-Template Variables Only Available in the story Template
+``date_head`` and ``date_foot`` templates have these additional variables:
+
+``date``
+   The date string of this day. 
+
+   Example: ``Sun, 23 May 2004``
+
+
+Template variables only available in the story template
 -------------------------------------------------------
 
 These template variables are only available in your story template.

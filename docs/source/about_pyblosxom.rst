@@ -2,119 +2,121 @@
 What is PyBlosxom
 =================
 
-PyBlosxom is a lightweight weblog system.  It was originally a Python
-clone of `Blosxom`_ but has since evolved into a weblog system of its own
+PyBlosxom is a lightweight weblog system.  It was originally a Python clone 
+of `Blosxom`_ but has since evolved into a weblog system of its own 
 reminiscent of `Blosxom`_.  PyBlosxom focuses on three things:
 
-.. _Blosxom: http://www.blosxom.com/
-
 **simplicity**
-  PyBlosxom uses the file system for all its data storage.  Because 
-  of this you can use whatever editor you want to use to create, update,
-  and manipulate entries.
+  PyBlosxom stores all data on the file system in plain text files.
+  This allows you to use any text editor to create, update and manipulate
+  entries.  You can use existing tools (version control, shell scripting,
+  procmail, ...) for blog management.
 
 **extensibility**
-  PyBlosxom has plugin framework allowing you to build plugins in 
-  Python to augment and change PyBlosxom's default behavior.
+  PyBlosxom has a plugin framework allowing you to use plugins to augment 
+  ane enhance PyBlosxom's default behavior.  Plugins are written in
+  Python.  We maintain a list of plugins in the plugin registry on the
+  website.
 
 **community**
-  There are several hundred PyBlosxom users out there all of whom 
-  have different needs.  PyBlosxom is used on a variety of operating
-  systems in a variety of environments.
+  There are several hundred PyBlosxom users out there all of whom have 
+  different needs.  PyBlosxom is used on a variety of operating systems 
+  in a variety of environments.  We have the standard open source project
+  fare: mailing lists, IRC channel, wiki, ...
 
 PyBlosxom is a pretty straight-forward system that allows you to do
 the things you need to do without building everything from scratch.
+
+.. _Blosxom: http://www.blosxom.com/
 
 
 Who shouldn't use PyBlosxom
 ===========================
 
-PyBlosxom is a small project.  As such, we have no customer support
-hotline, our documentation will be eternally half-done, and it's
-likely you will run into problems eventually.  PyBlosxom offers
-mailing lists through SourceForge for support, we do have some
-documentation, and you're encouraged to read the code.
+PyBlosxom is a small open source project.  As such, we have no customer 
+support hotline, our documentation will be eternally half-done and it's 
+likely you will run into problems eventually.  However we do have mailing
+lists, an IRC channel and documentation does exist.  Where documentation
+is lacking, you can read the source code.
 
-PyBlosxom is a CGI program at its heart.  While there have been
-changes to make it work with WSGI and mod_python and other
-web-servers, it's still architected as a CGI program.  Using it in
-other ways may cause headaches.
+PyBlosxom can run as a CGI program as well as a WSGI application.  Still,
+there are a plethora of web servers out there and other protocols to run
+web applications.  If you want to run PyBlosxom in an environment that's
+not well supported, then it may cause headaches.
 
-PyBlosxom by default uses the file-system to store entries where each
-entry is a separate file with the mtime of the file acting as the time
-stamp.  Files are stored in a directory hierarchy which matches the
-category structure of your blog.  As such, each entry ends up in a
-single category.
+PyBlosxom by default uses the file-system to store blog data.  Blog entries
+are stored in a directory tree where directories represent blog categories.
+Additionally, the mtime of the entry file is the file timestamp.  If you
+edit an existing blog entry, you'll change the timestamp.  Having said that,
+there are a variety of plugins that changes this behavior, so there is
+choice in the matter.
 
-We recognize that PyBlosxom will never be all things to all people and
-thus PyBlosxom has a framework for building plugins that are written
-in Python which allow you to augment and override the default
-behavior.  There are many plugins out there already, but it's likely
-that you will have needs that aren't met adequately.  If you don't
-have any interest in tinkering with plugins, then it's possible
-PyBlosxom is not for you.
+PyBlosxom will never be all things to all people and that's why PyBlosxom has
+a framework for plugins.  There are many plugins out there already, but if
+there's functionality that you want/need for which there are no plugins,
+then you'll either have to write it yourself or find someone else to write
+it for you.  If that's not possible, then PyBlosxom is not for you.
 
-If this program doesn't sound like something that will meet your needs
-or if this sounds like it's going to be really frustrating, we don't
-think you should use PyBlosxom.  There are many other weblog systems
-out there which meet a wide variety of needs--there's no need to try
-to shoe-horn PyBlosxom into your requirements and get frustrated in
-the process.
+If this program doesn't sound like something that will meet your needs or if 
+this sounds like it's going to be really frustrating, we don't think you 
+should use PyBlosxom.  There are many other weblog systems out there which 
+meet a wide variety of needs--there's no need to try to shoe-horn PyBlosxom 
+into your requirements and get frustrated in the process.
 
-However, if this invigorates you, join the mailing lists and we'll
-work together to make PyBlosxom better for all of us.
+However, if this invigorates you, join the mailing lists and we'll work 
+together to make PyBlosxom better for all of us.
 
 
 Basic Overview of PyBlosxom
 ===========================
 
-PyBlosxom is a file-based weblog system.  Entries are stored in
-text files (one file per entry) in a directory corresponding to the
-category for the entry.  The directory tree of your entries and
-categories is called a *datadir*.  For more about this see 
-``install`` and ``writing_entries``.
+PyBlosxom is a file-based weblog system.  Entries are stored in text files 
+(one file per entry) in a directory corresponding to the category for the 
+entry.  The directory tree of your entries and categories is called a 
+*datadir*.  For more about this see pages on installation and writing 
+entries.
 
-The look and feel of your blog is determined by flavours.  A
-flavour is a group of templates.  Examples of flavours include:
+The look and feel of your blog is determined by flavours.  A flavour is a 
+group of templates.  Examples of flavours include:
 
 * RSS
-* RSS 2.0
 * Atom 1.0
 * HTML
 * XHTML
 
-For more information about flavours, see ``flavours_and_templates``.
-The PyBlosxom web-site maintains flavours submitted by people like you
-at http://pyblosxom.sourceforge.net/registry/flavours/ .
+For more information about flavours, see ``flavours_and_templates``.  The 
+`PyBlosxom web-site`_ maintains flavours submitted by people like you in
+the flavour registry.
 
-PyBlosxom behavior can be adjusted by using PyBlosxom plugins.  Plugins
-are written in Python and use the PyBlosxom callback system to override
-or adjust PyBlosxom behavior.  For more information on plugins, see
-``plugins``, ``writing_plugins``, and ``dev_architecture``.  The PyBlosxom 
-web-site maintains plugins submitted by people like you at 
-http://pyblosxom.sourceforge.net/registry/ .  
+PyBlosxom behavior can be adjusted by using PyBlosxom plugins.  Plugins are 
+written in Python and use the PyBlosxom callback system to override or adjust 
+PyBlosxom behavior.  For more information on plugins, see pages on plugins,
+writing plugins and PyBlosxom architecture.  The `PyBlosxom web-site`_ 
+maintains plugins submitted by people like you in the plugin registry.
 
-Additionally, there's a contributed plugins pack that contains many 
-often-used plugins that are maintained by the PyBlosxom developers.  You
-can download the contributed plugins pack from our `web-site`_.
+Additionally, PyBlosxom 2.0 comes with some standard plugins. 
 
-.. web-site: http://pyblosxom.sourceforge.net/
+.. _PyBlosxom web-site: http://pyblosxom.sourceforge.net/
 
 
 Where to go for help
 ====================
 
-PyBlosxom comes with documentation in the ``docs`` directory.  This
-should be the first place you should go to for help.
+PyBlosxom comes with documentation in the ``docs`` directory.  This should be 
+the first place you should go to for help.
 
-On the PyBlosxom project `web-site`_, you can find up-to-date documentation, 
-manuals, project status and mailing list information.
+The `PyBlosxom web-site`_ has up-to-date documentation, project status and
+mailing list information.
 
-.. _web-site: http://pyblosxom.sourceforge.net/
+.. _PyBlosxom web-site: http://pyblosxom.sourceforge.net/
 
 The pyblosxom-users mailing list is the place to go if you're having
-difficulties.  Discussions from the mailing list affect the content of
-this manual.  Mailing list information can be found on our `Contact Us`_ 
+difficulties.  Discussions from the mailing list affect the content of this 
+documentation.  Mailing list information can be found on our `mailing lists`_ 
 page.
 
-.. _Contact Us: http://pyblosxom.sourceforge.net/blog/static/contact
+.. _mailing lists: http://pyblosxom.sourceforge.net/blog/static/contact
+
+Additionally, there are a handful of people who hang out on ``#pyblosxom``
+channel on Freenode.  This is a good place to get some help with setup
+and configuration.

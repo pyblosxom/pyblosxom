@@ -11,12 +11,9 @@ advanced and we consider these things to be very much a "you're on
 your own" kind of issue.
 
 If you ever have problems with PyBlosxom and you ask us questions on
-the `pyblosxom-users`_ or `pyblosxom-devel`_ mailing lists, make sure
+the pyblosxom-users or pyblosxom-devel mailing lists, make sure
 you explicitly state what things you've done from this chapter.  It'll
 go a long way in helping us to help you.
-
-.. _pyblosxom-users: mailto:pyblosxom-users@lists.sourceforge.net
-.. _pyblosxom-devel: mailto:pyblosxom-devel@lists.sourceforge.net
 
 
 
@@ -29,9 +26,9 @@ In the default installation, the PyBlosxom script is named ``pyblosxom.cgi``.
 For a typical user on an Apache installation with user folders turned
 on, PyBlosxom URLs could look like this::
 
-   http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi
-   http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi/an_entry.html
-   http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi/programming/another_entry.html 
+    http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi
+    http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi/an_entry.html
+    http://www.joe.com/~joe/cgi-bin/pyblosxom.cgi/programming/another_entry.html 
 
 
 That gets pretty long and it's not very good looking.  For example, telling 
@@ -53,8 +50,8 @@ Change the Name of the pyblosxom.cgi Script
 -------------------------------------------
 
 There's no reason that ``pyblosxom.cgi`` has to be named
-``pyblosxom.cgi``.  Let's try changing it from ``pyblosxom.cgi`` to
-``blog``.  Now our example URLs look like this::
+``pyblosxom.cgi``.  Let's try changing it ``blog``.  Now our example
+URLs look like this::
 
     http://www.joe.com/~joe/cgi-bin/blog
     http://www.joe.com/~joe/cgi-bin/blog/an_entry.html
@@ -69,9 +66,9 @@ You might have to change the ``base_url`` property in your
 
 .. Note::
 
-    A note about the base_url:
+    A note about the ``base_url``:
     
-    The base_url property should NOT have a trailing slash.
+    The ``base_url`` value should NOT have a trailing slash.
 
 
 If you're running on Apache, you might have to tell Apache that this

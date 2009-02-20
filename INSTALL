@@ -2,19 +2,7 @@
 PyBlosxom INSTALL
 =================
 
-:Author: PyBlosxom Development Team
-:Version: $Id: README 1046 2007-06-20 18:12:58Z willhelm $
-:Copyright: This document is distributed under the MIT license.
+Read through the ``install.rst`` document in ``docs/source/`` or view
+the document on the documentation section of the `PyBlosxom web-site`_.
 
-.. contents::
-
-
-Summary
-=======
-
-There are a variety of ways to install PyBlosxom and they differ in what
-platform you're installing PyBlosxom on and how you want it to function.
-Several installation methods are in the ``docs/`` directory.
-
-If you don't see an installation file that matches your needs, ask us on
-the pyblosxom-users mailing list (http://pyblosxom.sourceforge.net/blog/static/contact).
+.. PyBlosxom web-site: http://pyblosxom.sourceforge.net/

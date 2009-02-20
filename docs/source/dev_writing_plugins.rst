@@ -25,6 +25,10 @@ in detail:
 5. and any copyright information you have
 6. any notes about requirements (e.g. "Requires Python 2.3 or greater")
 
+
+Documentation
+-------------
+
 For example, this is at the top of Will's wbgpager plugin::
 
    """
@@ -111,6 +115,8 @@ For example, this is at the top of Will's wbgpager plugin::
    Copyright 2004, 2005, 2006 Will Guaraldi
    """
 
+Metadata
+--------
 
 All plugins should have the following module-level variables 
 defined in them just after the docstring:
@@ -138,18 +144,48 @@ For example::
    __description__ = "Splits long indexes into multiple pages."
 
 
-After that, you should have a verify_installation section that
-verifies that the plugin is configured correctly.  As of PyBlosxom 0.9, 
-the pyblosxom.cgi is able to test your PyBlosxom installation.  It 
-verifies certain items in your config.py file and also loads all the 
-plugins and lets them verify their configuration as well.
-First it tells you your Python version, OS name, and then proceeds to verify
-your config properties (did you specify a valid datadir?  does it
-exist?...) and then initializes all your plugins and executes
-verify_installation(request) on every plugin you have installed that 
-has the function.
+Configuration, installation and verification
+--------------------------------------------
 
-As a plugin developer, you should add a verify_installation function
+After that, you should have a ``verify_installation`` section that
+verifies that the plugin is configured correctly.  As of PyBlosxom 0.9, 
+PyBlosxom allows users to test their configuration and installation from
+the console.
+
+In PyBlosxom 0.9 through 1.4.3, users did this by executing the
+``pyblosxom.cgi`` script::
+
+   % ./pyblosxom.cgi
+   Trying to import the config module....
+   PyBlosxom version: 1.4.3-rc1 12/11/2007
+   Welcome to PyBlosxom's installation verification system.
+   ------
+   ]] printing diagnostics [[
+   pyblosxom:   1.4.3-rc1 12/11/2007
+   ....
+
+In PyBlosxom 1.5, users can do this either using the ``pyblosxom.cgi``
+script in the directory with the ``config.py`` file::
+
+   % ./pyblosxom.cgi --test
+   Trying to import the config module....
+   PyBlosxom version: 1.5 dev
+   ....
+
+or using the ``pyblosxom-cmd`` script::
+
+   % pyblosxom-cmd -c /home/joe/cgi-bin/config.py --test
+   Trying to import the config module....
+   PyBlosxom version: 1.5 dev
+   ....
+
+
+This goes through and verifies the properties in the ``config.py`` file
+as best as it can.  It also prints out diagnostic information which is
+useful when things don't work.  It also loads and initializes all the
+plugins and asks them to verify their configurations as best they can.
+
+As a plugin developer, you should add a ``verify_installation`` function
 to your plugin module.  Something like this (taken from pycategories)::
 
    def verify_installation(request):
@@ -168,15 +204,15 @@ through configuring your highly complex, quantum-charged, turbo plugin
 in small baby steps without having to hunt for where their logs might be.
 
 So check the things you need to check, print out error messages
-(informative ones), and then return a 1 if the plugin is configured 
-correctly or a 0 if it's not configured correctly.
+(informative ones) using ``print``, and then return a 1 if the plugin 
+is configured correctly or a 0 if it's not configured correctly.
 
-This is not a substitute for the user to read the installation instructions.  
-It should be a really easy way to catch a lot of potential problems
-without involving the web server's error logs and debugging information
-being sent to a web-browser and things of that nature.
+Note: This is not a substitute for the user to read the installation 
+instructions.  It should be a really easy way to catch a lot of potential 
+problems without involving the web server's error logs and debugging 
+information being sent to a web-browser and things of that nature.
 
-Here's another example of verify_installation from Will's wbgpager
+Here's an example of ``verify_installation`` from Will's wbgpager
 plugin::
 
    def verify_installation(request):

@@ -6,17 +6,24 @@ Summary
 =======
 
 The architecture for PyBlosxom has evolved over time.  The mission is to 
-build an easily augmented blog server that uses the file system for data 
-storage.  Using the file system allows PyBlosxom to fit in with other 
-applications rather than forcing PyBlosxom to solve all problems all by 
-itself.
+build an easily augmented blog system that uses the file system for data 
+storage.  Using the file system allows PyBlosxom to fit in with existing
+applications and processes ather than forcing PyBlosxom to solve all problems 
+by itself.
 
-In general, this chapter is lacking pretty severely.  The code itself
-is fairly well documented and you should always consider the code to be
-an authority when the code and this manual are in disagreement.
+For example, because PyBlosxom uses the file system for data storage
+you can use your favorite version control system to maintain 
+revisions and version history for your blog, you can use your favorite text 
+editor to edit blog entries, you can use ``grep`` and other command-line
+utilities, you can interface with your email system, ...
 
-FIXME - rework this whole chapter.
+This chapter is still pretty high-level and could use a lot of work.
+It could use more examples and text to document PyBlosxom's architecture 
+making it easier for people to develop plugins and continue to hack on 
+PyBlosxom itself.
 
+The code is fairly well documented and you should always consider the code
+to be the authority when the code and this manual are in disagreement.
 
 
 Parts
@@ -28,23 +35,25 @@ PyBlosxom is composed of several parts:
    web-server, pulls in configuration variables from ``config.py`` 
    and then instantiates PyBlosxom objects to handle the request.
 
-2. ``Pyblosxom`` package - This is the Python package that holds the 
+2. ``PyBlosxomWSGIApp`` - This is the WSGI application for PyBlosxom.
+
+3. ``Pyblosxom`` package - This is the Python package that holds the 
    PyBlosxom objects and utility functions that handle the request.
 
-   1.1. the ``entries`` package - Handles the abstraction allowing PyBlosxom 
-        to use entries other than those solely found on the file system.
+   1. the ``entries`` package - Handles the abstraction allowing PyBlosxom 
+      to use entries other than those solely found on the file system.
 
-   1.2. the ``renderers`` package - PyBlosxom can handle different renderers. 
-        The renderer gets a list of entries to be rendered and can render 
-        them using whatever means it so desires: blosxom templates, 
-        htmltmpl templates, Cheetah templates, hard-coded RSS 2.0 markup, 
-        ...  
+   2. the ``renderers`` package - PyBlosxom can handle different renderers. 
+      The renderer gets a list of entries to be rendered and can render 
+      them using whatever means it so desires: blosxom templates, 
+      htmltmpl templates, Cheetah templates, hard-coded RSS 2.0 markup, 
+      ...  
 
-        PyBlosxom comes with two renderers: default and blosxom.
+      PyBlosxom comes with two renderers: default and blosxom.
 
-   1.3. the ``cache`` package - PyBlosxom allows for entry-level caching. 
-        This helps in cases where your entries are stored in a format that 
-           requires a lot of processing to convert to HTML.
+   3. the ``cache`` package - PyBlosxom allows for entry-level caching. 
+      This helps in cases where your entries are stored in a format that 
+      requires a lot of processing to convert to HTML.
 
 
 PyBlosxom's behavior and output is then augmented by:
@@ -61,11 +70,11 @@ PyBlosxom's behavior and output is then augmented by:
 Lifecycle of a PyBlosxom Request
 ================================
 
-This is the life cycle of a single PyBlosxom request. It involves the 
+This is the life cycle of a single PyBlosxom CGI request. It involves the 
 following "entities":
 
 
-* ``pyblosxom.cgi`` - A script found in the web/ directory.  This is 
+* ``pyblosxom.cgi`` - A script found in the ``web/`` directory.  This is 
   the CGI script that handles PyBlosxom requests.
 
 * ``config.py`` - The configuration file that defines the behavior 
@@ -97,55 +106,57 @@ The PyBlosxom request lifecycle starts with the web-server executing
 
 4. ``pyblosxom.cgi`` calls ``run()`` on the PyBlosxom object
 
-   4.1. PyBlosxom instance, run method: calls ``initialize``
+   1. PyBlosxom instance, run method: calls ``initialize``
 
-        4.1.1. PyBlosxom instance, ``initialize`` method: calls the entry
-               parser callback to get a map of all the entry types PyBlosxom
-               can handle
+        1. PyBlosxom instance, ``initialize`` method: calls the entry
+           parser callback to get a map of all the entry types PyBlosxom
+           can handle
 
-   4.2. PyBlosxom instance, ``run`` method: calls the start callback to
-        allow plugins to do any initialization they need to do
+   2. PyBlosxom instance, ``run`` method: calls the start callback to
+      allow plugins to do any initialization they need to do
 
-   4.3. PyBlosxom instance, ``run`` method: calls the handle callback
-        allowing plugins to handle the request
+   3. PyBlosxom instance, ``run`` method: calls the handle callback
+      allowing plugins to handle the request
 
-        If a plugin handles the request, the plugin should return a ``1``
-        signifying it has handled the request and PyBlosxom should stop.
-        FINISHED.
+      If a plugin handles the request, the plugin should return a ``1``
+      signifying it has handled the request and PyBlosxom should stop.
+      FINISHED.
 
-        If no plugin handles the request, then we continue using the
-        ``blosxom_handler``.
+      If no plugin handles the request, then we continue using the
+      ``blosxom_handler``.
 
-   4.4. PyBlosxom instance, ``run`` method: calls the end callback to allow
-        plugins to do any cleanup they need to do.
+   4. PyBlosxom instance, ``run`` method: calls the end callback to allow
+      plugins to do any cleanup they need to do.
 
+FIXME - add lifecycle for long-running processes through WSGI--it's
+slightly different.
 
 
 Lifecycle of the blosxom_handler
 ================================
 
-This describes what the blosxom_handler does. This is the default handler 
-for PyBlosxom. It's called by the PyBlosxom instance in the run method if 
-none of the plugins have handled the request already.
+This describes what the ``blosxom_handler`` does.  This is the default
+handler for PyBlosxom.  It's called by the PyBlosxom instance in the
+run method if none of the plugins have handled the request already.
 
-1. Calls the renderer callback to get a renderer instance.
+1. Calls the ``renderer`` callback to get a renderer instance.
 
-   If none of the plugins return a renderer instance, then PyBlosxom
-   checks to see if the renderer property is set in ``config.py``.
+   If none of the plugins return a ``Renderer`` instance, then PyBlosxom
+   checks to see if the ``renderer`` property is set in ``config.py``.
 
-   If there is a renderer specified, PyBlosxom instantiates that.
+   If there ``renderer`` is specified, PyBlosxom instantiates that.
 
-   If there is no renderer specified, PyBlosxom uses the blosxom
+   If there ``renderer`` is not specified, PyBlosxom uses the ``blosxom``
    renderer in the ``renderer`` package.
 
-2. Calls the pathinfo callback which allows all plugins to help figure out
+2. Calls the ``pathinfo`` callback which allows all plugins to help figure out
    what to do with the HTTP URI/QUERYSTRING that's been requested.
 
-3. Calls the filelist callback which returns a list of entries to render
+3. Calls the ``filelist`` callback which returns a list of entries to render
    based on what the pathinfo is.
 
-4. Calls the prepare callback which allows plugins to transform the entries
-   and any other data in the Request object prior to rendering.
+4. Calls the ``prepare`` callback which allows plugins to transform the entries
+   and any other data in the ``Request`` object prior to rendering.
 
 5. Renders the entries.
 
@@ -161,27 +172,27 @@ templates and entry data at the time of rendering that specific piece.
 
 1. Renders the ``content_type`` template.
 
-2. Calls the head callback and then renders the ``head`` template.
+2. Calls the ``head`` callback and then renders the ``head`` template.
 
-3. Calls the date_head callback and renders the ``date_head`` template.
+3. Calls the ``date_head`` callback and renders the ``date_head`` template.
 
 4. For each entry:
 
-   4.1. If the date of this entry's mtime is different than the last entry,
-        call the date_foot callback and render the ``date_foot`` template.
-        Then call the date_head callback and render the ``date_head``
-        template.
+   1. If the date of this entry's mtime is different than the last entry,
+      call the ``date_foot`` callback and render the ``date_foot`` template.
+      Then call the ``date_head`` callback and render the ``date_head``
+      template.
 
-   4.2. Call the story callback and render the ``story`` template.
+   2. Call the ``story`` callback and render the ``story`` template.
 
-5. Call the date_foot callback and render the ``date_foot`` template.
+5. Call the ``date_foot`` callback and render the ``date_foot`` template.
 
-6. Call the foot callback and render the ``foot`` template.
+6. Call the ``foot`` callback and render the ``foot`` template.
 
 
 
-Callbacks
-=========
+About Callbacks
+===============
 
 Callbacks allow plugins to override behavior in PyBlosxom or provide
 additional behavior.  The callback mechanism actually encompasses a
@@ -259,8 +270,8 @@ is in the Request.  Inside the data dict is entry_list
 Functions that implement this callback will get an args dict
 containing:
 
-1. ``request`` - The Request object at the particular moment.
-
+``request``
+   a Request object
 
 Functions that implement this callback can return whatever they want--it
 doesn't affect the callback chain.
@@ -295,9 +306,14 @@ PyBlosxom request for the purposes of logging.
 Functions that implement this callback will get an args dict
 containing:
 
-1. ``filename`` - a filename (typically a base filename)
-2. ``return_code`` - A HTTP error code (e.g 200, 404, 304)
-3. ``>request`` - a Request object
+``filename``
+   a filename; typically a base filename
+
+``return_code``
+   an HTTP error code (e.g. 200, 404, 304, ...)
+
+``request``
+   a Request object
 
 
 Functions that implement this callback can return whatever they want--it
@@ -323,7 +339,8 @@ EntryBase subclass.
 Functions that implement this callback will get an args dict
 containing:
 
-1. ``request`` - the PyBlosxom request.
+``request``
+   a Request object
 
 Functions that implement this callback should return None if they
 don't plan on generating the entry list or a list of entries.
@@ -348,10 +365,11 @@ returns mtimes from its in-memory database.
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``filename`` - the filename of the entry
-2. ``mtime`` - the result of an os.stat on the filename of the 
-   entry
+``filename``
+   the filename of the entry
 
+``mtime``
+   the result of an ``os.stat`` on the filename of the entry
 
 Functions that implement this callback must return the input args dict
 whether or not they adjust anything in it.  The callback chain will stop 
@@ -368,20 +386,31 @@ item.  This item is stored in the http dict of the Request object.
 Functions would parse this as they desire, then set the following
 variables in the data dict of the Request object:
 
-1. ``bl_type`` - (dir|file)
-2. ``pi_bl`` - typically the same as PATH_INFO
-3. ``pi_yr`` - yyyy
-4. ``pi_mo`` - (mm|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
-5. ``pi_da`` - dd
-6. ``root_datadir`` - full path to the entry folder or entry file on 
-   filesystem
-7. ``flavour`` - The flavour gathered from the URL
+``bl_type``
+   ``dir`` or ``file``
 
+``pi_bl``
+   typically the same as ``PATHINFO``
+
+``pi_yr``
+   the year in yyyy format
+
+``pi_mo``
+   the month in mm or mmm format (e.g. 02, Jan, Feb, ...)
+
+``pi_da``
+   the day of the month in dd format
+
+``root_datadir``
+   full path to the entry folder or entry file on the file system
+
+``flavour``
+   the flavour gathered from this URL
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``request`` - a Request object
-
+``request``
+   a Request object
 
 Functions that implement this callback should make the modifications
 to the data dict in place--no need to return anything.
@@ -398,7 +427,8 @@ we use the default blosxom renderer.
 Functions that implement this callback will get an args dict
 containing:
 
-1. ``request`` - the PyBlosxom Request
+``request``
+   a Request object
 
 Functions that implement this callback should return None if they
 don't want to specify a renderer or the renderer object instanct
@@ -435,10 +465,14 @@ Once one of them returns a transformed entry, then we stop processing.
 Functions that implement this callback will get an args dict
 containing:
 
-1. ``parser`` - a string that indicates whether a preformatter should run
-2. ``story`` - a list containing lines of text (with '\n' included)
-3. ``request`` - a Request object
+``parser``
+  a string that indicates whether a preformatter should run
 
+``story``
+  the list of lines of the blog post with ``\n`` included
+
+``request``
+  a Request object
 
 Functions that implement this callback should return None if they
 didn't modify the story or a single story string.
@@ -466,9 +500,11 @@ Examples of usage:
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``entry_data`` - a dict that minimally contains a "title" and a "story"
-2. ``request`` - a Request object
+``entry_data``
+   a dict that minimally contains ``title`` and ``story``
 
+``request``
+   a Request object
 
 Functions that implement this callback don't need to return 
 anything--modifications to the entry_data dict are done in place.
@@ -487,10 +523,10 @@ Use this callback for any setup code that your plugin needs, like:
 
 .. Note::
 
-   cb_start is different in PyBlosxom than in blosxom
+   ``cb_start`` is different in PyBlosxom than in blosxom
 
-   The cb_start callback is slightly different than in blosxom in 
-   that cb_start is called for every PyBlosxom request regardless of 
+   The ``cb_start`` callback is slightly different than in blosxom in 
+   that ``cb_start`` is called for every PyBlosxom request regardless of 
    whether it's handled by the default blosxom handler.  In general,
    it's better to delay allocating resources until you absolutely know 
    you are going to use them.
@@ -498,8 +534,8 @@ Use this callback for any setup code that your plugin needs, like:
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``request`` - a Request object
-
+``request``
+   a Request object
 
 Functions that implement this callback don't need to return 
 anything.
@@ -522,17 +558,17 @@ Examples of usage:
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``request`` - a Request object
-
+``request``
+   a Request object
 
 Functions that implement this callback don't need to return 
 anything.
 
 .. Note::
 
-   cb_end is different in PyBlosxom than in blosxom
+   ``cb_end`` is different in PyBlosxom than in blosxom
 
-   The cb_end callback is called for every PyBlosxom request regardless
+   The ``cb_end`` callback is called for every PyBlosxom request regardless
    of whether it's handled by the default blosxom handler or not.  This
    is slightly different than blosxom.
 
@@ -543,21 +579,27 @@ cb_head
 
 The head callback is called before a head flavour template is rendered.
 
-cb_head is called before the variables in the entry are substituted
+``cb_head`` is called before the variables in the entry are substituted
 into the template.  This is the place to modify the head template based
 on the entry content.  You can also set variables on the entry that will
-be used by the cb_story or cb_foot templates.  You have access to 
+be used by the ``cb_story`` or ``cb_foot`` templates.  You have access to 
 all the content variables via entry.
 
-Blosxom 2.0 calls this callback 'head'.
+Blosxom 2.0 calls this callback ``head``.
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``request`` - the Request object
-2. ``renderer`` - the BlosxomRenderer that called the callback
-3. ``entry`` - a EntryBase to be rendered
-4. ``template`` - a string containing the flavour template to be processed
+``request``
+   a Request object
 
+``renderer``
+   the ``BlosxomRenderer`` instance that called the callback
+
+``entry``
+   the entry to be rendered
+
+``template``
+   a string containing the flavour template to be processed
 
 Functions that implement this callback must return the input args
 dict whether or not they adjust anything in it.
@@ -581,24 +623,29 @@ to the ``$blog_title`` variable::
 cb_date_head
 ------------
 
-The date_head callback is called before a date_head flavour template is
-rendered.
+The ``date_head`` callback is called before a ``date_head`` flavour 
+template is rendered.
 
-cb_date_head is called before the variables in the entry are substituted
-into the template.  This is the place to modify the date_head template 
+``cb_date_head`` is called before the variables in the entry are substituted
+into the template.  This is the place to modify the ``date_head`` template 
 based on the entry content.  You have access to all the content variables 
 via entry.
 
-Blosxom 2.0 calls this callback 'date'.
+Blosxom 2.0 calls this callback ``date``.
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``request`` - the Request object
-2. ``renderer`` - the BlosxomRenderer that called the callback
-3. ``entry`` - an EntryBase object to be rendered
-4. ``template`` - a string containing the flavour template to be
-   processed
+``request``
+   a Request object
 
+``renderer``
+   the ``BlosxomRenderer`` instance that called the callback
+
+``entry``
+   the entry to be rendered
+
+``template``
+   a string containing the flavour template to be processed
 
 Functions that implement this callback must return the input args
 dict whether or not they adjust anything in it.
@@ -608,26 +655,33 @@ dict whether or not they adjust anything in it.
 cb_story
 --------
 
-The story callback gets called before the entry is rendered.
+The ``story`` callback gets called before the entry is rendered.
 
-The template used is typically the story template, but we allow 
-entries to override this if they have a "template" property.  If they 
-have the "template" property, then we'll use that template instead.
+The template used is typically the ``story`` template, but we allow 
+entries to override this if they have a ``template`` property.  If they 
+have the ``template`` property, then we'll use the template of that
+name instead.
 
-cb_story is called before the variables in the entry are substituted
-into the template.  This is the place to modify the story template based
+``cb_story`` is called before the variables in the entry are substituted
+into the template.  This is the place to modify the ``story`` template based
 on the entry content.  You have access to all the content variables via 
 entry.
 
-Blosxom 2.0 calls this callback 'story'.
+Blosxom 2.0 calls this callback ``story``.
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``request`` - the Request object
-2. ``renderer`` - the BlosxomRenderer that called the callback
-3. ``entry`` - entry - a EntryBase to be rendered
-4. ``template`` - a string containing the flavour template to be processed
+``request``
+   a Request object
 
+``renderer``
+   the ``BlosxomRenderer`` that called the callback
+
+``entry``
+   the entry to be rendered
+
+``template``
+   a string containing the flavour template to be processed
 
 Functions that implement this callback must return the input args
 dict whether or not they adjust anything in it.
@@ -637,18 +691,23 @@ dict whether or not they adjust anything in it.
 cb_story_end
 ------------
 
-The story_end callback is is called after the variables in the entry 
+The ``story_end`` callback is is called after the variables in the entry 
 are substituted into the template.  You have access to all the 
 content variables via entry.
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``request`` - the Request object
-2. ``renderer`` - the BlosxomRenderer that called the callback
-3. ``entry`` - an EntryBase object to be rendered
-4. ``template`` - a string containing the flavour template to be
-   processed
+``request``
+   a Request object
 
+``renderer``
+   the ``BlosxomRenderer`` instance that called the callback
+
+``entry``
+   the entry object to be rendered
+
+``template``
+   a string containing the flavour template to be processed
 
 Functions that implement this callback must return the input args
 dict whether or not they adjust anything in it.
@@ -658,20 +717,26 @@ dict whether or not they adjust anything in it.
 cb_foot
 -------
 
-The foot callback is called before the variables in the entry are 
+The ``foot`` callback is called before the variables in the entry are 
 substituted into the foot template.  This is the place to modify the 
-foot template based on the entry content.  You have access to all the 
+``foot`` template based on the entry content.  You have access to all the 
 content variables via entry.
 
-Blosxom 2.0 calls this callback 'foot'.
+Blosxom 2.0 calls this callback ``foot``.
 
 Functions that implement this callback will get an args dict containing:
 
-1. ``request`` - the Request object
-2. ``renderer`` - renderer - the BlosxomRenderer that called the callback
-3. ``entry`` - an EntryBase to be rendered
-4. ``template`` - a string containing the flavour template to be processed
+``request``
+   a Request object
 
+``renderer``
+   the ``BlosxomRenderer`` instance that called the callback
+
+``entry``
+   the entry to be rendered
+
+``template``
+   a string containing the flavour template to be processed
 
 Functions that implement this callback must return the input args
 dict whether or not they adjust anything in it.

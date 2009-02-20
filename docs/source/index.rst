@@ -12,9 +12,7 @@ Contents:
 
    introduction
    about_pyblosxom
-   install_cgi
-   install_paste
-   install_debian
+   install
    install_wsgi
    advanced_installation
    config_variables
