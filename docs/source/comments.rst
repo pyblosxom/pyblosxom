@@ -2,12 +2,6 @@
 Comments
 ========
 
-:Author: PyBlosxom Development Team
-:Version: $Id$
-:Copyright: This document is distributed under the MIT license.
-
-.. contents::
-
 This chapter briefly walks you through installing the comments, trackback,
 pingback, and CommentAPI plugins.
 

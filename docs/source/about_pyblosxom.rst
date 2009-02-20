@@ -1,17 +1,6 @@
-===============
-About PyBlosxom
-===============
-
-:Author: PyBlosxom Development Team
-:Version: $Id$
-:Copyright: This document is distributed under the MIT license.
-
-.. contents::
-
-
-
-About PyBlosxom
-===============
+=================
+What is PyBlosxom
+=================
 
 PyBlosxom is a lightweight weblog system.  It was originally a Python
 clone of `Blosxom`_ but has since evolved into a weblog system of its own

@@ -2,14 +2,6 @@
 Advanced Installation
 =====================
 
-:Author: PyBlosxom Development Team
-:Version: $Id$
-:Copyright: This document is distributed under the MIT license.
-
-.. contents::
-
-
-
 We encourage you not to try any of this until you've gotten a blog up
 and running.
 

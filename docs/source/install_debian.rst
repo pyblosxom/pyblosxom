@@ -2,13 +2,6 @@
 Installing PyBlosxom on Debian
 ==============================
 
-:Author: PyBlosxom Development Team
-:Version: $Id: installation.txt 1036 2007-06-11 14:40:48Z willhelm $
-:Copyright: This document is distributed under the MIT license.
-
-.. contents::
-
-
 Summary
 =======
 

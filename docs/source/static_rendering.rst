@@ -2,13 +2,6 @@
 Static Rendering
 ================
 
-:Author: PyBlosxom Development Team
-:Version: $Id$
-:Copyright: This document is distributed under the MIT license.
-
-.. contents::
-
-
 Summary
 =======
 

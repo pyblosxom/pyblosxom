@@ -2,13 +2,6 @@
 Installing PyBlosxom with Paste
 ===============================
 
-:Author: PyBlosxom Development Team
-:Version: $Id: advanced_installation.txt 1029 2007-06-07 02:33:12Z willhelm $
-:Copyright: This document is distributed under the MIT license.
-
-.. contents::
-
-
 Summary
 =======
 
