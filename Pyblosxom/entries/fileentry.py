@@ -62,10 +62,6 @@ class FileEntry(base.EntryBase):
         self._populated_data = 0
 
     def __repr__(self):
-        """
-        Returns a representation of this instance with the filename
-        and root.
-        """
         return "<fileentry f'%s' r'%s'>" % (self._filename, self._root)
 
     def setTimeLazy(self, timetuple):

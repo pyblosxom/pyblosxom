@@ -36,8 +36,8 @@ class EntryBase:
     the InterWeeb.
     """
     def __init__(self, request):
-        self._data = None
-        self._metadata = tools.VariableDict()
+        self._data = ""
+        self._metadata = dict(tools.STANDARD_FILTERS)
         self._id = ""
         self._mtime = BIGNUM
         self._request = request
@@ -246,9 +246,6 @@ class EntryBase:
         if key == CONTENT_KEY:
             return self.getData()
 
-        if key == CONTENT_KEY + "_escaped":
-            return tools.escape_text(self.getData())
-
         return self.getMetadata(key, default)
 
     def get(self, key, default=None):
@@ -341,11 +338,10 @@ class EntryBase:
         keys = self.getMetadataKeys()
         if CONTENT_KEY not in keys:
             keys.append(CONTENT_KEY)
-            keys.append(CONTENT_KEY + "_escaped")
         return keys
 
 
-def generate_entry(request, properties, data, mtime):
+def generate_entry(request, properties, data, mtime=None):
     """
     Takes a properties dict and a data string and generates a generic
     entry using the data you provided.

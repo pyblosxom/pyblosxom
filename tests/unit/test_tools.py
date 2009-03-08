@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import _path_pyblosxom
 
 import string
@@ -6,24 +7,26 @@ import os.path
 
 from Pyblosxom import tools, pyblosxom
 
+from nose.tools import eq_
+
 class TestVAR_REGEXP:
-    """tools.VAR_REGEXP
+    """tools._VAR_REGEXP
 
     This tests the various syntaxes for variables in PyBlosxom templates.
     """
     def _get_match(self, compiled_regexp, s):
         r = compiled_regexp.search(s)
-        print repr(r)
+        # print repr(r)
         return r and r.group(1)
 
     def test_escaped_variables(self):
-        VR = tools.VAR_REGEXP
+        VR = tools._VAR_REGEXP
         assert self._get_match(VR, "\\$test") == None
         # FIXME - this is bad behavior
         assert self._get_match(VR, "\\\\$test") == None
 
     def test_dollar_then_string(self):
-        VR = tools.VAR_REGEXP
+        VR = tools._VAR_REGEXP
         assert self._get_match(VR, "$test") == "test"
         assert self._get_match(VR, "$test-test") == "test-test"
         assert self._get_match(VR, "$test_test") == "test_test"
@@ -33,60 +36,130 @@ class TestVAR_REGEXP:
         assert self._get_match(VR, "other $test $test2 stuff") == "test"
 
     def test_delimiters(self):
-        VR = tools.VAR_REGEXP
+        VR = tools._VAR_REGEXP
         for c in ('|', '=', '+', ' ', '$', '<', '>'):
             assert self._get_match(VR, "$test%s1" % c) == "test"
 
     def test_namespace(self):
-        VR = tools.VAR_REGEXP
+        VR = tools._VAR_REGEXP
         assert self._get_match(VR, "$foo::bar") == "foo::bar"
         assert self._get_match(VR, " $foo::bar ") == "foo::bar"
         assert self._get_match(VR, "other $foo::bar stuff") == "foo::bar"
 
     def test_single_function(self):
-        VR = tools.VAR_REGEXP
+        VR = tools._VAR_REGEXP
         assert self._get_match(VR, "$foo()") == "foo()"
         assert self._get_match(VR, " $foo() ") == "foo()"
         assert self._get_match(VR, "other $foo() stuff") == "foo()"
         assert self._get_match(VR, "other $foo::bar() stuff") == "foo::bar()"
 
     def test_function_with_arguments(self):
-        VR = tools.VAR_REGEXP
+        VR = tools._VAR_REGEXP
         assert self._get_match(VR, '$foo("arg1")') == 'foo("arg1")'
         assert self._get_match(VR, '$foo("arg1", 1)') == 'foo("arg1", 1)'
 
     def test_parens(self):
-        VR = tools.VAR_REGEXP
+        VR = tools._VAR_REGEXP
         assert self._get_match(VR, "$(foo)") == "(foo)"
         assert self._get_match(VR, "$(foo())") == "(foo())"
         assert self._get_match(VR, "$(foo::bar)") == "(foo::bar)"
         assert self._get_match(VR, "$(foo::bar())") == "(foo::bar())"
         assert self._get_match(VR, "$(foo::bar(1, 2, 3))") == "(foo::bar(1, 2, 3))"
 
+req = pyblosxom.Request({}, {}, {})
 class Testparse:
     """tools.parse"""
-    def _get_req(self):
-        return pyblosxom.Request( {}, {}, {} )
-
     def test_simple(self):
-        def pt(d, t):
-            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+        env = {"foo": "FOO",
+               "country": "España"}
 
-        assert pt( { "foo": "FOO" }, "foo foo foo") == "foo foo foo"
-        assert pt( { "foo": "FOO" }, "foo $foo foo") == "foo FOO foo"
+        for mem in (("foo foo foo", "foo foo foo"),
+                    ("foo $foo foo", "foo FOO foo"),
+                    ("foo $foor foo", "foo  foo"),
+                    ("foo $country foo", "foo España foo")):
+            yield eq_, tools.parse(req, env, mem[0]), mem[1]
 
     def test_delimited(self):
-        def pt(d, t):
-            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+        env = {"foo": "FOO",
+               "country": "España"}
 
-        assert pt( { "foo": "FOO" }, "foo $(foo) foo") == "foo FOO foo"
-        assert pt( { "foo": "FOO" }, "foo $(foor) foo") == "foo  foo"
+        for mem in (("foo $(foo) foo", "foo FOO foo"),
+                    ("foo $(foor) foo", "foo  foo"),
+                    ("foo $(country) foo", "foo España foo")):
+            yield eq_, tools.parse(req, env, mem[0]), mem[1]
 
     def test_functions(self):
-        def pt(d, t):
-            return tools.parse(self._get_req(), "iso-8859-1", d, t)
+        for mem in (({"foo": lambda req, vd: "FOO"}, "foo foo foo", "foo foo foo"),
+                    ({"foo": lambda req, vd: "FOO"}, "foo $foo() foo", "foo FOO foo"),
+                    ({"foo": lambda req, vd, z: z}, "foo $foo('a') foo", "foo a foo"),
+                    ({"foo": lambda req, vd, z: z}, "foo $foo(1) foo", "foo 1 foo"),
+                    ({"foo": lambda req, vd, z: z}, "foo $foo($money) foo", "foo $money foo"),
+                    ({"foo": lambda req, vd, z: z, "bar": "BAR"}, "foo $foo(bar) foo", "foo BAR foo"),
+                    ({"foo": lambda req, vd, z: z, "bar": "BAR"}, "foo $foo($bar) foo", "foo BAR foo"),
+                    ({"lang": lambda req, vd: "español"}, "foo $(lang) foo", "foo español foo"),
+                    # Note: functions can return unicode which will get 
+                    # converted to blog_encoding
+                    ({"lang": lambda req, vd: u"español"}, "español $(lang)", "español español")):
+            yield eq_, tools.parse(req, mem[0], mem[1]), mem[2]
 
-        assert pt( { "foo": (lambda : "FOO") }, "foo $foo() foo") == "foo FOO foo"
+    def test_functions_old_behavior(self):
+        # test the old behavior that allowed for functions that have no
+        # arguments--in this case we don't pass a request object in
+        eq_(tools.parse(req, {"foo": (lambda : "FOO")}, "foo $foo() foo"), "foo FOO foo")
+
+    def test_functions_with_args_that_have_commas(self):
+        env = { "foo": lambda req, vd, x: (x + "A"),
+                "foo2": lambda req, vd, x, y: (y + x) }
+
+        for mem in (('$foo("ba,ar")', "ba,arA"),
+                    ('$foo2("a,b", "c,d")', "c,da,b")):
+            yield eq_, tools.parse(req, env, mem[0]), mem[1]
+
+    def test_functions_with_var_args(self):
+        def pt(d, t):
+            return tools.parse(req, d, t)
+
+        vd = {"foo": lambda req, vd, x: (x + "A"),
+              "bar": "BAR",
+              "lang": "Español",
+              "ulang": u"Español"}
+
+        for mem in (
+                    # this bar is a string
+                    ("foo $foo('bar') foo", "foo barA foo"),
+
+                    # this bar is also a string
+                    ('foo $foo("bar") foo', "foo barA foo"),
+
+                    # this bar is an identifier which we lookup in the 
+                    # var_dict and pass into the foo function
+                    ("foo $foo(bar) foo", "foo BARA foo"),
+
+                    # variables that have utf-8 characters
+                    ("foo $foo(lang) foo", "foo EspañolA foo"),
+                    ("foo $foo(ulang) foo", "foo EspañolA foo")):
+            yield eq_, tools.parse(req, vd, mem[0]), mem[1]
+
+    def test_escaped(self):
+        def pt(d, t):
+            ret = tools.parse(req, d, t)
+            # print ret
+            return ret
+
+        vd = dict(tools.STANDARD_FILTERS)
+        vd.update({"foo": "'foo'",
+                   "lang": "'español'"})
+        for mem in (
+                    # this is old behavior
+                    ("$foo_escaped", "&apos;foo&apos;"),
+
+                    # this is the new behavior using the escape filter
+                    ("$escape(foo)", "&apos;foo&apos;"),
+
+                    # escaping with utf-8 characters
+                    ("$escape(lang)", "&apos;español&apos;")):
+            yield eq_, pt(vd, mem[0]), mem[1]
+
 
 class Testis_year:
     """tools.is_year"""
@@ -108,24 +181,6 @@ class Testis_year:
         assert tools.is_year("") == 0
         assert tools.is_year("ab") == 0
         assert tools.is_year("97") == 0
-
-class Testparse_args:
-    """tools.parse_args"""
-    def test_args_can_be_len_0(self):
-        assert tools.parse_args( [] ) == []
-
-    def test_single_args(self):
-        assert tools.parse_args( ["--test"] ) == [ ("--test", "") ]
-        assert tools.parse_args( ["-a", "-b", "--c"] ) == [ ("-a", ""),
-                                                            ("-b", ""),
-                                                            ("--c", "") ]
-    def test_key_value_args(self):
-        assert tools.parse_args( ["--test", "foo"] ) == [ ("--test", "foo") ]
-        assert tools.parse_args( ["--test", "foo",
-                                  "-a",
-                                  "--bar", "baz"] ) == [ ("--test", "foo"),
-                                                         ("-a", ""),
-                                                         ("--bar", "baz") ]
 
 class TestgenerateRandStr():
     """tools.generateRandStr
@@ -200,55 +255,6 @@ class Testurlencode_text():
         assert tools.urlencode_text("") == ""
         assert tools.urlencode_text("abc") == "abc"
 
-class TestVariableDict():
-    """tools.VariableDict class"""
-
-    def __init__(self):
-        self.vd = tools.VariableDict()
-        self.vd.update( { "a": "b", \
-                          "title": "This is my story", \
-                          "title2": "Story: \"aha!\"", \
-                          "filename": "joe.txt" } )
-
-    def _compare_unordered_lists(self, lista, listb):
-        assert len(lista) == len(listb)
-
-        lista.sort()
-        listb.sort()
-
-        for mem in lista:
-            print "comparing '" + mem + "' and '" + listb[0] + "'"
-            assert mem == listb[0]
-            listb.pop(0)
-
-        assert len(listb) == 0
-
-    def test_extends_dicts(self):
-        assert self.vd.get("a") == "b"
-        assert self.vd.get("title") == "This is my story"
-        assert self.vd.get("title2") == "Story: \"aha!\""
-        assert self.vd.get("badkey", "novalue") == "novalue"
-        
-        self._compare_unordered_lists(self.vd.keys(),
-                                      ["a", "title", "title2", "filename"])
-        self._compare_unordered_lists(self.vd.values(),
-                                      ["b", "This is my story",
-                                       "Story: \"aha!\"", "joe.txt"])
-
-    def test_can_escape_value(self):
-        assert self.vd.get("a_escaped") == "b"
-        assert self.vd.get("title_escaped") == "This is my story"
-        assert self.vd.get("title2_escaped") == "Story: &quot;aha!&quot;"
-        assert self.vd.get("badkey_escaped", "novalue") == "novalue"
-        assert self.vd.get("badkey_escaped", "no value") == "no value"
-
-    def test_can_urlencode_value(self):
-        assert self.vd.get("a_urlencoded") == "b"
-        assert self.vd.get("title_urlencoded") == "This%20is%20my%20story"
-        assert self.vd.get("title2_urlencoded") == "Story%3A%20%22aha%21%22"
-        assert self.vd.get("badkey_urlencoded", "novalue") == "novalue"
-        assert self.vd.get("badkey_urlencoded", "no value") == "no%20value"
-
 class TestStripper:
     """tools.Stripper class"""
 
@@ -275,7 +281,7 @@ class Testimportname:
 
     def _c(self, mn, n):
         m = tools.importname(mn, n)
-        print repr(m)
+        # print repr(m)
         return m
 
     def test_goodimport(self):
@@ -352,7 +358,7 @@ class Testconvert_configini_values:
     This tests config.ini -> config conversions.
     """
     def cmp(self, a, b):
-        print "comparing %s with %s" % (repr(a), repr(b))
+        # print "comparing %s with %s" % (repr(a), repr(b))
         if not a and not b: 
             return True
         if (not a and b) or (a and not b): 
@@ -437,7 +443,7 @@ class Testconvert_configini_values:
             except tools.ConfigSyntaxErrorException, csee:
                 assert True
             except Exception, e:
-                print repr(e)
+                # print repr(e)
                 assert False
 
         checkbadsyntax( { "a": "'b" } )

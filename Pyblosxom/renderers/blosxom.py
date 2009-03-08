@@ -6,18 +6,18 @@
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
 #
-# $Id$
+# $Id: blosxom.py 1277 2009-02-16 04:42:55Z willhelm $
 #######################################################################
 """
 This is the default blosxom renderer.  It tries to match the behavior 
 of the blosxom renderer.
 """
 
-__revision__ = "$Revision$"
+__revision__ = "$Revision: 1277 $"
 
 import os
 import sys
-import codecs
+import time
 
 from Pyblosxom import tools
 from Pyblosxom.renderers.base import RendererBase
@@ -53,9 +53,10 @@ def get_included_flavour(taste):
         template_files = os.listdir(path)
         template_d = {}
         for mem in template_files:
-            if not mem.endswith("." + taste):
+            name, ext = os.path.splitext(mem)
+            if ext not in ["." + taste, ""]:
                 continue
-            template_d[os.path.splitext(mem)[0]] = path + os.sep + mem
+            template_d[name] = os.path.join(path, mem)
         return template_d
 
     return None
@@ -83,9 +84,10 @@ def get_flavour_from_dir(path, taste):
         newpath = path + os.sep + taste + ".flav"
         template_files = os.listdir(newpath)
         for mem in template_files:
-            if not mem.endswith("." + taste):
+            name, ext = os.path.splitext(mem)
+            if ext not in ["." + taste, ""]:
                 continue
-            template_d[os.path.splitext(mem)[0]] = newpath + os.sep + mem
+            template_d[name] = os.path.join(path + os.sep + taste + ".flav", mem)
         return template_d
 
     # now we check the directory itself for flavour templates
@@ -105,15 +107,17 @@ class BlosxomRenderer(RendererBase):
     This is the default blosxom renderer.  It tries to match the behavior 
     of the blosxom renderer.
     """
-    def __init__(self, request, stdoutput = sys.stdout):
+    def __init__(self, request, stdoutput=sys.stdout):
         RendererBase.__init__(self, request, stdoutput)
         config = request.getConfiguration()
-        sw = codecs.lookup(config.get('blog_encoding', 'iso-8859-1'))[3]
-        self._out = sw(self._out)
-        self.dayFlag = 1
         self._request = request
-        self._encoding = config.get("blog_encoding", "iso-8859-1")
         self.flavour = None
+
+    def getParseVars(self):
+        parsevars = dict(tools.STANDARD_FILTERS)
+        parsevars.update(self._request.config)
+        parsevars.update(self._request.data)
+        return parsevars
 
     def _getflavour(self, taste='html'):
         """
@@ -189,77 +193,17 @@ class BlosxomRenderer(RendererBase):
             raise NoSuchFlavourException("Flavour '%s' does not exist." % taste)
 
         for k in template_d.keys():
-            flav_template = unicode(open(template_d[k]).read(), 
-                    config.get('blog_encoding', 'iso-8859-1'))
+            flav_template = open(template_d[k]).read()
             template_d[k] = flav_template
 
         return template_d
 
-    def _printTemplate(self, entry, template):
-        """
-        @param entry: either a dict or the Entry object
-        @type  entry: dict or Entry
-
-        @param template: the template string
-        @type  template: string
-
-        @returns: the content string
-        @rtype: string
-        """
-        if template:
-            template = unicode(template)
-            finaltext = tools.parse(self._request, self._encoding, 
-                                    entry, template)
-            return finaltext.replace(r'\$', '$')
-        return ""
-
-    def _processEntry(self, entry, current_date):
-        """
-        Main workhorse of pyblosxom stories, comments and other miscelany goes
-        here
-
-        @param entry: either a dict or an Entry object
-        @type  entry: dict or Entry object
-
-        @param current_date: the date of entries we're looking at
-        @type  string
-
-        @returns: the output string and the new current date
-        @rtype: (string, string)
-        """
-        data = self._request.getData()
-        config = self._request.getConfiguration()
-
-        output = []
-
-        if data['content-type'] == 'text/plain':
-            s = tools.Stripper()
-            s.feed(entry.getData())
-            s.close()
-            p = ['  ' + line for line in s.gettext().split('\n')]
-            entry.setData('\n'.join(p))
-
-        entry.update(data)
-        entry.update(config)
-
-        if entry["date"] and entry['date'] != current_date:
-            current_date = entry['date']
-            if not self.dayFlag:
-                self.outputTemplate(output, entry, 'date_foot')
-            self.dayFlag = 0
-            self.outputTemplate(output, entry, 'date_head')
-
-        self.outputTemplate(output, entry, 'story', override=1)
-
-        template = u""
-        args = self._run_callback("story_end", 
-                                  { "entry": entry, "template": template }) 
-            
-        return "".join(output) + args['template'], current_date    
-
-    def _processContent(self):
+    def renderContent(self, content):
         """
         Processes the content for the story portion of a page.
+
+        @params: the content to be rendered
+        @type: callable/dict/list
 
         @returns: the content string
         @rtype: string
@@ -268,27 +212,65 @@ class BlosxomRenderer(RendererBase):
 
         outputbuffer = []
 
-        if callable(self._content):
+        if callable(content):
             # if the content is a callable function, then we just spit out
             # whatever it returns as a string
-            outputbuffer.append(self._content())
+            outputbuffer.append(content())
 
-        elif isinstance(self._content, dict):
+        elif isinstance(content, dict):
             # if the content is a dict, then we parse it as if it were an
             # entry--except it's distinctly not an EntryBase derivative
-            self._content.update(data)
-            output = tools.parse(self._request, self._encoding, 
-                                 self._content, self.flavour['story'])
+            var_dict = self.getParseVars()
+            var_dict.update(content)
+
+            output = tools.parse(self._request, var_dict, self.flavour['story'])
             outputbuffer.append(output)
 
-        elif isinstance(self._content, list):
-            current_date = ''
+        elif isinstance(content, list):
 
-            for entry in self._content:
-                output, current_date = self._processEntry(entry, current_date)
-                outputbuffer.append(output)
+            if len(content) > 0:
+                current_date = content[0]["date"]
 
-        return self.write(u"".join(outputbuffer))
+                if current_date and "date_head" in self.flavour:
+                    vars = self.getParseVars()
+                    vars.update( { "date": current_date } )
+                    outputbuffer.append(self.renderTemplate(vars, "date_head"))
+
+                for entry in content:
+                    if entry["date"] and entry["date"] != current_date:
+                        if "date_foot" in self.flavour:
+                            vars = self.getParseVars()
+                            vars.update( { "date": current_date } )
+                            outputbuffer.append(self.renderTemplate(vars, "date_foot"))
+
+                        if "date_head" in self.flavour:
+                            current_date = entry["date"]
+                            vars = self.getParseVars()
+                            vars.update( { "date": current_date } )
+                            outputbuffer.append(self.renderTemplate(vars, "date_head"))
+
+                    if data['content-type'] == 'text/plain':
+                        s = tools.Stripper()
+                        s.feed(entry.getData())
+                        s.close()
+                        p = ['  ' + line for line in s.gettext().split('\n')]
+                        entry.setData('\n'.join(p))
+
+                    vars = self.getParseVars()
+                    vars.update(entry)
+
+                    outputbuffer.append(self.renderTemplate(vars, "story", override=1))
+
+                    args = { "entry": vars, "template": "" }
+                    args = self._run_callback("story_end", args)
+                    outputbuffer.append( args["template"] )
+
+                if current_date and "date_foot" in self.flavour:
+                    vars = self.getParseVars()
+                    vars.update( { "date": current_date } )
+                    outputbuffer.append(self.renderTemplate(vars, "date_foot"))
+
+        return outputbuffer
 
     def render(self, header=1):
         """
@@ -304,10 +286,6 @@ class BlosxomRenderer(RendererBase):
 
         data = self._request.getData()
         config = self._request.getConfiguration()
-
-        parsevars = tools.VariableDict()
-        parsevars.update(config)
-        parsevars.update(data)
 
         try:
             self.flavour = self._getflavour(data.get("flavour", "html"))
@@ -331,42 +309,32 @@ class BlosxomRenderer(RendererBase):
             self.showHeaders()
         
         if self._content:
-            if self.flavour.has_key('head'):
-                self._outputFlavour(parsevars,'head')
-            if self.flavour.has_key('story'):
-                self._processContent()
-            if self.flavour.has_key('date_foot'): 
-                self._outputFlavour(parsevars,'date_foot')                
-            if self.flavour.has_key('foot'): 
-                self._outputFlavour(parsevars,'foot')                
-        
+            if "head" in self.flavour:
+                self.write(self.renderTemplate(self.getParseVars(), "head"))
+            if "story" in self.flavour:
+                self.write("".join(self.renderContent(self._content)))
+            if "foot" in self.flavour:
+                self.write(self.renderTemplate(self.getParseVars(), "foot"))
+
         self.rendered = 1
 
-    def _outputFlavour(self, entry, template_name):
-        output = []
-        self.outputTemplate(output, entry, template_name)
-        self.write(u"".join(output))
-
-    def outputTemplate(self, output, entry, template_name, override=0):
+    def renderTemplate(self, entry, template_name, override=0):
         """
         Find the flavour template for template_name, run any blosxom callbacks,
-        substitute entry into it and append the template to the output.
+        substitute entry into it and render the template.
 
         If the entry has a "template_name" property and override is 1
         (this happens in the story template), then we'll use that
         template instead.
         
-        @param output: list of strings of the output
-        @type output: list
+        @param entry: the entry/variable-dict to use for expanding variables
+        @type entry: dict-like
 
-        @param entry: the entry to render with this flavour template
-        @type entry: L{Pyblosxom.entries.base.EntryBase}
-
-        @param template_name: name of the flavour template to use
+        @param template_name: template name (gets looked up in self.flavour)
         @type template_name: string
 
         @param override: whether (1) or not (0) this template can
-            be overriden with the "template_name" property of the entry
+            be overriden with the "template_name" value in the entry
         @type  override: boolean
         """
         template = ""
@@ -387,7 +355,8 @@ class BlosxomRenderer(RendererBase):
         template = args["template"]
         entry = args["entry"]
 
-        output.append(self._printTemplate(entry, template))
+        finaltext = tools.parse(self._request, entry, template)
+        return finaltext.replace(r'\$', '$')
 
     def _run_callback(self, chain, input):
         """
@@ -404,8 +373,8 @@ class BlosxomRenderer(RendererBase):
         input.update( { "request": self._request } )
 
         return tools.run_callback(chain, input, 
-                            mappingfunc=lambda x,y: x,
-                            defaultfunc=lambda x:x)
+                                  mappingfunc=lambda x,y: x,
+                                  defaultfunc=lambda x:x)
         
     def getContent(self):
         """
@@ -416,6 +385,12 @@ class BlosxomRenderer(RendererBase):
         @returns: content
         """
         return self._content
+
+    def outputTemplate(self, output, entry, template_name):
+        """
+        Deprecated.  Here for backwards compatibility.
+        """
+        output.append(self.renderTemplate(entry, template_name))
         
 class Renderer(BlosxomRenderer):
     """

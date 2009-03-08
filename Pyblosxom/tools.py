@@ -8,15 +8,15 @@
 #
 # $Id$
 #######################################################################
-"""
-Tools module
+"""Utility module for functions that are useful to PyBlosxom and plugins.
 
-The swiss army knife for all things pyblosxom
-
-@var month2num: A dict of literal months to its number format
-@var num2month: A dict of number month format to its literal format
-@var MONTHS: A list of valid literal and numeral months
-@var VAR_REGEXP: Regular expression for detection and substituion of variables
+:var:
+    month2num : dict
+        dict of month name (e.g. ``Jan``) to number (e.g. ``1``)
+    num2month : dict
+        dict of number (e.g. ``1``) to month name (e.g. ``Jan``)
+    MONTHS : list of strings and ints
+        list of all valid month names and month numbers
 """
 
 __revision__ = "$Revision$"
@@ -28,13 +28,14 @@ import time
 import os.path
 import stat
 import sys
+import locale
 import urllib
+import inspect
 
 try:
     from xml.sax.saxutils import escape
 except ImportError:
     from cgi import escape
-
 
 # Pyblosxom imports
 from Pyblosxom import plugin_utils
@@ -45,7 +46,7 @@ num2month = None
 MONTHS    = None
 
 # regular expression for detection and substituion of variables.
-VAR_REGEXP = re.compile(ur"""
+_VAR_REGEXP = re.compile(ur"""
     (?<!\\)   # if the $ is escaped, then this isn't a variable
     \$        # variables start with a $
     (
@@ -64,20 +65,20 @@ VAR_REGEXP = re.compile(ur"""
             (?<!\\)\)         # with an end paren that's not escaped
         )?    # 0 or 1 of these ( ... ) blocks
         \)
-    )
+    ) 
     """, re.VERBOSE)
 
 # reference to the pyblosxom config dict
-_config = None
+_config = {}
 
 def initialize(config):
-    """
-    Initialize the tools module. This gives the module a chance to use 
-    configuration from the pyblosxom config.py file.
-    This should be called from Pyblosxom.pyblosxom.PyBlosxom.initialize.
-    """
-    import locale
+    """Initializes the tools module.
 
+    This gives the module a chance to use configuration from the
+    pyblosxom config.py file.
+
+    This should be called from ``Pyblosxom.pyblosxom.PyBlosxom.initialize``.
+    """
     global _config
     _config = config
 
@@ -129,59 +130,6 @@ def initialize(config):
     global MONTHS
     MONTHS = num2month.keys() + month2num.keys()
 
-
-
-def cleanup():
-    """
-    Cleanup the tools module.
-    This should be called from Pyblosxom.pyblosxom.PyBlosxom.cleanup.
-    """
-    global _loghandler_registry
-    # try:
-    #     import logging
-    #     if _use_custom_logger:
-    #         raise ImportError, "whatever"
-    # except ImportError:
-    #     import _logging as logging
-
-    # try:
-    #     logging.shutdown()
-    #     _loghandler_registry = {}
-    # except ValueError:
-    #     pass
-    pass
-
-
-def parse_args(args):
-    """
-    Takes in a list of args and parses it out into a hashmap of arg-name 
-    to value(s).
-
-    @param args: the list of command-line arguments
-    @type  args: list of strings
-
-    @return: list of tuples of (arg, value) pairings
-    @rtype: list of tuples of (string, string)
-    """
-    i = 0
-    optlist = []
-    while (i < len(args)):
-        if args[i].startswith("-"):
-            if (i+1 < len(args)):
-                if not args[i+1].startswith("-"):
-                    optlist.append((args[i], args[i+1]))
-                    i = i + 1
-                else:
-                    optlist.append((args[i], ""))
-            else:
-                optlist.append((args[i], ""))
-
-        else:
-            optlist.append(("", args[i]))
-
-        i = i + 1
-    return optlist
-
 class ConfigSyntaxErrorException(Exception):
     pass
 
@@ -189,12 +137,13 @@ def convert_configini_values(configini):
     """Takes a dict containing config.ini style keys and values, converts
     the values, and returns a new config dict.
 
-    @param configini: dict containing config.ini style keys and values
-    @type configini: dict
+    :Parameters:
+        configini : dict
+            dict containing the config.ini style keys and values
 
-    @returns: a correctly typed config dict
-
-    @raise ConfigSyntaxErrorException: raised when there's a syntax error
+    :Exceptions:
+        ConfigSyntaxErrorException
+            raised when there's a syntax error
     """
     def s_or_i(s):
         if s.startswith('"'):
@@ -215,7 +164,7 @@ def convert_configini_values(configini):
     for key, value in configini.items():
         # in configini.items, we pick up a local_config which seems
         # to be a copy of what's in configini.items--puzzling.
-        if type(value) == type( {} ):
+        if isinstance(value, dict):
             continue
 
         value = value.strip()
@@ -236,158 +185,52 @@ def convert_configini_values(configini):
 
 
 
-QUOTES = {"'": "&apos;", '"': "&quot;"}
-
 def escape_text(s):
-    """
-    Takes in a string and escapes \' to &apos; and \" to &quot;.
-    If s is None, then we return None.
+    """Takes in a string and converts ``'`` to ``&apos;`` and ``"`` to 
+    ``&quot;``.
 
-    @param s: the input string to escape
-    @type s: string
+    Note: if ``s`` is ``None``, then we return ``None``.
 
-    @returns: the escaped string
-    @rtype: string
+    >>> escape_text(None)
+    None
+    >>> escape_text("")
+    ""
+    >>> escape_text("a'b")
+    "a&apos;b"
+    >>> escape_text('a"b')
+    "a&quot;b"
     """
-    if s == None:
-        return None
-    return escape(s, QUOTES)
+    if not s: 
+        return s
+
+    return escape(s, {"'": "&apos;", '"': "&quot;"} )
+
 
 def urlencode_text(s):
-    """
-    Calls urllib.quote on the string.  If is None, then we return
-    None.
+    """Calls ``urllib.quote`` on the string ``s``.
 
-    @param s: the string to be urlencoded.
-    @type s:  string
+    Note: if ``s`` is ``None``, then we return ``None``.
 
-    @returns: the urlencoded string
-    @rtype: string
+    >>> urlencode_text(None)
+    None
+    >>> urlencode_text("")
+    ""
+    >>> urlencode_text("a c")
+    "a%20c"
+    >>> urlencode_text("a&c")
+    "a%26c"
+    >>> urlencode_text("a=c")
+    "a%3Dc"
+
     """
-    if s == None:
-        return None
+    if not s: 
+        return s
+
     return urllib.quote(s)
 
+STANDARD_FILTERS = { "escape": lambda req, vd, s : escape_text(s),
+                     "urlencode": lambda req, vd, s : urlencode_text(s) }
 
-class VariableDict:
-    """
-    Wraps around a standard dict allowing for escaped and urlencoding
-    of internal data by tacking on a _urlencoded or a _escaped
-    to the end of the key name.
-    """
-    def __init__(self):
-        """
-        Initializes the internal dict.
-        """
-        self._dict = {}
-
-    def __getitem__(self, key, default=None):
-        """
-        If the key ends with _escaped, then this will retrieve
-        the value for the key and escape it.
-
-        If the key ends with _urlencoded, then this will retrieve
-        the value for the key and urlencode it.
-
-        Otherwise, this calls get(key, default) on the wrapped
-        dict.
-
-        @param key: the key to retrieve
-        @type  key: string
-
-        @param default: the default value to use if the key doesn't
-                        exist.
-        @type  default: string
-
-        @returns: the value; escaped if the key ends in _escaped;
-                  urlencoded if the key ends in _urlencoded.
-        @rtype: string
-        """
-        if key.endswith("_escaped"):
-            key = key[:-8]
-            return escape_text(self._dict.get(key, default))
-
-        if key.endswith("_urlencoded"):
-            key = key[:-11]
-            return urlencode_text(self._dict.get(key, default))
-
-        return self._dict.get(key, default)
-
-    def get(self, key, default=None):
-        """
-        This turns around and calls __getitem__(key, default).
-
-        @param key: the key to retrieve
-        @type  key: string
-
-        @param default: the default value to use if the key doesn't exist.
-        @type  default: string
-
-        @returns: __getitem__(key, default)
-        @rtype: string
-        """
-        return self.__getitem__(key, default)
-
-    def __setitem__(self, key, value):
-        """
-        This calls __setitem__(key, value) on the wrapped dict.
-
-        @param key: the key
-        @type  key: string
-
-        @param value: the value
-        @type  value: string
-        """
-        self._dict.__setitem__(key, value)
-
-    def update(self, newdict):
-        """
-        This calls update(newdict) on the wrapped dict.
-        """
-        self._dict.update(newdict)
-
-    def has_key(self, key):
-        """
-        If the key ends with _encoded or _urlencoded, we strip that off
-        and then check the wrapped dict to see if it has the adjusted key.
-
-        Otherwise we call has_key(key) on the wrapped dict.
-
-        @param key: the key to check for
-        @type  key: string
-
-        @returns: 1 if the key exists, 0 if not
-        @rtype: boolean
-        """
-        if key.endswith("_encoded"):
-            key = key[:-8]
-
-        if key.endswith("_urlencoded"):
-            key = key[:-11]
-
-        return self._dict.has_key(key)
-
-    def keys(self):
-        """
-        Returns a list of the keys that can be accessed through
-        __getitem__.
-
-        Note: this does not include the _encoded and _urlencoded
-        versions of these keys.
-
-        @returns: list of key names
-        @rtype: list of varies
-        """
-        return self._dict.keys()
-
-    def values(self):
-        """
-        Returns a list of the values in this dict.
-
-        @returns: list of values
-        @rtype: list of strings
-        """
-        return self._dict.values()
 
 class Stripper(sgmllib.SGMLParser):
     """
@@ -424,6 +267,63 @@ class Stripper(sgmllib.SGMLParser):
         """
         return "".join(self.data)
 
+def commasplit(s):
+    """
+    Splits a string that contains strings by comma.  This is
+    more involved than just an ``s.split(",")`` because this handles
+    commas in strings correctly.
+
+    Note: commasplit doesn't remove extranneous spaces.
+
+    >>> tools.commasplit(None)
+    []
+    >>> tools.commasplit("")
+    [""]
+    >>> tools.commasplit("a")
+    ["a"]
+    >>> tools.commasplit("a, b, c")
+    ["a", " b", " c"]
+    >>> tools.commasplit("'a', 'b, c'")
+    ["a", " 'b, c'"]
+    >>> tools.commasplit("'a', \"b, c\"")
+    ["a", " \"b, c\""]
+
+    This returns a list of strings.
+
+    :Parameters:
+       s : string
+          the string to split
+    """
+    if s is None:
+        return []
+
+    if not s:
+        return [""]
+
+    startstring = None
+    t = []
+    l = []
+
+    for c in s:
+        if c == startstring:
+            startstring = None
+            t.append(c)
+
+        elif c == "'" or c == '"':
+            startstring = c
+            t.append(c)
+
+        elif not startstring and c == ",":
+            l.append("".join(t))
+            t = []
+
+        else:
+            t.append(c)
+
+    if t:
+        l.append("".join(t))
+
+    return l
 
 class Replacer:
     """
@@ -452,17 +352,50 @@ class Replacer:
 
     def replace(self, matchobj):
         """
-        The replacement method. 
-        
-        This is passed a match object by re.sub(), which it uses to index the
-        replacement dictionary and find the replacement string.
+        This is passed a match object by ``re.sub()`` which represents a
+        template variable without the ``$``.  parse manipulates the variable
+        and returns the expansion of that variable using the following
+        rules:
 
-        @param matchobj: A C{re} object containing substitutions
-        @type  matchobj: C{re} object
+        1. if the variable ``v`` is an identifier, but not in the variable
+           dict, then we return the empty string, or
 
-        @returns: Substitutions
-        @rtype: string
+        2. if the variable ``v`` is an identifier in the variable dict, then
+           we return ``var_dict[v]``, or
+
+        3. if the variable ``v`` is a function call where the function is
+           an identifier in the variable dict, then
+
+           - if ``v`` has no passed arguments and the function takes no
+             arguments we return ``var_dict[v]()`` (this is the old
+             behavior
+
+           - if ``v`` has no passed arguments and the function takes two
+             arguments we return ``var_dict[v](request, vd)``
+
+           - if ``v`` has passed arguments, we return 
+             ``var_dict[v](request, vd, *args)`` after some mild 
+             processing of the arguments
+
+        Also, for backwards compatability reasons, we convert things like::
+
+            $id_escaped
+            $id_urlencoded
+            $(id_escaped)
+            $(id_urlencoded)
+
+        to::
+
+            $escape(id)
+            $urlencode(id)
+
+        It returns the substituted string.
+
+        :Parameters:
+           matchobj : re.matchobj
+              regular expression match object
         """
+        vd = self.var_dict
         request = self._request
         key = matchobj.group(1)
 
@@ -471,71 +404,90 @@ class Replacer:
         if key.startswith("(") and key.endswith(")"):
             key = key[1:-1]
 
-        if key.find("(") != -1 and key.find(")"):
+        # do this for backwards-compatability reasons
+        if key.endswith("_escaped"):
+            key = "escape(%s)" % key[:-8]
+        elif key.endswith("_urlencoded"):
+            key = "urlencode(%s)" % key[:-11]
+
+        if key.find("(") != -1 and key.rfind(")") > key.find("("):
             args = key[key.find("(")+1:key.rfind(")")]
             key = key[:key.find("(")]
-
         else:
             args = None
 
-        if self.var_dict.has_key(key):
-            r = self.var_dict[key]
+        if not vd.has_key(key):
+            return ""
 
-            # if the value turns out to be a function, then we call it
-            # with the args that we were passed.
-            if callable(r):
-                # FIXME - security issue here because we're using eval.
-                # course, the things it allows us to do can be done using
-                # plugins much more easily--so it's kind of a moot point.
-                if args:
-                    r = eval("r(request, " + args + ")")
-                else:
-                    r = r()
+        r = vd[key]
 
-            if not isinstance(r, str) and not isinstance(r, unicode):
+        # if the value turns out to be a function, then we call it
+        # with the args that we were passed.
+        if callable(r):
+            if args:
+                def fix(s, vd=vd):
+                    # if it's an int, return an int
+                    if s.isdigit(): 
+                        return int(s)
+                    # if it's a string, return a string
+                    if s.startswith("'") or s.startswith('"'):
+                        return s[1:-1]
+                    # otherwise it might be an identifier--check
+                    # the vardict and return the value if it's in
+                    # there
+                    if vd.has_key(s):
+                        return vd[s]
+                    if s.startswith("$") and vd.has_key(s[1:]):
+                        return vd[s[1:]]
+                    return s
+                args = [fix(arg.strip()) for arg in commasplit(args)]
+
+                # stick the request and var_dict in as the first and second
+                # arguments
+                args.insert(0, vd)
+                args.insert(0, request)
+
+                r = r(*args)
+
+            elif len(inspect.getargspec(r)[0]) == 2:
+                r = r(request, vd)
+
+            else:
+                # this case is here for handling the old behavior where
+                # functions took no arguments
+                r = r()
+
+        # convert non-strings to strings
+        if not isinstance(r, str):
+            if isinstance(r, unicode):
+                r = r.encode(self._encoding)
+            else:
                 r = str(r)
 
-            if not isinstance(r, unicode):
-                # convert strings to unicode, assumes strings in iso-8859-1
-                r = unicode(r, self._encoding, 'replace')
+        return r
 
-            return r
-
-        else:
-            return u''
-
-def parse(request, encoding, var_dict, template):
+def parse(request, var_dict, template):
     """
-    This method parses the open file object passed, replacing any keys
-    found using the replacement dictionary passed.  Uses the L{Replacer} 
-    object.  From OPAGCGI library
+    This method parses the ``template`` passed in using ``Replacer`` to 
+    expand template variables using values in the ``var_dict``.
 
-    @param request: the Request object
-    @type  request: Request
+    Originally based on OPAGCGI, but mostly re-written.
 
-    @param encoding: the encoding to use
-    @type  encoding: string
+    This returns the template string with template variables expanded.
 
-    @param var_dict: The name value pair list containing variable replacements
-    @type  var_dict: dict
-
-    @param template: A template file with placeholders for variable 
-        replacements
-    @type  template: string
-
-    @returns: Substituted template
-    @rtype: string
+    :Parameters:
+       request : Request object
+          the request object context
+       var_dict : dict
+          the name value pair list containing variable replacements
+       template : string
+          the template we're expanding template variables in
     """
-    if not isinstance(template, unicode):
-        # convert strings to unicode, assumes strings in iso-8859-1
-        template = unicode(template, encoding, 'replace')
-
+    encoding = request.config.get("blog_encoding", "utf-8")
     replacer = Replacer(request, encoding, var_dict)
+    return _VAR_REGEXP.sub(replacer.replace, template)
 
-    return u'' + VAR_REGEXP.sub(replacer.replace, template)
-
-
-def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
+def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     """
     This function walks a directory tree starting at a specified root folder,
     and returns a list of all of the files (and optionally folders) that match
@@ -554,26 +506,22 @@ def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
 
     It will also skip all directories that start with a period.
 
-    @param request: the Request object
-    @type  request: Request
+    Returns a list of file paths.
 
-    @param root: Starting point to walk from
-    @type root: string
-
-    @param recurse: Depth of recursion,
-        - 0: All the way
-        - 1: Just this level
-        - I{n}: I{n} depth of recursion
-    @type recurse: integer
-
-    @param pattern: A C{re.compile}'d object
-    @type pattern: object
-
-    @param return_folders: If true, just return list of folders
-    @type return_folders: boolean
-
-    @returns: A list of file paths
-    @rtype: list
+    :Parameters:
+       request : Request
+          the PyBlosxom request
+       root : string
+          the starting directory to walk from
+       recurse : int
+          the depth of recursion, defaults to ``0`` which is all the
+          way down
+       pattern : regexp object
+          filters out all files that don't match this pattern, defaults
+          to ``''``
+       return_folders : boolean
+          returns a list of folders if True, returns folders and files
+          otherwise
     """
     # expand pattern
     if not pattern:
@@ -596,14 +544,20 @@ def walk( request, root='.', recurse=0, pattern='', return_folders=0 ):
 
     return __walk_internal(root, recurse, pattern, ignorere, return_folders)
 
-# we do this for backwards compatibility reasons.
-Walk = walk
+# We do this for backwards compatibility reasons.
+def Walk(*args, **kwargs):
+    """Deprecated.  Use ``tools.walk`` instead."""
+    return walk(*args, **kwargs)
 
-def __walk_internal( root, recurse, pattern, ignorere, return_folders ):
+def __walk_internal(root, recurse, pattern, ignorere, return_folders):
     """
     Note: This is an internal function--don't use it and don't expect it to
     stay the same between PyBlosxom releases.
     """
+    # FIXME - we should either ditch this function and use os.walk or something
+    # similar, or optimize this version by removing the multiple stat calls
+    # that happen as a result of islink, isdir and isfile.
+
     # initialize
     result = []
 
@@ -640,15 +594,15 @@ def filestat(request, filename):
     """     
     Returns the filestat on a given file.  We store the filestat    
     in case we've already retrieved it this time.   
-    
-    @param request: the Pyblosxom Request object    
-    @type  request: Request     
-    
-    @param filename: the name of the file to stat   
-    @type  filename: string     
-    
-    @returns: the mtime of the file (same as returned by time.localtime(...))
-    @rtype: tuple of 9 ints     
+
+    This returns the mtime of the file (same as returned by 
+    ``time.localtime()``) -- tuple of 9 ints.
+
+    :Parameters:
+        request : Request object
+            the request object
+        filename : string
+            the file name of the file to stat
     """     
     data = request.getData()    
     filestat_cache = data.setdefault("filestat_cache", {})      
@@ -684,14 +638,13 @@ def what_ext(extensions, filepath):
     Takes in a filepath and a list of extensions and tries them all until
     it finds the first extension that works.
 
-    @param extensions: the list of extensions to test
-    @type  extensions: list of strings
+    Returns the extension (string) of the file or ``None``.
 
-    @param filepath: the complete file path (minus the extension) to test
-    @type  filepath: string
-
-    @return: the extension that was successful or None
-    @rtype: string
+    :Parameters:
+       extensions : list of strings
+          the list of extensions to test
+       filepath : string
+          the complete file path (minus the extension) to test
     """
     for ext in extensions:
         if os.path.isfile(filepath + '.' + ext):

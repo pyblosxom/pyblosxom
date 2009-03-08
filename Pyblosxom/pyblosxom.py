@@ -148,8 +148,6 @@ class PyBlosxom:
         log.debug("status = %s" % response.status)
         log.debug("headers = %s" % response.headers)
 
-        tools.cleanup()
-
     def getRequest(self):
         """
         Returns the L{Request} object for this PyBlosxom instance.
