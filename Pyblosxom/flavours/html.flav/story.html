@@ -2,9 +2,9 @@
 <div class="blosxomStory">
 $(body)
 <p>
-  posted at: $(ti) | 
-  path: <a href="$(base_url)/$(absolute_path_urlencoded)" title="path">/$(absolute_path)</a> | 
-  <a href="$(base_url)/$(file_path_urlencoded).$(flavour)">permanent link to this entry</a>
+  posted at: $(ti) |
+  path: <a href="$(base_url)/$(urlencode(absolute_path))" title="path">/$(absolute_path)</a> |
+  <a href="$(base_url)/$(urlencode(file_path)).$(flavour)">permanent link to this entry</a>
 </p>
 </div>
 
