@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import _path_pyblosxom
+from nose.tools import with_setup, eq_
 
 import string
 import os
 import os.path
 
 from Pyblosxom import tools, pyblosxom
-
-from nose.tools import eq_
 
 class TestVAR_REGEXP:
     """tools._VAR_REGEXP
@@ -20,53 +19,54 @@ class TestVAR_REGEXP:
         return r and r.group(1)
 
     def test_escaped_variables(self):
-        VR = tools._VAR_REGEXP
-        assert self._get_match(VR, "\\$test") == None
+        yield eq_, self._get_match(tools._VAR_REGEXP, "\\$test"), None
         # FIXME - this is bad behavior
-        assert self._get_match(VR, "\\\\$test") == None
+        yield eq_, self._get_match(tools._VAR_REGEXP, "\\\\$test"), None
 
     def test_dollar_then_string(self):
-        VR = tools._VAR_REGEXP
-        assert self._get_match(VR, "$test") == "test"
-        assert self._get_match(VR, "$test-test") == "test-test"
-        assert self._get_match(VR, "$test_test") == "test_test"
-        assert self._get_match(VR, " $test ") == "test"
-        assert self._get_match(VR, "other stuff $test ") == "test"
-        assert self._get_match(VR, "other $test stuff") == "test"
-        assert self._get_match(VR, "other $test $test2 stuff") == "test"
+        for mem in (("$test", "test"),
+                    ("$test-test", "test-test"),
+                    ("$test_test", "test_test"),
+                    (" $test", "test"),
+                    ("other stuff $test", "test"),
+                    ("other $test stuff", "test"),
+                    ("other $test $test2 stuff", "test"),
+                    ("español $test stuff", "test")):
+            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
 
     def test_delimiters(self):
-        VR = tools._VAR_REGEXP
         for c in ('|', '=', '+', ' ', '$', '<', '>'):
-            assert self._get_match(VR, "$test%s1" % c) == "test"
+            yield eq_, self._get_match(tools._VAR_REGEXP, "$test%s1" % c), "test"
 
     def test_namespace(self):
-        VR = tools._VAR_REGEXP
-        assert self._get_match(VR, "$foo::bar") == "foo::bar"
-        assert self._get_match(VR, " $foo::bar ") == "foo::bar"
-        assert self._get_match(VR, "other $foo::bar stuff") == "foo::bar"
+        for mem in (("$foo::bar", "foo::bar"),
+                    (" $foo::bar ", "foo::bar"),
+                    ("other $foo::bar stuff", "foo::bar")):
+            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
 
     def test_single_function(self):
-        VR = tools._VAR_REGEXP
-        assert self._get_match(VR, "$foo()") == "foo()"
-        assert self._get_match(VR, " $foo() ") == "foo()"
-        assert self._get_match(VR, "other $foo() stuff") == "foo()"
-        assert self._get_match(VR, "other $foo::bar() stuff") == "foo::bar()"
+        for mem in (("$foo()", "foo()"),
+                    (" $foo() ", "foo()"),
+                    ("other $foo() stuff", "foo()"),
+                    ("other $foo::bar() stuff", "foo::bar()")):
+            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
 
     def test_function_with_arguments(self):
-        VR = tools._VAR_REGEXP
-        assert self._get_match(VR, '$foo("arg1")') == 'foo("arg1")'
-        assert self._get_match(VR, '$foo("arg1", 1)') == 'foo("arg1", 1)'
+        for mem in (('$foo("arg1")', 'foo("arg1")'),
+                    ('$foo("arg1", 1)', 'foo("arg1", 1)'),
+                    ('$foo("español", 1)', 'foo("español", 1)')):
+            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
 
     def test_parens(self):
-        VR = tools._VAR_REGEXP
-        assert self._get_match(VR, "$(foo)") == "(foo)"
-        assert self._get_match(VR, "$(foo())") == "(foo())"
-        assert self._get_match(VR, "$(foo::bar)") == "(foo::bar)"
-        assert self._get_match(VR, "$(foo::bar())") == "(foo::bar())"
-        assert self._get_match(VR, "$(foo::bar(1, 2, 3))") == "(foo::bar(1, 2, 3))"
+        for mem in (("$(foo)", "(foo)"),
+                    ("$(foo())", "(foo())"),
+                    ("$(foo::bar)", "(foo::bar)"),
+                    ("$(foo::bar())", "(foo::bar())"),
+                    ("$(foo::bar(1, 2, 3))", "(foo::bar(1, 2, 3))")):
+            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
 
 req = pyblosxom.Request({}, {}, {})
+
 class Testparse:
     """tools.parse"""
     def test_simple(self):
@@ -161,99 +161,110 @@ class Testparse:
             yield eq_, pt(vd, mem[0]), mem[1]
 
 
+class Testcommasplit:
+    """tools.commasplit"""
+    def test_commasplit(self):
+        tcs = tools.commasplit
+        for mem in ((None, []),
+                    ("", [""]),
+                    ("a", ["a"]),
+                    ("a b c", ["a b c"]),
+                    ("a, b, c", ["a", " b", " c"]),
+                    ("a, 'b, c'", ["a", " 'b, c'"]),
+                    ("a, \"b, c\"", ["a", " \"b, c\""])):
+            yield eq_, tools.commasplit(mem[0]), mem[1]
+ 
 class Testis_year:
     """tools.is_year"""
-
     def test_must_be_four_digits(self):
-        assert tools.is_year("abab") == 0
-        assert tools.is_year("ab") == 0
-        assert tools.is_year("199") == 0
-        assert tools.is_year("19999") == 0
-        assert tools.is_year("1997") == 1
-        assert tools.is_year("2097") == 1
+        for mem in (("abab", 0),
+                    ("ab", 0),
+                    ("199", 0),
+                    ("19999", 0),
+                    ("1997", 1),
+                    ("2097", 1)):
+            yield eq_, tools.is_year(mem[0]), mem[1]
 
     def test_must_start_with_19_or_20(self):
-        assert tools.is_year("3090") == 0
-        assert tools.is_year("0101") == 0
-        
-    def test_everything_else_returns_false(self):
-        assert tools.is_year(None) == 0
-        assert tools.is_year("") == 0
-        assert tools.is_year("ab") == 0
-        assert tools.is_year("97") == 0
+        for mem in (("3090", 0),
+                    ("0101", 0)):
+            yield eq_, tools.is_year(mem[0]), mem[1]
 
-class TestgenerateRandStr():
+    def test_everything_else_returns_false(self):
+        for mem in ((None, 0),
+                    ("", 0),
+                    ("ab", 0),
+                    ("97", 0)):
+            yield eq_, tools.is_year(mem[0]), mem[1]
+
+class TestgenerateRandStr:
     """tools.generateRandStr
 
     Note: This is a mediocre test because generateRandStr produces
     a string that's of random length and random content.
     It's possible for this test to pass even when the code is bad.
     """
-
     def _gen_checker(self, s, minlen, maxlen):
         assert len(s) >= minlen and len(s) <= maxlen
         for c in s:
             assert c in string.letters or c in string.digits
 
     def test_generates_a_random_string(self):
-        self._gen_checker(tools.generateRandStr(), 5, 10)
-        self._gen_checker(tools.generateRandStr(), 5, 10)
-        self._gen_checker(tools.generateRandStr(), 5, 10)
-        self._gen_checker(tools.generateRandStr(), 5, 10)
-        self._gen_checker(tools.generateRandStr(), 5, 10)
+        for i in range(5):
+            self._gen_checker(tools.generateRandStr(), 5, 10)
 
     def test_generates_a_random_string_between_minlen_and_maxlen(self):
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
-        self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
+        for i in range(5):
+             self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
 
-class Testescape_text():
+        for i in range(5):
+            self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
+
+class Testescape_text:
     """tools.escape_text"""
     def test_none_to_none(self):
-        assert tools.escape_text(None) == None
+        eq_(tools.escape_text(None), None)
 
     def test_empty_string_to_empty_string(self):
-        assert tools.escape_text("") == ""
+        eq_(tools.escape_text(""), "")
 
     def test_single_quote_to_pos(self):
-        assert tools.escape_text("a'b") == "a&apos;b"
+        eq_(tools.escape_text("a'b"), "a&apos;b")
 
     def test_double_quote_to_quot(self):
-        assert tools.escape_text("a\"b") == "a&quot;b"
+        eq_(tools.escape_text("a\"b"), "a&quot;b")
 
     def test_everything_else_unchanged(self):
-        assert tools.escape_text(None) == None
-        assert tools.escape_text("") == ""
-        assert tools.escape_text("abc") == "abc"
+        for mem in ((None, None),
+                    ("", ""),
+                    ("abc", "abc")):
+            yield eq_, tools.escape_text(mem[0]), mem[1]
 
-class Testurlencode_text():
+class Testurlencode_text:
     """tools.urlencode_text"""
     def test_none_to_none(self):
-        assert tools.urlencode_text(None) == None
+        eq_(tools.urlencode_text(None), None)
 
     def test_empty_string_to_empty_string(self):
-        assert tools.urlencode_text("") == "" 
+        eq_(tools.urlencode_text(""), "")
 
     def test_equals_to_3D(self):
-        assert tools.urlencode_text("a=c") == "a%3Dc"
+        eq_(tools.urlencode_text("a=c"), "a%3Dc")
 
     def test_ampersand_to_26(self):
-        assert tools.urlencode_text("a&c") == "a%26c"
+        eq_(tools.urlencode_text("a&c"), "a%26c")
 
     def test_space_to_20(self):
-        assert tools.urlencode_text("a c") == "a%20c"
+        eq_(tools.urlencode_text("a c"), "a%20c")
+
+    def test_utf8(self):
+        eq_(tools.urlencode_text("español"), "espa%C3%B1ol")
 
     def test_everything_else_unchanged(self):
-        assert tools.urlencode_text(None) == None
-        assert tools.urlencode_text("") == ""
-        assert tools.urlencode_text("abc") == "abc"
+        for mem in ((None, None),
+                    ("", ""),
+                    ("abc", "abc")):
+            yield eq_, tools.urlencode_text(mem[0]), mem[1]
 
 class TestStripper:
     """tools.Stripper class"""
@@ -266,17 +277,20 @@ class TestStripper:
 
     def test_replaces_html_markup_from_string_with_space(self):
         s = tools.Stripper()
-        assert self._strip("") == ""
-        assert self._strip("abc") == "abc"
-        assert self._strip("<b>abc</b>") == " abc "
-        assert self._strip("abc <b>def</b> ghi") == "abc  def  ghi"
-        
+        for mem in (("", ""),
+                    ("abc", "abc"),
+                    ("<b>abc</b>", " abc "),
+                    ("abc<br />", "abc "),
+                    ("abc <b>def</b> ghi", "abc  def  ghi"),
+                    ("abc <b>español</b> ghi", "abc  español  ghi")):
+            yield eq_, self._strip(mem[0]), mem[1]
+
 class Testimportname:
     """tools.importname"""
-    def _setup(self):
+    def setUp(self):
         tools._config = {}
 
-    def _teardown(self):
+    def teartDown(self):
         del tools.__dict__["_config"]
 
     def _c(self, mn, n):
@@ -285,39 +299,34 @@ class Testimportname:
         return m
 
     def test_goodimport(self):
-        self._setup()
-
         import string
-        assert self._c("", "string") == string
+        yield eq_, tools.importname("", "string"), string
 
         import os.path
-        from os import path
-        assert self._c("os", "path") == path
+        yield eq_, tools.importname("os", "path"), os.path
 
-        self._teardown()
+    def test_badimport(self):
+        yield eq_, tools.importname("", "foo"), None
 
 class Testwhat_ext:
     """tools.what_ext"""
     def __init__(self):
-        self._files = ["a.txt", "b.html", "c.txtl"]
+        self._files = ["a.txt", "b.html", "c.txtl", "español.txt"]
         d = os.path.dirname(__file__)
         self._d = os.path.join(d, "what_ext_test_dir")
         
-    def _setup(self):
+    def setUp(self):
         """
         Creates the directory with some files in it.
         """
-        try:
-            os.mkdir(self._d)
+        os.mkdir(self._d)
 
-            for mem in self._files:
-                f = open(os.path.join(self._d, mem), "w")
-                f.write("lorem ipsum")
-                f.close()
-        except:
-            self._teardown()
+        for mem in self._files:
+            f = open(os.path.join(self._d, mem), "w")
+            f.write("lorem ipsum")
+            f.close()
 
-    def _teardown(self):
+    def tearDown(self):
         """
         Cleans up the test files and the directory that we created.
         """
@@ -333,108 +342,72 @@ class Testwhat_ext:
             pass
     
     def test_returns_extension_if_file_has_extension(self):
-        self._setup()
-        try:
-            assert "txt" == tools.what_ext(["txt", "html"],
-                                           os.path.join(self._d, "a"))
-            assert "html" == tools.what_ext(["txt", "html"],
-                                           os.path.join(self._d, "b"))
-        finally:
-            self._teardown()
+        # FIXME - can't turn this into a generator for some reason
+        eq_(tools.what_ext(["txt", "html"], os.path.join(self._d, "a")), "txt")
+        eq_(tools.what_ext(["txt", "html"], os.path.join(self._d, "b")), "html")
+        eq_(tools.what_ext(["txt", "html"], os.path.join(self._d, "español")), "txt")
 
     def test_returns_None_if_extension_not_present(self):
-        self._setup()
-        try:
-            assert None == tools.what_ext([],
-                                          os.path.join(self._d, "a"))
-            assert None == tools.what_ext(["html"],
-                                          os.path.join(self._d, "a"))
-        finally:
-            self._teardown()
+        eq_(tools.what_ext([], os.path.join(self._d, "a")), None)
+        eq_(tools.what_ext(["html"], os.path.join(self._d, "a")), None)
+
+## class Testrun_callback:
+##     """tools.run_callback
+
+##     This tests run_callback functionality.
+##     """
+##     def test_run_callback(self):
+##         def fun1(args):
+##             eq_(args["x"], 0)
+##             return {"x": 1}
+
+##         def fun2(args):
+##             eq_(args["x"], 1)
+##             return {"x": 2}
+
+##         def fun3(args):
+##             eq_(args["x"], 2)
+##             return {"x": 3}
+
+##         args = {"x": 0}
+##         ret = tools.run_callback([fun1, fun2, fun3], args,
+##                                  mappingfunc=lambda x,y: y)
+##         eq_(ret["x"], 3)
 
 class Testconvert_configini_values:
     """tools.convert_configini_values
 
     This tests config.ini -> config conversions.
     """
-    def cmp(self, a, b):
-        # print "comparing %s with %s" % (repr(a), repr(b))
-        if not a and not b: 
-            return True
-        if (not a and b) or (a and not b): 
-            return False
-
-        if not type(a) == type(b):
-            return False
-
-        # this handles strings and integers
-        if a == b:
-            return True
-
-        if type(a) == type( [] ) or type(a) == type( () ):
-            if not len(a) == len(b):
-                return False
-            for i in range(len(a)):
-                if not self.cmp(a[i], b[i]):
-                    return False
-            return True
-                
-        if type(a) == type( {} ):
-            if not len(a) == len(b):
-                return False
-
-            for k in a.keys():
-                if not self.cmp(a[k], b[k]):
-                    return False
-            return True        
-
-        return False
-
-    def test_cmp(self):
-        assert self.cmp( {}, {} )
-        assert self.cmp( {"a": 1}, {"a": 1} )
-        assert self.cmp( {"a": "b"}, {"a": "b"} )
-        assert (not self.cmp( {"a": 1}, {"a": 2} ))
-
     def test_empty(self):
-        assert self.cmp(tools.convert_configini_values( {} ),
-                        {})
+        eq_(tools.convert_configini_values({}), {})
 
     def test_no_markup(self):
-        assert self.cmp(tools.convert_configini_values( { "a": "b" } ),
-                        { "a": "b" })
+        eq_(tools.convert_configini_values({"a": "b"}), {"a": "b"})
 
     def test_integers(self):
-        assert self.cmp(tools.convert_configini_values( { "a": "1" } ),
-                        { "a": 1 })
-        assert self.cmp(tools.convert_configini_values( { "a": "1", "b": "2" } ),
-                        { "a": 1, "b": 2 })
-        assert self.cmp(tools.convert_configini_values( { "a": "10" } ),
-                        { "a": 10 })
-        assert self.cmp(tools.convert_configini_values( { "a": "100" } ),
-                        { "a": 100 })
-        assert self.cmp(tools.convert_configini_values( { "a": " 100  " } ),
-                        { "a": 100 })
+        for mem in (({"a": "1"}, {"a": 1}),
+                    ({"a": "1", "b": "2"}, {"a": 1, "b": 2}),
+                    ({"a": "10"}, {"a": 10}),
+                    ({"a": "100"}, {"a": 100}),
+                    ({"a": " 100  "}, {"a": 100})):
+            yield eq_, tools.convert_configini_values(mem[0]), mem[1]
 
     def test_strings(self):
-        assert self.cmp(tools.convert_configini_values( { "a": "'b'" } ),
-                        { "a": "b" })
-        assert self.cmp(tools.convert_configini_values( { "a": "\"b\"" } ),
-                        { "a": "b" })
-        assert self.cmp(tools.convert_configini_values( { "a": "   \"b\" " } ),
-                        { "a": "b" })
+        for mem in (({"a": "'b'"}, {"a": "b"}),
+                    ({"a": "\"b\""}, {"a": "b"}),
+                    ({"a": "   \"b\" "}, {"a": "b"}),
+                    ({"a": "español"}, {"a": "español"}),
+                    ({"a": "'español'"}, {"a": "español"})):
+            yield eq_, tools.convert_configini_values(mem[0]), mem[1]
 
     def test_lists(self):
-        assert self.cmp(tools.convert_configini_values( { "a": "[]" } ),
-                        { "a": [ ] })
-        assert self.cmp(tools.convert_configini_values( { "a": "[1]" } ),
-                        { "a": [ 1 ] })
-        assert self.cmp(tools.convert_configini_values( { "a": "[1, 2]" } ),
-                        { "a": [ 1, 2 ] })
-        assert self.cmp(tools.convert_configini_values( { "a": "  [1 ,2 , 3]  " } ),
-                        { "a": [ 1, 2, 3 ] })
-        assert self.cmp(tools.convert_configini_values( { "a": "['1' ,\"2\" , 3]" } ),
-                        { "a": [ "1", "2", 3 ] })
+        for mem in (({"a": "[]"}, {"a": []}),
+                    ({"a": "[1]"}, {"a": [1]}),
+                    ({"a": "[1, 2]"}, {"a": [1, 2]}),
+                    ({"a": "  [1 ,2 , 3]"}, {"a": [1, 2, 3]}),
+                    ({"a": "['1' ,\"2\" , 3]"}, {"a": ["1", "2", 3]})):
+            yield eq_, tools.convert_configini_values(mem[0]), mem[1]
 
     def test_syntax_exceptions(self):
         def checkbadsyntax(d):
@@ -446,9 +419,14 @@ class Testconvert_configini_values:
                 # print repr(e)
                 assert False
 
-        checkbadsyntax( { "a": "'b" } )
-        checkbadsyntax( { "a": "b'" } )
-        checkbadsyntax( { "a": "\"b" } )
-        checkbadsyntax( { "a": "b\"" } )
-        checkbadsyntax( { "a": "[b" } )
-        checkbadsyntax( { "a": "b]" } )
+        for mem in ({ "a": "'b" },
+                    { "a": "b'" },
+                    { "a": "\"b" },
+                    { "a": "b\"" },
+                    { "a": "[b" },
+                    { "a": "b]" }):
+            yield checkbadsyntax, mem
+
+    # FIXME - test tools.walk
+
+    # FIXME - test filestat
