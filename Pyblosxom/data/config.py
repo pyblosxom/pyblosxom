@@ -57,10 +57,6 @@ py["blog_encoding"] = "utf-8"
 # your system.  See the PyBlosxom documentation for details.
 #py["locale"] = "en_US.iso-8859-1"
 
-# Where is this blog geographically located?  This is used by geocoding 
-# (aka geotagging crawlers) and sites like http://geourl.org/ .
-#py["blog_icbm"] = '37.448089,-122.159259'
-
 # Where are this blog's entries kept?
 py["datadir"] = "%(basedir)sentries"
 
