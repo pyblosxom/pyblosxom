@@ -44,7 +44,7 @@ These are the instructions for configuring static rendering in PyBlosxom.
    For example, I created a directory ``/home/joe/pyblosxom/`` and put 
    both files in there.
 
-   If you're using PyBlosxom 1.4 or later, copy ``bin/pyblcmd`` and
+   If you're using PyBlosxom 1.4 or later, copy ``bin/pyblosxom-cmd`` and
    ``web/config.py``.
 
 2. **Add ``static_dir`` to your ``config.py`` file.**
@@ -103,13 +103,13 @@ Render Everything
 If you're using PyBlosxom 1.4 or later, run the static renderer like
 this to render all pages in your blog::
 
-   % pyblcmd --config <config-file> --static
+   % pyblosxom-cmd --config <config-file> --static
 
 
 where ``<config-file>`` is replaced by the absolute full path of your
 ``config.py`` file.  For example::
 
-   % pyblcmd --config /home/joe/blog/config.py --static
+   % pyblosxom-cmd --config /home/joe/blog/config.py --static
 
 
 If you're using a version of PyBlosxom earlier than 1.4, then the 
@@ -134,7 +134,7 @@ comparing the mtime on the entry file with the mtime on the rendered file.
 If you're using PyBlosxom 1.4 or later, run the static renderer like
 this to render new pages in your blog::
 
-   % pyblcmd --config <config-file> --static incremental
+   % pyblosxom-cmd --config <config-file> --static incremental
    
 
 If you're using a version of PyBlosxom earlier than 1.4, then run the
@@ -187,7 +187,7 @@ a shell script like this::
    export CONFIG = <path to config.py here>
    export STATIC_DIR = <your static dir here>
  
-   pyblcmd --config ${CONFIG} --static
+   pyblosxom-cmd --config ${CONFIG} --static
    find ${STATIC_DIR} -mmin +30 -exec 'rm' '{}' ';' 
 
 

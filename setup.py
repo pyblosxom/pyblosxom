@@ -43,7 +43,7 @@ setup(name="pyblosxom",
     keywords="blog pyblosxom cgi weblog",
     url="http://pyblosxom.sourceforge.net/",
     packages=find_packages(exclude=["ez_setup"]),
-    scripts=["bin/pyblcmd"],
+    scripts=["bin/pyblosxom-cmd"],
     zip_safe=False,
     include_package_data=True,
     install_requires=[], # FIXME

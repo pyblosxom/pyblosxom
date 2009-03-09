@@ -22,4 +22,4 @@ sys.path.insert(0, os.getcwd())
 from Pyblosxom.commandline import command_line_handler
 
 if __name__ == '__main__':
-    sys.exit(command_line_handler("pyblcmd", sys.argv))
+    sys.exit(command_line_handler("pyblosxom-cmd", sys.argv))

@@ -215,9 +215,9 @@ def create_blog(d, verbose):
 def command_line_handler(scriptname, argv):
     """
     Handles calling PyBlosxom from the command line.  This can be
-    called from two different things: pyblosxom.cgi and pyblcmd.
+    called from two different things: pyblosxom.cgi and pyblosxom-cmd.
 
-    @param scriptname: the name of the script (ex. "pyblcmd")
+    @param scriptname: the name of the script (ex. "pyblosxom-cmd")
     @type  scriptname: string
 
     @param argv: the arguments passed in

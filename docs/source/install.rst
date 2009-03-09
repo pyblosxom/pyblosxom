@@ -39,7 +39,7 @@ You can do this in Python scripts by appending the diectory to ``sys.path``::
 You can do this by setting the ``PYTHONPATH`` environment variable, too.  For
 example::
 
-    PYTHONPATH=/home/joe/pyblosxom/ python pyblcmd --help
+    PYTHONPATH=/home/joe/pyblosxom/ python pyblosxom-cmd --help
 
 
 System-wide installation

@@ -56,9 +56,9 @@ MANUAL
  - Need to add installation instructions for PyBlosxom as WSGI middleware.
  - Convert to reST.
 
-PYBLCMD
+PYBLOSXOM-CMD
 
- - Finish up pyblcmd so that it's a good alternative to running
+ - Finish up pyblosxom-cmd so that it's a good alternative to running
    pyblosxom.cgi.
 
 
@@ -143,10 +143,10 @@ CONFIGURATION
 
 MTIMES
 
- - pyblcmd should go through the datadir and export the mtimes for
+ - pyblosxom-cmd should go through the datadir and export the mtimes for
    all files (by calling cb_filestat) into a file index
    (There's an rdate module that copies mtimes into the entries.  We
-   might want to fold this functionality into pyblcmd.)
+   might want to fold this functionality into pyblosxom-cmd.)
  - adjust pyblosxom so that it looks for the file index cache before
    the default of stating the file
 
