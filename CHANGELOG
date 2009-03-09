@@ -1,3 +1,90 @@
+Changes between 1.4.3 and 2.0
+=============================
+
+Pertinent to users:
+-------------------
+.. Warning::
+
+   This is a big rewrite and a lot of things have changed.  It's very 
+   likely that many plugins you're currently using will break.  If you need 
+   help, let us know!
+
+1. PyBlosxom now requires Python 2.3.  We've removed the _logging module that
+   provided logging facilities to pre-Python 2.3 versions.
+
+2. To install PyBlosxom on your system, you will now need setuptools.
+
+3. The ``pyblosxom.cgi`` file has changed significantly--if you're using it
+   you should grab the new one that comes with this distribution.  We've
+   gutted the ``pyblosxom.cgi`` script and turned it into a stub.  This will
+   reduce the need for you to update your ``pyblosxom.cgi`` in the future
+   when you upgrade PyBlosxom.
+
+4. pyblcmd now has an option to create the blog directory structure
+   and skeleton files for you.  This makes it much faster to get a new 
+   blog up and running.  Syntax is this::
+
+      pyblcmd --create <path>
+
+   Some examples::
+
+      pyblcmd --create .
+      pyblcmd --create /home/joe/blog
+
+5. Template variable syntax ``$id_escaped`` and ``$id_urlencoded``
+   has been removed.  Use ``$escape(id)`` and ``$urlencode(id)``
+   instead.
+
+6. Switched to using Python's optparse module instead of our home-brewed
+   one.  There are some changes in command line syntax.  Do
+   ``pyblcmd --help`` for command line help.
+
+7. Changed around ``INSTALL``, ``README`` and added ``UPGRADE``.
+
+8. Removed ``blog_title_with_path`` variable.  If you were using this 
+   variable in your templates, replace it.  i.e. instead of::
+   
+       $blog_title_with_path
+    
+   do::
+
+       $blog_title : $pi_bl
+
+9. Re-worked PyBlosxom so that it uses the same encoding throughout.  This
+   means you need to use the same encoding for all your data files and that
+   encoding has to match the ``blog_encoding`` property in ``config.py``.
+   This defaults to UTF-8.
+
+10. Re-worked documentation to use Sphinx.  The end result is that
+    the "source" for the docs is in ``docs/source/``, there's an HTML
+    version that's built by Sphinx in ``docs/build/html/``, and 
+    it's a lot easier to read and use now.  Thank you to the Sphinx
+    team!
+
+
+Pertinent to developers:
+------------------------
+
+1. ``Pyblosxom.tools.VariableDict`` is no more.
+
+2. If you have template variables that end in ``_urlencoded`` and
+   ``_escaped``, it's better to instead call ``tools.escape_text(...)``
+   and ``tools.urlencode_text(...)`` or use filter functions
+   ``$escape(var)`` and ``$urlencode(var)``.
+
+3. The blosxom renderer has undergone a bunch of fixes.  If you
+   depended on functions that started with ``_``, then you'll probably
+   need to rework your plugin.  These functions were not intended
+   for outside use.
+
+   Additionally, we fixed the bug where the renderer was adding the
+   contents of the config and data dicts to each entry when it was
+   rendered as a story.  Now the items in the entrylist are untouched 
+   during rendering.
+
+4. Added a lot of tests.
+
+
 Changes between 1.4.2 and 1.4.3
 ===============================
 
