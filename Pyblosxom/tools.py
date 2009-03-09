@@ -2,7 +2,7 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-# 
+#
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
 #
@@ -65,7 +65,7 @@ _VAR_REGEXP = re.compile(ur"""
             (?<!\\)\)         # with an end paren that's not escaped
         )?    # 0 or 1 of these ( ... ) blocks
         \)
-    ) 
+    )
     """, re.VERBOSE)
 
 # reference to the pyblosxom config dict
@@ -86,37 +86,37 @@ def initialize(config):
     global month2num
 
     try:
-        month2num = { 'nil' : '00',
-                      locale.nl_langinfo(locale.ABMON_1) : '01',
-                      locale.nl_langinfo(locale.ABMON_2) : '02',
-                      locale.nl_langinfo(locale.ABMON_3) : '03',
-                      locale.nl_langinfo(locale.ABMON_4) : '04',
-                      locale.nl_langinfo(locale.ABMON_5) : '05',
-                      locale.nl_langinfo(locale.ABMON_6) : '06',
-                      locale.nl_langinfo(locale.ABMON_7) : '07',
-                      locale.nl_langinfo(locale.ABMON_8) : '08',
-                      locale.nl_langinfo(locale.ABMON_9) : '09',
-                      locale.nl_langinfo(locale.ABMON_10) : '10',
-                      locale.nl_langinfo(locale.ABMON_11) : '11',
-                      locale.nl_langinfo(locale.ABMON_12) : '12'}
+        month2num = {'nil' : '00',
+                     locale.nl_langinfo(locale.ABMON_1) : '01',
+                     locale.nl_langinfo(locale.ABMON_2) : '02',
+                     locale.nl_langinfo(locale.ABMON_3) : '03',
+                     locale.nl_langinfo(locale.ABMON_4) : '04',
+                     locale.nl_langinfo(locale.ABMON_5) : '05',
+                     locale.nl_langinfo(locale.ABMON_6) : '06',
+                     locale.nl_langinfo(locale.ABMON_7) : '07',
+                     locale.nl_langinfo(locale.ABMON_8) : '08',
+                     locale.nl_langinfo(locale.ABMON_9) : '09',
+                     locale.nl_langinfo(locale.ABMON_10) : '10',
+                     locale.nl_langinfo(locale.ABMON_11) : '11',
+                     locale.nl_langinfo(locale.ABMON_12) : '12'}
 
     except:
-        # Windows doesn't have nl_langinfo, so we use one that 
+        # Windows doesn't have nl_langinfo, so we use one that
         # only return English.
         # FIXME - need a better hack for this issue.
-        month2num = { 'nil' : '00',
-                      "Jan" : '01',
-                      "Feb" : '02',
-                      "Mar" : '03',
-                      "Apr" : '04',
-                      "May" : '05',
-                      "Jun" : '06',
-                      "Jul" : '07',
-                      "Aug" : '08',
-                      "Sep" : '09',
-                      "Oct" : '10',
-                      "Nov" : '11',
-                      "Dec" : '12'}
+        month2num = {'nil': '00',
+                     "Jan": '01',
+                     "Feb": '02',
+                     "Mar": '03',
+                     "Apr": '04',
+                     "May": '05',
+                     "Jun": '06',
+                     "Jul": '07',
+                     "Aug": '08',
+                     "Sep": '09',
+                     "Oct": '10',
+                     "Nov": '11',
+                     "Dec": '12'}
 
     # This is not python 2.1 compatible (Nifty though)
     # num2month = dict(zip(month2num.itervalues(), month2num))
@@ -125,7 +125,7 @@ def initialize(config):
     for month_abbr, month_num in month2num.items():
         num2month[month_num] = month_abbr
         num2month[int(month_num)] = month_abbr
-    
+
     # all the valid month possibilities
     global MONTHS
     MONTHS = num2month.keys() + month2num.keys()
@@ -183,10 +183,8 @@ def convert_configini_values(configini):
 
     return config
 
-
-
 def escape_text(s):
-    """Takes in a string and converts ``'`` to ``&apos;`` and ``"`` to 
+    """Takes in a string and converts ``'`` to ``&apos;`` and ``"`` to
     ``&quot;``.
 
     Note: if ``s`` is ``None``, then we return ``None``.
@@ -200,11 +198,10 @@ def escape_text(s):
     >>> escape_text('a"b')
     "a&quot;b"
     """
-    if not s: 
+    if not s:
         return s
 
-    return escape(s, {"'": "&apos;", '"': "&quot;"} )
-
+    return escape(s, {"'": "&apos;", '"': "&quot;"})
 
 def urlencode_text(s):
     """Calls ``urllib.quote`` on the string ``s``.
@@ -223,13 +220,13 @@ def urlencode_text(s):
     "a%3Dc"
 
     """
-    if not s: 
+    if not s:
         return s
 
     return urllib.quote(s)
 
-STANDARD_FILTERS = { "escape": lambda req, vd, s : escape_text(s),
-                     "urlencode": lambda req, vd, s : urlencode_text(s) }
+STANDARD_FILTERS = {"escape": lambda req, vd, s: escape_text(s),
+                    "urlencode": lambda req, vd, s: urlencode_text(s)}
 
 
 class Stripper(sgmllib.SGMLParser):
@@ -243,25 +240,25 @@ class Stripper(sgmllib.SGMLParser):
         self.data = []
         sgmllib.SGMLParser.__init__(self)
 
-    def unknown_starttag(self, tag, attrs): 
+    def unknown_starttag(self, tag, attrs):
         """
         Implements unknown_starttag.  Appends a space to the buffer.
         """
         self.data.append(" ")
 
-    def unknown_endtag(self, tag): 
+    def unknown_endtag(self, tag):
         """
         Implements unknown_endtag.  Appends a space to the buffer.
         """
         self.data.append(" ")
 
-    def handle_data(self, data): 
+    def handle_data(self, data):
         """
         Implements handle_data.  Appends data to the buffer.
         """
         self.data.append(data)
 
-    def gettext(self): 
+    def gettext(self):
         """
         Returns the buffer.
         """
@@ -308,21 +305,16 @@ def commasplit(s):
         if c == startstring:
             startstring = None
             t.append(c)
-
         elif c == "'" or c == '"':
             startstring = c
             t.append(c)
-
         elif not startstring and c == ",":
             l.append("".join(t))
             t = []
-
         else:
             t.append(c)
-
     if t:
         l.append("".join(t))
-
     return l
 
 class Replacer:
@@ -338,7 +330,7 @@ class Replacer:
         passed.
 
         @param request: the Request object
-        @type  request: Request 
+        @type  request: Request
 
         @param encoding: the encoding to use
         @type  encoding: string
@@ -373,8 +365,8 @@ class Replacer:
            - if ``v`` has no passed arguments and the function takes two
              arguments we return ``var_dict[v](request, vd)``
 
-           - if ``v`` has passed arguments, we return 
-             ``var_dict[v](request, vd, *args)`` after some mild 
+           - if ``v`` has passed arguments, we return
+             ``var_dict[v](request, vd, *args)`` after some mild
              processing of the arguments
 
         Also, for backwards compatability reasons, we convert things like::
@@ -427,7 +419,7 @@ class Replacer:
             if args:
                 def fix(s, vd=vd):
                     # if it's an int, return an int
-                    if s.isdigit(): 
+                    if s.isdigit():
                         return int(s)
                     # if it's a string, return a string
                     if s.startswith("'") or s.startswith('"'):
@@ -468,7 +460,7 @@ class Replacer:
 
 def parse(request, var_dict, template):
     """
-    This method parses the ``template`` passed in using ``Replacer`` to 
+    This method parses the ``template`` passed in using ``Replacer`` to
     expand template variables using values in the ``var_dict``.
 
     Originally based on OPAGCGI, but mostly re-written.
@@ -494,7 +486,7 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     our pattern(s). Taken from the online Python Cookbook and modified to own
     needs.
 
-    It will look at the config "ignore_directories" for a list of 
+    It will look at the config "ignore_directories" for a list of
     directories to ignore.  It uses a regexp that joins all the things
     you list.  So the following::
 
@@ -576,51 +568,51 @@ def __walk_internal(root, recurse, pattern, ignorere, return_folders):
                 (return_folders and os.path.isdir(fullname) and
                  (not ignorere or not ignorere.match(fullname)))):
                 result.append(fullname)
-                
+
         # recursively scan other folders, appending results
         if (recurse == 0) or (recurse > 1):
             if name[0] != "." and os.path.isdir(fullname) and \
                     not os.path.islink(fullname) and \
                     (not ignorere or not ignorere.match(fullname)):
                 result = result + \
-                         __walk_internal(fullname, 
-                                        (recurse > 1 and recurse -  1 or 0), 
+                         __walk_internal(fullname,
+                                        (recurse > 1 and [recurse - 1] or [0])[0],
                                         pattern, ignorere, return_folders)
 
     return result
 
 
-def filestat(request, filename):     
-    """     
-    Returns the filestat on a given file.  We store the filestat    
-    in case we've already retrieved it this time.   
+def filestat(request, filename):
+    """
+    Returns the filestat on a given file.  We store the filestat in case
+    we've already retrieved it during this PyBlosxom request.
 
-    This returns the mtime of the file (same as returned by 
+    This returns the mtime of the file (same as returned by
     ``time.localtime()``) -- tuple of 9 ints.
 
     :Parameters:
-        request : Request object
-            the request object
-        filename : string
-            the file name of the file to stat
-    """     
-    data = request.getData()    
-    filestat_cache = data.setdefault("filestat_cache", {})      
-    
-    if filestat_cache.has_key(filename):    
-        return filestat_cache[filename]     
-    
-    argdict = { "request": request,
-                "filename": filename,    
-                "mtime": (0,) * 10 }
+       request : Request object
+          the request object
+       filename : string
+          the file name of the file to stat
+    """
+    data = request.getData()
+    filestat_cache = data.setdefault("filestat_cache", {})
+
+    if filestat_cache.has_key(filename):
+        return filestat_cache[filename]
+
+    argdict = {"request": request,
+               "filename": filename,
+               "mtime": (0,) * 10}
 
     MT = stat.ST_MTIME
 
-    argdict = run_callback("filestat",      
-                           argdict,     
-                           mappingfunc = lambda x,y:y,    
-                           donefunc = lambda x:x and x["mtime"][MT] != 0,
-                           defaultfunc = lambda x:x)
+    argdict = run_callback("filestat",
+                           argdict,
+                           mappingfunc=lambda x, y: y,
+                           donefunc=lambda x: x and x["mtime"][MT] != 0,
+                           defaultfunc=lambda x: x)
 
     # no plugin handled cb_filestat; we default to asking the
     # filesystem
@@ -628,10 +620,9 @@ def filestat(request, filename):
         argdict["mtime"] = os.stat(filename)
 
     timetuple = time.localtime(argdict["mtime"][MT])
-    filestat_cache[filename] = timetuple    
-     
-    return timetuple
+    filestat_cache[filename] = timetuple
 
+    return timetuple
 
 def what_ext(extensions, filepath):
     """
@@ -652,43 +643,41 @@ def what_ext(extensions, filepath):
     return None
 
 
-def is_year(checks):
+def is_year(s):
     """
-    Checks to see if the string is likely to be a year or not.  In order to 
+    Checks to see if the string is likely to be a year or not.  In order to
     be considered to be a year, it must pass the following criteria:
 
-      1. four digits
-      2. first two digits are either 19 or 20.
+    1. four digits
+    2. first two digits are either 19 or 20.
 
-    @param checks: the string to check for "year-hood"
-    @type  checks: string
+    Returns ``True`` if it is a year and ``False`` otherwise.
 
-    @return: 1 if checks is likely to be a year or 0 if it is not
-    @rtype: boolean
+    :Parameters:
+       s : string
+          the string to check for "year-hood"
     """
-    if not checks:
-        return 0
+    if not s:
+        return False
 
-    if len(checks) == 4 and checks.isdigit() and \
-            (checks.startswith("19") or checks.startswith("20")):
-        return 1
-    return 0
+    if len(s) == 4 and s.isdigit() and \
+            (s.startswith("19") or s.startswith("20")):
+        return True
+    return False
 
 
 def importname(modulename, name):
     """
-    Imports modules for modules that can only be determined during 
-    runtime.  It logs any import errors.
+    Safely imports modules for runtime importing.
 
-    @param modulename: The base name of the module to import from
-    @type modulename: string
+    Returns the module object or ``None`` if there were problems
+    importing.
 
-    @param name: The name of the module to import from the modulename
-    @type name: string
-
-    @returns: If successful, returns an imported object reference, else
-              C{None}
-    @rtype: object
+    :Parameters:
+       modulename : string
+          The package name of the module to import from
+       name : string
+          The name of the module to import
     """
     logger = getLogger()
     if not modulename:
@@ -712,22 +701,18 @@ def importname(modulename, name):
 
     return None
 
-
 def generateRandStr(minlen=5, maxlen=10):
     """
-    Generate a random string
-    
-    Tool to generate a random string between C{minlen} to C{maxlen}
-    characters.
+    Generate a random string between ``minlen`` and ``maxlen`` characters
+    long.
 
-    @param minlen: The minimum length the string should be
-    @type minlen: integer
+    The generated string consists of letters and numbers.
 
-    @param maxlen: The maximum length the string could be
-    @type maxlen: integer
-
-    @returns: A string containing random characters
-    @rtype: string
+    :Parameters:
+       minlen : int
+          the minimum length of the generated random string
+       maxlen : int
+          the maximum length of the generated random string
     """
     import random, string
     chars = string.letters + string.digits
@@ -739,11 +724,10 @@ def generateRandStr(minlen=5, maxlen=10):
         x += 1
     return "".join(randstr)
 
-
-def run_callback(chain, input, 
-        mappingfunc = lambda x,y : x, 
-        donefunc = lambda x : 0,
-        defaultfunc = None):
+def run_callback(chain, input,
+        mappingfunc=lambda x, y: x,
+        donefunc=lambda x: 0,
+        defaultfunc=None):
     """
     Executes a callback chain on a given piece of data.
     passed in is a dict of name/value pairs.  Consult the documentation
@@ -763,7 +747,7 @@ def run_callback(chain, input,
     @type  chain: string
 
     @param input: data is a dict filled with name/value pairs--refer
-        to the callback chain documentation for what's in the data 
+        to the callback chain documentation for what's in the data
         dict.
     @type  input: dict
 
@@ -776,7 +760,7 @@ def run_callback(chain, input,
 
     @param donefunc: this function tests whether we're done doing
         what we're doing.  This function takes as input the output
-        of the most recent iteration.  If this function returns 
+        of the most recent iteration.  If this function returns
         true (1) then we'll drop out of the loop.  For example,
         if you wanted a callback to stop running when one of the
         registered functions returned a 1, then you would pass in:
@@ -801,9 +785,9 @@ def run_callback(chain, input,
         output = func(input)
 
         # we fun the output through our donefunc to see if we should stop
-        # iterating through the loop.  the donefunc should return a 1
-        # if we're done--all other values cause us to continue.
-        if donefunc(output) == 1:
+        # iterating through the loop.  if the donefunc returns something
+        # true, then we're all done; otherwise we continue.
+        if donefunc(output):
             break
 
         # we pass the input we just used and the output we just got
@@ -816,13 +800,12 @@ def run_callback(chain, input,
     # if we have a defaultfunc and we haven't satisfied the donefunc
     # conditions, then we return whatever the defaultfunc returns
     # when given the current version of the input.
-    if callable(defaultfunc) and donefunc(output) != 1:
+    if callable(defaultfunc) and not donefunc(output):
         return defaultfunc(input)
-        
+
     # we didn't call the defaultfunc--so we return the most recent
     # output.
     return output
-
 
 def create_entry(datadir, category, filename, mtime, title, metadata, body):
     """
@@ -831,30 +814,25 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
     This is primarily used by the testing system, but it could be
     used by scripts and other tools.
 
-    @param datadir: the directory of the datadir where the blog
-                    entries are stored.
-    @type  datadir: string
+    :Parameters:
+       datadir : string
+          the directory of the datadir where the blog entries are stored
+       category : string
+          the category of the entry
+       filename : string
+          the name of the blog entry (filename and extension--no directory)
+       mtime : float
+          the mtime for the entry in seconds since the epoch
+       title : string
+          the entry title
+       metadata : dict
+          the metadata for the entry in a dict of key/value pairs
+       body : string
+          the body of the entry
 
-    @param category: the category of the entry.
-    @type  category: string
-
-    @param filename: the name of the blog entry (filename and extension).
-    @type  filename: string
-
-    @param mtime: the mtime for the entry (seconds since the epoch).
-    @type  mtime: float
-
-    @param title: the title for the entry.
-    @type  title: string
-
-    @param metadata: any metadata for this entry.
-    @type  metadata: dict
-
-    @param body: the content of the entry.
-    @type  body: string
-
-    @raises IOError: if the datadir + category directory exists, but isn't
-                     a directory.
+    :Except:
+       IOError
+          if the datadir + category directory exists, but isn't a directory
     """
 
     def addcr(s):
@@ -875,7 +853,7 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
 
     if not os.path.isdir(d):
         raise IOError("%s exists, but isn't a directory." % d)
-    
+
     # create the filename
     fn = os.path.join(datadir, category, filename)
 
@@ -923,14 +901,14 @@ def update_static_entry(cdict, entry_filename):
     First we figure out whether this blog is set up for static rendering.
     If not, then we return--no harm done.
 
-    If we are, then we call render_url for each static_flavour of the entry
-    and then for each static_flavour of the index page.
+    If we are, then we call ``render_url`` for each ``static_flavour`` of
+    the entry and then for each ``static_flavour`` of the index page.
 
-    @param cdict: the config.py dict
-    @type  cdict: dict
-
-    @param entry_filename: the filename of the entry (ex. /movies/xmen2)
-    @type  entry_filename: string
+    :Parameters:
+       cdict : dict
+          the ``config.py`` dict
+       entry_filename : string
+          the url path of the entry to be updated.  ex. ``/movies/xmen2``
     """
     staticdir = cdict.get("static_dir", "")
 
@@ -941,12 +919,11 @@ def update_static_entry(cdict, entry_filename):
 
     renderme = []
     for mem in staticflavours:
-        renderme.append( "/index" + "." + mem, "" )
-        renderme.append( entry_filename + "." + mem, "" )
-   
+        renderme.append("/index" + "." + mem, "")
+        renderme.append(entry_filename + "." + mem, "")
+
     for mem in renderme:
         render_url_statically(cdict, mem[0], mem[1])
-
 
 def render_url_statically(cdict, url, q):
     staticdir = cdict.get("static_dir", "")
@@ -958,28 +935,27 @@ def render_url_statically(cdict, url, q):
     if not os.path.isdir(os.path.dirname(fn)):
         os.makedirs(os.path.dirname(fn))
 
-    # by using the response object the cheesy part of removing 
+    # by using the response object the cheesy part of removing
     # the HTTP headers from the file is history.
     f = open(fn, "w")
     f.write(response.read())
     f.close()
- 
+
 def render_url(cdict, pathinfo, querystring=""):
     """
     Takes a url and a querystring and renders the page that corresponds
     with that by creating a Request and a PyBlosxom object and passing
     it through.  It then returns the resulting Response.
 
-    @param cdict: the config.py dict
-    @type  cdict: dict
+    This returns a PyBlosxom ``Response`` object.
 
-    @param pathinfo: the path_info string.  ex: /dev/pyblosxom/firstpost.html
-    @type  pathinfo: string
-
-    @param querystring: the querystring (if any).  ex: debug=yes
-    @type  querystring: string
-
-    @returns: Response
+    :Parameters:
+       cdict : dict
+          the ``config``.py dict
+       pathinfo : string
+          the ``path_info`` string.  ex. ``/dev/pyblosxom/firstpost.html``
+       querystring : string
+          the querystring (if any).  ex: debug=yes
     """
     staticdir = cdict.get("static_dir", "")
 
@@ -1014,16 +990,7 @@ def render_url(cdict, pathinfo, querystring=""):
 # Logging
 #******************************
 
-# If you have Python >=2.3 and want to use/test the custom logging 
-# implementation set this flag to True.
-_use_custom_logger = False
-
-try:
-    import logging
-    if _use_custom_logger:
-        raise ImportError, "whatever"
-except ImportError:
-    import _logging as logging
+import logging
 
 # A dict to keep track of created log handlers.
 # Used to prevent multiple handlers from beeing added to the same logger.
@@ -1038,10 +1005,11 @@ class LogFilter(object):
     def __init__(self, names=None):
         """
         Initializes the filter to the list provided by the names
-        argument (or [] if names is None).
+        argument (or ``[]`` if ``names`` is ``None``).
 
-        @param names: list of name strings to filter out
-        @type  names: list of strings
+        :Parameters:
+           names : list of strings
+              the list of strings to filter out
         """
         if names == None:
             names = []
@@ -1053,17 +1021,17 @@ class LogFilter(object):
         return 0
 
 def getLogger(log_file=None):
-    """
-    Creates and retuns a log channel.
+    """Creates and retuns a log channel.
+
     If no log_file is given the system-wide logfile as defined in config.py
     is used. If a log_file is given that's where the created logger logs to.
 
-    @param log_file: optional, the file to log to.
-    @type log_file: C{str}
+    Returns a log channel (logger instance) which you can call ``error``,
+    ``warning``, ``debug``, ``info``, ... on.
 
-    @return: a log channel (Logger instance)
-    @rtype: L{logging.Logger} for Python >=2.3, 
-            L{Pyblosxom._logging.Logger} for Python <2.3
+    :Parameters:
+       log_file : string
+          the file to log to, defaults to ``None``
     """
     custom_log_file = False
     if log_file == None:
@@ -1075,7 +1043,7 @@ def getLogger(log_file=None):
         log_name = ""
         for path in _config.get('plugin_dirs', []):
             if filename.startswith(path):
-                # if it's a plugin, use the module name as the log channels 
+                # if it's a plugin, use the module name as the log channels
                 # name
                 log_name = module
                 break
@@ -1130,7 +1098,7 @@ def getLogger(log_file=None):
 
         if not custom_log_file:
             # only log messages from plugins listed in log_filter.
-            # add 'root' to the log_filter list to still allow application 
+            # add 'root' to the log_filter list to still allow application
             # level messages.
             log_filter = _config.get('log_filter', None)
             if log_filter:
@@ -1142,11 +1110,10 @@ def getLogger(log_file=None):
 
     return logger
 
-
 def log_exception(log_file=None):
     """
     Logs an exception to the given file.
-    Uses the system-wide log_file as defined in config.py if none 
+    Uses the system-wide log_file as defined in config.py if none
     is given here.
 
     @param log_file: optional, the file to log to
@@ -1154,7 +1121,6 @@ def log_exception(log_file=None):
     """
     log = getLogger(log_file)
     log.exception("Exception occured:")
-
 
 def log_caller(frame_num=1, log_file=None):
     """
@@ -1167,11 +1133,11 @@ def log_caller(frame_num=1, log_file=None):
         tools.log_caller(2)
         tools.log_caller(3, log_file="/path/to/file")
 
-    @param frame_num: optional, index of the frame
-    @type frame_num: C{int}
-
-    @param log_file: optional, the file to log to
-    @type log_file: C{str}
+    :Parameters:
+       frame_num : int
+          index of the frame to log, defaults to ``1``
+       log_file : string
+          the file to log to, defaults to ``None``
     """
     f = sys._getframe(frame_num)
     module = f.f_globals["__name__"]
@@ -1180,8 +1146,8 @@ def log_caller(frame_num=1, log_file=None):
     subr = f.f_code.co_name
 
     log = getLogger(log_file)
-    log.info("\n  module: %s\n  filename: %s\n  line: %s\n  subroutine: %s", 
-        module, filename, line, subr)
+    log.info("\n  module: %s\n  filename: %s\n  line: %s\n  subroutine: %s",
+             module, filename, line, subr)
 
 
 # %<-------------------------
@@ -1190,37 +1156,37 @@ def log_caller(frame_num=1, log_file=None):
 # It's been modified for use in Pyblosxom.
 
 # """Cross-platform (posix/nt) API for flock-style file locking.
-# 
+#
 # Synopsis:
-# 
+#
 #    import portalocker
 #    file = open("somefile", "r+")
 #    portalocker.lock(file, portalocker.LOCK_EX)
 #    file.seek(12)
 #    file.write("foo")
 #    file.close()
-# 
+#
 # If you know what you're doing, you may choose to
-# 
+#
 #    portalocker.unlock(file)
-# 
+#
 # before closing the file, but why?
-# 
+#
 # Methods:
-# 
+#
 #    lock( file, flags )
 #    unlock( file )
-# 
+#
 # Constants:
-# 
+#
 #    LOCK_EX
 #    LOCK_SH
 #    LOCK_NB
-# 
+#
 # I learned the win32 technique for locking files from sample code
 # provided by John Nielsen <nielsenjf@my-deja.com> in the documentation
 # that accompanies the win32 modules.
-# 
+#
 # Author: Jonathan Feinberg <jdf@pobox.com>
 # Version: $Id$
 
