@@ -1,13 +1,8 @@
-Changes between 1.4.3 and 2.0
+Changes between 1.4.3 and 1.5
 =============================
 
 Pertinent to users:
 -------------------
-.. Warning::
-
-   This is a big rewrite and a lot of things have changed.  It's very 
-   likely that many plugins you're currently using will break.  If you need 
-   help, let us know!
 
 1. Renamed ``pyblcmd`` to ``pyblosxom-cmd``.
 
@@ -26,12 +21,12 @@ Pertinent to users:
    and skeleton files for you.  This makes it much faster to get a new 
    blog up and running.  Syntax is this::
 
-      pyblosxom-cmd --create <path>
+      pyblosxom-cmd create <path>
 
    Some examples::
 
-      pyblosxom-cmd --create .
-      pyblosxom-cmd --create /home/joe/blog
+      pyblosxom-cmd create .
+      pyblosxom-cmd create /home/joe/blog
 
 6. Template variable syntax ``$id_escaped`` and ``$id_urlencoded``
    has been removed.  Use ``$escape(id)`` and ``$urlencode(id)``
@@ -63,6 +58,14 @@ Pertinent to users:
     it's a lot easier to read and use now.  Thank you to the Sphinx
     team!
 
+12. Reworked the command line for static rendering.  It now works like this::
+
+        pyblosxom-cmd --config <path/to/config/file> \
+                      staticrender [--incremenal]
+
+    If the ``config.py`` file is in your ``PYTHONPATH``, then you can skip
+    the ``--config <path/to/config/file>`` stuff.
+
 
 Pertinent to developers:
 ------------------------
@@ -85,6 +88,11 @@ Pertinent to developers:
    during rendering.
 
 4. Added a lot of tests.
+
+5. Added a lot of documentation.
+
+6. Plugins can now do command-line things.  See the ``commandline``
+   callback in the documentation.
 
 
 Changes between 1.4.2 and 1.4.3
