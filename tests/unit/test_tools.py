@@ -151,13 +151,13 @@ class Testparse:
                    "lang": "'español'"})
         for mem in (
                     # this is old behavior
-                    ("$foo_escaped", "&apos;foo&apos;"),
+                    ("$foo_escaped", "&#x27;foo&#x27;"),
 
                     # this is the new behavior using the escape filter
-                    ("$escape(foo)", "&apos;foo&apos;"),
+                    ("$escape(foo)", "&#x27;foo&#x27;"),
 
                     # escaping with utf-8 characters
-                    ("$escape(lang)", "&apos;español&apos;")):
+                    ("$escape(lang)", "&#x27;español&#x27;")):
             yield eq_, pt(vd, mem[0]), mem[1]
 
 
@@ -229,10 +229,22 @@ class Testescape_text:
         eq_(tools.escape_text(""), "")
 
     def test_single_quote_to_pos(self):
-        eq_(tools.escape_text("a'b"), "a&apos;b")
+        eq_(tools.escape_text("a'b"), "a&#x27;b")
 
     def test_double_quote_to_quot(self):
         eq_(tools.escape_text("a\"b"), "a&quot;b")
+
+    def test_greater_than(self):
+        eq_(tools.escape_text("a>b"), "a&gt;b")
+
+    def test_lesser_than(self):
+        eq_(tools.escape_text("a<b"), "a&lt;b")
+
+    def test_ampersand(self):
+        eq_(tools.escape_text("a&b"), "a&amp;b")
+
+    def test_complicated_case(self):
+        eq_(tools.escape_text("a&>b"), "a&amp;&gt;b")
 
     def test_everything_else_unchanged(self):
         for mem in ((None, None),

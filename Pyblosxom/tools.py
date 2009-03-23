@@ -32,11 +32,6 @@ import locale
 import urllib
 import inspect
 
-try:
-    from xml.sax.saxutils import escape
-except ImportError:
-    from cgi import escape
-
 # Pyblosxom imports
 from Pyblosxom import plugin_utils
 
@@ -201,7 +196,10 @@ def escape_text(s):
     if not s:
         return s
 
-    return escape(s, {"'": "&apos;", '"': "&quot;"})
+    for mem in (("&", "&amp;"), (">", "&gt;"), ("<", "&lt;"), ("\"", "&quot;"),
+        ("'", "&#x27;"), ("/", "&#x2F;")):
+        s = s.replace(mem[0], mem[1])
+    return s
 
 def urlencode_text(s):
     """Calls ``urllib.quote`` on the string ``s``.
