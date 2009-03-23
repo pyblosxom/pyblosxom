@@ -1332,20 +1332,12 @@ def blosxom_process_path_info(args):
                     data["bl_type"] = "dir"
                     data["root_datadir"] = absolute_path
 
-
-    # figure out the blog_title_with_path data variable
-    blog_title = config["blog_title"]
-
-    if data['pi_bl'] != '':
-        data['blog_title_with_path'] = '%s : %s' % (blog_title, data['pi_bl'])
-    else:
-        data['blog_title_with_path'] = blog_title
-
     # construct our final URL
-    data['url'] = '%s%s' % (config['base_url'], data['pi_bl'])
     url = config['base_url']
-    if data['pi_bl'].startswith("/"):
-        url = url + data['pi_bl']
+    if data['pi_bl'].startswith("/") and url.endswith("/"):
+        url = url[:-1] + data['pi_bl']
+    elif data['pi_bl'].startswith("/") or url.endswith("/"):
+        url = url + data["pi_bl"]
     else:
         url = url + "/" + data['pi_bl']
     data['url'] = url
