@@ -294,7 +294,8 @@ class PyBlosxom:
         datadir = config["datadir"]
 
         if not staticdir:
-            raise Exception("You must set static_dir in your config file.")
+            print "Error: You must set static_dir in your config file."
+            return 0
 
         flavours = config.get("static_flavours", ["html"])
 
