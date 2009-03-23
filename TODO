@@ -38,6 +38,7 @@ MANUAL
 COMMAND-LINE
 
  - port over command line changes from experimental
+ - re-work command line handling to be more like git
 
 
 MILESTONE VERSION 1.4
