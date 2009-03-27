@@ -152,8 +152,31 @@ verifies that the plugin is configured correctly.  As of PyBlosxom 0.9,
 PyBlosxom allows users to test their configuration and installation from
 the console.
 
-In PyBlosxom 0.9 through 1.4.3, users did this by executing the
-``pyblosxom.cgi`` script::
+In PyBlosxom 1.5 and later, you can test using either the ``pyblosxom.cgi``
+script or the ``pyblosxom-cmd`` script::
+
+    % ./pyblosxom.cgi test
+
+or::
+
+    % pyblosxom-cmd --config <path/to/config/file> test
+    pyblosxom-cmd version 1.5 dev
+    Adding ./blog/ to sys.path....
+    Trying to import the config module....
+    == System information ==
+       pyblosxom:    1.5 dev
+       sys.version:  2.5.2 (r252:60911, Oct  5 2008, 19:24:49)  [GCC 4.3.2]
+       os.name:      posix
+       codebase:     /home/willg/pyblosxom/trunk/pyblosxom
+
+    == Checking config.py file ==
+       properties set: 18
+       datadir '/home/willg/working/testing/blog/entries' exists.
+    ....
+
+
+Prior to PyBlosxom 1.5, you would just execute the ``pyblosxom.cgi``
+script::
 
    % ./pyblosxom.cgi
    Trying to import the config module....
@@ -162,21 +185,6 @@ In PyBlosxom 0.9 through 1.4.3, users did this by executing the
    ------
    ]] printing diagnostics [[
    pyblosxom:   1.4.3-rc1 12/11/2007
-   ....
-
-In PyBlosxom 1.5, users can do this either using the ``pyblosxom.cgi``
-script in the directory with the ``config.py`` file::
-
-   % ./pyblosxom.cgi --test
-   Trying to import the config module....
-   PyBlosxom version: 1.5 dev
-   ....
-
-or using the ``pyblosxom-cmd`` script::
-
-   % pyblosxom-cmd -c /home/joe/cgi-bin/config.py --test
-   Trying to import the config module....
-   PyBlosxom version: 1.5 dev
    ....
 
 

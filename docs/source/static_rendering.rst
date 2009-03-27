@@ -29,7 +29,7 @@ These are the instructions for configuring static rendering in PyBlosxom.
 
    You can install PyBlosxom as a Python library like this::
 
-      python setup.py install
+      easy_install pyblosxom
 
    and move on to step 2.
 
@@ -103,18 +103,24 @@ Render Everything
 If you're using PyBlosxom 1.4 or later, run the static renderer like
 this to render all pages in your blog::
 
-   % pyblosxom-cmd --config <config-file> --static
+   % pyblosxom-cmd --config <config-file> staticrender
 
 
 where ``<config-file>`` is replaced by the absolute full path of your
 ``config.py`` file.  For example::
 
-   % pyblosxom-cmd --config /home/joe/blog/config.py --static
+   % pyblosxom-cmd --config /home/joe/blog/config.py staticrender
 
 
-If you're using a version of PyBlosxom earlier than 1.4, then the 
-``config.py`` file must be in the same directory as the ``pyblosxom.cgi``
-file.  Run the static renderer like this::
+**PyBlosxom 1.4**: If you're using PyBlosxom 1.4, then the command line 
+is slightly different::
+
+   % pyblcmd --config /home/joe/blog/config.py --static
+
+
+**Before PyBlosxom 1.4**: If you're using a version of PyBlosxom earlier 
+than 1.4, then the ``config.py`` file must be in the same directory 
+as the ``pyblosxom.cgi`` file::
 
    % ./pyblosxom.cgi --static
 
@@ -131,14 +137,19 @@ We have incremental rendering which will find all the entries that have
 changed since we rendered them and then re-render them.  It does this by 
 comparing the mtime on the entry file with the mtime on the rendered file.
 
-If you're using PyBlosxom 1.4 or later, run the static renderer like
-this to render new pages in your blog::
+In PyBlosxom 1.5 and later, incremental static rendering works like this::
 
-   % pyblosxom-cmd --config <config-file> --static incremental
+   % pyblosxom-cmd --config <config-file> staticrender --incremental
+
+
+**PyBlosxom 1.4**: If you're using PyBlosxom 1.4, run the static renderer 
+like this to render new pages in your blog::
+
+   % pyblcmd --config <config-file> --static incremental
    
 
-If you're using a version of PyBlosxom earlier than 1.4, then run the
-static renderer like this::
+**Before PyBlosxom 1.4**: If you're using a version of PyBlosxom earlier 
+than 1.4, then run the static renderer like this::
 
    % ./pyblosxom.cgi --static --incremental 
 
@@ -184,17 +195,17 @@ a shell script like this::
 
    #!/bin/bash 
 
-   export CONFIG = <path to config.py here>
-   export STATIC_DIR = <your static dir here>
+   CONFIG=<path to config.py here>
+   STATIC_DIR=<your static dir here>
  
-   pyblosxom-cmd --config ${CONFIG} --static
+   pyblosxom-cmd --config ${CONFIG} static
    find ${STATIC_DIR} -mmin +30 -exec 'rm' '{}' ';' 
 
 
 That'll re-render everything, then delete any files in your static 
-dir that are older than 30 minutes (in case you moved entries from 
+dir that are older than 30 minutes in case you moved entries from 
 one category to another or deleted an entry or something along those
-lines). 
+lines.
 
 
 .. Note::
