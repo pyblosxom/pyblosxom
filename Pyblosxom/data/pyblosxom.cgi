@@ -11,7 +11,7 @@ import os, sys
 
 # Uncomment this line to add the directory your config.py file is in to the
 # python path:
-#sys.path.append("/path/to/directory/")
+#sys.path.append("%(basedir)s")
 
 # You shouldn't have to adjust anything below this line.
 # --------------------------------------------------

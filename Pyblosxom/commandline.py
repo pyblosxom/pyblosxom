@@ -245,7 +245,7 @@ def create_blog(command, argv):
 
     copyfile(source, d, "config.py", fix=True)
     copyfile(source, d, "blog.ini", fix=True)
-    copyfile(source, d, "pyblosxom.cgi")
+    copyfile(source, d, "pyblosxom.cgi", fix=True)
 
     datadir = os.path.join(d, "entries")
     firstpost = os.path.join(datadir, "firstpost.txt")
