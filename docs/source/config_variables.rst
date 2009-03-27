@@ -1,6 +1,6 @@
-===================
-config.py variables
-===================
+======================
+Variables in config.py
+======================
 
 Summary
 =======
@@ -58,13 +58,9 @@ on my web-server so that the base_url looked like this:
 
 .. Note::
 
-   A note about trailing slashes:
-
    Your base_url property should NOT have a trailing slash.
 
 .. Note::
-
-   A note about url rewriting:
 
    If you use mod_rewrite rules or some other url rewriting system on
    your web-server, then you'll want to set this property.
@@ -124,8 +120,6 @@ might go like this::
 
 .. Note::
 
-   A note about long lines:
-
    Remember that the ``config.py`` file is a Python code file just like
    any other Python code file.  Splitting long lines into shorter lines
    can be done with string concatenation and the ``\`` character which 
@@ -175,8 +169,6 @@ set the blog_encoding to::
 
 .. Note::
 
-   A note about encoding values:
-
    This value must be a valid encoding value.  In general, if you don't
    know what to set your encoding to and you're planning to use US or
    UK English, then setting it to ``iso-8859-1`` is probably fine.
@@ -188,30 +180,6 @@ encoding will gummy up some/most feed readers and web-browsers.
 FIXME - where can we find more information about what constitutes a
 valid encoding value?
 
-
-----------------------------
-
-blog_icbm
----------
-
-**REQUIRED**: no
-
-**DATATYPE**: string: "float,float"
-
-**DEFAULT_VALUE**: no default value
-
-This is the geographical location of your blgo as a latitude/longitude
-pair, if appropriate.  This is used by flavours that support the ICBM
-meta tag for HTML- or XHTML-based flavours.  The meta tags are used by
-sites like http://geourl.org/ which track where blogs are located.
-
-For example, if you lived at 37.448087, -122.159259, then your blog_icbm
-would be set to::
-
-   py["blog_icbm"] = "37.448089,-122.159259"
-
-
-FIXME - how can you figure out where you are?
 
 ----------------------------
 
@@ -354,8 +322,6 @@ flavours and templates in the datadir alongside your entries.
 
 .. Note::
 
-   A note about the spelling:
-
    "flavour" is spelled using the British spelling and not the American
    one.
 
@@ -368,8 +334,6 @@ set flavourdir and datadir like this::
 
 
 .. Note::
-
-   A note about flavourdir on Windows:
 
    Use ``/`` to separate directories in the flavourdir path even if
    you are using Windows.  Examples of valid flavourdir on Windows::
@@ -480,16 +444,12 @@ would set load_plugins to::
 
 .. Note::
 
-   A note about files versus modules:
-
    load_plugins should contain a list of strings where each string is
    a Python module--not a filename.  So don't add the ``.py`` to the
    end of the module name!
 
 
 .. Note::
-
-   A note about load_plugins:
 
    In general, it's better to explicitly set load_plugins to the
    plugins you want to use.  This reduces the confusion about which
@@ -499,8 +459,6 @@ would set load_plugins to::
 
 
 .. Note::
-
-   A note about the order of the plugins:
 
    PyBlosxom loads plugins in the order specified by load_plugins.
    This order also affects the order that callbacks are registered

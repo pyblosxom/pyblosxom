@@ -1,21 +1,22 @@
-================
-Static Rendering
-================
+======================================
+Deploy PyBlosxom with Static Rendering
+======================================
 
 Summary
 =======
 
-Static rendering made its first appearance in PyBlosxom 1.0.  It fills the 
-functionality gap for people who want to use PyBlosxom, but don't have a 
-web-server with CGI installed, don't have CGI access, or can't run PyBlosxom 
-for one of a myriad of other reasons.  Static rendering allows these people 
-to run PyBlosxom on their local machine, write blog entries, render their 
-entire site into HTML, and then use ftp or some other file copy method to 
-move the pages up to their static web-site.
+Static rendering made its first appearance in PyBlosxom 1.0.  It fills
+the functionality gap for people who want to use PyBlosxom, but don't
+have a web-server with CGI installed, don't have CGI access, or can't
+run PyBlosxom for one of a myriad of other reasons.  Static rendering
+allows these people to run PyBlosxom on their local machine, write
+blog entries, render their entire site into HTML, and then use ftp or
+some other file copy method to move the pages up to their static
+web-site.
 
-PyBlosxom's static rendering allows for incremental building.  It can scan 
-your entries, figure out what's changed, and render only the pages that 
-need re-rendering.
+PyBlosxom's static rendering allows for incremental building.  It can
+scan your entries, figure out what's changed, and render only the
+pages that need re-rendering.
 
 Beyond that, it's not particularly sophisticated.
 

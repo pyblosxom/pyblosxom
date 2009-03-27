@@ -2,83 +2,101 @@
 Installing PyBlosxom
 ====================
 
-This guide walks through two different ways to install PyBlosxom: system-wide 
-and individual.
+This guide walks through two different ways to install PyBlosxom:
+system-wide and individual.
 
-If this file doesn't meet your needs, ask us on the pyblosxom-users mailing 
-list or on IRC.  Information on both is on the website_.
+If this file doesn't meet your needs, ask us on the pyblosxom-users
+mailing list or on IRC.  Information on both is on the website_.
 
 .. _website: http://pyblosxom.sourceforge.net/
 
-.. Note:: Note to people testing PyBlosxom
-   If you're testing PyBlosxom, do an individual installation.
+.. Note::
+
+    If you're testing PyBlosxom, do an individual installation--it's
+    easy and will save you a lot of time.
 
 
 Requirements
 ============
 
-* Python 2.3 or later to run PyBloxsxom
-* other requirements depending on how you want to deploy your blog
+Minimally, PyBlosxom requires Python 2.3 to install.
+
+PyBlosxom is well supported on GNU/Linux, probably works on Mac OSX,
+and might work on Windows.
+
+PyBlosxom works with any web-server as a CGI application, works as
+a WSGI application, and might work in other contexts.
 
 
-Individual installation
-=======================
+easy-install
+============
 
-1. Follow the links at http://pyblosxom.sourceforge.net/ to download PyBlosxom.
+Best way to install PyBlosxom is with *easy_install*.
 
-2. Extract the contents of the ``.tar.gz`` file.
-
-When you use PyBlosxom things, you'll need to add the path to the ``pyblosxom``
-to the Python path.
-
-You can do this in Python scripts by appending the diectory to ``sys.path``::
-
-    import sys
-    sys.path.append("/path/to/pyblosxom")
-
-You can do this by setting the ``PYTHONPATH`` environment variable, too.  For
-example::
-
-    PYTHONPATH=/home/joe/pyblosxom/ python pyblosxom-cmd --help
-
-
-System-wide installation
-========================
-
-If you have easy_install installed, run::
-
-    easy_install pyblosxom
-
-If you don't have easy_install installed, you can install it and PyBlosxom by
-downloading the script from http://peak.telecommunity.com/dist/ez_setup.py and
-running::
+If you don't have easy_install installed, you can install it and
+PyBlosxom by downloading the script from
+http://peak.telecommunity.com/dist/ez_setup.py and running::
 
     python ez_setup.py pyblosxom
 
-If you want to install PyBlosxom as a library, but not system-wide, you can
-use Ian Bicking's `virtualenv`_.  It's fantastic for setting up Python 
-environments.
+If you do have *easy_install* installed, run::
+
+    easy_install pyblosxom
+
+If you don't want to install PyBlosxom system-wide, we encourage that
+you use `virtualenv`_.
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 
 
-Deploying PyBlosxom
-===================
+Source install
+==============
 
-There are a bunch of different ways to deploy PyBlosxom.  Many of these are
-detailed on the `website`_.  If you can't find instructions for deploying
-PyBlosxom in the manner of your choosing, ask us on the pyblosxom-devel
-mailing list or on IRC.
+You can download PyBlosxom from 
+http://sourceforge.net/project/showfiles.php?group_id=67445 .
+Extract the ``tar.gz`` file.
 
-.. _website: http://pyblosxom.sourceforge.net/
+Instructions for checking PyBlosxom out from SVN are at
+http://sourceforge.net/scm/?type=svn&group_id=67445 .  Generally,
+*trunk* is unstable but any of the tags are stable.
+
+Run::
+
+    python setup.py install
+
+to install PyBlosxom to your system.
+
+If you don't want to install PyBlosxom system-wide, we encourage that
+you use `virtualenv`_.
+
+.. _virtualenv: http://pypi.python.org/pypi/virtualenv
+
+
+Creating a blog
+===============
+
+To create a blog, do::
+
+    pyblosxom-cmd create ./blog/
+
+That generates the directory structure, required files, and a first
+post in the ``./blog/`` directory.
+
+
+Deploying
+=========
+
+There are a bunch of ways to deploy your blog.  See the chapters
+on deployment for documented options.
 
 
 Post-install
 ============
 
-After you finish installing PyBlosxom, you should sign up on the 
-pyblosxom-users mailing list.
+After you finish installing PyBlosxom, you should sign up on the
+*pyblosxom-users* mailing list.
 
-Additionally, please hop on the ``#pyblosxom`` IRC channel on ``irc.freenode.net``
-and say hi.  It'll almost certainly help you get acquainted with PyBlosxom 
-and it'll reduce the amount of time it takes to get your blog up and going.
+Additionally, please hop on the ``#pyblosxom`` IRC channel on
+``irc.freenode.net`` and say hi.  It'll almost certainly help you get
+acquainted with PyBlosxom and it'll reduce the amount of time it takes
+to get your blog up and going.

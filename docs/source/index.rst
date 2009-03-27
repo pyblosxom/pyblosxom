@@ -13,17 +13,19 @@ Contents:
    introduction
    about_pyblosxom
    install
-   install_wsgi
-   advanced_installation
+   deploy_cgi
+   deploy_paste
+   deploy_wsgi
+   deploy_staticrendering
    config_variables
    writing_entries
    flavours_and_templates
-   static_rendering
    syndication
    comments
    plugins
    dev_architecture
    dev_writing_plugins
+
 
 Indices and tables
 ==================
