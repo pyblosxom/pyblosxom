@@ -509,7 +509,7 @@ def pyblosxom_app_factory(global_config, **local_config):
     if "configpydir" in conf:
         sys.path.insert(0, conf["configpydir"])
 
-    return cgitb_catcher.make_cgitb_middleware(PyBlosxomWSGIApp(conf),
+    return cgitb_catcher.make_cgitb_middleware(PyBlosxomWSGIApp(configini=conf),
                                                global_config)
 
 
