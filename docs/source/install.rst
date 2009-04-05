@@ -12,8 +12,9 @@ mailing list or on IRC.  Information on both is on the website_.
 
 .. Note::
 
-    If you're testing PyBlosxom, do an individual installation--it's
-    easy and will save you a lot of time.
+    If you're testing PyBlosxom, use ``virtualenv`` and deploy
+    with Paste.  It'll save you a lot of time and it's easy to
+    clean up afterwards.
 
 
 Requirements
@@ -28,8 +29,11 @@ PyBlosxom works with any web-server as a CGI application, works as
 a WSGI application, and might work in other contexts.
 
 
-easy-install
-============
+Install
+=======
+
+easy_install
+------------
 
 Best way to install PyBlosxom is with *easy_install*.
 
@@ -50,7 +54,7 @@ you use `virtualenv`_.
 
 
 Source install
-==============
+--------------
 
 You can download PyBlosxom from 
 http://sourceforge.net/project/showfiles.php?group_id=67445 .

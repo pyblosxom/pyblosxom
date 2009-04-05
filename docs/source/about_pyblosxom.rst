@@ -53,13 +53,13 @@ There are a lot of other weblog systems out there.  If it's apparent
 that PyBlosxom won't work for you, don't force it--use something else.
 Possibilities include:
 
-:WordPress:
+**WordPress**
 
     http://wordpress.org/
 
     PHP/database based weblog system that a lot of people use.
 
-:Zine:
+**Zine**
 
     http://zine.pocoo.org/
 
@@ -94,22 +94,22 @@ registry for plugins submitted by people like you.
 Project details, contact information, and where to go for help
 ==============================================================
 
-:Web-site and documentation:
+**Web-site and documentation**
 
     http://pyblosxom.sourceforge.net/
 
-:IRC:
+**IRC**
 
     ``#pyblosxom`` on ``irc.freenode.net``
 
-:User Mailing List:
+**User mailing list**
 
     http://lists.sourceforge.net/lists/listinfo/pyblosxom-users
 
-:Developer Mailing List:
+**Developer mailing list**
 
     http://lists.sourceforge.net/lists/listinfo/pyblosxom-devel
 
-:SVN Repository:
+**SVN repository**
 
     http://pyblosxom.svn.sourceforge.net/viewvc/pyblosxom/
