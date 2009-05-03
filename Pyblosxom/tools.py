@@ -222,7 +222,6 @@ def urlencode_text(s):
 STANDARD_FILTERS = {"escape": lambda req, vd, s: escape_text(s),
                     "urlencode": lambda req, vd, s: urlencode_text(s)}
 
-
 class Stripper(sgmllib.SGMLParser):
     """
     SGMLParser that removes HTML formatting code.
@@ -528,14 +527,12 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     if not os.path.isdir(root):
         return []
 
-    return __walk_internal(root, recurse, pattern, ignorere, return_folders)
+    return _walk_internal(root, recurse, pattern, ignorere, return_folders)
 
 # We do this for backwards compatibility reasons.
-def Walk(*args, **kwargs):
-    """Deprecated.  Use ``tools.walk`` instead."""
-    return walk(*args, **kwargs)
+Walk = walk
 
-def __walk_internal(root, recurse, pattern, ignorere, return_folders):
+def _walk_internal(root, recurse, pattern, ignorere, return_folders):
     """
     Note: This is an internal function--don't use it and don't expect it to
     stay the same between PyBlosxom releases.
@@ -569,7 +566,7 @@ def __walk_internal(root, recurse, pattern, ignorere, return_folders):
                     not os.path.islink(fullname) and \
                     (not ignorere or not ignorere.match(fullname)):
                 result = result + \
-                         __walk_internal(fullname,
+                         _walk_internal(fullname,
                                         (recurse > 1 and [recurse - 1] or [0])[0],
                                         pattern, ignorere, return_folders)
 
@@ -636,7 +633,6 @@ def what_ext(extensions, filepath):
             return ext
     return None
 
-
 def is_year(s):
     """
     Checks to see if the string is likely to be a year or not.  In order to
@@ -658,7 +654,6 @@ def is_year(s):
             (s.startswith("19") or s.startswith("20")):
         return True
     return False
-
 
 def importname(modulename, name):
     """
@@ -695,7 +690,7 @@ def importname(modulename, name):
 
     return None
 
-def generateRandStr(minlen=5, maxlen=10):
+def generate_rand_str(minlen=5, maxlen=10):
     """
     Generate a random string between ``minlen`` and ``maxlen`` characters
     long.
@@ -717,6 +712,8 @@ def generateRandStr(minlen=5, maxlen=10):
         randstr.append(random.choice(chars))
         x += 1
     return "".join(randstr)
+
+generateRandStr = generate_rand_str
 
 def run_callback(chain, input,
         mappingfunc=lambda x, y: x,
@@ -828,7 +825,6 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
        IOError
           if the datadir + category directory exists, but isn't a directory
     """
-
     def addcr(s):
         if not s.endswith("\n"):
             return s + "\n"
@@ -885,7 +881,6 @@ def get_cache(request):
         data["data_cache"] = mycache
 
     return mycache
-
 
 def update_static_entry(cdict, entry_filename):
     """
@@ -979,7 +974,6 @@ def render_url(cdict, pathinfo, querystring=""):
     return p.getResponse()
 
 
-
 #******************************
 # Logging
 #******************************
@@ -989,7 +983,6 @@ import logging
 # A dict to keep track of created log handlers.
 # Used to prevent multiple handlers from beeing added to the same logger.
 _loghandler_registry = {}
-
 
 class LogFilter(object):
     """
@@ -1014,7 +1007,7 @@ class LogFilter(object):
             return 1
         return 0
 
-def getLogger(log_file=None):
+def get_logger(log_file=None):
     """Creates and retuns a log channel.
 
     If no log_file is given the system-wide logfile as defined in config.py
@@ -1104,6 +1097,8 @@ def getLogger(log_file=None):
 
     return logger
 
+getLogger = get_logger
+
 def log_exception(log_file=None):
     """
     Logs an exception to the given file.
@@ -1142,80 +1137,3 @@ def log_caller(frame_num=1, log_file=None):
     log = getLogger(log_file)
     log.info("\n  module: %s\n  filename: %s\n  line: %s\n  subroutine: %s",
              module, filename, line, subr)
-
-
-# %<-------------------------
-# BEGIN portalocking block from Python Cookbook.
-# LICENSE is located in docs/LICENSE.portalocker.
-# It's been modified for use in Pyblosxom.
-
-# """Cross-platform (posix/nt) API for flock-style file locking.
-#
-# Synopsis:
-#
-#    import portalocker
-#    file = open("somefile", "r+")
-#    portalocker.lock(file, portalocker.LOCK_EX)
-#    file.seek(12)
-#    file.write("foo")
-#    file.close()
-#
-# If you know what you're doing, you may choose to
-#
-#    portalocker.unlock(file)
-#
-# before closing the file, but why?
-#
-# Methods:
-#
-#    lock( file, flags )
-#    unlock( file )
-#
-# Constants:
-#
-#    LOCK_EX
-#    LOCK_SH
-#    LOCK_NB
-#
-# I learned the win32 technique for locking files from sample code
-# provided by John Nielsen <nielsenjf@my-deja.com> in the documentation
-# that accompanies the win32 modules.
-#
-# Author: Jonathan Feinberg <jdf@pobox.com>
-# Version: $Id$
-
-if os.name == 'nt':
-    import win32con
-    import win32file
-    import pywintypes
-    LOCK_EX = win32con.LOCKFILE_EXCLUSIVE_LOCK
-    LOCK_SH = 0 # the default
-    LOCK_NB = win32con.LOCKFILE_FAIL_IMMEDIATELY
-    # is there any reason not to reuse the following structure?
-    __overlapped = pywintypes.OVERLAPPED()
-elif os.name == 'posix':
-    import fcntl
-    LOCK_EX = fcntl.LOCK_EX
-    LOCK_SH = fcntl.LOCK_SH
-    LOCK_NB = fcntl.LOCK_NB
-else:
-    raise RuntimeError("PortaLocker only defined for nt and posix platforms")
-
-if os.name == 'nt':
-    def lock(f, flags):
-        hfile = win32file._get_osfhandle(f.fileno())
-        win32file.LockFileEx(hfile, flags, 0, 0xffff0000, __overlapped)
-
-    def unlock(f):
-        hfile = win32file._get_osfhandle(f.fileno())
-        win32file.UnlockFileEx(hfile, 0, 0xffff0000, __overlapped)
-
-elif os.name =='posix':
-    def lock(f, flags):
-        fcntl.flock(f.fileno(), flags)
-
-    def unlock(f):
-        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
-
-# END portalocking block from Python Cookbook.
-# %<-------------------------
