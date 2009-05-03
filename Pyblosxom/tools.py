@@ -5,8 +5,6 @@
 #
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id$
 #######################################################################
 """Utility module for functions that are useful to PyBlosxom and plugins.
 
@@ -18,8 +16,6 @@
     MONTHS : list of strings and ints
         list of all valid month names and month numbers
 """
-
-__revision__ = "$Revision$"
 
 import sgmllib
 import re

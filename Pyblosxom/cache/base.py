@@ -2,28 +2,24 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-# 
+#
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id$
 #######################################################################
 """
 The cache base class.  Subclasses of this class provide caching for
 blog entry data in PyBlosxom.
 """
 
-__revision__ = "$Revision$"
-
 class BlosxomCacheBase:
     """
     Base Class for Caching stories in pyblosxom.
 
-    A cache is a disposable piece of data that gets updated when an entry 
+    A cache is a disposable piece of data that gets updated when an entry
     is in a fresh state.
 
-    Drivers are to subclass this object, overriding methods defined in 
-    this class.  If there is an error in creating cache data, be as quite 
+    Drivers are to subclass this object, overriding methods defined in
+    this class.  If there is an error in creating cache data, be as quite
     as possible, document how a user could check whether his cache works.
 
     Driver should expect empty caches and should attempt to create them from
@@ -149,5 +145,3 @@ class BlosxomCache(BlosxomCacheBase):
     A null cache.
     """
     pass
-
-# vim: tabstop=4 shiftwidth=4 expandtab

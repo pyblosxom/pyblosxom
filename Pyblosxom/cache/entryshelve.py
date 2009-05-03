@@ -2,11 +2,9 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-# 
+#
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id$
 #######################################################################
 """
 This cache driver creates shelved data as cache in a dbm file.
@@ -19,8 +17,6 @@ py['cacheConfig'] = '/path/to/a/cache/dbm/file'
 If successful, you will see the cache file. Be sure that you have write access
 to the cache file.
 """
-
-__revision__ = "$Revision$"
 
 from Pyblosxom.cache.base import BlosxomCacheBase
 import shelve
@@ -70,7 +66,7 @@ class BlosxomCache(BlosxomCacheBase):
         payload = {}
         payload['mtime'] = os.stat(self._entryid)[8]
         payload['entrydata'] = entrydata
-        
+
         self._db[self._entryid] = payload
 
 
@@ -97,7 +93,7 @@ class BlosxomCache(BlosxomCacheBase):
                 # Remove this key, why is it there in the first place?
                 del self._db[self._entryid]
         return ret
-    
+
 
     def close(self):
         """
@@ -105,5 +101,3 @@ class BlosxomCache(BlosxomCacheBase):
         """
         self._db.close()
         self._db = None
-
-# vim: tabstop=4 shiftwidth=4 expandtab

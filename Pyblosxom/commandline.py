@@ -5,8 +5,6 @@
 #
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id: pyblosxom.py 1226 2008-03-22 04:01:05Z willhelm $
 #######################################################################
 """
 This module holds commandline related stuff.  Installation verification,

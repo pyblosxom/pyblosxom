@@ -2,11 +2,9 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-# 
+#
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id$
 #######################################################################
 """
 This module contains the base class for all the Entry classes.  The
@@ -18,8 +16,6 @@ This module also holds a generic generate_entry function which will generate
 a BaseEntry with data that you provide for it.
 """
 
-__revision__ = "$Revision$"
-
 import time, locale
 from Pyblosxom import tools
 
@@ -30,9 +26,9 @@ DOESNOTEXIST2 = "THISKEYDOESNOTEXIST2"
 
 class EntryBase:
     """
-    EntryBase is the base class for all the Entry classes.  Each 
-    instance of an Entry class represents a single entry in the weblog, 
-    whether it came from a file, or a database, or even somewhere off 
+    EntryBase is the base class for all the Entry classes.  Each
+    instance of an Entry class represents a single entry in the weblog,
+    whether it came from a file, or a database, or even somewhere off
     the InterWeeb.
     """
     def __init__(self, request):
@@ -54,7 +50,7 @@ class EntryBase:
 
     def getId(self):
         """
-        This should return an id that's unique enough for caching 
+        This should return an id that's unique enough for caching
         purposes.
 
         Override this.
@@ -214,19 +210,19 @@ class EntryBase:
         self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', gmtimetuple)
         self['rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', \
                                            gmtimetuple)
-        
+
         # set the locale back
         locale.setlocale(locale.LC_ALL, loc)
 
     def __getitem__(self, key, default=None):
         """
-        Retrieves an item from this dict based on the key given.  If 
+        Retrieves an item from this dict based on the key given.  If
         the item does not exist, then we return the default.
 
-        If the item is CONTENT_KEY then we return the result from 
+        If the item is CONTENT_KEY then we return the result from
         self.getData().
 
-        This is just a convenience method for getData(...) and 
+        This is just a convenience method for getData(...) and
         getMetadata(...).
 
         There's no reason to override this--override getData and
@@ -239,7 +235,7 @@ class EntryBase:
             exist
         @type  default: varies
 
-        @returns: the value of self._metadata.get(key, default) or 
+        @returns: the value of self._metadata.get(key, default) or
             self.getData()
         @rtype: varies
         """
@@ -265,7 +261,7 @@ class EntryBase:
             exist
         @type  default: varies
 
-        @returns: the value of self._metadata.get(key, default) or 
+        @returns: the value of self._metadata.get(key, default) or
             self.getData() (through __getitem__)
         @rtype: varies
         """
@@ -355,7 +351,7 @@ def generate_entry(request, properties, data, mtime=None):
     @param data: the data content for the entry
     @type  data: string
 
-    @param mtime: the mtime tuple (as given by time.localtime()).  
+    @param mtime: the mtime tuple (as given by time.localtime()).
         if you pass in None, then we'll use localtime.
     @type  mtime: tuple of ints
     """
@@ -368,5 +364,3 @@ def generate_entry(request, properties, data, mtime=None):
     else:
         entry.setTime(time.localtime())
     return entry
-
-# vim: tabstop=4 shiftwidth=4

@@ -2,19 +2,15 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-# 
+#
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id$
 #######################################################################
 """
 Holds a series of utility functions for cataloguing, retrieving, and
 manipulating callback functions and chains.  Refer to the documentation
 for which callbacks are available and their behavior.
 """
-
-__revision__ = "$Revision$"
 
 import os
 import glob
@@ -49,7 +45,7 @@ def catalogue_plugin(plugin_module):
         memadj = mem[3:]
         if callable(func):
             callbacks.setdefault(memadj, []).append(func)
-            
+
 def get_callback_chain(chain):
     """
     Returns a list of functions registered with the callback.
@@ -136,12 +132,12 @@ def get_module_name(filename):
     """
     return os.path.splitext(os.path.split(filename)[1])[0]
 
-def get_plugin_list(plugin_list, plugin_dirs):    
+def get_plugin_list(plugin_list, plugin_dirs):
     """
     This handles the situation where the user has provided a series of
     plugin dirs, but has not specified which plugins they want to load
     from those dirs.  In this case, we load all possible plugins except
-    the ones whose names being with _ .  
+    the ones whose names being with _ .
 
     @param plugin_list: List of plugins to load
     @type plugin_list: list or None
@@ -167,5 +163,3 @@ def get_plugin_list(plugin_list, plugin_dirs):
         plugin_list.sort()
 
     return plugin_list
-
-# vim: shiftwidth=4 tabstop=4 expandtab

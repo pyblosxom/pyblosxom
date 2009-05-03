@@ -2,11 +2,9 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-# 
+#
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id$
 #######################################################################
 """
 The is the base renderer module.  If you were to dislike the blosxom
@@ -17,8 +15,6 @@ functionality required by the other rendering system.
 For examples, look at the BlosxomRenderer and the Renderer in the debug
 module.
 """
-
-__revision__ = "$Revision$"
 
 import sys
 import time
@@ -74,7 +70,7 @@ class RendererBase:
                 if reqIsGif and gifFileExists(theGifFile):
                     # Read the file
                     data = open(theGifFile).read()
-                    
+
                     # Modify header
                     renderer.addHeader('Content-type', 'image/gif')
                     renderer.addHeader('Content-Length', len(data))
@@ -133,7 +129,7 @@ class RendererBase:
             mtime = time.time()
         self._content_mtime = mtime
 
-    
+
     def needsContentType(self, flag):
         """
         Use the renderer to determine 'Content-Type: x/x' default is to use the
@@ -147,7 +143,7 @@ class RendererBase:
 
     def showHeaders(self):
         """
-        Updated the headers of the L{Response<Pyblosxom.pyblosxom.Response>} 
+        Updated the headers of the L{Response<Pyblosxom.pyblosxom.Response>}
         instance.
         This is just for backwards compatibility.
         """

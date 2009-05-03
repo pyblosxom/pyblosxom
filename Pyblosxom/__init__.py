@@ -5,11 +5,8 @@
 # 
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id$
 #######################################################################
 """
 This package holds PyBlosxom modules.
 """
-
-__revision__ = "$Revision$"
+pass

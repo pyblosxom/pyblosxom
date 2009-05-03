@@ -2,11 +2,9 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-# 
+#
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id$
 #######################################################################
 """
 This cache driver creates pickled data as cache in a directory.
@@ -19,8 +17,6 @@ py['cacheConfig'] = '/path/to/a/cache/directory'
 If successful, you will see the cache directory filled up with files that ends
 with .entryplugin extention in the drectory.
 """
-
-__revision__ = "$Revision$"
 
 from Pyblosxom import tools
 from Pyblosxom.cache.base import BlosxomCacheBase
@@ -113,9 +109,9 @@ class BlosxomCache(BlosxomCacheBase):
         keys = []
         cached = []
         if os.path.isdir(self._config):
-            cached = tools.Walk(self._request, 
-                                self._config, 
-                                1, 
+            cached = tools.Walk(self._request,
+                                self._config,
+                                1,
                                 re.compile(r'.*\.entrypickle$'))
         for cache in cached:
             cache_data = pickle.load(open(cache))
@@ -141,8 +137,6 @@ class BlosxomCache(BlosxomCacheBase):
         @rtype: string
         """
         dpath = normpath(dirname(path))
-        if not exists(dpath): 
+        if not exists(dpath):
             makedirs(dpath)
         return normpath(abspath(path))
-
-# vim: tabstop=4 shiftwidth=4 expandtab

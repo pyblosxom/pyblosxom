@@ -2,23 +2,19 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-# 
+#
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
-#
-# $Id$
 #######################################################################
 """
-This module contains FileEntry class which is used to retrieve entries 
-from a file system.  Since pulling data from the file system and parsing 
+This module contains FileEntry class which is used to retrieve entries
+from a file system.  Since pulling data from the file system and parsing
 it is expensive (especially when you have 100s of entries) we delay
 fetching data until it's demanded.
 
 The FileEntry calls EntryBase methods addToCache and getFromCache
 to handle caching.
 """
-
-__revision__ = "$Revision$"
 
 import time
 import os
@@ -68,9 +64,9 @@ class FileEntry(base.EntryBase):
         """
         Set the time without populating the entry.
 
-        @param timetuple: the mtime of the file (same as returned by 
-                          time.localtime(...))   
-        @type  timetuple: tuple of 9 ints     
+        @param timetuple: the mtime of the file (same as returned by
+                          time.localtime(...))
+        @type  timetuple: tuple of 9 ints
         """
         self._timetuple = timetuple
         self._mtime = time.mktime(timetuple)
@@ -122,7 +118,7 @@ class FileEntry(base.EntryBase):
             self.__populatedata()
 
         return self._metadata.get(key, default)
-        
+
     def __populatedata(self):
         """
         Fills the metadata dict with metadata about the given file.  This
@@ -178,5 +174,3 @@ class FileEntry(base.EntryBase):
 
         self.update(entrydict)
         self._populated_data = 1
-
-# vim: tabstop=4 shiftwidth=4

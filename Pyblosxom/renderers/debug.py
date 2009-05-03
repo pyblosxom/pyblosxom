@@ -2,7 +2,7 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-# 
+#
 # PyBlosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
 #
@@ -12,8 +12,6 @@
 This is the debug renderer.  This is very useful for debugging plugins
 and templates.
 """
-
-__revision__ = "$Id$"
 
 from Pyblosxom.renderers.base import RendererBase
 from Pyblosxom import tools
@@ -61,7 +59,7 @@ class Renderer(RendererBase):
     """
     def render(self, header=1):
         """
-        Renders a PyBlosxom request after we've gone through all the 
+        Renders a PyBlosxom request after we've gone through all the
         motions of converting data and getting entries to render.
 
         @param header: either prints (1) or does not print (0) the http
@@ -119,7 +117,7 @@ class Renderer(RendererBase):
         printout(hbar)
         for content in self._content:
             if not isinstance(content, str):
-                printout("%s\n" % 
+                printout("%s\n" %
                          escv(content.get('filename', 'No such file\n')))
 
         printout(hbar)
@@ -143,7 +141,7 @@ class Renderer(RendererBase):
             for content in self._content:
                 if not isinstance(content, str):
                     filename = content['filename']
-            
+
                     if cache.has_key(filename):
                         printout("%s\n" % escv(cache[filename]['title']))
                     cache.close()
