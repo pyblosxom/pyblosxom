@@ -66,6 +66,10 @@ Pertinent to users:
     If the ``config.py`` file is in your ``PYTHONPATH``, then you can skip
     the ``--config <path/to/config/file>`` stuff.
 
+13. Removed portalocker code.  This will cause any plugins using the locking
+    code to fail.  The only one I saw like this was the logstats
+    plugin which had a lot of other problems.
+
 
 Pertinent to developers:
 ------------------------
@@ -93,6 +97,35 @@ Pertinent to developers:
 
 6. Plugins can now do command-line things.  See the ``commandline``
    callback in the documentation.
+
+7. Removed the portalocker code so PyBlosxom no longer provides a way to
+   lock/unlock text files.
+
+8. Changed a lot of camel-case function/method names to PEP-8 versions.
+   Camel case names are deprecated and will be removed in a future version:
+
+   tools.py:
+
+   * Walk -> walk
+   * getLogger -> get_logger
+   * generateRandStr -> generate_rand_str
+
+   pyblosxom/Pyblosxom.py
+
+   * getRequest -> get_request
+   * getResponse -> get_response
+   * runCallback -> run_callback
+   * runRenderOne -> run_render_one
+   * runStaticRenderer -> run_static_renderer
+   * setResponse -> set_response
+   * getResponse -> get_response
+   * getForm -> get_form
+   * getConfiguration -> get_configuration
+   * getHttp -> get_http
+   * getData -> get_data
+   * addHttp -> add_http
+   * addData -> add_data
+   * addConfiguration -> add_configuration
 
 
 Changes between 1.4.2 and 1.4.3
