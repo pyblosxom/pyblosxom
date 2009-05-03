@@ -7,14 +7,6 @@
 # for distribution details.
 #######################################################################
 """Utility module for functions that are useful to PyBlosxom and plugins.
-
-:var:
-    month2num : dict
-        dict of month name (e.g. ``Jan``) to number (e.g. ``1``)
-    num2month : dict
-        dict of number (e.g. ``1``) to month name (e.g. ``Jan``)
-    MONTHS : list of strings and ints
-        list of all valid month names and month numbers
 """
 
 import sgmllib
@@ -31,9 +23,13 @@ import inspect
 # Pyblosxom imports
 from Pyblosxom import plugin_utils
 
-# Month names tend to differ with locale
+# Note: month names tend to differ with locale
+
+# month name (Jan) to number (1)
 month2num = None
+# month number (1) to name (Jan)
 num2month = None
+# list of all month numbers and names
 MONTHS    = None
 
 # regular expression for detection and substituion of variables.
@@ -122,6 +118,9 @@ def initialize(config):
     MONTHS = num2month.keys() + month2num.keys()
 
 class ConfigSyntaxErrorException(Exception):
+    """Thrown when convert_configini_values encounters a syntax
+    error.
+    """
     pass
 
 def convert_configini_values(configini):
@@ -129,12 +128,15 @@ def convert_configini_values(configini):
     the values, and returns a new config dict.
 
     :Parameters:
+
         configini : dict
             dict containing the config.ini style keys and values
 
     :Exceptions:
+
         ConfigSyntaxErrorException
             raised when there's a syntax error
+    
     """
     def s_or_i(s):
         if s.startswith('"'):
@@ -188,6 +190,7 @@ def escape_text(s):
     "a&apos;b"
     >>> escape_text('a"b')
     "a&quot;b"
+
     """
     if not s:
         return s
@@ -734,38 +737,31 @@ def run_callback(chain, input,
 
     If this is confusing, read through the code for this function.
 
-    @param chain: the callback chain to run
-    @type  chain: string
+    Returns the transformed input dict.
 
-    @param input: data is a dict filled with name/value pairs--refer
-        to the callback chain documentation for what's in the data
-        dict.
-    @type  input: dict
-
-    @param mappingfunc: the function that maps output arguments
-        to input arguments for the next iteration.  It must take
-        two arguments: the original dict and the return from the
-        previous function.  It defaults to returning the original
-        dict.
-    @type  mappingfunc: function
-
-    @param donefunc: this function tests whether we're done doing
-        what we're doing.  This function takes as input the output
-        of the most recent iteration.  If this function returns
-        true (1) then we'll drop out of the loop.  For example,
-        if you wanted a callback to stop running when one of the
-        registered functions returned a 1, then you would pass in:
-        donefunc=lambda x:x .
-    @type  donefunc: function
-
-    @param defaultfunc: if this is set and we finish going through all
-        the functions in the chain and none of them have returned something
-        that satisfies the donefunc, then we'll execute the defaultfunc
-        with the latest version of the input dict.
-    @type  defaultfunc: function
-
-    @returns: the transformed dict
-    @rtype: dict
+    :Parameters:
+       chain : string
+          the name of the callback chain to run
+       input : dict
+          dict filled with name/value pairs--refer to the callback chain
+          documentation for what's in the data dict
+       mappingfunc : function
+          the function that maps output arguments to input arguments for
+          the next iteration.  It must take two arguments: the original
+          dict and the return from the previous function.  It defaults
+          to returning the original dict.
+       donefunc : function
+          this function tests whether we're done doing what we're doing.
+          This function takes as input the output of the most recent
+          iteration.  If this function returns True then we'll drop
+          out of the loop.  For example, if you wanted a callback to
+          stop running when one of the registered functions returned
+          a 1, then you would pass in: ``donefunc=lambda x: x`` .
+       defaultfunc : function
+          if this is set and we finish going through all the functions
+          in the chain and none of them have returned something that
+          satisfies the donefunc, then we'll execute the defaultfunc
+          with the latest version of the input dict.
     """
     chain = plugin_utils.get_callback_chain(chain)
 
@@ -821,7 +817,7 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
        body : string
           the body of the entry
 
-    :Except:
+    :Exception:
        IOError
           if the datadir + category directory exists, but isn't a directory
     """
@@ -1105,8 +1101,9 @@ def log_exception(log_file=None):
     Uses the system-wide log_file as defined in config.py if none
     is given here.
 
-    @param log_file: optional, the file to log to
-    @type log_file: C{str}
+    :Parameters:
+       log_file : string
+          the name of the file to log to
     """
     log = getLogger(log_file)
     log.exception("Exception occured:")
@@ -1116,11 +1113,12 @@ def log_caller(frame_num=1, log_file=None):
     Logs some info about the calling function/method.
     Useful for debugging.
 
-    Usage::
-        import tools
-        tools.log_caller() # logs frame 1
-        tools.log_caller(2)
-        tools.log_caller(3, log_file="/path/to/file")
+    Usage:
+
+    >>> import tools
+    >>> tools.log_caller()     # logs frame 1
+    >>> tools.log_caller(2)
+    >>> tools.log_caller(3, log_file="/path/to/file")
 
     :Parameters:
        frame_num : int

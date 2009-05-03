@@ -5,22 +5,14 @@ PyBlosxom Architecture
 Summary
 =======
 
-The architecture for PyBlosxom has evolved over time.  The mission is to 
-build an easily augmented blog system that uses the file system for data 
-storage.  Using the file system allows PyBlosxom to fit in with existing
-applications and processes ather than forcing PyBlosxom to solve all problems 
-by itself.
+PyBlosxom uses the file system for data storage allowing you to use the
+text-based tools that you use for other parts of your workflow for
+your blog.
 
-For example, because PyBlosxom uses the file system for data storage
-you can use your favorite version control system to maintain 
-revisions and version history for your blog, you can use your favorite text 
-editor to edit blog entries, you can use ``grep`` and other command-line
-utilities, you can interface with your email system, ...
+PyBlosxom has a plugin system allowing users to augment and extend 
+PyBlosxom's behavior to meet their specific needs.
 
-This chapter is still pretty high-level and could use a lot of work.
-It could use more examples and text to document PyBlosxom's architecture 
-making it easier for people to develop plugins and continue to hack on 
-PyBlosxom itself.
+This chapter covers PyBlosxom's architecture.
 
 The code is fairly well documented and you should always consider the code
 to be the authority when the code and this manual are in disagreement.

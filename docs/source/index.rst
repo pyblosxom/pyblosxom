@@ -25,6 +25,7 @@ Contents:
    plugins
    dev_architecture
    dev_writing_plugins
+   dev_codedocs
 
 
 Indices and tables
