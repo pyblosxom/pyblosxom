@@ -109,7 +109,7 @@ class BlosxomCache(BlosxomCacheBase):
         keys = []
         cached = []
         if os.path.isdir(self._config):
-            cached = tools.Walk(self._request,
+            cached = tools.walk(self._request,
                                 self._config,
                                 1,
                                 re.compile(r'.*\.entrypickle$'))

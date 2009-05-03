@@ -85,7 +85,7 @@ def test_installation(command, argv):
     if not p:
         return 0
 
-    request = p.getRequest()
+    request = p.get_request()
     config = request.config
 
     print "== System information =="
@@ -274,10 +274,10 @@ def render_url(command, argv):
     if args:
         p = build_pyblosxom()
 
-        base_url = p.getRequest().config.get("base_url", "")
+        base_url = p.get_request().config.get("base_url", "")
         if url.startswith(base_url):
             url = url[len(base_url):]
-        return p.runRenderOne(url, options.headers)
+        return p.run_render_one(url, options.headers)
 
     parser.print_help()
     return 0
@@ -295,7 +295,7 @@ def run_static_renderer(command, argv):
     if not p:
         return 0
 
-    return p.runStaticRenderer(options.incremental)
+    return p.run_static_renderer(options.incremental)
 
 DEFAULT_HANDLERS = (
     ("create", create_blog, "Creates directory structure for a new blog."),
