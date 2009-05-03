@@ -127,6 +127,9 @@ Pertinent to developers:
    * addData -> add_data
    * addConfiguration -> add_configuration
 
+9. Changed ``add_header`` in the ``Response`` class to take a key and value 
+   instead of a list of strings that it has to use * magic and then munge 
+   through.
 
 Changes between 1.4.2 and 1.4.3
 ===============================
