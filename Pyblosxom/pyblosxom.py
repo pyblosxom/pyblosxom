@@ -1040,39 +1040,49 @@ def blosxom_file_list_handler(args):
     else:
         filelist = []
 
-    entrylist = []
-    for ourfile in filelist:
-        e = FileEntry(request, ourfile, data['root_datadir'])
-        entrylist.append((e._mtime, e))
+    entrylist = [FileEntry(request, e, data["root_datadir"]) for e in filelist]
 
-    # this sorts entries by mtime in reverse order.  entries that have
-    # no mtime get sorted to the top.
+    # if we're looking at a set of archives, remove all the entries that
+    # aren't in the archive
+    if data["pi_yr"]:
+        datestr = "%s%s%s" % (data["pi_yr"],
+                              tools.month2num.get(data["pi_mo"], data["pi_mo"]),
+                              data["pi_da"])
+        entrylist = [x for x in entrylist
+                     if time.strftime("%Y%m%d%H%M%S", x["timetuple"]).startswith(datestr)]
+
+    entrylist = [(e._mtime, e) for e in entrylist]
     entrylist.sort()
     entrylist.reverse()
+    entrylist = [e[1] for e in entrylist]
 
-    # Match dates with files if applicable
-    if data['pi_yr']:
-        # This is called when a date has been requested, e.g.
-        # /some/category/2004/Sep
-        month = (data['pi_mo'] in tools.month2num.keys() and \
-                      tools.month2num[data['pi_mo']] or \
-                      data['pi_mo'])
-        matchstr = "^" + data["pi_yr"] + month + data["pi_da"]
-        valid_list = [x for x in entrylist if re.match(matchstr,
-                                                       x[1]._fulltime)]
-    else:
-        valid_list = entrylist
+    entrylist = tools.run_callback("truncatelist",
+                                   {"request": request, "entry_list": entrylist},
+                                   donefunc=lambda x: x != None,
+                                   defaultfunc=blosxom_truncate_list_handler)
 
-    # This is the maximum number of entries we can show on the front page
-    # (zero indicates show all entries)
-    maxe = config.get("num_entries", 5)
-    if maxe and not data["pi_yr"]:
-        valid_list = valid_list[:maxe]
-        data["debugme"] = "done"
+    return entrylist
 
-    valid_list = [x[1] for x in valid_list]
 
-    return valid_list
+def blosxom_truncate_list_handler(args):
+    """
+    If config["num_entries"] is not 0 and data["truncate"] is not 0, then this
+    truncates args["entry_list"] by config["num_entries"].
+
+    :param args: args dict with ``request`` object and ``entry_list`` list of entries
+    :returns: the truncated ``entry_list``
+    """
+    request = args["request"]
+    entrylist = args["entry_list"]
+
+    data = request.data
+    config = request.config
+
+    num_entries = config.get("num_entries", 5)
+    truncate = data.get("truncate", 0)
+    if num_entries and truncate:
+        entrylist = entrylist[:num_entries]
+    return entrylist
 
 def blosxom_process_path_info(args):
     """
@@ -1225,6 +1235,12 @@ def blosxom_process_path_info(args):
                 if item or len(path_info) > 0:
                     data["bl_type"] = "dir"
                     data["root_datadir"] = absolute_path
+
+    # set truncate to 1 if this request isn't for date archives
+    if not data["pi_yr"]:
+        data["truncate"] = 1
+    else:
+        data["truncate"] = 0
 
     # construct our final URL
     url = config['base_url']
