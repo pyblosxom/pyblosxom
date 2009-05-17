@@ -377,3 +377,41 @@ A typical preformatter plugin looks like this::
        text = re.sub('\\n','<br />',text)
        return '<p>%s</p>' % text
 
+
+Writing a plugin that adds a commandline command
+================================================
+
+*New in PyBlosxom 1.5*
+
+The ``pyblosxom-cmd`` command allows for plugin-defined commands.  This
+allows your plugin to do maintenance tasks (updating an index, statistics,
+generating content, ...) and allows the user to schedule command execution
+through cron or some similar system.
+
+To write a new command, you must:
+
+1. implement the ``commandline`` callback which adds the command, handler,
+   and command summary
+2. implement the command function
+
+For example, this adds a command to print arguments::
+
+    def printargs(command, argv):
+        print argv
+        return 0
+
+    def cb_commandline(args):
+        args["printargs"] = (printargs, "prints arguments")
+        return args
+
+
+.. note::
+
+   The plugin must be in a directory specified by ``load_plugins`` in the
+   user's ``config.py`` file.
+
+Executing the command looks like this::
+
+    > pyblosxom-cmd --config /path/to/config.py/dir printargs a b c
+    pyblosxom-cmd version 1.5
+    a b c
