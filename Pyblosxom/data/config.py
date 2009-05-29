@@ -22,7 +22,9 @@ py = {}
 # directory (note the case--uppercase P lowercase b!).
 #py["codebase"] = "%(codedir)s"
 
+import os
 
+blogdir = "%(basedir)s"
 
 # Blog configuration
 # ==================
@@ -58,10 +60,10 @@ py["blog_encoding"] = "utf-8"
 #py["locale"] = "en_US.iso-8859-1"
 
 # Where are this blog's entries kept?
-py["datadir"] = "%(basedir)sentries"
+py["datadir"] = os.path.join(blogdir, "entries")
 
 # Where are this blog's flavours kept?
-py["flavourdir"] = "%(basedir)sflavours"
+py["flavourdir"] = os.path.join(blogdir, "flavours")
 
 # List of strings with directories that should be ignored (e.g. "CVS")
 # ex: py['ignore_directories'] = ["CVS", "temp"]
@@ -91,7 +93,7 @@ py["default_flavour"] = "html"
 # Where should PyBlosxom write logged messages to?
 # If set to "NONE" log messages are silently ignored.
 # Falls back to sys.stderr if the file can't be opened for writing.
-#py["log_file"] = "/path/to/pyblosxom.log"
+#py["log_file"] = os.path.join(blogdir, "logs", "pyblosxom.log")
 
 # At what level should we log to log_file?
 # One of: "critical", "error", "warning", "info", "debug"
@@ -118,7 +120,7 @@ py["default_flavour"] = "html"
 # should only contain the related plugins.
 # Example: py['plugin_dirs'] = [ "/home/joe/blog/plugins",
 #                                "/var/lib/pyblosxom/plugins" ]
-py["plugin_dirs"] = [ "%(basedir)splugins" ]
+py["plugin_dirs"] = [os.path.join(blogdir, "plugins")]
 
 # There are two ways for PyBlosxom to load plugins.  The first is the
 # default way which involves loading all the plugins in the lib/plugins
