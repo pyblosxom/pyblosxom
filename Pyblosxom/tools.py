@@ -118,7 +118,7 @@ def initialize(config):
     MONTHS = num2month.keys() + month2num.keys()
 
 class ConfigSyntaxErrorException(Exception):
-    """Thrown when convert_configini_values encounters a syntax
+    """Thrown when ``convert_configini_values`` encounters a syntax
     error.
     """
     pass
@@ -127,16 +127,9 @@ def convert_configini_values(configini):
     """Takes a dict containing config.ini style keys and values, converts
     the values, and returns a new config dict.
 
-    :Parameters:
+    :param confini: dict containing the config.ini style keys and values
 
-        configini : dict
-            dict containing the config.ini style keys and values
-
-    :Exceptions:
-
-        ConfigSyntaxErrorException
-            raised when there's a syntax error
-    
+    :raises ConfigSyntaxErrorException: when there's a syntax error
     """
     def s_or_i(s):
         if s.startswith('"'):
@@ -283,9 +276,7 @@ def commasplit(s):
 
     This returns a list of strings.
 
-    :Parameters:
-       s : string
-          the string to split
+    :param s: the string to split
     """
     if s is None:
         return []
@@ -318,21 +309,16 @@ class Replacer:
     Class for replacing variables in a template
 
     This class is a utility class used to provide a bound method to the
-    C{re.sub()} function.  Gotten from OPAGCGI.
+    ``re.sub()`` function.  Originally from OPAGCGI.
     """
     def __init__(self, request, encoding, var_dict):
         """
         Its only duty is to populate itself with the replacement dictionary
         passed.
 
-        @param request: the Request object
-        @type  request: Request
-
-        @param encoding: the encoding to use
-        @type  encoding: string
-
-        @param var_dict: The dict for variable substitution
-        @type var_dict: dict
+        :param request: the Request object
+        :param encoding: the encoding to use.  ``utf-8`` is good.
+        :param var_dict: the dict containing variable substitutions
         """
         self._request = request
         self._encoding = encoding
@@ -379,9 +365,7 @@ class Replacer:
 
         It returns the substituted string.
 
-        :Parameters:
-           matchobj : re.matchobj
-              regular expression match object
+        :param matchobj: the regular expression match object
         """
         vd = self.var_dict
         request = self._request
@@ -463,13 +447,9 @@ def parse(request, var_dict, template):
 
     This returns the template string with template variables expanded.
 
-    :Parameters:
-       request : Request object
-          the request object context
-       var_dict : dict
-          the name value pair list containing variable replacements
-       template : string
-          the template we're expanding template variables in
+    :param request: the Request object
+    :param var_dict: the dict holding name/value pair variable replacements
+    :param template: the string template we're expanding variables in.
     """
     encoding = request.config.get("blog_encoding", "utf-8")
     replacer = Replacer(request, encoding, var_dict)
@@ -496,20 +476,16 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
 
     Returns a list of file paths.
 
-    :Parameters:
-       request : Request
-          the PyBlosxom request
-       root : string
-          the starting directory to walk from
-       recurse : int
-          the depth of recursion, defaults to ``0`` which is all the
-          way down
-       pattern : regexp object
-          filters out all files that don't match this pattern, defaults
-          to ``''``
-       return_folders : boolean
-          returns a list of folders if True, returns folders and files
-          otherwise
+    :param request: the Request object
+    :param root: the root directory to walk
+    :param recurse: the depth of recursion; defaults to 0 which goes all
+                    the way down
+    :param pattern: the regexp object for matching files; defaults to
+                    '' which causes PyBlosxom to return files with
+                    file extensions that match those the entryparsers
+                    handle
+    :param return_folders: True if you want only folders, False if you
+                    want files AND folders
     """
     # expand pattern
     if not pattern:
@@ -584,11 +560,8 @@ def filestat(request, filename):
     This returns the mtime of the file (same as returned by
     ``time.localtime()``) -- tuple of 9 ints.
 
-    :Parameters:
-       request : Request object
-          the request object
-       filename : string
-          the file name of the file to stat
+    :param request: the Request object
+    :param filename: the file name of the file to stat
     """
     data = request.getData()
     filestat_cache = data.setdefault("filestat_cache", {})
@@ -625,11 +598,9 @@ def what_ext(extensions, filepath):
 
     Returns the extension (string) of the file or ``None``.
 
-    :Parameters:
-       extensions : list of strings
-          the list of extensions to test
-       filepath : string
-          the complete file path (minus the extension) to test
+    :param extensions: the list of extensions to test
+    :param filepath: the complete file path (minus the extension) to test
+                     and find the extension for
     """
     for ext in extensions:
         if os.path.isfile(filepath + '.' + ext):
@@ -646,9 +617,7 @@ def is_year(s):
 
     Returns ``True`` if it is a year and ``False`` otherwise.
 
-    :Parameters:
-       s : string
-          the string to check for "year-hood"
+    :param s: the string to check for "year-hood"
     """
     if not s:
         return False
@@ -665,11 +634,8 @@ def importname(modulename, name):
     Returns the module object or ``None`` if there were problems
     importing.
 
-    :Parameters:
-       modulename : string
-          The package name of the module to import from
-       name : string
-          The name of the module to import
+    :param modulename: the package name of the module to import from
+    :param name: the name of the module to import
     """
     logger = getLogger()
     if not modulename:
@@ -700,11 +666,8 @@ def generate_rand_str(minlen=5, maxlen=10):
 
     The generated string consists of letters and numbers.
 
-    :Parameters:
-       minlen : int
-          the minimum length of the generated random string
-       maxlen : int
-          the maximum length of the generated random string
+    :param minlen: the minimum length of the generated random string
+    :param maxlen: the maximum length of the generated random string
     """
     import random, string
     chars = string.letters + string.digits
@@ -739,29 +702,27 @@ def run_callback(chain, input,
 
     Returns the transformed input dict.
 
-    :Parameters:
-       chain : string
-          the name of the callback chain to run
-       input : dict
-          dict filled with name/value pairs--refer to the callback chain
-          documentation for what's in the data dict
-       mappingfunc : function
-          the function that maps output arguments to input arguments for
-          the next iteration.  It must take two arguments: the original
-          dict and the return from the previous function.  It defaults
-          to returning the original dict.
-       donefunc : function
-          this function tests whether we're done doing what we're doing.
-          This function takes as input the output of the most recent
-          iteration.  If this function returns True then we'll drop
-          out of the loop.  For example, if you wanted a callback to
-          stop running when one of the registered functions returned
-          a 1, then you would pass in: ``donefunc=lambda x: x`` .
-       defaultfunc : function
-          if this is set and we finish going through all the functions
-          in the chain and none of them have returned something that
-          satisfies the donefunc, then we'll execute the defaultfunc
-          with the latest version of the input dict.
+    :param chain: the name of the callback chain to run
+    :param input: dict with name/value pairs that gets passed as the
+                  args dict to all callback functions
+    :param mappingfunc: the function that maps output arguments to
+                        input arguments for the next iteration.  It
+                        must take two arguments: the original dict and
+                        the return from the previous function.  It
+                        defaults to returning the original dict.
+    :param donefunc: this function tests whether we're done doing what
+                     we're doing.  This function takes as input the
+                     output of the most recent iteration.  If this
+                     function returns True then we'll drop out of the
+                     loop.  For example, if you wanted a callback to
+                     stop running when one of the registered functions
+                     returned a 1, then you would pass in:
+                     ``donefunc=lambda x: x`` .
+    :param defaultfunc: if this is set and we finish going through all
+                        the functions in the chain and none of them
+                        have returned something that satisfies the
+                        donefunc, then we'll execute the defaultfunc
+                        with the latest version of the input dict.
     """
     chain = plugin_utils.get_callback_chain(chain)
 
@@ -801,25 +762,18 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
     This is primarily used by the testing system, but it could be
     used by scripts and other tools.
 
-    :Parameters:
-       datadir : string
-          the directory of the datadir where the blog entries are stored
-       category : string
-          the category of the entry
-       filename : string
-          the name of the blog entry (filename and extension--no directory)
-       mtime : float
-          the mtime for the entry in seconds since the epoch
-       title : string
-          the entry title
-       metadata : dict
-          the metadata for the entry in a dict of key/value pairs
-       body : string
-          the body of the entry
+    :param datadir: the datadir
+    :param category: the category the entry should go in
+    :param filename: the name of the blog entry (filename and
+                     extension--no directory)
+    :param mtime: the mtime (float) for the entry in seconds since the
+                  epoch
+    :param title: the title for the entry
+    :param metadata: dict of key/value metadata pairs
+    :param body: the body of the entry
 
-    :Exception:
-       IOError
-          if the datadir + category directory exists, but isn't a directory
+    :raises IOError: if the datadir + category directory exists, but
+                     isn't a directory
     """
     def addcr(s):
         if not s.endswith("\n"):
@@ -856,11 +810,9 @@ def get_cache(request):
     Retrieves the cache from the request or fetches a new CacheDriver
     instance.
 
-    @param request: the Request object for this run
-    @type  request: Request
+    Returns a BlosxomCache object
 
-    @returns: A BlosxomCache object reference
-    @rtype: L{Pyblosxom.cache.base.BlosxomCacheBase} subclass
+    :param request: the Request object
     """
     data = request.getData()
     mycache = data.get("data_cache", "")
@@ -889,11 +841,9 @@ def update_static_entry(cdict, entry_filename):
     If we are, then we call ``render_url`` for each ``static_flavour`` of
     the entry and then for each ``static_flavour`` of the index page.
 
-    :Parameters:
-       cdict : dict
-          the ``config.py`` dict
-       entry_filename : string
-          the url path of the entry to be updated.  ex. ``/movies/xmen2``
+    :param cdict: the config.py dict
+    :param entry_filename: the url path of the entry to be updated;
+                           example: ``/movies/xmen2``
     """
     staticdir = cdict.get("static_dir", "")
 
@@ -934,13 +884,10 @@ def render_url(cdict, pathinfo, querystring=""):
 
     This returns a PyBlosxom ``Response`` object.
 
-    :Parameters:
-       cdict : dict
-          the ``config``.py dict
-       pathinfo : string
-          the ``path_info`` string.  ex. ``/dev/pyblosxom/firstpost.html``
-       querystring : string
-          the querystring (if any).  ex: debug=yes
+    :param cdict: the config.py dict
+    :param pathinfo: the ``PATH_INFO`` string;
+                     example: ``/dev/pyblosxom/firstpost.html``
+    :param querystring: the querystring (if any); example: debug=yes
     """
     staticdir = cdict.get("static_dir", "")
 
@@ -990,9 +937,7 @@ class LogFilter(object):
         Initializes the filter to the list provided by the names
         argument (or ``[]`` if ``names`` is ``None``).
 
-        :Parameters:
-           names : list of strings
-              the list of strings to filter out
+        :param names: list of strings to filter out
         """
         if names == None:
             names = []
@@ -1012,9 +957,10 @@ def get_logger(log_file=None):
     Returns a log channel (logger instance) which you can call ``error``,
     ``warning``, ``debug``, ``info``, ... on.
 
-    :Parameters:
-       log_file : string
-          the file to log to, defaults to ``None``
+    :param log_file: the file to log to.  defaults to None which causes
+                     PyBlosxom to check for the ``log_file`` config.py
+                     property and if that's blank, then the log_file is
+                     stderr
     """
     custom_log_file = False
     if log_file == None:
@@ -1101,9 +1047,10 @@ def log_exception(log_file=None):
     Uses the system-wide log_file as defined in config.py if none
     is given here.
 
-    :Parameters:
-       log_file : string
-          the name of the file to log to
+    :param log_file: the file to log to.  defaults to None which causes
+                     PyBlosxom to check for the ``log_file`` config.py
+                     property and if that's blank, then the log_file is
+                     stderr
     """
     log = getLogger(log_file)
     log.exception("Exception occured:")
@@ -1120,11 +1067,11 @@ def log_caller(frame_num=1, log_file=None):
     >>> tools.log_caller(2)
     >>> tools.log_caller(3, log_file="/path/to/file")
 
-    :Parameters:
-       frame_num : int
-          index of the frame to log, defaults to ``1``
-       log_file : string
-          the file to log to, defaults to ``None``
+    :param frame_num: the index of the frame to log; defaults to 1
+    :param log_file: the file to log to.  defaults to None which causes
+                     PyBlosxom to check for the ``log_file`` config.py
+                     property and if that's blank, then the log_file is
+                     stderr
     """
     f = sys._getframe(frame_num)
     module = f.f_globals["__name__"]
