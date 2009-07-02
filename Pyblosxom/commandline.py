@@ -332,10 +332,8 @@ def command_line_handler(scriptname, argv):
     print "%s version %s" % (scriptname, VERSION_DATE)
 
     # slurp off the config file setting and add it to sys.path.
-
-    # FIXME - this really needs to be first to pick up plugin-based
-    # command handlers
-    if len(argv) > 1 and argv[1] in ("-c", "--config"):
+    # this needs to be first to pick up plugin-based command handlers.
+    if len(argv) > 1 and argv[1].startswith("--config"):
         if "=" in argv[1]:
             key, val = argv.pop(1).split("=")
         elif len(argv) > 2:
