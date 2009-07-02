@@ -139,10 +139,8 @@ class PyBlosxom:
         If nothing handles the request, then we use the
         ``default_blosxom_handler``.
 
-        :Parameters:
-           static : boolean
-              True if we should execute in "static rendering mode" and False
-              otherwise.
+        :param static: True if PyBlosxom should execute in "static rendering
+                       mode" and False otherwise.
         """
         self.initialize()
 
@@ -173,22 +171,19 @@ class PyBlosxom:
             self.cleanup()
 
     def run_callback(self, callback="help"):
-        """
-        This method executes the start callback (initializing plugins),
-        executes the requested callback, and then executes the end
-        callback.
+        """This method executes the start callback (initializing
+        plugins), executes the requested callback, and then executes
+        the end callback.
 
         This is useful for scripts outside of PyBlosxom that need to
         do things inside of the PyBlosxom framework.
 
-        If you want to run a callback from a plugin, use ``tools.run_callback``
-        instead.
+        If you want to run a callback from a plugin, use
+        ``tools.run_callback`` instead.
 
         Returns the results of the callback.
 
-        :Parameters:
-           callback : string
-              The name of the callback to execute.
+        :param callback: the name of the callback to execute.
         """
         self.initialize()
 
@@ -208,15 +203,12 @@ class PyBlosxom:
     runCallback = run_callback
 
     def run_render_one(self, url, headers):
-        """
-        Renders a single page from the blog.
+        """Renders a single page from the blog.
 
-        :Parameter:
-           url : string
-              The url to render--this has to be relative to the base url
-              for PyBlosxom.
-           headers : boolean
-              True if you want the headers to be rendered and False if not.
+        :param url: the url to render--this has to be relative to the base
+                    url for this blog.
+        :param headers: True if you want headers to be rendered and False
+                        if not.
         """
         self.initialize()
 
@@ -232,8 +224,8 @@ class PyBlosxom:
         url = url.replace(os.sep, "/")
         response = tools.render_url(config, url, query)
         if headers:
-            response.sendHeaders(sys.stdout)
-        response.sendBody(sys.stdout)
+            response.send_headers(sys.stdout)
+        response.send_body(sys.stdout)
 
         print response.read()
 
@@ -241,18 +233,17 @@ class PyBlosxom:
         self.cleanup()
 
     def run_static_renderer(self, incremental=False):
-        """
-        This will go through all possible things in the blog and statically
-        render everything to the ``static_dir`` specified in the config file.
+        """This will go through all possible things in the blog and
+        statically render everything to the ``static_dir`` specified
+        in the config file.
 
-        This figures out all the possible ``path_info`` settings and calls
-        ``self.run()`` a bazillion times saving each file.
+        This figures out all the possible ``path_info`` settings and
+        calls ``self.run()`` a bazillion times saving each file.
 
-        :Parameters:
-           incremental : boolean
-              Whether (True) or not (False) to incrementally render the
-              pages.  If we're incrementally rendering pages, then we render
-              only the ones that have changed.
+        :param incremental: Whether (True) or not (False) to
+                            incrementally render the pages.  If we're
+                            incrementally rendering pages, then we
+                            render only the ones that have changed.
         """
         self.initialize()
 
@@ -478,30 +469,25 @@ class EnvDict(dict):
     Wrapper arround a dict to provide a backwards compatible way
     to get the ``form`` with syntax as::
 
-        request.getHttp()['form']
+        request.get_http()['form']
 
     instead of::
 
-        request.getForm()
+        request.get_form()
     """
     def __init__(self, request, env):
         """Wraps an environment (which is a dict) and a request.
 
-        :Parameters:
-           request : Request
-              Request object for this request
-           env : dict
-              environment for this request
+        :param request: the Request object for this request.
+        :param env: the environment dict for this request.
         """
         dict.__init__(self)
         self._request = request
         self.update(env)
 
     def __getitem__(self, key):
-        """
-        If the key argument is ``form``, we return ``_request.getForm()``.
-        Otherwise this returns the item for that key in the wrapped
-        dict.
+        """If the key argument is ``form``, we return ``_request.getForm()``.
+        Otherwise this returns the item for that key in the wrapped dict.
         """
         if key == "form":
             return self._request.getForm()
@@ -520,18 +506,14 @@ class Request(object):
     Request instance.
     """
     def __init__(self, config, environ, data):
-        """
-        Sets configuration and environment.
+        """Sets configuration and environment.
+
         Creates the Response object which handles all output
         related functionality.
 
-        :Parameters:
-           config : dict
-              Dict containing configuration variables.
-           environ : dict
-              Dict containing environment variables.
-           data : dict
-              Dict containing data variables.
+        :param config: dict containing configuration variables.
+        :param environ: dict containing environment variables.
+        :param data: dict containing data variables.
         """
         # this holds configuration data that the user changes
         # in config.py
@@ -757,7 +739,6 @@ class Response(object):
         """Returns the status code and message of this response.
         """
         return self.status
-    getStatus = get_status
 
     def add_header(self, key, value):
         """Populates the HTTP header with lines of text.
@@ -769,9 +750,8 @@ class Response(object):
         >>> resp.add_header("Content-type", "text/plain")
         >>> resp.add_header("Content-Length", "10500")
 
-        :Exception:
-           ValueError
-              This happens when the parameters are not correct
+        :exception ValueError: This happens when the parameters are
+                               not correct.
         """
         key = key.strip()
         if key.find(' ') != -1 or key.find(':') != -1:
@@ -804,14 +784,11 @@ class Response(object):
                 for hkey in self.headers.keys()]))
         out.write('\n\n')
         self._headers_sent = True
-    sendHeaders = send_headers
 
     def send_body(self, out):
         """Send the response body to the given output stream.
 
-        :Parameters:
-           out : file-like object
-              The file like object to print the body to.
+        :param out: the file-like object to print the body to.
         """
         self.seek(0)
         try:
@@ -820,15 +797,13 @@ class Response(object):
             # this is usually a Broken Pipe because the client dropped the
             # connection.  so we skip it.
             pass
-    sendBody = send_body
 
 #
 # blosxom behavior stuff
 #
 
 def blosxom_handler(request):
-    """
-    This is the default blosxom handler.
+    """This is the default blosxom handler.
 
     It calls the renderer callback to get a renderer.  If there is
     no renderer, it uses the blosxom renderer.
@@ -844,8 +819,7 @@ def blosxom_handler(request):
 
     Then it tells the renderer to render the entries.
 
-    @param request: A standard request object
-    @type request: L{Pyblosxom.pyblosxom.Request} object
+    :param request: the request object.
     """
     config = request.getConfiguration()
     data = request.getData()
@@ -953,20 +927,15 @@ def blosxom_handler(request):
         cache.close()
 
 def blosxom_entry_parser(filename, request):
-    """
-    Open up a *.txt file and read its contents.  The first line
-    becomes the title of the entry.  The other lines are the
-    body of the entry.
+    """Open up a ``.txt`` file and read its contents.  The first line
+    becomes the title of the entry.  The other lines are the body of
+    the entry.
 
-    @param filename: A filename to extract data and metadata from
-    @type filename: string
+    Returns A dict containing parsed data and meta data with the
+    particular file (and plugin).
 
-    @param request: A standard request object
-    @type request: L{Pyblosxom.pyblosxom.Request} object
-
-    @returns: A dict containing parsed data and meta data with the
-            particular file (and plugin)
-    @rtype: dict
+    :param filename: a filename to extract data and metadata from
+    :param request: a standard request object
     """
     config = request.getConfiguration()
 
@@ -1014,17 +983,14 @@ def blosxom_entry_parser(filename, request):
     return entryData
 
 def blosxom_file_list_handler(args):
-    """
-    This is the default handler for getting entries.  It takes the
+    """This is the default handler for getting entries.  It takes the
     request object in and figures out which entries based on the
     default behavior that we want to show and generates a list of
     EntryBase subclass objects which it returns.
 
-    @param args: dict containing the incoming Request object
-    @type args: object
+    Returns the content we want to render.
 
-    @returns: the content we want to render
-    @rtype: list of EntryBase objects
+    :param args: dict containing the incoming Request object
     """
     request = args["request"]
 
@@ -1044,10 +1010,10 @@ def blosxom_file_list_handler(args):
 
     # if we're looking at a set of archives, remove all the entries that
     # aren't in the archive
-    if data["pi_yr"]:
-        datestr = "%s%s%s" % (data["pi_yr"],
-                              tools.month2num.get(data["pi_mo"], data["pi_mo"]),
-                              data["pi_da"])
+    if data.get("pi_yr", ""):
+        datestr = "%s%s%s" % (data.get("pi_yr", ""),
+                              tools.month2num.get(data.get("pi_mo", ""), data.get("pi_mo", "")),
+                              data.get("pi_da", ""))
         entrylist = [x for x in entrylist
                      if time.strftime("%Y%m%d%H%M%S", x["timetuple"]).startswith(datestr)]
 
@@ -1065,12 +1031,14 @@ def blosxom_file_list_handler(args):
 
 
 def blosxom_truncate_list_handler(args):
-    """
-    If config["num_entries"] is not 0 and data["truncate"] is not 0, then this
-    truncates args["entry_list"] by config["num_entries"].
+    """If ``config["num_entries"]`` is not 0 and ``data["truncate"]``
+    is not 0, then this truncates ``args["entry_list"]`` by
+    ``config["num_entries"]``.
 
-    :param args: args dict with ``request`` object and ``entry_list`` list of entries
-    :returns: the truncated ``entry_list``
+    Returns the truncated ``entry_list``.
+
+    :param args: args dict with ``request`` object and ``entry_list``
+                 list of entries
     """
     request = args["request"]
     entrylist = args["entry_list"]
@@ -1085,20 +1053,20 @@ def blosxom_truncate_list_handler(args):
     return entrylist
 
 def blosxom_process_path_info(args):
-    """
-    Process HTTP PATH_INFO for URI according to path specifications, fill in
-    data dict accordingly.
+    """Process HTTP ``PATH_INFO`` for URI according to path
+    specifications, fill in data dict accordingly.
 
     The paths specification looks like this:
-        - C{/foo.html} and C{/cat/foo.html} - file foo.* in / and /cat
-        - C{/cat} - category
-        - C{/2002} - category
-        - C{/2002} - year
-        - C{/2002/Feb} (or 02) - Year and Month
-        - C{/cat/2002/Feb/31} - year and month day in category.
 
-    @param args: dict containing the incoming Request object
-    @type args: object
+    - ``/foo.html`` and ``/cat/foo.html`` - file foo.* in / and /cat
+    - ``/cat`` - category
+    - ``/2002`` - category
+    - ``/2002`` - year
+    - ``/2002/Feb`` and ``/2002/02`` - Year and Month
+    - ``/cat/2002/Feb/31`` and ``/cat/2002/02/31``- year and month day
+      in category.
+
+    :param args: dict containing the incoming Request object
     """
     request = args['request']
     config = request.getConfiguration()
@@ -1236,8 +1204,9 @@ def blosxom_process_path_info(args):
                     data["bl_type"] = "dir"
                     data["root_datadir"] = absolute_path
 
-    # set truncate to 1 if this request isn't for date archives
-    if not data["pi_yr"]:
+    # truncate categories by default
+    if ((config.get("truncate_category", 1) and data.get("bl_type") == "dir")
+            or (config.get("truncate_date", 0) and data.get("pi_yr"))):
         data["truncate"] = 1
     else:
         data["truncate"] = 0
@@ -1311,5 +1280,5 @@ def run_pyblosxom():
 
         p.run()
         response = p.get_response()
-        response.sendHeaders(sys.stdout)
-        response.sendBody(sys.stdout)
+        response.send_headers(sys.stdout)
+        response.send_body(sys.stdout)
