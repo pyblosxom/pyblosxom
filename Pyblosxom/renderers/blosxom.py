@@ -291,9 +291,11 @@ class BlosxomRenderer(RendererBase):
                 self.flavour = self._getflavour("error")
             except NoSuchFlavourException, nsfe2:
                 self.flavour = get_included_flavour("error")
-                error_msg = error_msg + "And your error flavour doesn't exist."
+                error_msg = error_msg + "  And your error flavour doesn't exist."
 
-            self._content = {"title": "Flavour error",
+            resp = self._request.getResponse()
+            resp.set_status("404 Not Found")
+            self._content = {"title": "HTTP 404: Flavour error",
                              "body": error_msg}
 
         data['content-type'] = self.flavour['content_type'].strip()
