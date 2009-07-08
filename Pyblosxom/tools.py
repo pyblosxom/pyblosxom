@@ -33,7 +33,7 @@ num2month = None
 MONTHS    = None
 
 # regular expression for detection and substituion of variables.
-_VAR_REGEXP = re.compile(ur"""
+_VAR_REGEXP = re.compile(r"""
     (?<!\\)   # if the $ is escaped, then this isn't a variable
     \$        # variables start with a $
     (
