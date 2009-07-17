@@ -69,6 +69,9 @@ Pertinent to users:
     locking code to fail.  The only one I saw like this was the
     logstats plugin which had a lot of other problems.
 
+14. Added a ``--silent`` flag to pyblcmd so that it quells all stdout.
+    This is useful for cron jobs.
+
 
 Pertinent to developers:
 ------------------------
