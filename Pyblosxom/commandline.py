@@ -329,6 +329,10 @@ def get_handlers():
     return handlers
 
 def command_line_handler(scriptname, argv):
+    if "--silent" in argv:
+        sys.stdout = open(os.devnull, "w")
+        argv.remove("--silent")
+
     print "%s version %s" % (scriptname, VERSION_DATE)
 
     # slurp off the config file setting and add it to sys.path.
