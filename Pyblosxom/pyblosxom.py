@@ -380,6 +380,8 @@ class PyBlosxom:
                             'filelist': renderme,
                             'flavours': flavours})
 
+        renderme = sorted(set(renderme))
+
         print "building %s files." % len(renderme)
 
         for url, q in renderme:
