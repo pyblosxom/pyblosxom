@@ -1204,13 +1204,6 @@ def blosxom_process_path_info(args):
                     data["bl_type"] = "dir"
                     data["root_datadir"] = absolute_path
 
-    # truncate categories by default
-    if ((config.get("truncate_category", 1) and data.get("bl_type") == "dir")
-            or (config.get("truncate_date", 0) and data.get("pi_yr"))):
-        data["truncate"] = 1
-    else:
-        data["truncate"] = 0
-
     # construct our final URL
     url = config['base_url']
     if data['pi_bl'].startswith("/") and url.endswith("/"):
@@ -1223,6 +1216,17 @@ def blosxom_process_path_info(args):
 
     # set path_info to our latest path_info
     data['path_info'] = path_info
+
+    if data.get("pi_yr"):
+        data["truncate"] = config.get("truncate_date", 0)
+    elif data.get("bl_type") == "dir":
+        if data["path_info"] == ['']:
+            data["truncate"] = config.get("truncate_frontpage", 1)
+        else:
+            data["truncate"] = config.get("truncate_category", 1)
+    else:
+        data["truncate"] = 0
+
 
 def run_pyblosxom():
     from config import py as cfg

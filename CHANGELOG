@@ -39,9 +39,9 @@ Pertinent to users:
 
 9. Removed ``blog_title_with_path`` variable.  If you were using this
    variable in your templates, replace it.  i.e. instead of::
-   
+
        $blog_title_with_path
-    
+
    do::
 
        $blog_title : $pi_bl
@@ -71,6 +71,29 @@ Pertinent to users:
 
 14. Added a ``--silent`` flag to pyblcmd so that it quells all stdout.
     This is useful for cron jobs.
+
+15. Added ``truncate_date`` config variable.  When set to True, it
+    causes date-based archives to be truncated to ``num_entries`` entries.
+    Defaults to False.
+
+    Example::
+
+        py["truncate_date"] = True
+
+16. Added ``truncate_category`` config variable.  When set to True, it
+    causes category-based archives to be truncated to ``num_entries``
+    entries.  Defaults to True.
+
+    Example::
+
+        py["truncate_category"] = True
+
+17. Added ``truncate_frontpage`` config variable.  When set to True, it
+    causes the front page ``num_entries`` entries.  Defaults to True.
+
+    Example::
+
+        py["truncate_frontpage"] = True
 
 
 Pertinent to developers:
@@ -288,7 +311,7 @@ refactoring.
 
       nosetests --verbose --include unit
       nosetests --verbose --include functional
-      
+
 
 Changes between 1.3.1 and 1.3.2
 ===============================
@@ -454,7 +477,7 @@ Pertinent to developers and plugin developers:
 3. We added __iter__, read, readline, readlines, seek, and tell to the
    Request object.  All of them access the input stream.  You should
    not use sys.stdin directly.
-   
+
    Usage::
 
       data = request.read()
