@@ -1220,7 +1220,7 @@ def blosxom_process_path_info(args):
     if data.get("pi_yr"):
         data["truncate"] = config.get("truncate_date", False)
     elif data.get("bl_type") == "dir":
-        if data["path_info"] == ['']:
+        if data["path_info"] == [''] or data["path_info"] == ['index']:
             data["truncate"] = config.get("truncate_frontpage", True)
         else:
             data["truncate"] = config.get("truncate_category", True)
