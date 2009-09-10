@@ -1218,15 +1218,14 @@ def blosxom_process_path_info(args):
     data['path_info'] = path_info
 
     if data.get("pi_yr"):
-        data["truncate"] = config.get("truncate_date", 0)
+        data["truncate"] = config.get("truncate_date", False)
     elif data.get("bl_type") == "dir":
         if data["path_info"] == ['']:
-            data["truncate"] = config.get("truncate_frontpage", 1)
+            data["truncate"] = config.get("truncate_frontpage", True)
         else:
-            data["truncate"] = config.get("truncate_category", 1)
+            data["truncate"] = config.get("truncate_category", True)
     else:
-        data["truncate"] = 0
-
+        data["truncate"] = False
 
 def run_pyblosxom():
     from config import py as cfg
