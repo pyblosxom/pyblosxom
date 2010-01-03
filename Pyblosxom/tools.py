@@ -87,7 +87,7 @@ def initialize(config):
                      locale.nl_langinfo(locale.ABMON_11) : '11',
                      locale.nl_langinfo(locale.ABMON_12) : '12'}
 
-    except:
+    except AttributeError:
         # Windows doesn't have nl_langinfo, so we use one that
         # only return English.
         # FIXME - need a better hack for this issue.
@@ -131,20 +131,26 @@ def convert_configini_values(configini):
 
     :raises ConfigSyntaxErrorException: when there's a syntax error
     """
-    def s_or_i(s):
-        if s.startswith('"'):
-            if s.endswith('"'):
-                return s[1:-1]
-            else:
-                raise ConfigSyntaxErrorException("config syntax error: string '%s' missing end \"" % s)
-        elif s.startswith("'"):
-            if s.endswith("'"):
-                return s[1:-1]
-            else:
-                raise ConfigSyntaxErrorException("config syntax error: string '%s' missing end '" % s)
-        elif s.isdigit():
-            return int(s)
-        return s
+    def s_or_i(text):
+        """Takes a string and if it begins with " or ' and ends with
+        " or ', then it returns the string.  If it's an int, returns
+        the int.  Otherwise it returns the text.
+        """
+        if text.startswith('"'):
+            if text.endswith('"'):
+                return text[1:-1]
+            raise ConfigSyntaxErrorException("config syntax error: "
+                                             "string '%s' missing end \"" %
+                                             text)
+        elif text.startswith("'"):
+            if text.endswith("'"):
+                return text[1:-1]
+            raise ConfigSyntaxErrorException("config syntax error: "
+                                             "string '%s' missing end '" %
+                                             text)
+        elif text.isdigit():
+            return int(text)
+        return text
 
     config = {}
     for key, value in configini.items():
@@ -163,7 +169,9 @@ def convert_configini_values(configini):
                 else:
                     config[key] = [s_or_i(s.strip()) for s in value2]
             else:
-                raise ConfigSyntaxErrorException("config syntax error: list '%s' missing end ]" % value)
+                raise ConfigSyntaxErrorException("config syntax error: "
+                                                 "list '%s' missing end ]" %
+                                                 value)
         else:
             config[key] = s_or_i(value)
 
@@ -313,8 +321,8 @@ class Replacer:
     """
     def __init__(self, request, encoding, var_dict):
         """
-        Its only duty is to populate itself with the replacement dictionary
-        passed.
+        Its only duty is to populate itself with the replacement
+        dictionary passed.
 
         :param request: the Request object
         :param encoding: the encoding to use.  ``utf-8`` is good.
@@ -326,32 +334,33 @@ class Replacer:
 
     def replace(self, matchobj):
         """
-        This is passed a match object by ``re.sub()`` which represents a
-        template variable without the ``$``.  parse manipulates the variable
-        and returns the expansion of that variable using the following
-        rules:
+        This is passed a match object by ``re.sub()`` which represents
+        a template variable without the ``$``.  parse manipulates the
+        variable and returns the expansion of that variable using the
+        following rules:
 
-        1. if the variable ``v`` is an identifier, but not in the variable
-           dict, then we return the empty string, or
+        1. if the variable ``v`` is an identifier, but not in the
+           variable dict, then we return the empty string, or
 
-        2. if the variable ``v`` is an identifier in the variable dict, then
-           we return ``var_dict[v]``, or
+        2. if the variable ``v`` is an identifier in the variable
+           dict, then we return ``var_dict[v]``, or
 
-        3. if the variable ``v`` is a function call where the function is
-           an identifier in the variable dict, then
+        3. if the variable ``v`` is a function call where the function
+           is an identifier in the variable dict, then
 
-           - if ``v`` has no passed arguments and the function takes no
-             arguments we return ``var_dict[v]()`` (this is the old
+           - if ``v`` has no passed arguments and the function takes
+             no arguments we return ``var_dict[v]()`` (this is the old
              behavior
 
-           - if ``v`` has no passed arguments and the function takes two
-             arguments we return ``var_dict[v](request, vd)``
+           - if ``v`` has no passed arguments and the function takes
+             two arguments we return ``var_dict[v](request, vd)``
 
            - if ``v`` has passed arguments, we return
              ``var_dict[v](request, vd, *args)`` after some mild
              processing of the arguments
 
-        Also, for backwards compatability reasons, we convert things like::
+        Also, for backwards compatability reasons, we convert things
+        like::
 
             $id_escaped
             $id_urlencoded
@@ -414,8 +423,8 @@ class Replacer:
                     return s
                 args = [fix(arg.strip()) for arg in commasplit(args)]
 
-                # stick the request and var_dict in as the first and second
-                # arguments
+                # stick the request and var_dict in as the first and
+                # second arguments
                 args.insert(0, vd)
                 args.insert(0, request)
 
@@ -425,8 +434,8 @@ class Replacer:
                 r = r(request, vd)
 
             else:
-                # this case is here for handling the old behavior where
-                # functions took no arguments
+                # this case is here for handling the old behavior
+                # where functions took no arguments
                 r = r()
 
         # convert non-strings to strings
@@ -440,8 +449,8 @@ class Replacer:
 
 def parse(request, var_dict, template):
     """
-    This method parses the ``template`` passed in using ``Replacer`` to
-    expand template variables using values in the ``var_dict``.
+    This method parses the ``template`` passed in using ``Replacer``
+    to expand template variables using values in the ``var_dict``.
 
     Originally based on OPAGCGI, but mostly re-written.
 
@@ -457,10 +466,10 @@ def parse(request, var_dict, template):
 
 def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     """
-    This function walks a directory tree starting at a specified root folder,
-    and returns a list of all of the files (and optionally folders) that match
-    our pattern(s). Taken from the online Python Cookbook and modified to own
-    needs.
+    This function walks a directory tree starting at a specified root
+    folder, and returns a list of all of the files (and optionally
+    folders) that match our pattern(s). Taken from the online Python
+    Cookbook and modified to own needs.
 
     It will look at the config "ignore_directories" for a list of
     directories to ignore.  It uses a regexp that joins all the things
@@ -497,7 +506,7 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
         ignore = [ignore]
 
     if ignore:
-        ignore = map(re.escape, ignore)
+        ignore = [re.escape(i) for i in ignore]
         ignorere = re.compile(r'.*?(' + '|'.join(ignore) + r')$')
     else:
         ignorere = None
@@ -513,19 +522,20 @@ Walk = walk
 
 def _walk_internal(root, recurse, pattern, ignorere, return_folders):
     """
-    Note: This is an internal function--don't use it and don't expect it to
-    stay the same between PyBlosxom releases.
+    Note: This is an internal function--don't use it and don't expect
+    it to stay the same between PyBlosxom releases.
     """
-    # FIXME - we should either ditch this function and use os.walk or something
-    # similar, or optimize this version by removing the multiple stat calls
-    # that happen as a result of islink, isdir and isfile.
+    # FIXME - we should either ditch this function and use os.walk or
+    # something similar, or optimize this version by removing the
+    # multiple stat calls that happen as a result of islink, isdir and
+    # isfile.
 
     # initialize
     result = []
 
     try:
         names = os.listdir(root)
-    except:
+    except OSError:
         return []
 
     # check each file
@@ -554,8 +564,8 @@ def _walk_internal(root, recurse, pattern, ignorere, return_folders):
 
 def filestat(request, filename):
     """
-    Returns the filestat on a given file.  We store the filestat in case
-    we've already retrieved it during this PyBlosxom request.
+    Returns the filestat on a given file.  We store the filestat in
+    case we've already retrieved it during this PyBlosxom request.
 
     This returns the mtime of the file (same as returned by
     ``time.localtime()``) -- tuple of 9 ints.
@@ -593,14 +603,14 @@ def filestat(request, filename):
 
 def what_ext(extensions, filepath):
     """
-    Takes in a filepath and a list of extensions and tries them all until
-    it finds the first extension that works.
+    Takes in a filepath and a list of extensions and tries them all
+    until it finds the first extension that works.
 
     Returns the extension (string) of the file or ``None``.
 
     :param extensions: the list of extensions to test
-    :param filepath: the complete file path (minus the extension) to test
-                     and find the extension for
+    :param filepath: the complete file path (minus the extension) to
+                     test and find the extension for
     """
     for ext in extensions:
         if os.path.isfile(filepath + '.' + ext):
@@ -609,8 +619,9 @@ def what_ext(extensions, filepath):
 
 def is_year(s):
     """
-    Checks to see if the string is likely to be a year or not.  In order to
-    be considered to be a year, it must pass the following criteria:
+    Checks to see if the string is likely to be a year or not.  In
+    order to be considered to be a year, it must pass the following
+    criteria:
 
     1. four digits
     2. first two digits are either 19 or 20.
@@ -661,8 +672,8 @@ def importname(modulename, name):
 
 def generate_rand_str(minlen=5, maxlen=10):
     """
-    Generate a random string between ``minlen`` and ``maxlen`` characters
-    long.
+    Generate a random string between ``minlen`` and ``maxlen``
+    characters long.
 
     The generated string consists of letters and numbers.
 
@@ -682,34 +693,37 @@ def generate_rand_str(minlen=5, maxlen=10):
 generateRandStr = generate_rand_str
 
 def run_callback(chain, input,
-        mappingfunc=lambda x, y: x,
-        donefunc=lambda x: 0,
-        defaultfunc=None):
+                 mappingfunc=lambda x, y: x,
+                 donefunc=lambda x: 0,
+                 defaultfunc=None):
     """
-    Executes a callback chain on a given piece of data.
-    passed in is a dict of name/value pairs.  Consult the documentation
-    for the specific callback chain you're executing.
+    Executes a callback chain on a given piece of data.  passed in is
+    a dict of name/value pairs.  Consult the documentation for the
+    specific callback chain you're executing.
 
-    Callback chains should conform to their documented behavior.
-    This function allows us to do transforms on data, handling data,
-    and also callbacks.
+    Callback chains should conform to their documented behavior.  This
+    function allows us to do transforms on data, handling data, and
+    also callbacks.
 
     The difference in behavior is affected by the mappingfunc passed
-    in which converts the output of a given function in the chain
-    to the input for the next function.
+    in which converts the output of a given function in the chain to
+    the input for the next function.
 
     If this is confusing, read through the code for this function.
 
     Returns the transformed input dict.
 
     :param chain: the name of the callback chain to run
+
     :param input: dict with name/value pairs that gets passed as the
                   args dict to all callback functions
+
     :param mappingfunc: the function that maps output arguments to
                         input arguments for the next iteration.  It
                         must take two arguments: the original dict and
                         the return from the previous function.  It
                         defaults to returning the original dict.
+
     :param donefunc: this function tests whether we're done doing what
                      we're doing.  This function takes as input the
                      output of the most recent iteration.  If this
@@ -718,6 +732,7 @@ def run_callback(chain, input,
                      stop running when one of the registered functions
                      returned a 1, then you would pass in:
                      ``donefunc=lambda x: x`` .
+
     :param defaultfunc: if this is set and we finish going through all
                         the functions in the chain and none of them
                         have returned something that satisfies the
@@ -729,12 +744,13 @@ def run_callback(chain, input,
     output = None
 
     for func in chain:
-        # we call the function with the input dict it returns an output.
+        # we call the function with the input dict it returns an
+        # output.
         output = func(input)
 
-        # we fun the output through our donefunc to see if we should stop
-        # iterating through the loop.  if the donefunc returns something
-        # true, then we're all done; otherwise we continue.
+        # we fun the output through our donefunc to see if we should
+        # stop iterating through the loop.  if the donefunc returns
+        # something true, then we're all done; otherwise we continue.
         if donefunc(output):
             break
 
@@ -742,12 +758,13 @@ def run_callback(chain, input,
         # into the mappingfunc which will give us the input for the
         # next iteration.  in most cases, this consists of either
         # returning the old input or the old output--depending on
-        # whether we're transforming the data through the chain or not.
+        # whether we're transforming the data through the chain or
+        # not.
         input = mappingfunc(input, output)
 
     # if we have a defaultfunc and we haven't satisfied the donefunc
-    # conditions, then we return whatever the defaultfunc returns
-    # when given the current version of the input.
+    # conditions, then we return whatever the defaultfunc returns when
+    # given the current version of the input.
     if callable(defaultfunc) and not donefunc(output):
         return defaultfunc(input)
 
@@ -755,12 +772,19 @@ def run_callback(chain, input,
     # output.
     return output
 
+def addcr(text):
+    """Adds a cr if it needs one.
+    """
+    if not text.endswith("\n"):
+        return text + "\n"
+    return text
+
 def create_entry(datadir, category, filename, mtime, title, metadata, body):
     """
     Creates a new entry in the blog.
 
-    This is primarily used by the testing system, but it could be
-    used by scripts and other tools.
+    This is primarily used by the testing system, but it could be used
+    by scripts and other tools.
 
     :param datadir: the datadir
     :param category: the category the entry should go in
@@ -775,10 +799,6 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
     :raises IOError: if the datadir + category directory exists, but
                      isn't a directory
     """
-    def addcr(s):
-        if not s.endswith("\n"):
-            return s + "\n"
-        return s
 
     # format the metadata lines for the entry
     metadatalines = ["#%s %s" % (key, metadata[key])
@@ -833,13 +853,15 @@ def get_cache(request):
 def update_static_entry(cdict, entry_filename):
     """
     This is a utility function that allows plugins to easily update
-    statically rendered entries without going through all the rigamarole.
+    statically rendered entries without going through all the
+    rigamarole.
 
-    First we figure out whether this blog is set up for static rendering.
-    If not, then we return--no harm done.
+    First we figure out whether this blog is set up for static
+    rendering.  If not, then we return--no harm done.
 
-    If we are, then we call ``render_url`` for each ``static_flavour`` of
-    the entry and then for each ``static_flavour`` of the index page.
+    If we are, then we call ``render_url`` for each ``static_flavour``
+    of the entry and then for each ``static_flavour`` of the index
+    page.
 
     :param cdict: the config.py dict
     :param entry_filename: the url path of the entry to be updated;
@@ -860,27 +882,34 @@ def update_static_entry(cdict, entry_filename):
     for mem in renderme:
         render_url_statically(cdict, mem[0], mem[1])
 
-def render_url_statically(cdict, url, q):
+def render_url_statically(cdict, url, querystring):
+    """Renders a url and saves the rendered output to the
+    filesystem.
+
+    :param cdict: config dict
+    :param url: url to render
+    :param querystring: querystring of the url to render or ""
+    """
     staticdir = cdict.get("static_dir", "")
 
-    response = render_url(cdict, url, q)
+    response = render_url(cdict, url, querystring)
     response.seek(0)
 
     fn = os.path.normpath(staticdir + os.sep + url)
     if not os.path.isdir(os.path.dirname(fn)):
         os.makedirs(os.path.dirname(fn))
 
-    # by using the response object the cheesy part of removing
-    # the HTTP headers from the file is history.
+    # by using the response object the cheesy part of removing the
+    # HTTP headers from the file is history.
     f = open(fn, "w")
     f.write(response.read())
     f.close()
 
 def render_url(cdict, pathinfo, querystring=""):
     """
-    Takes a url and a querystring and renders the page that corresponds
-    with that by creating a Request and a PyBlosxom object and passing
-    it through.  It then returns the resulting Response.
+    Takes a url and a querystring and renders the page that
+    corresponds with that by creating a Request and a PyBlosxom object
+    and passing it through.  It then returns the resulting Response.
 
     This returns a PyBlosxom ``Response`` object.
 
@@ -923,8 +952,8 @@ def render_url(cdict, pathinfo, querystring=""):
 
 import logging
 
-# A dict to keep track of created log handlers.
-# Used to prevent multiple handlers from beeing added to the same logger.
+# A dict to keep track of created log handlers.  Used to prevent
+# multiple handlers from beeing added to the same logger.
 _loghandler_registry = {}
 
 class LogFilter(object):
@@ -951,16 +980,17 @@ class LogFilter(object):
 def get_logger(log_file=None):
     """Creates and retuns a log channel.
 
-    If no log_file is given the system-wide logfile as defined in config.py
-    is used. If a log_file is given that's where the created logger logs to.
+    If no log_file is given the system-wide logfile as defined in
+    config.py is used. If a log_file is given that's where the created
+    logger logs to.
 
-    Returns a log channel (logger instance) which you can call ``error``,
-    ``warning``, ``debug``, ``info``, ... on.
+    Returns a log channel (logger instance) which you can call
+    ``error``, ``warning``, ``debug``, ``info``, ... on.
 
-    :param log_file: the file to log to.  defaults to None which causes
-                     PyBlosxom to check for the ``log_file`` config.py
-                     property and if that's blank, then the log_file is
-                     stderr
+    :param log_file: the file to log to.  defaults to None which
+                     causes PyBlosxom to check for the ``log_file``
+                     config.py property and if that's blank, then the
+                     log_file is stderr
     """
     custom_log_file = False
     if log_file == None:
@@ -972,11 +1002,12 @@ def get_logger(log_file=None):
         log_name = ""
         for path in _config.get('plugin_dirs', []):
             if filename.startswith(path):
-                # if it's a plugin, use the module name as the log channels
-                # name
+                # if it's a plugin, use the module name as the log
+                # channels name
                 log_name = module
                 break
-        # default to log level WARNING if it's not defined in config.py
+        # default to log level WARNING if it's not defined in
+        # config.py
         log_level = _config.get('log_level', 'warning')
     else:
         # handle custom log_file
@@ -993,8 +1024,8 @@ def get_logger(log_file=None):
     # don't propagate messages up the logger hierarchy
     logger.propagate = 0
 
-    # setup the handler if it doesn't allready exist.
-    # only add one handler per log channel.
+    # setup the handler if it doesn't allready exist.  only add one
+    # handler per log channel.
     key = "%s|%s" % (log_file, log_name)
     if not key in _loghandler_registry:
 
@@ -1027,8 +1058,8 @@ def get_logger(log_file=None):
 
         if not custom_log_file:
             # only log messages from plugins listed in log_filter.
-            # add 'root' to the log_filter list to still allow application
-            # level messages.
+            # add 'root' to the log_filter list to still allow
+            # application level messages.
             log_filter = _config.get('log_filter', None)
             if log_filter:
                 lfilter = LogFilter(log_filter)
@@ -1043,22 +1074,21 @@ getLogger = get_logger
 
 def log_exception(log_file=None):
     """
-    Logs an exception to the given file.
-    Uses the system-wide log_file as defined in config.py if none
-    is given here.
+    Logs an exception to the given file.  Uses the system-wide
+    log_file as defined in config.py if none is given here.
 
-    :param log_file: the file to log to.  defaults to None which causes
-                     PyBlosxom to check for the ``log_file`` config.py
-                     property and if that's blank, then the log_file is
-                     stderr
+    :param log_file: the file to log to.  defaults to None which
+                     causes PyBlosxom to check for the ``log_file``
+                     config.py property and if that's blank, then the
+                     log_file is stderr
     """
     log = getLogger(log_file)
     log.exception("Exception occured:")
 
 def log_caller(frame_num=1, log_file=None):
     """
-    Logs some info about the calling function/method.
-    Useful for debugging.
+    Logs some info about the calling function/method.  Useful for
+    debugging.
 
     Usage:
 
@@ -1068,10 +1098,11 @@ def log_caller(frame_num=1, log_file=None):
     >>> tools.log_caller(3, log_file="/path/to/file")
 
     :param frame_num: the index of the frame to log; defaults to 1
-    :param log_file: the file to log to.  defaults to None which causes
-                     PyBlosxom to check for the ``log_file`` config.py
-                     property and if that's blank, then the log_file is
-                     stderr
+
+    :param log_file: the file to log to.  defaults to None which
+                     causes PyBlosxom to check for the ``log_file``
+                     config.py property and if that's blank, then the
+                     log_file is stderr
     """
     f = sys._getframe(frame_num)
     module = f.f_globals["__name__"]

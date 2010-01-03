@@ -1,21 +1,22 @@
-from __future__ import nested_scopes, generators
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# Copyright (c) 2003-2006 Wari Wahab
+# Copyright (c) 2007-2010 Will Kahn-Greene
 #
-# PyBlosxom is distributed under the MIT license.  See the file LICENSE
-# for distribution details.
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
 #######################################################################
 
 """This is the main module for PyBlosxom functionality.  PyBlosxom's
 setup and default handlers are defined here.
 """
 
+from __future__ import nested_scopes, generators
+
 # Python imports
 import os
 import time
-import re
 import locale
 import sys
 import os.path
@@ -41,8 +42,9 @@ class PyBlosxom:
     we're complete.
     """
     def __init__(self, config, environ, data=None):
-        """Sets configuration and environment and creates the Request object.
-        
+        """Sets configuration and environment and creates the Request
+        object.
+
         :Parameters:
            config : dict
               Dict containing the configuration variables.
@@ -58,9 +60,9 @@ class PyBlosxom:
         self._request = Request(config, environ, data)
 
     def initialize(self):
-        """The initialize step further initializes the Request by setting
-        additional information in the ``data`` dict, registering plugins,
-        and entryparsers.
+        """The initialize step further initializes the Request by
+        setting additional information in the ``data`` dict,
+        registering plugins, and entryparsers.
         """
         data = self._request.getData()
         pyhttp = self._request.getHttp()
@@ -105,8 +107,8 @@ class PyBlosxom:
         plugin_utils.initialize_plugins(config.get("plugin_dirs", []),
                                         config.get("load_plugins", None))
 
-        # entryparser callback is run here first to allow other plugins
-        # register what file extensions can be used
+        # entryparser callback is run here first to allow other
+        # plugins register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
                                         {'txt': blosxom_entry_parser},
                                         mappingfunc=lambda x,y:y,
@@ -126,17 +128,21 @@ class PyBlosxom:
         log.debug("headers = %s" % response.headers)
 
     def get_request(self):
+        """Returns the Request object for this PyBlosxom instance.
+        """
         return self._request
     getRequest = get_request
 
     def get_response(self):
+        """Returns the Response object associated with this Request.
+        """
         return self._request.getResponse()
     getResponse = get_response
 
     def run(self, static=False):
-        """This is the main loop for PyBlosxom.  This method will run the
-        handle callback to allow registered handlers to handle the request.
-        If nothing handles the request, then we use the
+        """This is the main loop for PyBlosxom.  This method will run
+        the handle callback to allow registered handlers to handle the
+        request.  If nothing handles the request, then we use the
         ``default_blosxom_handler``.
 
         :param static: True if PyBlosxom should execute in "static rendering
@@ -144,9 +150,9 @@ class PyBlosxom:
         """
         self.initialize()
 
-        # buffer the input stream in a StringIO instance if dynamic rendering
-        # is used.  This is done to have a known/consistent way of accessing
-        # incomming data.
+        # buffer the input stream in a StringIO instance if dynamic
+        # rendering is used.  This is done to have a known/consistent
+        # way of accessing incomming data.
         if static == False:
             self.get_request().buffer_input_stream()
 
@@ -205,15 +211,15 @@ class PyBlosxom:
     def run_render_one(self, url, headers):
         """Renders a single page from the blog.
 
-        :param url: the url to render--this has to be relative to the base
-                    url for this blog.
-        :param headers: True if you want headers to be rendered and False
-                        if not.
+        :param url: the url to render--this has to be relative to the
+                    base url for this blog.
+
+        :param headers: True if you want headers to be rendered and
+                        False if not.
         """
         self.initialize()
 
         config = self._request.getConfiguration()
-        data = self._request.getData()
 
         if url.find("?") != -1:
             url = url[:url.find("?")]
@@ -371,9 +377,9 @@ class PyBlosxom:
 
             renderme.append((url, query))
 
-        # now we pass the complete render list to all the plugins
-        # via cb_staticrender_filelist and they can add to the filelist
-        # any ( url, query ) tuples they want rendered.
+        # now we pass the complete render list to all the plugins via
+        # cb_staticrender_filelist and they can add to the filelist
+        # any (url, query) tuples they want rendered.
         print "(before) building %s files." % len(renderme)
         tools.run_callback("staticrender_filelist",
                            {'request': self._request,
@@ -394,8 +400,7 @@ class PyBlosxom:
         self.cleanup()
 
 class PyBlosxomWSGIApp:
-    """
-    This class is the WSGI application for PyBlosxom.
+    """This class is the WSGI application for PyBlosxom.
     """
     def __init__(self, environ=None, start_response=None, configini=None):
         """
@@ -419,7 +424,6 @@ class PyBlosxomWSGIApp:
 
         _config = tools.convert_configini_values(configini)
 
-        # FIXME - what if config is not named config?
         import config
         self.config = dict(config.py)
 
@@ -451,8 +455,7 @@ class PyBlosxomWSGIApp:
         yield self.run_pyblosxom(self.environ, self.start_response)
 
 def pyblosxom_app_factory(global_config, **local_config):
-    """
-    App factory for paste.
+    """App factory for paste.
     """
     from paste import cgitb_catcher
 
@@ -467,9 +470,8 @@ def pyblosxom_app_factory(global_config, **local_config):
                                                global_config)
 
 class EnvDict(dict):
-    """
-    Wrapper arround a dict to provide a backwards compatible way
-    to get the ``form`` with syntax as::
+    """Wrapper arround a dict to provide a backwards compatible way to
+    get the ``form`` with syntax as::
 
         request.get_http()['form']
 
@@ -488,8 +490,9 @@ class EnvDict(dict):
         self.update(env)
 
     def __getitem__(self, key):
-        """If the key argument is ``form``, we return ``_request.getForm()``.
-        Otherwise this returns the item for that key in the wrapped dict.
+        """If the key argument is ``form``, we return
+        ``_request.getForm()``.  Otherwise this returns the item for
+        that key in the wrapped dict.
         """
         if key == "form":
             return self._request.getForm()
@@ -499,8 +502,8 @@ class EnvDict(dict):
 class Request(object):
     """
     This class holds the PyBlosxom request.  It holds configuration
-    information, HTTP/CGI information, and data that we calculate
-    and transform over the course of execution.
+    information, HTTP/CGI information, and data that we calculate and
+    transform over the course of execution.
 
     There should be only one instance of this class floating around
     and it should get created by ``pyblosxom.cgi`` and passed into the
@@ -510,15 +513,15 @@ class Request(object):
     def __init__(self, config, environ, data):
         """Sets configuration and environment.
 
-        Creates the Response object which handles all output
-        related functionality.
+        Creates the Response object which handles all output related
+        functionality.
 
         :param config: dict containing configuration variables.
         :param environ: dict containing environment variables.
         :param data: dict containing data variables.
         """
-        # this holds configuration data that the user changes
-        # in config.py
+        # this holds configuration data that the user changes in
+        # config.py
         self._configuration = config
 
         # this holds HTTP/CGI oriented data specific to the request
@@ -532,9 +535,9 @@ class Request(object):
         else:
             self._data = data
 
-        # this holds the input stream.
-        # initialized for dynamic rendering in Pyblosxom.run.
-        # for static rendering there is no input stream.
+        # this holds the input stream.  initialized for dynamic
+        # rendering in Pyblosxom.run.  for static rendering there is
+        # no input stream.
         self._in = StringIO()
 
         # copy methods to the Request object.
@@ -555,8 +558,9 @@ class Request(object):
 
     def __iter__(self):
         """
-        Can't copy the __iter__ method over from the StringIO instance cause
-        iter looks for the method in the class instead of the instance.
+        Can't copy the __iter__ method over from the StringIO instance
+        cause iter looks for the method in the class instead of the
+        instance.
 
         See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
         """
@@ -564,9 +568,9 @@ class Request(object):
 
     def buffer_input_stream(self):
         """
-        Buffer the input stream in a StringIO instance.
-        This is done to have a known/consistent way of accessing incomming
-        data.  For example the input stream passed by mod_python does not
+        Buffer the input stream in a StringIO instance.  This is done
+        to have a known/consistent way of accessing incomming data.
+        For example the input stream passed by mod_python does not
         offer the same functionallity as ``sys.stdin``.
         """
         # TODO: tests on memory consumption when uploading huge files
@@ -589,12 +593,16 @@ class Request(object):
                 self._in.seek(0)
 
     def set_response(self, response):
+        """Sets the Response object.
+        """
         self._response = response
         # for backwards compatibility
         self.getConfiguration()['stdoutput'] = response
     setResponse = set_response
 
     def get_response(self):
+        """Returns the Response for this request.
+        """
         return self._response
     getResponse = get_response
 
@@ -620,7 +628,8 @@ class Request(object):
 
     def get_configuration(self):
         """Returns the *actual* configuration dict.  The configuration
-        dict holds values that the user sets in their ``config.py`` file.
+        dict holds values that the user sets in their ``config.py``
+        file.
 
         Modifying the contents of the dict will affect all downstream
         processing.
@@ -629,8 +638,8 @@ class Request(object):
     getConfiguration = get_configuration
 
     def get_http(self):
-        """Returns the *actual* http dict.   Holds HTTP/CGI data derived
-        from the environment of execution.
+        """Returns the *actual* http dict.  Holds HTTP/CGI data
+        derived from the environment of execution.
 
         Modifying the contents of the dict will affect all downstream
         processing.
@@ -639,8 +648,8 @@ class Request(object):
     getHttp = get_http
 
     def get_data(self):
-        """Returns the *actual* data dict.   Holds run-time data which is
-        created and transformed by pyblosxom during execution.
+        """Returns the *actual* data dict.  Holds run-time data which
+        is created and transformed by pyblosxom during execution.
 
         Modifying the contents of the dict will affect all downstream
         processing.
@@ -648,31 +657,25 @@ class Request(object):
         return self._data
     getData = get_data
 
-    def _populatedict(self, currdict, newdict):
-        """Internal helper method for populating an existing dict
-        (``curdict``) with data from the new dict (``newdict``).
-        """
-        currdict.update(newdict)
-
     def add_http(self, d):
         """Takes in a dict and adds/overrides values in the existing
         http dict with the new values.
         """
-        self._populatedict(self._http, d)
+        self._http.update(d)
     addHttp = add_http
 
     def add_data(self, d):
         """Takes in a dict and adds/overrides values in the existing
         data dict with the new values.
         """
-        self._populatedict(self._data, d)
+        self._data.update(d)
     addData = add_data
 
     def add_configuration(self, newdict):
         """Takes in a dict and adds/overrides values in the existing
         configuration dict with the new values.
         """
-        self._populatedict(self._configuration, newdict)
+        self._configuration.update(newdict)
     addConfiguration = add_configuration
 
     def __getattr__(self, name):
@@ -717,11 +720,12 @@ class Response(object):
         self.writelines = self._out.writelines
 
     def __iter__(self):
-        """Can't copy the ``__iter__`` method over from the ``StringIO``
-        instance because iter looks for the method in the class instead
-        of the instance.
+        """Can't copy the ``__iter__`` method over from the
+        ``StringIO`` instance because iter looks for the method in the
+        class instead of the instance.
 
-        See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
+        See
+        http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252151
         """
         return self._out
 
@@ -743,12 +747,12 @@ class Response(object):
         return self.status
 
     def add_header(self, key, value):
-        """Populates the HTTP header with lines of text.
-        Sets the status code on this response object if the given argument
-        list containes a 'Status' header.
+        """Populates the HTTP header with lines of text.  Sets the
+        status code on this response object if the given argument list
+        containes a 'Status' header.
 
         Example:
-        
+
         >>> resp.add_header("Content-type", "text/plain")
         >>> resp.add_header("Content-Length", "10500")
 
@@ -774,8 +778,8 @@ class Response(object):
 
         .. note::
 
-            This prints the headers and then the ``\\n\\n`` that separates
-            headers from the body.
+            This prints the headers and then the ``\\n\\n`` that
+            separates headers from the body.
 
         :Parameters:
            out : file-like object
@@ -807,8 +811,8 @@ class Response(object):
 def blosxom_handler(request):
     """This is the default blosxom handler.
 
-    It calls the renderer callback to get a renderer.  If there is
-    no renderer, it uses the blosxom renderer.
+    It calls the renderer callback to get a renderer.  If there is no
+    renderer, it uses the blosxom renderer.
 
     It calls the pathinfo callback to process the path_info http
     variable.
@@ -826,9 +830,9 @@ def blosxom_handler(request):
     config = request.getConfiguration()
     data = request.getData()
 
-    # go through the renderer callback to see if anyone else
-    # wants to render.  this renderer gets stored in the data dict
-    # for downstream processing.
+    # go through the renderer callback to see if anyone else wants to
+    # render.  this renderer gets stored in the data dict for
+    # downstream processing.
     rend = tools.run_callback('renderer',
                               {'request': request},
                               donefunc = lambda x: x != None,
@@ -857,13 +861,14 @@ def blosxom_handler(request):
                        defaultfunc=blosxom_process_path_info)
 
     # call the filelist callback to generate a list of entries
-    data["entry_list"] = tools.run_callback("filelist",
-                                            {"request": request},
-                                            donefunc=lambda x:x != None,
-                                            defaultfunc=blosxom_file_list_handler)
+    data["entry_list"] = tools.run_callback(
+        "filelist",
+        {"request": request},
+        donefunc=lambda x:x != None,
+        defaultfunc=blosxom_file_list_handler)
 
-    # figure out the blog-level mtime which is the mtime of the head of
-    # the entry_list
+    # figure out the blog-level mtime which is the mtime of the head
+    # of the entry_list
     entry_list = data["entry_list"]
     if isinstance(entry_list, list) and len(entry_list) > 0:
         mtime = entry_list[0].get("mtime", time.time())
@@ -886,9 +891,9 @@ def blosxom_handler(request):
     # set the locale back
     locale.setlocale(locale.LC_ALL, loc)
 
-    # we pass the request with the entry_list through the prepare callback
-    # giving everyone a chance to transform the data.  the request is
-    # modified in place.
+    # we pass the request with the entry_list through the prepare
+    # callback giving everyone a chance to transform the data.  the
+    # request is modified in place.
     tools.run_callback("prepare", {"request": request})
 
     # now we pass the entry_list through the renderer
@@ -941,48 +946,47 @@ def blosxom_entry_parser(filename, request):
     """
     config = request.getConfiguration()
 
-    entryData = {}
+    entry_data = {}
 
     f = open(filename, "r")
     lines = f.readlines()
     f.close()
 
-    # the file has nothing in it...  so we're going to return
-    # a blank entry data object.
+    # the file has nothing in it...  so we're going to return a blank
+    # entry data object.
     if len(lines) == 0:
         return {"title": "", "body": ""}
 
-    # NOTE: you can probably use the next bunch of lines verbatim
-    # for all entryparser plugins.  this pulls the first line off as
-    # the title, the next bunch of lines that start with # as
-    # metadata lines, and then everything after that is the body
-    # of the entry.
+    # NOTE: you can probably use the next bunch of lines verbatim for
+    # all entryparser plugins.  this pulls the first line off as the
+    # title, the next bunch of lines that start with # as metadata
+    # lines, and then everything after that is the body of the entry.
     title = lines.pop(0).strip()
-    entryData['title'] = title
+    entry_data['title'] = title
 
     # absorb meta data lines which begin with a #
     while lines and lines[0].startswith("#"):
         meta = lines.pop(0)
         meta = meta[1:].strip()     # remove the hash
         meta = meta.split(" ", 1)
-        entryData[meta[0].strip()] = meta[1].strip()
+        entry_data[meta[0].strip()] = meta[1].strip()
 
     # Call the preformat function
-    args = {'parser': entryData.get('parser', config.get('parser', 'plain')),
+    args = {'parser': entry_data.get('parser', config.get('parser', 'plain')),
             'story': lines,
             'request': request}
     otmp = tools.run_callback('preformat',
                               args,
                               donefunc = lambda x:x != None,
                               defaultfunc = lambda x: ''.join(x['story']))
-    entryData['body'] = otmp
+    entry_data['body'] = otmp
 
     # Call the postformat callbacks
     tools.run_callback('postformat',
                       {'request': request,
-                       'entry_data': entryData})
+                       'entry_data': entry_data})
 
-    return entryData
+    return entry_data
 
 def blosxom_file_list_handler(args):
     """This is the default handler for getting entries.  It takes the
@@ -1010,11 +1014,12 @@ def blosxom_file_list_handler(args):
 
     entrylist = [FileEntry(request, e, data["root_datadir"]) for e in filelist]
 
-    # if we're looking at a set of archives, remove all the entries that
-    # aren't in the archive
+    # if we're looking at a set of archives, remove all the entries
+    # that aren't in the archive
     if data.get("pi_yr", ""):
+        tmp_pi_mo = data.get("pi_mo", "")
         datestr = "%s%s%s" % (data.get("pi_yr", ""),
-                              tools.month2num.get(data.get("pi_mo", ""), data.get("pi_mo", "")),
+                              tools.month2num.get(tmp_pi_mo, tmp_pi_mo),
                               data.get("pi_da", ""))
         entrylist = [x for x in entrylist
                      if time.strftime("%Y%m%d%H%M%S", x["timetuple"]).startswith(datestr)]
@@ -1024,8 +1029,9 @@ def blosxom_file_list_handler(args):
     entrylist.reverse()
     entrylist = [e[1] for e in entrylist]
 
+    args = {"request": request, "entry_list": entrylist}    
     entrylist = tools.run_callback("truncatelist",
-                                   {"request": request, "entry_list": entrylist},
+                                   args,
                                    donefunc=lambda x: x != None,
                                    defaultfunc=blosxom_truncate_list_handler)
 
@@ -1077,10 +1083,10 @@ def blosxom_process_path_info(args):
 
     form = request.getForm()
 
-    # figure out which flavour to use.  the flavour is determined
-    # by looking at the "flav" post-data variable, the "flav"
-    # query string variable, the "default_flavour" setting in the
-    # config.py file, or "html"
+    # figure out which flavour to use.  the flavour is determined by
+    # looking at the "flav" post-data variable, the "flav" query
+    # string variable, the "default_flavour" setting in the config.py
+    # file, or "html"
     flav = config.get("default_flavour", "html")
     if form.has_key("flav"):
         flav = form["flav"].value
@@ -1097,12 +1103,13 @@ def blosxom_process_path_info(args):
 
     data["pi_bl"] = path_info
 
-    # first we check to see if this is a request for an index and we can pluck
-    # the extension (which is certainly a flavour) right off.
+    # first we check to see if this is a request for an index and we
+    # can pluck the extension (which is certainly a flavour) right
+    # off.
     newpath, ext = os.path.splitext(path_info)
     if newpath.endswith("/index") and ext:
-        # there is a flavour-like thing, so that's our new flavour
-        # and we adjust the path_info to the new filename
+        # there is a flavour-like thing, so that's our new flavour and
+        # we adjust the path_info to the new filename
         data["flavour"] = ext[1:]
         path_info = newpath
 
@@ -1133,15 +1140,16 @@ def blosxom_process_path_info(args):
 
         ext = tools.what_ext(data["extensions"].keys(), absolute_path)
         if not ext:
-            # it's possible we didn't find the file because it's got a flavour
-            # thing at the end--so try removing it and checking again.
+            # it's possible we didn't find the file because it's got a
+            # flavour thing at the end--so try removing it and
+            # checking again.
             newpath, flav = os.path.splitext(absolute_path)
             if flav:
                 ext = tools.what_ext(data["extensions"].keys(), newpath)
                 if ext:
-                    # there is a flavour-like thing, so that's our new flavour
-                    # and we adjust the absolute_path and path_info to the new
-                    # filename
+                    # there is a flavour-like thing, so that's our new
+                    # flavour and we adjust the absolute_path and
+                    # path_info to the new filename
                     data["flavour"] = flav[1:]
                     absolute_path = newpath
                     path_info, flav = os.path.splitext("/".join(path_info))
@@ -1230,6 +1238,9 @@ def blosxom_process_path_info(args):
         data["truncate"] = False
 
 def run_pyblosxom():
+    """Executes PyBlosxom either as a commandline script or CGI
+    script.
+    """
     from config import py as cfg
     env = {}
 
@@ -1248,9 +1259,9 @@ def run_pyblosxom():
     env['wsgi.input'] = sys.stdin
     env['wsgi.errors'] = sys.stderr
 
-    # figure out what the protocol is for the wsgi.url_scheme property.
-    # we look at the base_url first and if there's nothing set there,
-    # we look at environ.
+    # figure out what the protocol is for the wsgi.url_scheme
+    # property.  we look at the base_url first and if there's nothing
+    # set there, we look at environ.
     if 'base_url' in cfg:
         env['wsgi.url_scheme'] = cfg['base_url'][:cfg['base_url'].find("://")]
 
@@ -1264,7 +1275,6 @@ def run_pyblosxom():
     try:
         # try running as a WSGI-CGI
         from wsgiref.handlers import CGIHandler
-        from Pyblosxom.pyblosxom import PyBlosxomWSGIApp
         CGIHandler().run(PyBlosxomWSGIApp())
 
     except ImportError:

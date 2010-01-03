@@ -15,7 +15,7 @@ import os
 import os.path
 import sys
 import textwrap
-from optparse import OptionParser, OptionGroup
+from optparse import OptionParser
 
 from Pyblosxom.pyblosxom import VERSION_DATE, PyBlosxom
 from Pyblosxom.tools import run_callback
@@ -37,10 +37,12 @@ def pwrap(s):
     print starter + linesep.join(textwrap.wrap(s, 72))
 
 def build_pyblosxom():
+    """Imports config.py and builds an empty PyBlosxom object.
+    """
     pwrap("Trying to import the config module....")
     try:
         from config import py as cfg
-    except:
+    except StandardError:
         h, t = os.path.split(sys.argv[0])
         scriptname = t or h
 
@@ -91,7 +93,7 @@ def test_installation(command, argv):
           the request object
     """
     parser = build_parser("%prog test [options]")
-    (options, args) = parser.parse_args()
+    parser.parse_args()
 
     p = build_pyblosxom()
     if not p:
@@ -146,8 +148,8 @@ def test_installation(command, argv):
     if len(plugin_utils.plugins) == 0:
         pwrap("- There are no plugins installed.")
     else:
-        pwrap("- This goes through your plugins and asks each of them to verify "
-              "configuration and installation.")
+        pwrap("- This goes through your plugins and asks each of them to "
+              "verify configuration and installation.")
         pwrap("")
         pwrap("----")
         for mem in plugin_utils.plugins:
@@ -161,7 +163,7 @@ def test_installation(command, argv):
                         pwrap("PASS")
                     else:
                         pwrap("FAIL")
-                except Exception, e:
+                except StandardError:
                     pwrap("FAIL: Exception thrown:")
                     traceback.print_exc(file=sys.stdout)
 
@@ -204,17 +206,17 @@ def create_blog(command, argv):
     verbose = options.verbose
 
     if os.path.isfile(d) or os.path.isdir(d):
-        print "Error: Cannot create '%s'--something is in the way." % d
+        pwrap("ERROR: Cannot create '%s'--something is in the way." % d)
         return 0
 
-    def mkdir(d):
+    def _mkdir(d):
         if verbose:
             print "Creating '%s'..." % d
         os.makedirs(d)
 
-    mkdir(d)
-    mkdir(os.path.join(d, "entries"))
-    mkdir(os.path.join(d, "plugins"))
+    _mkdir(d)
+    _mkdir(os.path.join(d, "entries"))
+    _mkdir(os.path.join(d, "plugins"))
 
     source = os.path.join(os.path.dirname(__file__), "flavours")
 
@@ -239,7 +241,7 @@ def create_blog(command, argv):
             fpout.close()
             fpin.close()
 
-    def copyfile(frompath, topath, fn, fix=False):
+    def _copyfile(frompath, topath, fn, fix=False):
         if verbose:
             print "Creating file '%s'..." % os.path.join(topath, fn)
         fp = open(os.path.join(frompath, fn), "r")
@@ -262,9 +264,9 @@ def create_blog(command, argv):
 
     source = os.path.join(os.path.dirname(__file__), "data")
 
-    copyfile(source, d, "config.py", fix=True)
-    copyfile(source, d, "blog.ini", fix=True)
-    copyfile(source, d, "pyblosxom.cgi", fix=True)
+    _copyfile(source, d, "config.py", fix=True)
+    _copyfile(source, d, "blog.ini", fix=True)
+    _copyfile(source, d, "pyblosxom.cgi", fix=True)
 
     datadir = os.path.join(d, "entries")
     firstpost = os.path.join(datadir, "firstpost.txt")
@@ -279,11 +281,14 @@ def create_blog(command, argv):
 """)
     fp.close()
 
-    if verbose: print "Done!"
+    if verbose:
+        print "Done!"
     return 0
 
 def render_url(command, argv):
-    parser = build_parser("%prog renderurl [options] <url>")
+    """Renders a single url.
+    """
+    parser = build_parser("%prog renderurl [options] <url> [<url>...]")
 
     parser.add_option("--headers",
                       action="store_true", dest="headers", default=False,
@@ -292,15 +297,18 @@ def render_url(command, argv):
 
     (options, args) = parser.parse_args()
 
-    if args:
+    if not args:
+        parser.print_help()
+        return 0
+
+    for url in args:
         p = build_pyblosxom()
 
         base_url = p.get_request().config.get("base_url", "")
         if url.startswith(base_url):
             url = url[len(base_url):]
-        return p.run_render_one(url, options.headers)
+        p.run_render_one(url, options.headers)
 
-    parser.print_help()
     return 0
 
 def run_static_renderer(command, argv):
@@ -320,8 +328,10 @@ def run_static_renderer(command, argv):
 
 DEFAULT_HANDLERS = (
     ("create", create_blog, "Creates directory structure for a new blog."),
-    ("test", test_installation, "Tests installation and configuration for a blog."),
-    ("staticrender", run_static_renderer, "Statically renders your blog into an HTML site."),
+    ("test", test_installation, 
+     "Tests installation and configuration for a blog."),
+    ("staticrender", run_static_renderer, 
+     "Statically renders your blog into an HTML site."),
     ("renderurl", render_url, "Renders a single url of your blog.")
     )
 
@@ -362,7 +372,7 @@ def command_line_handler(scriptname, argv):
     for i, mem in enumerate(argv):
         if mem.startswith("--config"):
             if "=" in mem:
-                key, configdir = mem.split("=")
+                _, configdir = mem.split("=")
                 break
             else:
                 try:
@@ -378,12 +388,14 @@ def command_line_handler(scriptname, argv):
             configdir = configdir[0:-9]
 
         if not os.path.exists(configdir):
-            print "Error: '%s' does not exist--cannot find config.py file." % configdir
-            print "Exiting."
+            pwrap("ERROR: '%s' does not exist--cannot find config.py "
+                  "file." % configdir)
+            pwrap("Exiting.")
             return 0
         if not "config.py" in os.listdir(configdir):
-            print "Error: config.py not in '%s'.  Cannot find config.py file." % configdir
-            print "Exiting."
+            pwrap("Error: config.py not in '%s'.  Cannot find config.py "
+                  "file." % configdir)
+            pwrap("Exiting.")
             return 0
 
         sys.path.append(configdir)
@@ -394,9 +406,9 @@ def command_line_handler(scriptname, argv):
     if len(argv) == 1 or (len(argv) == 2 and argv[1] in ("-h", "--help")):
         parser = build_parser("[command]")
         parser.print_help()
-        print
+        print ""
         print "Commands:"
-        for command_str, command_func, command_help in handlers:
+        for command_str, _, command_help in handlers:
             print "    %-14s %s" % (command_str, command_help)
         return 0
 
@@ -408,7 +420,7 @@ def command_line_handler(scriptname, argv):
         print "Command '%s' does not exist." % argv[1]
         print
         print "Commands:"
-        for command_str, command_func, command_help in handlers:
+        for command_str, _, command_help in handlers:
             print "    %-14s %s" % (command_str, command_help)
         return 0
 
