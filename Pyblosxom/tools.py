@@ -118,6 +118,15 @@ def initialize(config):
     global MONTHS
     MONTHS = num2month.keys() + month2num.keys()
 
+def deprecated_function(func):
+    def _deprecated_function(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    _deprecated_function.__doc__ = ("DEPRECATED.  Use %s instead." % 
+                                    func.__name__)
+    _deprecated_function.__dict__.update(func.__dict__)
+    return _deprecated_function
+
 class ConfigSyntaxErrorException(Exception):
     """Thrown when ``convert_configini_values`` encounters a syntax
     error.
@@ -519,7 +528,7 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     return _walk_internal(root, recurse, pattern, ignorere, return_folders)
 
 # We do this for backwards compatibility reasons.
-Walk = walk
+Walk = deprecated_function(walk)
 
 def _walk_internal(root, recurse, pattern, ignorere, return_folders):
     """
@@ -691,7 +700,7 @@ def generate_rand_str(minlen=5, maxlen=10):
         x += 1
     return "".join(randstr)
 
-generateRandStr = generate_rand_str
+generateRandStr = deprecated_function(generate_rand_str)
 
 def run_callback(chain, input,
                  mappingfunc=lambda x, y: x,
@@ -775,6 +784,11 @@ def run_callback(chain, input,
 
 def addcr(text):
     """Adds a cr if it needs one.
+
+    >>> addrc("foo")
+    foo\\n
+    >>> addcr("foo\\n")
+    foo\\n
     """
     if not text.endswith("\n"):
         return text + "\n"
@@ -1071,7 +1085,7 @@ def get_logger(log_file=None):
 
     return logger
 
-getLogger = get_logger
+getLogger = deprecated_function(get_logger)
 
 def log_exception(log_file=None):
     """

@@ -131,13 +131,13 @@ class PyBlosxom:
         """Returns the Request object for this PyBlosxom instance.
         """
         return self._request
-    getRequest = get_request
+    getRequest = tools.deprecated_function(get_request)
 
     def get_response(self):
         """Returns the Response object associated with this Request.
         """
         return self._request.getResponse()
-    getResponse = get_response
+    getResponse = tools.deprecated_function(get_response)
 
     def run(self, static=False):
         """This is the main loop for PyBlosxom.  This method will run
@@ -206,7 +206,7 @@ class PyBlosxom:
         tools.run_callback("end", {'request': self._request})
 
         return handled
-    runCallback = run_callback
+    runCallback = tools.deprecated_function(run_callback)
 
     def run_render_one(self, url, headers):
         """Renders a single page from the blog.
@@ -598,13 +598,13 @@ class Request(object):
         self._response = response
         # for backwards compatibility
         self.getConfiguration()['stdoutput'] = response
-    setResponse = set_response
+    setResponse = tools.deprecated_function(set_response)
 
     def get_response(self):
         """Returns the Response for this request.
         """
         return self._response
-    getResponse = get_response
+    getResponse = tools.deprecated_function(get_response)
 
     def _getform(self):
         form = cgi.FieldStorage(fp=self._in,
@@ -624,7 +624,7 @@ class Request(object):
         if self._form == None:
             self._form = self._getform()
         return self._form
-    getForm = get_form
+    getForm = tools.deprecated_function(get_form)
 
     def get_configuration(self):
         """Returns the *actual* configuration dict.  The configuration
@@ -635,7 +635,7 @@ class Request(object):
         processing.
         """
         return self._configuration
-    getConfiguration = get_configuration
+    getConfiguration = tools.deprecated_function(get_configuration)
 
     def get_http(self):
         """Returns the *actual* http dict.  Holds HTTP/CGI data
@@ -645,7 +645,7 @@ class Request(object):
         processing.
         """
         return self._http
-    getHttp = get_http
+    getHttp = tools.deprecated_function(get_http)
 
     def get_data(self):
         """Returns the *actual* data dict.  Holds run-time data which
@@ -655,28 +655,28 @@ class Request(object):
         processing.
         """
         return self._data
-    getData = get_data
+    getData = tools.deprecated_function(get_data)
 
     def add_http(self, d):
         """Takes in a dict and adds/overrides values in the existing
         http dict with the new values.
         """
         self._http.update(d)
-    addHttp = add_http
+    addHttp = tools.deprecated_function(add_http)
 
     def add_data(self, d):
         """Takes in a dict and adds/overrides values in the existing
         data dict with the new values.
         """
         self._data.update(d)
-    addData = add_data
+    addData = tools.deprecated_function(add_data)
 
     def add_configuration(self, newdict):
         """Takes in a dict and adds/overrides values in the existing
         configuration dict with the new values.
         """
         self._configuration.update(newdict)
-    addConfiguration = add_configuration
+    addConfiguration = tools.deprecated_function(add_configuration)
 
     def __getattr__(self, name):
         if name in ["config", "configuration", "conf"]:
@@ -737,9 +737,11 @@ class Response(object):
 
         >>> resp.set_status("200 OK")
         >>> resp.set_status("404 Not Found")
+
+        :param status: the status string.
         """
         self.status = status
-    setStatus = set_status
+    setStatus = tools.deprecated_function(set_status)
 
     def get_status(self):
         """Returns the status code and message of this response.
@@ -767,23 +769,23 @@ class Response(object):
             self.setStatus(str(value))
         else:
             self.headers.update({key: str(value)})
-    addHeader = add_header
+    addHeader = tools.deprecated_function(add_header)
 
     def get_headers(self):
+        """Returns the headers.
+        """
         return self.headers
-    getHeaders = get_headers
+    getHeaders = tools.deprecated_function(get_headers)
 
     def send_headers(self, out):
         """Send HTTP Headers to the given output stream.
 
-        .. note::
+        .. Note::
 
             This prints the headers and then the ``\\n\\n`` that
             separates headers from the body.
 
-        :Parameters:
-           out : file-like object
-              The file like object to print headers to.
+        :param out: The file-like object to print headers to.
         """
         out.write("Status: %s\n" % self.status)
         out.write('\n'.join(['%s: %s' % (hkey, self.headers[hkey])
