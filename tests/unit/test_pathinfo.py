@@ -13,10 +13,11 @@ class Testpathinfo(UnitTestBase):
 
     def _basic_test(self, pathinfo, expected, cfg=None, http=None, data=None):
         _http = { "PATH_INFO": pathinfo }
-        if http: _http.update(http)
+        if http:
+            _http.update(http)
         req = self._build_request(cfg=cfg, http=_http, data=data)
         blosxom_process_path_info(args={"request": req})
-        print repr(expected), repr(req.data)
+        # print repr(expected), repr(req.data)
         self.cmpdict( expected, req.data )
  
     def test_root(self):
