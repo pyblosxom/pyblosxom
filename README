@@ -7,9 +7,8 @@ Summary
 
 PyBlosxom is a file-based blogging system in the spirit of Blosxom.
 PyBlosxom uses directory tree to represent the category hierarchy.
-All entries in a PyBlosxom blog are text files where the first
-line is the title of the blog entry and the rest is the body of
-the entry.
+All entries in a PyBlosxom blog are text files where the first line is
+the title of the blog entry and the rest is the body of the entry.
 
 PyBlosxom isn't for everyone.
 
@@ -30,8 +29,7 @@ How to install PyBlosxom
 ========================
 
 Look at the ``install_*.txt`` documents in the ``docs/`` directory.
-Pick the one that matches the kind of installation you're looking
-for.
+Pick the one that matches the kind of installation you're looking for.
 
 If you're upgrading from a previous PyBlosxom version, read
 ``CHANGELOG`` which will describe the differences between PyBlosxom
@@ -62,7 +60,7 @@ Some of us hang out on IRC on Freenode in ``#pyblosxom``.
 How to report bugs, send in patches, fix problems
 =================================================
 
-We really appreciate people helping out.  
+We really appreciate people helping out.
 
 If you discover a problem with PyBlosxom, please log it in our
 bug-tracker_.
@@ -88,5 +86,5 @@ To run the tests, execute::
    nosetests --verbose --include unit
    nosetests --verbose --include functional
 
-If you would like to add tests to the test suite, please do and send us
-patches!
+If you would like to add tests to the test suite, please do and send
+us patches!

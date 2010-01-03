@@ -2,8 +2,8 @@
  THANKS
 ========
 
-Over the years, PyBlosxom has had many contributors who have helped make
-the project what it is today (in no particular order):
+Over the years, PyBlosxom has had many contributors who have helped
+make the project what it is today (in no particular order):
 
 Martin Kraft
 Joerg Wendland
@@ -34,5 +34,5 @@ Andrew Kuchling
 
 
 If we have forgotten your name from this list, we apologize profusely.
-Please send an email to pyblosxom-devel@lists.sourceforge.net so that we 
-can correct the mistake.
+Please send an email to pyblosxom-devel@lists.sourceforge.net so that
+we can correct the mistake.

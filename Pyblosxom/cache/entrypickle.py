@@ -1,10 +1,11 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# Copyright (c) 2003-2006 Wari Wahab
+# Copyright (c) 2003-2010 Will Kahn-Greene
 #
-# PyBlosxom is distributed under the MIT license.  See the file LICENSE
-# for distribution details.
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
 #######################################################################
 """
 This cache driver creates pickled data as cache in a directory.

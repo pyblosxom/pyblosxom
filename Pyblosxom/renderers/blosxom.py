@@ -1,10 +1,11 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
-#
-# PyBlosxom is distributed under the MIT license.  See the file LICENSE
-# for distribution details.
+# Copyright (c) 2003-2006 Wari Wahab
+# Copyright (c) 2003-2010 Will Kahn-Greene
+# 
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
 #######################################################################
 """
 This is the default blosxom renderer.  It tries to match the behavior
@@ -83,7 +84,8 @@ def get_flavour_from_dir(path, taste):
             name, ext = os.path.splitext(mem)
             if ext not in ["." + taste, ""]:
                 continue
-            template_d[name] = os.path.join(path + os.sep + taste + ".flav", mem)
+            template_d[name] = os.path.join(path + os.sep + taste + ".flav",
+                                            mem)
         return template_d
 
     # now we check the directory itself for flavour templates
@@ -117,13 +119,13 @@ class BlosxomRenderer(RendererBase):
 
     def _getflavour(self, taste='html'):
         """
-        This retrieves all the template files for a given flavour taste.
-        This will first pull the templates for the default flavour
-        of this taste if there are any.  Then it looks at EITHER
-        the configured datadir OR the flavourdir (if configured).  It'll
-        go through directories overriding the template files it has
-        already picked up descending the category path of the PyBlosxom
-        request.
+        This retrieves all the template files for a given flavour
+        taste.  This will first pull the templates for the default
+        flavour of this taste if there are any.  Then it looks at
+        EITHER the configured datadir OR the flavourdir (if
+        configured).  It'll go through directories overriding the
+        template files it has already picked up descending the
+        category path of the PyBlosxom request.
 
         For example, if the user requested the "html" flavour and is
         looking at an entry in the category "dev/pyblosxom", then
@@ -239,13 +241,15 @@ class BlosxomRenderer(RendererBase):
                         if "date_foot" in self.flavour:
                             vars = self.getParseVars()
                             vars.update({"date": current_date})
-                            outputbuffer.append(self.renderTemplate(vars, "date_foot"))
+                            outputbuffer.append(
+                                self.renderTemplate(vars, "date_foot"))
 
                         if "date_head" in self.flavour:
                             current_date = entry["date"]
                             vars = self.getParseVars()
                             vars.update({"date": current_date})
-                            outputbuffer.append(self.renderTemplate(vars, "date_head"))
+                            outputbuffer.append(
+                                self.renderTemplate(vars, "date_head"))
 
                     if data['content-type'] == 'text/plain':
                         s = tools.Stripper()
@@ -257,7 +261,8 @@ class BlosxomRenderer(RendererBase):
                     vars = self.getParseVars()
                     vars.update(entry)
 
-                    outputbuffer.append(self.renderTemplate(vars, "story", override=1))
+                    outputbuffer.append(
+                        self.renderTemplate(vars, "story", override=1))
 
                     args = {"entry": vars, "template": ""}
                     args = self._run_callback("story_end", args)
@@ -294,7 +299,8 @@ class BlosxomRenderer(RendererBase):
                 self.flavour = self._getflavour("error")
             except NoSuchFlavourException, nsfe2:
                 self.flavour = get_included_flavour("error")
-                error_msg = error_msg + "  And your error flavour doesn't exist."
+                error_msg = (error_msg +
+                             "  And your error flavour doesn't exist.")
 
             resp = self._request.getResponse()
             resp.set_status("404 Not Found")
@@ -326,8 +332,8 @@ class BlosxomRenderer(RendererBase):
 
     def renderTemplate(self, entry, template_name, override=0):
         """
-        Find the flavour template for template_name, run any blosxom callbacks,
-        substitute entry into it and render the template.
+        Find the flavour template for template_name, run any blosxom
+        callbacks, substitute entry into it and render the template.
 
         If the entry has a "template_name" property and override is 1
         (this happens in the story template), then we'll use that
@@ -345,9 +351,9 @@ class BlosxomRenderer(RendererBase):
         """
         template = ""
         if override == 1:
-            # here we do a quick override...  if the entry has a template
-            # field we use that instead of the template_name argument
-            # passed in.
+            # here we do a quick override...  if the entry has a
+            # template field we use that instead of the template_name
+            # argument passed in.
             actual_template_name = entry.get("template_name", template_name)
             template = self.flavour.get(actual_template_name, '')
 
@@ -366,12 +372,12 @@ class BlosxomRenderer(RendererBase):
 
     def _run_callback(self, chain, input):
         """
-        Makes calling blosxom callbacks a bit easier since they all have the
-        same mechanics.  This function merely calls run_callback with
-        the arguments given and a mappingfunc.
+        Makes calling blosxom callbacks a bit easier since they all
+        have the same mechanics.  This function merely calls
+        run_callback with the arguments given and a mappingfunc.
 
-        The mappingfunc copies the "template" value from the output to the
-        input for the next function.
+        The mappingfunc copies the "template" value from the output to
+        the input for the next function.
 
         Refer to run_callback for more details.
         """

@@ -63,8 +63,9 @@ Pertinent to users:
 12. Reworked the command line for static rendering.  It now works like
     this::
 
-        pyblosxom-cmd --config <path/to/config/file> \
-                      staticrender [--incremenal]
+        pyblosxom-cmd staticrender \
+                      [--config <path/to/config/file>] \
+                      [--incremenal]
 
     If the ``config.py`` file is in your ``PYTHONPATH``, then you can
     skip the ``--config <path/to/config/file>`` stuff.

@@ -1,19 +1,20 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# Copyright (c) 2003-2006 Wari Wahab
+# Copyright (c) 2003-2010 Will Kahn-Greene
 #
-# PyBlosxom is distributed under the MIT license.  See the file LICENSE
-# for distribution details.
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
 #######################################################################
 """
 This module contains FileEntry class which is used to retrieve entries
-from a file system.  Since pulling data from the file system and parsing
-it is expensive (especially when you have 100s of entries) we delay
-fetching data until it's demanded.
+from a file system.  Since pulling data from the file system and
+parsing it is expensive (especially when you have 100s of entries) we
+delay fetching data until it's demanded.
 
-The FileEntry calls EntryBase methods addToCache and getFromCache
-to handle caching.
+The FileEntry calls EntryBase methods addToCache and getFromCache to
+handle caching.
 """
 
 import time

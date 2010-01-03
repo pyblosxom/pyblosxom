@@ -11,21 +11,22 @@
 Summary
 =======
 
-This document walks through upgrading PyBlosxom from a previous version.
+This document walks through upgrading PyBlosxom from a previous
+version.
 
 
 Before upgrading
 ================
 
-Check the notes on the web-site to make sure that you meet the minimum 
+Check the notes on the web-site to make sure that you meet the minimum
 requirements.
 
-To be safe, install PyBlosxom locally and test your blog configuration and 
-plugins to make sure everything works with the new version.
+To be safe, install PyBlosxom locally and test your blog configuration
+and plugins to make sure everything works with the new version.
 
-Make sure you read the ``CHANGELOG`` file which includes pointers to users
-and plugin developers regarding changes between older versions and newer
-versions.
+Make sure you read the ``CHANGELOG`` file which includes pointers to
+users and plugin developers regarding changes between older versions
+and newer versions.
 
 
 System-wide upgrade

@@ -12,9 +12,9 @@ mailing list or on IRC.  Information on both is on the website_.
 
 .. Note::
 
-    If you're testing PyBlosxom, use ``virtualenv`` and deploy
-    with Paste.  It'll save you a lot of time and it's easy to
-    clean up afterwards.
+    If you're testing PyBlosxom, use ``virtualenv`` and deploy with
+    Paste.  It'll save you a lot of time and it's easy to clean up
+    afterwards.
 
 
 Requirements
@@ -25,8 +25,8 @@ Minimally, PyBlosxom requires Python 2.3 to install.
 PyBlosxom is well supported on GNU/Linux, probably works on Mac OSX,
 and might work on Windows.
 
-PyBlosxom works with any web-server as a CGI application, works as
-a WSGI application, and might work in other contexts.
+PyBlosxom works with any web-server as a CGI application, works as a
+WSGI application, and might work in other contexts.
 
 
 Install
@@ -56,9 +56,9 @@ you use `virtualenv`_.
 Source install
 --------------
 
-You can download PyBlosxom from 
-http://sourceforge.net/project/showfiles.php?group_id=67445 .
-Extract the ``tar.gz`` file.
+You can download PyBlosxom from
+http://sourceforge.net/project/showfiles.php?group_id=67445 .  Extract
+the ``tar.gz`` file.
 
 Instructions for checking PyBlosxom out from SVN are at
 http://sourceforge.net/scm/?type=svn&group_id=67445 .  Generally,
@@ -96,8 +96,8 @@ post in the ``./blog/`` directory.
 Deploying
 =========
 
-There are a bunch of ways to deploy your blog.  See the chapters
-on deployment for documented options.
+There are a bunch of ways to deploy your blog.  See the chapters on
+deployment for documented options.
 
 
 Post-install
