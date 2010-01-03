@@ -50,7 +50,7 @@ def get_included_flavour(taste):
         template_d = {}
         for mem in template_files:
             name, ext = os.path.splitext(mem)
-            if ext not in ["." + taste, ""]:
+            if ext not in ["." + taste, ""] or name.startswith("."):
                 continue
             template_d[name] = os.path.join(path, mem)
         return template_d
