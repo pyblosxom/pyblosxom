@@ -1249,11 +1249,10 @@ def run_pyblosxom():
     if not "REQUEST_METHOD" in os.environ:
         from Pyblosxom.commandline import command_line_handler
 
-        args = sys.argv
-        if len(args) <= 1:
-            args.append("--test")
+        if len(sys.argv) <= 1:
+            sys.argv.append("test")
 
-        sys.exit(command_line_handler("pyblosxom.cgi", args))
+        sys.exit(command_line_handler("pyblosxom.cgi", sys.argv))
 
     # names taken from wsgi instead of inventing something new
     env['wsgi.input'] = sys.stdin
