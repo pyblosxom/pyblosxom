@@ -2,8 +2,8 @@
 Comments
 ========
 
-This chapter briefly walks you through installing the comments, trackback,
-pingback, and CommentAPI plugins.
+This chapter briefly walks you through installing the comments,
+trackback, pingback, and CommentAPI plugins.
 
 FIXME - September 27th, 2009 - I have no idea how accurate this is.
 
@@ -42,10 +42,9 @@ Requirements:
 
 After making sure you have the requirements, do the following:
 
-1. Copy ``contrib/plugins/comments/plugins/comments.py`` to 
-   your plugins directory.  Then add ``"comments"`` to the 
-   ``load_plugins`` property in your ``config.py`` 
-   file.
+1. Copy ``contrib/plugins/comments/plugins/comments.py`` to your
+   plugins directory.  Then add ``"comments"`` to the ``load_plugins``
+   property in your ``config.py`` file.
 
 2. Comments are stored in a directory tree which will parallel the
    data directory tree.  The comments themselves are stored as XML
@@ -62,7 +61,6 @@ After making sure you have the requirements, do the following:
    Set ``comment_ext`` to the change comment file extension.  The
    default file extension is ``cmt``.
 
-
 3. Copy the flavour files from the contrib/plugins/comments/flavours
    directory.  There are flavours for ``html`` and ``rss``. You should
    copy all the files to your data directory.
@@ -72,14 +70,12 @@ After making sure you have the requirements, do the following:
    single comment/trackback/pingback.  The ``comment-form`` template
    provides the form used to enter new comments.
 
-4. Edit the ``comment-story``,
-   ``comment``, and ``comment-form`` templates.
-   Variables that are available are:
+4. Edit the ``comment-story``, ``comment``, and ``comment-form``
+   templates.  Variables that are available are:
 
    Available in the ``story`` and ``comment-story`` templates:
 
    
-
    =============   ========================================================
    Template variables from comments.py available in story and comment-story
    ------------------------------------------------------------------------
@@ -141,15 +137,14 @@ your ``config.py`` file::
     py['comment_smtp_from']   - the address sending the notification
     py['comment_smtp_to']     - the address receiving the notification
 
-For example, this sends email through your MTA via SMTP connecting
-to localhost::
+For example, this sends email through your MTA via SMTP connecting to
+localhost::
 
     py['comment_smtp_server'] = "localhost"
     py['comment_smtp_from']   = "joe@joe.com"
     py['comment_smtp_to']     = "joe@joe.com"
 
-This sends email through your MTA via the command 
-``/usr/bin/mail``::
+This sends email through your MTA via the command ``/usr/bin/mail``::
 
     py['comment_mta_cmd']     = "/usr/bin/mail"
     py['comment_smtp_from']   = "joe@joe.com"
@@ -166,8 +161,8 @@ FIXME
 Writing comments plugin templates
 =================================
 
-This "diagram" shows which templates are responsible for what for rendering
-a single entry::
+This "diagram" shows which templates are responsible for what for
+rendering a single entry::
 
     <div class="news">           <- story.html
     <h2>$title</h2>               |
@@ -216,8 +211,7 @@ JavaScript to your ``comment-form`` template. (It's already included
 in the ``comment-form.html`` template that comes with the comments
 plugin.)
 
-First, add a ``comment-anchor`` tag to the beginning of the
-template::
+First, add a ``comment-anchor`` tag to the beginning of the template::
 
     <p id="comment-anchor" />
 
@@ -241,8 +235,8 @@ Next, add ``onclick`` handlers to the button ``input`` tags::
     <input value="Submit" name="submit" type="button" id="post"
            onclick="send_comment('post');" />
 
-Finally, include this ``script`` tag somewhere after the
-``form`` closing tag::
+Finally, include this ``script`` tag somewhere after the ``form``
+closing tag::
 
     <script type="text/javascript" src="/comments.js"></script>
 
@@ -483,7 +477,6 @@ Installing the CommentAPI
 
 FIXME - this text probably needs fixing.
 
-
 If you want to support `CommentAPI`_, copy
 ``contrib/plugins/comments/plugins/commentAPI.py`` to your plugins
 directory.  If you enable CommentAPI in your RSS feed (see below),
@@ -492,11 +485,9 @@ comment to a blog entry.
 
 .. _CommentAPI: http://wellformedweb.org/story/9
 
-You need to have ``comments.py`` installed in order for this 
-to work.
+You need to have ``comments.py`` installed in order for this to work.
 
-
-Then you must add the CommentAPI tags to your RSS 2.0 feed.  The best 
+Then you must add the CommentAPI tags to your RSS 2.0 feed.  The best
 way to do this is to add an XML namespace declaration to the rss
 element::
 
@@ -507,5 +498,5 @@ Then inside your RSS items you need to add a wfw:comment element::
     <wfw:comment>###commentAPI###/$file_path</wfw:comment>
     
 where ###commentAPI### is replaced by the URI that you mapped your
-CommentAPI.cgi to  At the moment, you need to map to a URI one level
+CommentAPI.cgi to At the moment, you need to map to a URI one level
 below the $base_url of the blog

@@ -12,6 +12,8 @@ This installation assumes you have some understanding of Python Paste.
 If this doesn't sound like you, then you can read up on Paste on
 the `Paste web-site`_.
 
+.. _Paste web-site: http://pythonpaste.org/
+
 
 Dependencies
 ============

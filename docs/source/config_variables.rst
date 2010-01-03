@@ -5,8 +5,8 @@ Variables in config.py
 Summary
 =======
 
-This is a list of configuration variables in ``config.py``.  This list is
-not comprehensive!
+This is a list of configuration variables in ``config.py``.  This list
+is not comprehensive!
 
 If you install any plugins, those plugins may ask you to set
 additional variables in your ``config.py`` file--those variables will
@@ -20,6 +20,14 @@ media files (JPEG images, GIF images, CSS, ...) into a directory on
 your server to be served by Apache and then set the variable
 ``$media_url`` to the directory with media files and use that in your
 templates.
+
+If there are variables that are listed here that aren't in your
+``config.py`` file, you can add them yourself.  The format is::
+
+    py["key"] = value
+
+where *key* is the configuration property name and *value* is the
+value.  If the *value* is a string, it must be enclosed in quotes.
 
 
 Configuration variables
@@ -97,7 +105,7 @@ you would set your codebase variable like this::
 datadir
 -------
 
-**REQUIRED**: YES
+**REQUIRED**: yes
 
 **DATATYPE**: string
 
@@ -129,7 +137,7 @@ this::
 depth
 -----
 
-**REQUIRED**: NO
+**REQUIRED**: no
 
 **DATATYPE**: integer
 
@@ -215,8 +223,6 @@ For example, the following will all use the "joy" flavour::
    http://joesmith.net/blog/movies/
    http://joesmith.net/blog/movies/supermanreturns
 
-
-----------------------------
 
 ignore_directories
 ------------------
@@ -364,7 +370,7 @@ valid encoding value?
 blog_language
 -------------
 
-**REQUIRED**: YES
+**REQUIRED**: yes
 
 **DATATYPE**: string
 
@@ -385,7 +391,7 @@ This gets used in the RSS flavours.
 blog_title
 ----------
 
-**REQUIRED**: YES
+**REQUIRED**: yes
 
 **DATATYPE**: string
 
@@ -399,11 +405,6 @@ For example, if Joe were writing a blog about cooking, he might title
 his blog::
 
    py["blog_title"] = "Joe's blog about cooking"
-
-
-
-
-----------------------------
 
 
 locale
@@ -467,7 +468,6 @@ If you were on Windows, then you might set it to::
    The webserver that is executing PyBlosxom must be able to write to
    the directory containing your ``pyblosxom.log`` file.
 
-----------------------------
 
 log_level
 ---------

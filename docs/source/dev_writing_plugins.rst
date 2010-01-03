@@ -161,102 +161,114 @@ script or the ``pyblosxom-cmd`` script::
 
 or::
 
-    % pyblosxom-cmd --config <path/to/config/file> test
+    $ ./pyblcmd_dev.sh test --config ./newblog/
     pyblosxom-cmd version 1.5 dev
-    Adding ./blog/ to sys.path....
+    Adding ./newblog/ to sys.path....
     Trying to import the config module....
-    == System information ==
-       pyblosxom:    1.5 dev
-       sys.version:  2.5.2 (r252:60911, Oct  5 2008, 19:24:49)  [GCC 4.3.2]
-       os.name:      posix
-       codebase:     /home/willg/pyblosxom/trunk/pyblosxom
+    System Information
+    ==================
+    
+    - pyblosxom:    1.5 dev
+    - sys.version:  2.6.4 (r264:75706, Dec  7 2009, 18:45:15)  [GCC 4.4.1]
+    - os.name:      posix
+    - codebase:     /home/willg/projects/pyblosxom/trunk/pyblosxom
 
-    == Checking config.py file ==
-       properties set: 18
-       datadir '/home/willg/working/testing/blog/entries' exists.
+    Checking config.py file
+    =======================
+    - properties set: 21
+    - datadir '/home/willg/projects/pyblosxom/testing/newblog/entries' exists.
+
+    Checking plugin configuration
+    =============================
     ....
 
 
 Prior to PyBlosxom 1.5, you would just execute the ``pyblosxom.cgi``
 script::
 
-   % ./pyblosxom.cgi
-   Trying to import the config module....
-   PyBlosxom version: 1.4.3-rc1 12/11/2007
-   Welcome to PyBlosxom's installation verification system.
-   ------
-   ]] printing diagnostics [[
-   pyblosxom:   1.4.3-rc1 12/11/2007
-   ....
+    % ./pyblosxom.cgi
+    Trying to import the config module....
+    PyBlosxom version: 1.4.3-rc1 12/11/2007
+    Welcome to PyBlosxom's installation verification system.
+    ------
+    ]] printing diagnostics [[
+    pyblosxom:   1.4.3-rc1 12/11/2007
+    ....
 
 
-This goes through and verifies the properties in the ``config.py`` file
-as best as it can.  It also prints out diagnostic information which is
-useful when things don't work.  It also loads and initializes all the
-plugins and asks them to verify their configurations as best they can.
+This goes through and verifies the properties in the ``config.py``
+file as best as it can.  It also prints out diagnostic information
+which is useful when things don't work.  It also loads and initializes
+all the plugins and asks them to verify their configurations as best
+they can.
 
-As a plugin developer, you should add a ``verify_installation`` function
-to your plugin module.  Something like this (taken from pycategories)::
+As a plugin developer, you should add a ``verify_installation``
+function to your plugin module.  Something like this (taken from
+pycategories)::
 
-   def verify_installation(request):
-       config = request.getConfiguration()
+    def verify_installation(request):
+        config = request.getConfiguration()
 
-       if not config.has_key("category_flavour"):
-           print "missing optional config property 'category_flavour' "
-           print "which allows you to specify the flavour for the category "
-           print "link.  refer to pycategory plugin documentation for more "
-           print "details."
-       return 1
+        if not config.has_key("category_flavour"):
+            print "missing optional config property 'category_flavour' "
+            print "which allows you to specify the flavour for the category "
+            print "link.  refer to pycategory plugin documentation for more "
+            print "details."
+        return 1
 
 
-This gives you (the plugin developer) the opportunity to walk the user 
-through configuring your highly complex, quantum-charged, turbo plugin 
-in small baby steps without having to hunt for where their logs might be.
+This gives you (the plugin developer) the opportunity to walk the user
+through configuring your highly complex, quantum-charged, turbo plugin
+in small baby steps without having to hunt for where their logs might
+be.
 
 So check the things you need to check, print out error messages
-(informative ones) using ``print``, and then return a 1 if the plugin 
+(informative ones) using ``print``, and then return a 1 if the plugin
 is configured correctly or a 0 if it's not configured correctly.
 
-Note: This is not a substitute for the user to read the installation 
-instructions.  It should be a really easy way to catch a lot of potential 
-problems without involving the web server's error logs and debugging 
-information being sent to a web-browser and things of that nature.
+.. Note::
+
+    This is not a substitute for the user to read the installation
+    instructions.  It should be a really easy way to catch a lot of
+    potential problems without involving the web server's error logs and
+    debugging information being sent to a web-browser and things of that
+    nature.
 
 Here's an example of ``verify_installation`` from Will's wbgpager
 plugin::
 
-   def verify_installation(request):
-       config = request.getConfiguration()
-       if config.get("num_entries", 0) == 0:
-           print "missing config property 'num_entries'.  wbgpager won't do "
-           print "anything without num_entries set.  either set num_entries "
-           print "to a positive integer, or disable the wbgpager plugin."
-           print "see the documentation at the top of the wbgpager plugin "
-           print "code file for more details."
-           return 0
+    def verify_installation(request):
+        config = request.getConfiguration()
+        if config.get("num_entries", 0) == 0:
+            print "missing config property 'num_entries'.  wbgpager won't do "
+            print "anything without num_entries set.  either set num_entries "
+            print "to a positive integer, or disable the wbgpager plugin."
+            print "see the documentation at the top of the wbgpager plugin "
+            print "code file for more details."
+            return 0
 
-       return 1
+        return 1
 
 
 
 How to log messages to a log file
 =================================
 
-First you need to get the logger instance.  After that, you can call 
-debug, info, warning, error and critical on the logger instance.  For 
+First you need to get the logger instance.  After that, you can call
+debug, info, warning, error and critical on the logger instance.  For
 example::
 
-   from pyblosxom import tools
+    from pyblosxom import tools
 
-   def cb_prepare(args):
-      ...
-      logger = tools.getLogger()
-      logger.info("blah blah blah...")
+    def cb_prepare(args):
+        ...
+        logger = tools.getLogger()
+        logger.info("blah blah blah...")
 
-      try:
-         ...
-      except Exception, e:
-         logger.error(e)
+        try:
+            ...
+        except Exception, e:
+            logger.error(e)
 
 
 
@@ -266,46 +278,45 @@ How to store plugin state between callbacks
 The easiest way to store state between callbacks is to store the data
 in the data dict of the Request object.  For example::
 
-   STATE_KEY = "myplugin_state"
+    STATE_KEY = "myplugin_state"
 
-   def cb_date_head(args):
-      request = args["request"]
-      data = request.getData()
+    def cb_date_head(args):
+        request = args["request"]
+        data = request.getData()
 
-      if data.has_key(STATE_KEY) and data[STATE_KEY]["blah"] == "blahblah":
-         ...
+        if data.has_key(STATE_KEY) and data[STATE_KEY]["blah"] == "blahblah":
+            ...
 
 
-   def cb_filelist(args):
-      request = args["request"]
-      data = request.getData()
+    def cb_filelist(args):
+        request = args["request"]
+        data = request.getData()
 
-      data[STATE_KEY] = {}
-      data[STATE_KEY]["blah"] = "blahblah"
-
+        data[STATE_KEY] = {}
+        data[STATE_KEY]["blah"] = "blahblah"
 
 
 How to implement a callback
 ===========================
 
 If you want to implement a callback, you add a function corresponding
-to the callback name to your plugin module.  For example, if you wanted
-to modify the Request object just before rendering, you'd implement
-cb_prepare like this::
+to the callback name to your plugin module.  For example, if you
+wanted to modify the Request object just before rendering, you'd
+implement cb_prepare like this::
 
-   def cb_prepare(args):
-       pass
+    def cb_prepare(args):
+        pass
 
 
 Obviously, since we have ``pass`` we're not actually doing anything
-here, but when the user sends a request and PyBlosxom handles it, 
-this function in your plugin will get called when PyBlosxom runs the 
+here, but when the user sends a request and PyBlosxom handles it, this
+function in your plugin will get called when PyBlosxom runs the
 prepare callback.
 
 Each callback passes in arguments through a single dictionary.  Each
 callback passes in different arguments and expects different return
-values.  Check the architecture chapter for a list of all the callbacks
-that are available, their arguments, and return values.
+values.  Check the architecture chapter for a list of all the
+callbacks that are available, their arguments, and return values.
 
 
 
@@ -313,52 +324,53 @@ Writing an entryparser
 ======================
 
 Entry parsing functions take in a filename and the Request object.
-They then open the file and parse it out.  The can call cb_preformat and 
-cb_postformat as they see fit.  They should return a dict containing at 
-least "title" and "story" keys.  The "title" should be a single string.  
-The "story" should be a list of strings (with \n at the end).
+They then open the file and parse it out.  The can call cb_preformat
+and cb_postformat as they see fit.  They should return a dict
+containing at least "title" and "story" keys.  The "title" should be a
+single string.  The "story" should be a list of strings (with \n at
+the end).
 
-Here's an example code that reads .plain files which have the title as 
-the first line, metadata lines that start with # and then after all the 
-metadata the body of the entry::
+Here's an example code that reads .plain files which have the title as
+the first line, metadata lines that start with # and then after all
+the metadata the body of the entry::
 
-   import os
+    import os
 
-   def cb_entryparser(entryparsingdict):
-       """
-       Register self as plain file handler
-       """
-       entryparsingdict['plain'] = parse
-       return entryparsingdict
+    def cb_entryparser(entryparsingdict):
+        """
+        Register self as plain file handler
+        """
+        entryparsingdict['plain'] = parse
+        return entryparsingdict
 
-   def parse(filename, request):
-       """
-       We just read everything off the file here, using the filename as
-       title
-       """
-       entrydata = {}
+    def parse(filename, request):
+        """
+        We just read everything off the file here, using the filename as
+        title
+        """
+        entrydata = {}
 
-       f = open(filename, "r")
-       lines = f.readlines()
-       f.close()
+        f = open(filename, "r")
+        lines = f.readlines()
+        f.close()
 
-       # strip off the first line and use that as the title.
-       title = lines.pop(0).strip()
-       entrydata['title'] = title
+        # strip off the first line and use that as the title.
+        title = lines.pop(0).strip()
+        entrydata['title'] = title
 
-       # absorb meta data lines which begin with a # and consist
-       # of a name and a value
-       while lines and lines[0].startswith("#"):
-           meta = lines.pop(0)
-           meta = meta[1:].strip()     # remove the hash
-           meta = meta.split(" ", 1)
-           entrydata[meta[0].strip()] = meta[1].strip()
+        # absorb meta data lines which begin with a # and consist
+        # of a name and a value
+        while lines and lines[0].startswith("#"):
+            meta = lines.pop(0)
+            meta = meta[1:].strip()     # remove the hash
+            meta = meta.split(" ", 1)
+            entrydata[meta[0].strip()] = meta[1].strip()
 
-       # join the rest of the lines as the story
-       story = ''.join(lines)
-       entrydata["story"] = "".join(lines)
+        # join the rest of the lines as the story
+        story = ''.join(lines)
+        entrydata["story"] = "".join(lines)
 
-       return entrydata
+        return entrydata
 
 
 
@@ -369,15 +381,15 @@ FIXME - need more about preformatters here
 
 A typical preformatter plugin looks like this::
 
-   def cb_preformat(args):
-       if args['parser'] == 'linebreaks':
-           return parse(''.join(args['story']))
+    def cb_preformat(args):
+        if args['parser'] == 'linebreaks':
+            return parse(''.join(args['story']))
 
-   def parse(text):
-       # A preformatter to convert linebreak to its HTML counterpart
-       text = re.sub('\\n\\n+','</p><p>',text)
-       text = re.sub('\\n','<br />',text)
-       return '<p>%s</p>' % text
+    def parse(text):
+        # A preformatter to convert linebreak to its HTML counterpart
+        text = re.sub('\\n\\n+','</p><p>',text)
+        text = re.sub('\\n','<br />',text)
+        return '<p>%s</p>' % text
 
 
 Writing a plugin that adds a commandline command
@@ -385,10 +397,10 @@ Writing a plugin that adds a commandline command
 
 *New in PyBlosxom 1.5*
 
-The ``pyblosxom-cmd`` command allows for plugin-defined commands.  This
-allows your plugin to do maintenance tasks (updating an index, statistics,
-generating content, ...) and allows the user to schedule command execution
-through cron or some similar system.
+The ``pyblosxom-cmd`` command allows for plugin-defined commands.
+This allows your plugin to do maintenance tasks (updating an index,
+statistics, generating content, ...) and allows the user to schedule
+command execution through cron or some similar system.
 
 To write a new command, you must:
 
@@ -407,13 +419,13 @@ For example, this adds a command to print arguments::
         return args
 
 
-.. note::
+.. Note::
 
-   The plugin must be in a directory specified by ``load_plugins`` in the
-   user's ``config.py`` file.
+   The plugin must be in a directory specified by ``load_plugins`` in
+   the user's ``config.py`` file.
 
 Executing the command looks like this::
 
-    > pyblosxom-cmd --config /path/to/config.py/dir printargs a b c
+    % pyblosxom-cmd printargs --config /path/to/config.py/dir a b c
     pyblosxom-cmd version 1.5
     a b c

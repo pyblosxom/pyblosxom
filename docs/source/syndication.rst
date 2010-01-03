@@ -36,8 +36,8 @@ formats.
 RSS 0.9.1
 ---------
 
-PyBlosxom comes with an rss flavour that produces RSS 0.9.1 output.  Here's
-a sample of what it produces::
+PyBlosxom comes with an rss flavour that produces RSS 0.9.1 output.
+Here's a sample of what it produces::
 
    <?xml version="1.0" encoding="utf-8"?>
    <!-- name="generator" content="pyblosxom/1.2 3/25/2005" -->
@@ -63,22 +63,22 @@ a sample of what it produces::
    </rss>
 
 
-This example only has one entry in it.  The number of entries the rss flavour
-will display is determined by the ``num_entries` property in your 
-``config.py`` file.
+This example only has one entry in it.  The number of entries the rss
+flavour will display is determined by the ``num_entries` property in
+your ``config.py`` file.
 
 .. Note::
 
    Probably better not to use RSS 0.9.1:
 
-   RSS 0.9.1 format lacks dates in the data for the items.  Unless you 
-   include the date for the entry somewhere in the description block, people 
-   looking at your RSS 0.9.1 feed won't know what the date the entry was 
-   created on was.
+   RSS 0.9.1 format lacks dates in the data for the items.  Unless you
+   include the date for the entry somewhere in the description block,
+   people looking at your RSS 0.9.1 feed won't know what the date the
+   entry was created on was.
  
-   Unless you have some reason to use RSS 0.9.1 as your syndication format,
-   you should look at using RSS 2.0 or Atom 1.0 both of which also come
-   with PyBlosxom.
+   Unless you have some reason to use RSS 0.9.1 as your syndication
+   format, you should look at using RSS 2.0 or Atom 1.0 both of which
+   also come with PyBlosxom.
 
 
 For more information, look at the `RSS 0.9.1 spec`_.
@@ -90,9 +90,10 @@ For more information, look at the `RSS 0.9.1 spec`_.
 RSS 2.0
 -------
 
-PyBlosxom 1.3 comes with an RSS 2.0 flavour called "rss20".  If it's missing
-features that you want (for example, some folks are doing podcasting with
-their blog), then override the individual templates you need to adjust.
+PyBlosxom 1.3 comes with an RSS 2.0 flavour called "rss20".  If it's
+missing features that you want (for example, some folks are doing
+podcasting with their blog), then override the individual templates
+you need to adjust.
 
 For more information on RSS 2.0, see the `RSS 2.0 spec`_.
 

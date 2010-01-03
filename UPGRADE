@@ -2,31 +2,22 @@
  Upgrading PyBlosxom
 =====================
 
-:Author: PyBlosxom Development Team
-:Copyright: This document is distributed under the MIT license.
-
-.. contents::
-
-
-Summary
-=======
-
-This document walks through upgrading PyBlosxom from a previous
-version.
+This walks through upgrading PyBlosxom from a previous version.
 
 
 Before upgrading
 ================
 
-Check the notes on the web-site to make sure that you meet the minimum
-requirements.
+First, read through the changelog which includes pointers to users and
+plugin developers regarding changes between older versions and newer
+versions.
+
+The changelog is in the ``CHANGELOG`` file.
+
+If you're reading this online, the changelog is :ref:`here <changelog>`.
 
 To be safe, install PyBlosxom locally and test your blog configuration
 and plugins to make sure everything works with the new version.
-
-Make sure you read the ``CHANGELOG`` file which includes pointers to
-users and plugin developers regarding changes between older versions
-and newer versions.
 
 
 System-wide upgrade

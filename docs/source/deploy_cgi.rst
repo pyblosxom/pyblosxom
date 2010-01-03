@@ -159,6 +159,8 @@ UGH! My blog looks UGLY!
 
 Read the documentation regarding Flavours and Templates to help you out.
 
+If you're reading this documentation online, then it is 
+:ref:`here <flavours-and-templates>`.
 
 I hate writing in HTML!
 -----------------------
@@ -167,6 +169,9 @@ That's ok.  PyBlosxom supports formatters and entry parsers which
 allow you to use a variety of markups for writing blog entries.  See
 the documentation on Writing Entries for more information.
 
+If you're reading this documentation online, then it is 
+:ref:`here <writing-entries>`.
+
 
 Advanced Installation
 =====================
@@ -174,7 +179,7 @@ Advanced Installation
 We encourage you not to try any of this until you've gotten a blog up
 and running.
 
-This chapter covers additional advanced things you can do to your blog
+This section covers additional advanced things you can do to your blog
 that will make it nicer.  However, they're not necessary and they're
 advanced and we consider these things to be very much a "you're on
 your own" kind of issue.
