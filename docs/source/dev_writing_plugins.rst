@@ -2,6 +2,8 @@
 Writing Plugins
 ===============
 
+.. _writing-plugins:
+
 Summary
 =======
 

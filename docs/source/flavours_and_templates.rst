@@ -2,6 +2,7 @@
 Flavours and Templates
 ======================
 
+.. _flavours-and-templates:
 
 Summary
 =======

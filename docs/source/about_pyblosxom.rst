@@ -16,6 +16,10 @@ PyBlosxom focuses on three things:
   This allows you to use any text editor to create, update and
   manipulate entries.  You can also use existing text-manipulation
   tools, version control, scripts, grep, ...  for managing your blog.
+
+  PyBlosxom can run as a CGI script, WSGI component or you can use it
+  to statically compile your web-site into HTML/XML files.
+
   Your workflow is your workflow.
 
 **extensibility**
@@ -42,13 +46,13 @@ Why you wouldn't want to use PyBlosxom
 ======================================
 
 PyBlosxom is a small open source project and while there is a
-community, it's pretty small.  PyBlosxom is a pretty niche weblog
-engine.
+community, it's pretty small.  PyBlosxom's features are great
+but make it a niche weblog engine.
 
-PyBlosxom is a *file-based* weblog system.  Blog entries are stored as
-separate files in a directory hierarchy on the filesystem.  By
-default, the hierarchy is a category tree meaning each entry belongs
-in a single category.  By default, mtimes are used as the entry
+PyBlosxom is a *file-based* weblog system.  Each blog entry is a separate
+file stored in a directory hierarchy on your file system.
+By default, the hierarchy is a category tree meaning each blog entry belongs
+in a single category.  By default, mtimes are used as the blog entry
 timestamp.  There are plugins that change this behavior, but require
 extra configuration to use.
 
@@ -77,24 +81,41 @@ Possibilities include:
     version control storage.
 
 
-Basic overview
-==============
+Overview of PyBlosxom
+=====================
 
-PyBlosxom is a file-based weblog system.  Each entry is a single text
-file in a directory hierarchy.  The directory tree is the category
-tree for entries and is called your *datadir*.
+Entries, categories, storage:
 
-PyBlosxom has themeing.  Themes are called *flavours*.  A flavour is a
-group of templates.  PyBlosxom comes with a bunch of flavours by
-default, but they're pretty basic.  For more information about
-flavours, see ``flavours_and_templates``.  The `PyBlosxom web-site`_
-maintains a flavour registry for flavours submitted by people like
-you.
+ * PyBlosxom stores everything as files on the file system--there is no
+   database
+ * Each blog entry is a file.
+ * Blog entry files are stored in a directory hierarchy in your *datadir*.
+ * Each subdirectory in your *datadir* corresponds to a category of
+   your blog.
 
-PyBlosxom allows you to change its behavior with plugins.  For more
-information on plugins, see pages on plugins, writing plugins and
-PyBlosxom architecture.  The `PyBlosxom web-site`_ maintains a plugin
-registry for plugins submitted by people like you.
+Themes:
+
+ * Themes in PyBlosxom are called *flavours*.
+ * A flavour consists of a set of templates.
+ * Flavours are stored in a directory called the *flavourdir*.
+ * PyBlosxom comes with several flavours: html, rss20, and atom.
+ * The `PyBlosxom web-site`_ maintains a flavour registry for flavours
+   contributed by people like you.
+ * There's more information in the chapter on
+   :ref:`Flavours and Templates <flavours-and-templates>`.
+
+Plugins:
+
+ * PyBlosxom has a plugin system.
+ * Plugins are written in Python.
+ * Plugins are loaded using the ``plugin_dirs`` and ``load_plugins``
+   configuration variables.
+ * For more information on using plugins see
+   :ref:`Plugins <using-plugins>`.
+ * For more information on writing plugins see
+   :ref:`Writing Plugins <writing-plugins>`.
+ * The `PyBlosxom web-site`_ maintains a plugin registry for plugins 
+   submitted by people like you.
 
 .. _PyBlosxom web-site: http://pyblosxom.sourceforge.net/
 

@@ -70,10 +70,16 @@ Run::
 
 to install PyBlosxom to your system.
 
+
+virtualenv
+----------
+
 If you don't want to install PyBlosxom system-wide, we encourage that
 you use `virtualenv`_.
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
+
+FIXME - need instructions here
 
 
 Creating a blog

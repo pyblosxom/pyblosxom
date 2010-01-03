@@ -2,6 +2,8 @@
 Plugins
 =======
 
+.. _using-plugins:
+
 Summary
 =======
 
