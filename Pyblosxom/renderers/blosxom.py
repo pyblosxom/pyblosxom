@@ -189,8 +189,11 @@ class BlosxomRenderer(RendererBase):
             raise NoSuchFlavourException("Flavour '%s' does not exist." % taste)
 
         for k in template_d.keys():
-            flav_template = open(template_d[k]).read()
-            template_d[k] = flav_template
+            try:
+                flav_template = open(template_d[k]).read()
+                template_d[k] = flav_template
+            except OSError, IOError:
+                pass
 
         return template_d
 
