@@ -7,13 +7,14 @@
 # for distribution details.
 #######################################################################
 """
-This module holds commandline related stuff.  Installation verification,
-blog creation, commandline argument parsing, ...
+This module holds commandline related stuff.  Installation
+verification, blog creation, commandline argument parsing, ...
 """
 
 import os
 import os.path
 import sys
+import textwrap
 from optparse import OptionParser, OptionGroup
 
 from Pyblosxom.pyblosxom import VERSION_DATE, PyBlosxom
@@ -23,28 +24,36 @@ from Pyblosxom import plugin_utils
 USAGE = "%prog [options] [command] [command-options]"
 VERSION = "%prog " + VERSION_DATE
 
+def pwrap(s):
+    """Wraps the text and prints it.
+    """
+    starter = ""
+    linesep = os.linesep
+    if s.startswith("- "):
+        starter = "- "
+        s = s[2:]
+        linesep = os.linesep + "  "
+
+    print starter + linesep.join(textwrap.wrap(s, 72))
+
 def build_pyblosxom():
-    print "Trying to import the config module...."
+    pwrap("Trying to import the config module....")
     try:
         from config import py as cfg
     except:
         h, t = os.path.split(sys.argv[0])
         scriptname = t or h
 
-        print \
-"""
-Error: Cannot find your config.py file.  Please execute %s in the
-directory with the config.py file in it or use the --config flag.
-
-See "%s --help" for more details.
-""" % (scriptname, scriptname)
+        pwrap("ERROR: Cannot find your config.py file.  Please execute "
+              "%s in the directory with the config.py file in it or use "
+              "the --config flag.\n\n"
+              "See \"%s --help\" for more details." % (scriptname, scriptname))
         return None
 
     return PyBlosxom(cfg, {})
 
-def build_parser(command):
-    parser = OptionParser(usage=USAGE.replace("[command]", command),
-                          version=VERSION)
+def build_parser(usage):
+    parser = OptionParser(usage=usage, version=VERSION)
     parser.add_option("-q", "--quiet",
                       action="store_false", dest="verbose", default=True,
                       help="If the quiet flag is specified, then PyBlosxom "
@@ -70,17 +79,20 @@ def test_installation(command, argv):
        they are installed correctly (i.e. have valid config property
        settings and can read/write to data files)
 
-    The goal is to be as useful and informative to the user as we can be
-    without being overly verbose and confusing.
+    The goal is to be as useful and informative to the user as we can
+    be without being overly verbose and confusing.
 
-    This is designed to make it easier for a user to verify their PyBlosxom
-    installation is working and also to install new plugins and verify that
-    their configuration is correct.
+    This is designed to make it easier for a user to verify their
+    PyBlosxom installation is working and also to install new plugins
+    and verify that their configuration is correct.
 
     :Parameters:
        request : Request object
           the request object
     """
+    parser = build_parser("%prog test [options]")
+    (options, args) = parser.parse_args()
+
     p = build_pyblosxom()
     if not p:
         return 0
@@ -88,77 +100,87 @@ def test_installation(command, argv):
     request = p.get_request()
     config = request.config
 
-    print "== System information =="
-    print "   pyblosxom:    %s" % VERSION_DATE
-    print "   sys.version:  %s" % sys.version.replace("\n", " ")
-    print "   os.name:      %s" % os.name
-    print "   codebase:     %s" % config.get("codebase",
-                                  os.path.dirname(os.path.dirname(__file__)))
+    pwrap("System Information")
+    pwrap("==================")
+    pwrap("")
 
-    print ""
-    print "== Checking config.py file =="
-    print "   properties set: %s" % len(config)
+    pwrap("- pyblosxom:    %s" % VERSION_DATE)
+    pwrap("- sys.version:  %s" % sys.version.replace("\n", " "))
+    pwrap("- os.name:      %s" % os.name)
+    codebase = os.path.dirname(os.path.dirname(__file__))
+    pwrap("- codebase:     %s" % config.get("codebase", codebase))
+    pwrap("")
+
+    pwrap("Checking config.py file")
+    pwrap("=======================")
+    pwrap("- properties set: %s" % len(config))
 
     config_keys = config.keys()
 
     if "datadir" not in config_keys:
-        print "ERROR: 'datadir' must be set.  Refer to installation " + \
-              "documentation."
+        pwrap("- ERROR: 'datadir' must be set.  Refer to installation "
+              "documentation.")
 
     elif not os.path.isdir(config["datadir"]):
-        print "ERROR: datadir '%s' does not exist.  You need to create your " + \
-              "datadir and give it appropriate permissions."
+        pwrap("- ERROR: datadir '%s' does not exist.  You need to create "
+              "your datadir and give it appropriate permissions.")
 
     else:
-        print "   datadir '%s' exists." % config["datadir"]
+        pwrap("- datadir '%s' exists." % config["datadir"])
 
-    if "blog_encoding" in config_keys and config["blog_encoding"].lower() != "utf-8":
-        print "WARNING: 'blog_encoding' is set to something other than " + \
-              "'utf-8'.  As of PyBlosxom 2.0, this isn't a good idea unless " + \
-              "you're absolutely certain it's going to work for your blog."
+    if (("blog_encoding" in config_keys 
+         and config["blog_encoding"].lower() != "utf-8")):
+        pwrap("- WARNING: 'blog_encoding' is set to something other than "
+              "'utf-8'.  As of PyBlosxom 2.0, this isn't a good idea "
+              "unless you're absolutely certain it's going to work for "
+              "your blog.")
+    pwrap("")
 
-    print ""
-    print "== Checking plugin configuration =="
-    print "   This goes through your plugins and asks each of them to verify " + \
-          "configuration and installation."
+    pwrap("Checking plugin configuration")
+    pwrap("=============================")
 
     import traceback
 
     no_verification_support = []
 
     if len(plugin_utils.plugins) == 0:
-        print "   There are no plugins installed."
+        pwrap("- There are no plugins installed.")
     else:
-        print ""
+        pwrap("- This goes through your plugins and asks each of them to verify "
+              "configuration and installation.")
+        pwrap("")
+        pwrap("----")
         for mem in plugin_utils.plugins:
             if hasattr(mem, "verify_installation"):
-                print "=== plugin: '%s'" % mem.__name__
-                print "    file: %s" % mem.__file__
-                print "    version: %s" % (str(getattr(mem, "__version__")))
+                pwrap("plugin:  %s" % mem.__name__)
+                print "file:    %s" % mem.__file__
+                print "version: %s" % (str(getattr(mem, "__version__")))
 
                 try:
                     if mem.verify_installation(request) == 1:
-                        print "    PASS"
+                        pwrap("PASS")
                     else:
-                        print "    FAIL"
+                        pwrap("FAIL")
                 except Exception, e:
-                    print "    FAIL: Exception thrown:"
+                    pwrap("FAIL: Exception thrown:")
                     traceback.print_exc(file=sys.stdout)
 
+                pwrap("----")
             else:
                 mn = mem.__name__
                 mf = mem.__file__
                 no_verification_support.append( "'%s' (%s)" % (mn, mf))
 
         if len(no_verification_support) > 0:
-            print ""
-            print "The following plugins do not support installation " + \
-                  "verification:"
+            pwrap("")
+            pwrap("The following plugins do not support installation "
+                  "verification:")
+            no_verification_support.sort()
             for mem in no_verification_support:
-                print "   %s" % mem
+                print "- %s" % mem
 
-    print ""
-    print "Verification complete.  Correct any errors and warnings above."
+    pwrap("")
+    pwrap("Verification complete.  Correct any errors and warnings above.")
 
 def create_blog(command, argv):
     """
@@ -166,8 +188,7 @@ def create_blog(command, argv):
     copying things over, but there are a few cases where we expand
     template variables.
     """
-    parser = build_parser(command)
-
+    parser = build_parser("%prog create [options] <dir>")
     (options, args) = parser.parse_args()
 
     if args:
@@ -262,7 +283,7 @@ def create_blog(command, argv):
     return 0
 
 def render_url(command, argv):
-    parser = build_parser(command)
+    parser = build_parser("%prog renderurl [options] <url>")
 
     parser.add_option("--headers",
                       action="store_true", dest="headers", default=False,
@@ -283,7 +304,7 @@ def render_url(command, argv):
     return 0
 
 def run_static_renderer(command, argv):
-    parser = build_parser(command)
+    parser = build_parser("%prog staticrender [options]")
     parser.add_option("--incremental",
                       action="store_true", dest="incremental", default=False,
                       help="Option that causes static rendering to be "
@@ -337,31 +358,36 @@ def command_line_handler(scriptname, argv):
 
     # slurp off the config file setting and add it to sys.path.
     # this needs to be first to pick up plugin-based command handlers.
-    if len(argv) > 1 and argv[1].startswith("--config"):
-        if "=" in argv[1]:
-            key, val = argv.pop(1).split("=")
-        elif len(argv) > 2:
-            key = argv.pop(1)
-            val = argv.pop(1)
-        else:
-            print "Error: no config file argument specified."
+    configdir = None
+    for i, mem in enumerate(argv):
+        if mem.startswith("--config"):
+            if "=" in mem:
+                key, configdir = mem.split("=")
+                break
+            else:
+                try:
+                    configdir = argv[i+1]
+                    break
+                except IndexError:
+                    print "Error: no config file argument specified."
+                    print "Exiting."
+                    return 0
+
+    if configdir is not None:
+        if configdir.endswith("config.py"):
+            configdir = configdir[0:-9]
+
+        if not os.path.exists(configdir):
+            print "Error: '%s' does not exist--cannot find config.py file." % configdir
+            print "Exiting."
+            return 0
+        if not "config.py" in os.listdir(configdir):
+            print "Error: config.py not in '%s'.  Cannot find config.py file." % configdir
             print "Exiting."
             return 0
 
-        if val.endswith("config.py"):
-            val = val[0:-9]
-
-        if not os.path.exists(val):
-            print "Error: '%s' does not exist--cannot find config.py file." % val
-            print "Exiting."
-            return 0
-        if not "config.py" in os.listdir(val):
-            print "Error: config.py not in '%s'.  Cannot find config.py file." % val
-            print "Exiting."
-            return 0
-
-        sys.path.append(val)
-        print "Adding %s to sys.path...." % val
+        sys.path.append(configdir)
+        print "Adding %s to sys.path...." % configdir
 
     handlers = get_handlers()
 
