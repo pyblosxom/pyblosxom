@@ -22,10 +22,18 @@ help:
 	@echo "  changes   to make an overview over all changed/added/deprecated items"
 	@echo "  linkcheck to check all external links for integrity"
 
+copyover:
+	mkdir -p source/notes/
+	cp ../AUTHORS source/notes/AUTHORS.rst
+	cp ../THANKS source/notes/THANKS.rst
+	cp ../CHANGELOG source/notes/CHANGELOG.rst
+	cp ../UPGRADE source/notes/UPGRADE.rst
+	cp ../INSTALL source/notes/INSTALL.rst
+
 clean:
 	-rm -rf build/*
 
-html:
+html: copyover
 	mkdir -p build/html build/doctrees
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) build/html
 	@echo
@@ -48,7 +56,7 @@ htmlhelp:
 	@echo "Build finished; now you can run HTML Help Workshop with the" \
 	      ".hhp project file in build/htmlhelp."
 
-latex:
+latex: copyover
 	mkdir -p build/latex build/doctrees
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) build/latex
 	@echo

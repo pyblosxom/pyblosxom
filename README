@@ -1,13 +1,6 @@
-================
-PyBlosxom README
-================
-
-:Author: PyBlosxom Development Team
-:Version: $Id$
-:Copyright: This document is distributed under the MIT license.
-
-.. contents::
-
+==================
+ PyBlosxom Readme
+==================
 
 Summary
 =======
@@ -18,14 +11,17 @@ All entries in a PyBlosxom blog are text files where the first
 line is the title of the blog entry and the rest is the body of
 the entry.
 
-PyBlosxom isn't for everyone and it won't scale well if you have
-a million entries.
+PyBlosxom isn't for everyone.
 
-PyBlosxom runs as a CGI script.  It also runs as a WSGI application
-and it probably runs fine under mod_python, though this is less 
-well-tested.
+PyBlosxom runs as a CGI script and WSGI application.
 
-PyBlosxom supports flavours to change the look and feel of your blog.
+PyBlosxom can run as a "static renderer" and compile your blog into
+HTML pages for any web server.  This is a good solution for blogs with
+millions of entries or servers that are really slow or don't have a
+way to run applications.
+
+PyBlosxom supports templates (called flavours) to change the look and
+feel of your blog.
 
 PyBlosxom supports plugins to modify the existing default behavior.
 
@@ -37,17 +33,17 @@ Look at the ``install_*.txt`` documents in the ``docs/`` directory.
 Pick the one that matches the kind of installation you're looking
 for.
 
-If you're upgrading PyBlosxom versions, read ``CHANGELOG`` which will
-describe the differences between PyBlosxom versions and point out
-things that you'll need to do when upgrading from one version to
-the next.
+If you're upgrading from a previous PyBlosxom version, read
+``CHANGELOG`` which will describe the differences between PyBlosxom
+versions and tell you things you need to change.
 
 
 How to find comprehensive documentation
 =======================================
 
-There's a series of text files in the docs/ directory which comprise
-the current state of the PyBlosxom manual at the time of this release.
+There's a series of text files in the ``docs/`` directory which
+comprise the current state of the PyBlosxom manual at the time of this
+release.
 
 The most current version of the manual can be found on the `PyBlosxom
 web-site <http://pyblosxom.sourceforge.net/>`_ .
@@ -56,9 +52,11 @@ web-site <http://pyblosxom.sourceforge.net/>`_ .
 How to get help
 ===============
 
-On our web-site we have information about our mailing lists.  Send
-an email to our pyblosxom-users mailing list if you have questions
-that you are unable to find answers to.
+On our web-site we have information about our mailing lists.  Send an
+email to our pyblosxom-users mailing list if you have questions that
+you are unable to find answers to.
+
+Some of us hang out on IRC on Freenode in ``#pyblosxom``.
 
 
 How to report bugs, send in patches, fix problems
@@ -66,20 +64,22 @@ How to report bugs, send in patches, fix problems
 
 We really appreciate people helping out.  
 
-If you discover a problem with PyBlosxom, please log it in our bug-tracker_.
+If you discover a problem with PyBlosxom, please log it in our
+bug-tracker_.
 
 .. _bug-tracker: http://sf.net/tracker/?atid=517918&group_id=67445
 
-If you can additionally fix it, attach a patch file to the bug or
-send the patch as an attachment to the pyblosxom-devel mailing list.
-Please make sure to describe the details of the problem you are fixing.
+If you can additionally fix it, attach a patch file to the bug or send
+the patch as an attachment to the pyblosxom-devel mailing list.
+**Please** make sure to describe the details of the problem you are
+fixing.
 
 
 How to run unit tests
 =====================
 
-We use nose_ for test discovery.  You'll need to have that installed to 
-run our tests.
+We use nose_ for test discovery and running unit tests.  You'll need
+to have that installed to run our tests.
 
 .. _nose: http://somethingaboutorange.com/mrl/projects/nose/
 

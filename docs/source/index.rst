@@ -12,7 +12,9 @@ Contents:
 
    introduction
    about_pyblosxom
-   install
+   notes/CHANGELOG
+   notes/INSTALL
+   notes/UPGRADE
    deploy_cgi
    deploy_paste
    deploy_wsgi
@@ -26,6 +28,8 @@ Contents:
    dev_architecture
    dev_writing_plugins
    dev_codedocs
+   notes/AUTHORS
+   notes/THANKS
 
 
 Indices and tables

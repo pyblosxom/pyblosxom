@@ -14,15 +14,18 @@ PyBlosxom focuses on three things:
 
   PyBlosxom stores all data on the file system in plain text files.
   This allows you to use any text editor to create, update and
-  manipulate entries.  You can use existing tools (version control,
-  shell scripting, procmail, ...) for blog management.
+  manipulate entries.  You can also use existing text-manipulation
+  tools, version control, scripts, grep, ...  for managing your blog.
+  Your workflow is your workflow.
 
 **extensibility**
 
-  PyBlosxom has a plugin framework allowing you to use plugins to
-  augment ane enhance PyBlosxom's default behavior.  Plugins are
-  written in Python.  We maintain a list of plugins in the plugin
-  registry on the website.
+  PyBlosxom has a plugin framework enabling you to augment and enhance
+  PyBlosxom's default behavior.  Plugins are written in Python.  We
+  maintain a list of plugins in the plugin registry on the website.
+
+  Plugins aren't hard to write.  We're happy to help you write
+  plugins.
 
 **community**
 
@@ -65,6 +68,13 @@ Possibilities include:
 
     Python-based weblog system that's a lot like WordPress, but it's
     written in Python and supports Python plugins.
+
+**ikiwiki**
+
+    http://ikiwiki.info/
+
+    ikiwiki is written in Perl and melds blogging with wiki with
+    version control storage.
 
 
 Basic overview
