@@ -324,13 +324,13 @@ Writing an entryparser
 ======================
 
 Entry parsing functions take in a filename and the Request object.
-They then open the file and parse it out.  The can call cb_preformat
-and cb_postformat as they see fit.  They should return a dict
-containing at least "title" and "story" keys.  The "title" should be a
-single string.  The "story" should be a list of strings (with \n at
-the end).
+They then open the file and parse it out.  They can call ``cb_preformat``
+and ``cb_postformat`` as they see fit.  They should return a dict
+containing at least ``"title"`` and ``"body"`` keys.  The "title" should be a
+single string.  The ``"body"`` should be a single string and should be
+formatted in HTML.
 
-Here's an example code that reads .plain files which have the title as
+Here's an example code that reads ``.plain`` files which have the title as
 the first line, metadata lines that start with # and then after all
 the metadata the body of the entry::
 
@@ -340,7 +340,7 @@ the metadata the body of the entry::
         """
         Register self as plain file handler
         """
-        entryparsingdict['plain'] = parse
+        entryparsingdict["plain"] = parse
         return entryparsingdict
 
     def parse(filename, request):
@@ -354,24 +354,56 @@ the metadata the body of the entry::
         lines = f.readlines()
         f.close()
 
-        # strip off the first line and use that as the title.
-        title = lines.pop(0).strip()
-        entrydata['title'] = title
-
-        # absorb meta data lines which begin with a # and consist
-        # of a name and a value
-        while lines and lines[0].startswith("#"):
-            meta = lines.pop(0)
-            meta = meta[1:].strip()     # remove the hash
-            meta = meta.split(" ", 1)
-            entrydata[meta[0].strip()] = meta[1].strip()
-
-        # join the rest of the lines as the story
-        story = ''.join(lines)
-        entrydata["story"] = "".join(lines)
+        entrydata["title"] = filename
+        entrydata["body"] = "<pre>" + "".join(lines) + "</pre>"
 
         return entrydata
 
+
+You can also specify the template to use by setting the
+``"template_name"`` variable in the returned dict.  If the template
+specified doesn't exist, PyBlosxom will use the ``story`` template for
+the specified flavour.
+
+For example, if you were creating a tumbelog and the file parsed was a
+image entry and you want image entries to be displayed on your blog
+with an image and then a caption below it and that's it, then you
+would create a template for that and set ``"template_name"`` to the
+name of the template::
+
+    def cb_entryparser(entryparsingdict):
+        """
+        Register self as plain file handler
+        """
+        entryparsingdict['image'] = parse_image
+        return entryparsingdict
+
+    def parse_image(filename, request):
+        """
+        An image entry consists of an image file name followed by the
+        caption.  Like this::
+
+            cimg_8229.jpg
+            This is a picture of me standing on my head.
+
+        Note that there's no title, no metadata, ...
+        """
+        entrydata = {}
+
+        f = open(filename, "r")
+        lines = f.readlines()
+        f.close()
+
+        # we do this for RSS purposes
+        entrydata['title'] = "image %s" % lines[0]
+        entrydata['body'] = "\n".join([
+            "<img src=\"/images/%s\">",
+            "<p>%s</p>" % "".join(lines[1:])
+            ])
+
+        entrydata["template_name"] = "image_post"
+
+        return entrydata
 
 
 Writing a preformatter plugin
@@ -404,11 +436,11 @@ command execution through cron or some similar system.
 
 To write a new command, you must:
 
-1. implement the ``commandline`` callback which adds the command, handler,
-   and command summary
+1. implement the ``commandline`` callback which adds the command,
+   handler, and command summary
 2. implement the command function
 
-For example, this adds a command to print arguments::
+For example, this adds a command to print command line arguments::
 
     def printargs(command, argv):
         print argv
