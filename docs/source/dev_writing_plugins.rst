@@ -365,7 +365,7 @@ You can also specify the template to use by setting the
 specified doesn't exist, PyBlosxom will use the ``story`` template for
 the specified flavour.
 
-For example, if you were creating a tumbelog and the file parsed was a
+For example, if you were creating a tumblelog and the file parsed was a
 image entry and you want image entries to be displayed on your blog
 with an image and then a caption below it and that's it, then you
 would create a template for that and set ``"template_name"`` to the
