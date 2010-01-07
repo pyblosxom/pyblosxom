@@ -188,8 +188,14 @@ def convert_configini_values(configini):
     return config
 
 def escape_text(s):
-    """Takes in a string and converts ``'`` to ``&apos;`` and ``"`` to
-    ``&quot;``.
+    """Takes in a string and converts:
+
+    * ``&`` to ``&amp;``
+    * ``>`` to ``&gt;``
+    * ``<`` to ``&lt;``
+    * ``\"`` to ``&quot;``
+    * ``'`` to ``&#x27;``
+    * ``/`` to ``&#x2F;``
 
     Note: if ``s`` is ``None``, then we return ``None``.
 
@@ -198,16 +204,15 @@ def escape_text(s):
     >>> escape_text("")
     ""
     >>> escape_text("a'b")
-    "a&apos;b"
+    "a&#x27;b"
     >>> escape_text('a"b')
     "a&quot;b"
-
     """
     if not s:
         return s
 
     for mem in (("&", "&amp;"), (">", "&gt;"), ("<", "&lt;"), ("\"", "&quot;"),
-        ("'", "&#x27;"), ("/", "&#x2F;")):
+                ("'", "&#x27;"), ("/", "&#x2F;")):
         s = s.replace(mem[0], mem[1])
     return s
 
@@ -907,6 +912,13 @@ def render_url_statically(cdict, url, querystring):
     """
     staticdir = cdict.get("static_dir", "")
 
+    # if there is no staticdir, then they're not set up for static
+    # rendering.
+    if not staticdir:
+        raise Exception("You must set static_dir in your config file.")
+
+    staticdir = cdict.get("static_dir", "")
+
     response = render_url(cdict, url, querystring)
     response.seek(0)
 
@@ -933,13 +945,6 @@ def render_url(cdict, pathinfo, querystring=""):
                      example: ``/dev/pyblosxom/firstpost.html``
     :param querystring: the querystring (if any); example: debug=yes
     """
-    staticdir = cdict.get("static_dir", "")
-
-    # if there is no staticdir, then they're not set up for static
-    # rendering.
-    if not staticdir:
-        raise Exception("You must set static_dir in your config file.")
-
     from pyblosxom import PyBlosxom
 
     env = {
@@ -958,7 +963,7 @@ def render_url(cdict, pathinfo, querystring=""):
     data = {"STATIC": 1}
     p = PyBlosxom(cdict, env, data)
     p.run(static=True)
-    return p.getResponse()
+    return p.get_response()
 
 
 #******************************
