@@ -138,30 +138,47 @@ Pertinent to developers:
    versions.  Camel case names are deprecated and will be removed in a
    future version:
 
-   tools.py:
+   ``tools.py``:
 
    * Walk -> walk
    * getLogger -> get_logger
    * generateRandStr -> generate_rand_str
 
-   pyblosxom/Pyblosxom.py
+   ``pyblosxom/Pyblosxom.py``:
 
-   * getRequest -> get_request
-   * getResponse -> get_response
-   * runCallback -> run_callback
-   * runRenderOne -> run_render_one
-   * runStaticRenderer -> run_static_renderer
-   * setResponse -> set_response
-   * getResponse -> get_response
-   * getForm -> get_form
-   * getConfiguration -> get_configuration
-   * getHttp -> get_http
-   * getData -> get_data
-   * addHttp -> add_http
-   * addData -> add_data
-   * addConfiguration -> add_configuration
-   * sendBody -> send_body
-   * sendHeaders -> send_headers
+   * PyBlosxom: getRequest -> get_request
+   * PyBlosxom: getResponse -> get_response
+   * PyBlosxom: runCallback -> run_callback
+   * PyBlosxom: runRenderOne -> run_render_one
+   * PyBlosxom: runStaticRenderer removed
+   * Request: setResponse -> set_response
+   * Request: getResponse -> get_response
+   * Request: getForm -> get_form
+   * Request: getConfiguration -> get_configuration
+   * Request: getHttp -> get_http
+   * Request: getData -> get_data
+   * Request: addHttp -> add_http
+   * Request: addData -> add_data
+   * Request: addConfiguration -> add_configuration
+   * Response: setStatus -> set_status
+   * Response: addHeader -> add_header
+   * Response: getHeaders -> get_headers
+   * Response: sendBody -> send_body
+   * Response: sendHeaders -> send_headers
+
+   ``pyblosxom/renderers/base.py``:
+
+   * RendererBase: addHeader -> add_header
+   * RendererBase: setContent -> set_content
+   * RendererBase: needsContentType -> needs_content_type
+   * RendererBase: showHeaders -> show_headers
+
+   ``pyblosxom/renderers/blosxom.py``:
+
+   * BlosxomRenderer: renderContent -> render_content
+   * BlosxomRenderer: renderTemplate -> render_template
+   * BlosxomRenderer: getContent -> get_content
+   * BlosxomRenderer: outputTemplate -> output_template
 
 9. Changed ``add_header`` in the ``Response`` class to take a key and
    value instead of a list of strings that it has to use * magic and

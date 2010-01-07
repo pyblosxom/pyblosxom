@@ -20,11 +20,9 @@ def escv(s):
     Takes in a value.  If it's not a string, we repr it and turn it into
     a string.  Then we escape it so it can be printed in HTML safely.
 
-    @param s: any value
-    @type  s: varies
+    :param s: any value
 
-    @returns: a safe-to-print-in-html string representation of the value
-    @rtype: string
+    :returns: a safe-to-print-in-html string representation of the value
     """
     if not s:
         return ""
@@ -32,50 +30,47 @@ def escv(s):
     if not isinstance(s, str):
         s = repr(s)
 
-    return s.replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;")
+    return tools.escape_text(s)
 
 def print_map(printfunc, keymap):
     """
     Takes a map of keys to values and applies the function f to a pretty
     printed version of each key/value pair.
 
-    @param printfunc: function for printing
-    @type  printfunc: function
+    :param printfunc: function for printing
 
-    @param keymap: a mapping of key/value pairs
-    @type  keymap: map
+    :param keymap: a mapping of key/value pairs
     """
     keys = keymap.keys()
     keys.sort()
     for key in keys:
         printfunc("<font color=\"#0000ff\">%s</font> -&gt; %s\n" % \
                   (escv(key), escv(keymap[key])))
-
+        
 class Renderer(RendererBase):
     """
-    This is the debug renderer.  This is very useful for debugging plugins
-    and templates.
+    This is the debug renderer.  This is very useful for debugging
+    plugins and templates.
     """
-    def render(self, header=1):
+    def render(self, header=True):
         """
         Renders a PyBlosxom request after we've gone through all the
         motions of converting data and getting entries to render.
 
-        @param header: either prints (1) or does not print (0) the http
-                       headers.
-        @type  header: boolean
+        :param header: either prints (True) or does not print (True)
+                       the http headers.
         """
-        pyhttp = self._request.getHttp()
-        config = self._request.getConfiguration()
-        data = self._request.getData()
+        pyhttp = self._request.get_http()
+        config = self._request.get_configuration()
+        data = self._request.get_data()
         printout = self.write
 
         hbar = "------------------------------------------------------\n"
 
 
         if header:
-            self.addHeader('Content-type', 'text/html')
-            self.showHeaders()
+            self.add_header('Content-type', 'text/html')
+            self.show_headers()
 
         printout("<html>")
         printout("<body>")
@@ -97,17 +92,17 @@ class Renderer(RendererBase):
         print_map(printout, os.environ)
 
         printout(hbar)
-        printout("Request.getHttp() dict contains:\n")
+        printout("Request.get_http() dict contains:\n")
         printout(hbar)
         print_map(printout, pyhttp)
 
         printout(hbar)
-        printout("Request.getConfiguration() dict contains:\n")
+        printout("Request.get_configuration() dict contains:\n")
         printout(hbar)
         print_map(printout, config)
 
         printout(hbar)
-        printout("Request.getData() dict contains:\n")
+        printout("Request.get_data() dict contains:\n")
         printout(hbar)
         print_map(printout, data)
 

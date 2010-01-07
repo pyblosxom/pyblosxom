@@ -28,9 +28,9 @@ DOESNOTEXIST2 = "THISKEYDOESNOTEXIST2"
 class EntryBase:
     """
     EntryBase is the base class for all the Entry classes.  Each
-    instance of an Entry class represents a single entry in the weblog,
-    whether it came from a file, or a database, or even somewhere off
-    the InterWeeb.
+    instance of an Entry class represents a single entry in the
+    weblog, whether it came from a file, or a database, or even
+    somewhere off the InterWeeb.
     """
     def __init__(self, request):
         self._data = ""
@@ -41,103 +41,107 @@ class EntryBase:
 
     def __repr__(self):
         """
-        Returns a friendly debuggable representation of self. Useful to know on
-        what entry pyblosxom fails on you (though unlikely)
+        Returns a friendly debuggable representation of self. Useful
+        to know on what entry pyblosxom fails on you (though unlikely)
 
-        returns: Identifiable representation of object
-        rtype: string
+        :returns: Identifiable representation of object
         """
         return "<Entry instance: %s>\n" % self.getId()
 
-    def getId(self):
+    def get_id(self):
         """
         This should return an id that's unique enough for caching
         purposes.
 
         Override this.
 
-        @returns: string id
-        @rtype: string
+        :returns: string id
         """
         return self._id
 
-    def getData(self):
+    getId = tools.deprecated_function(get_id)
+    
+    def get_data(self):
         """
         Returns the data string.  This method should be overridden to
         provide from pulling the data from other places.
 
         Override this.
 
-        @returns: the data as a string
-        @rtype: string
+        :returns: the data as a string
         """
         return str(self._data)
 
-    def setData(self, data):
+    getData = tools.deprecated_function(get_data)
+
+    def set_data(self, data):
         """
-        Sets the data content for this entry.  If you are not
-        creating the entry, then you have no right to set the data
-        of the entry.  Doing so could be hazardous depending on what
+        Sets the data content for this entry.  If you are not creating
+        the entry, then you have no right to set the data of the
+        entry.  Doing so could be hazardous depending on what
         EntryBase subclass you're dealing with.
 
         Override this.
 
-        @param data: the data
-        @type  data: string
+        :param data: the data
         """
         self._data = data
 
-    def getMetadata(self, key, default=None):
+    setData = tools.deprecated_function(set_data)
+
+    def get_metadata(self, key, default=None):
         """
         Returns a given piece of metadata.
 
         Override this.
 
-        @param key: the key being sought
-        @type  key: varies
+        :param key: the key being sought
 
-        @param default: the default to return if the key does not
-            exist
-        @type  default: varies
+        :param default: the default to return if the key does not
+                        exist
 
-        @return: either the default (if the key did not exist) or the
-            value of the key in the metadata dict
-        @rtype: varies
+        :return: either the default (if the key did not exist) or the
+                 value of the key in the metadata dict
         """
         return self._metadata.get(key, default)
 
-    def setMetadata(self, key, value):
+    getMetadata = tools.deprecated_function(get_metadata)
+
+    def set_metadata(self, key, value):
         """
         Sets a key/value pair in the metadata dict.
 
         Override this.
 
-        @param key: the key string
-        @type  key: string
+        :param key: the key string
 
-        @param value: the value string
-        @type  value: string (or an object with a __str__ method)
+        :param value: the value string
         """
         self._metadata[key] = value
 
-    def getMetadataKeys(self):
+    setMetadata = tools.deprecated_function(set_metadata)
+
+    def get_metadata_keys(self):
         """
         Returns the list of keys for which we have values in our
         stored metadata.
 
-        Note: This list gets modified later downstream.  If you
-        cache your list of metadata keys, then this method should
-        return a copy of that list and not the list itself
-        lest it get adjusted.
+        .. Note::
+
+            This list gets modified later downstream.  If you cache
+            your list of metadata keys, then this method should return
+            a copy of that list and not the list itself lest it get
+            adjusted.
 
         Override this.
 
-        @returns: list of metadata keys
-        @rtype: list of strings
+        :returns: list of metadata keys
         """
         return self._metadata.keys()
 
-    def getFromCache(self, entryid):
+    getMetadataKeys = tools.deprecated_function(get_metadata_keys)
+
+    def get_from_cache(self, entryid):
         """
         Retrieves information from the cache that pertains to this
         specific entryid.
@@ -145,12 +149,10 @@ class EntryBase:
         This is a helper method--call this to get data from the cache.
         Do not override it.
 
-        @param entryid: a unique key for the information you're retrieving
-        @type  entryid: string
+        :param entryid: a unique key for the information you're retrieving
 
-        @returns: dict with the values or None if there's nothing for that
-            entryid
-        @rtype: dict or None
+        :returns: dict with the values or None if there's nothing for that
+                  entryid
         """
         cache = tools.get_cache(self._request)
 
@@ -160,34 +162,36 @@ class EntryBase:
 
         return None
 
-    def addToCache(self, entryid, data):
+    getFromCache = tools.deprecated_function(get_from_cache)
+
+    def add_to_cache(self, entryid, data):
         """
-        Over-writes the cached dict for key entryid with the data dict.
+        Over-writes the cached dict for key entryid with the data
+        dict.
 
         This is a helper method--call this to add data to the cache.
         Do not override it.
 
-        @param entryid: a unique key for the information you're storing
-        @type  entryid: string
+        :param entryid: a unique key for the information you're
+                        storing
 
-        @param data: the data to store--this should probably be a dict
-        @type  data: dict
+        :param data: the data to store--this should probably be a dict
         """
         mycache = tools.get_cache(self._request)
         if mycache:
             mycache[entryid] = data
 
-    # everything below this point involves convenience functions
-    # that work with the above functions.
+    addToCache = tools.deprecated_function(add_to_cache)
 
-    def setTime(self, timetuple):
+    def set_time(self, timetuple):
         """
-        This takes in a given time tuple and sets all the magic metadata
-        variables we have according to the items in the time tuple.
+        This takes in a given time tuple and sets all the magic
+        metadata variables we have according to the items in the time
+        tuple.
 
-        @param timetuple: the timetuple to use to set the data with--this
-            is the same thing as the mtime/atime portions of an os.stat.
-        @type  timetuple: tuple of ints
+        :param timetuple: the timetuple to use to set the data
+                          with--this is the same thing as the
+                          mtime/atime portions of an os.stat.
         """
         self['timetuple'] = timetuple
         self._mtime = time.mktime(timetuple)
@@ -215,56 +219,55 @@ class EntryBase:
         # set the locale back
         locale.setlocale(locale.LC_ALL, loc)
 
+    setTime = tools.deprecated_function(set_time)
+
+    # everything below this point involves convenience functions
+    # that work with the above functions.
+
     def __getitem__(self, key, default=None):
         """
         Retrieves an item from this dict based on the key given.  If
         the item does not exist, then we return the default.
 
-        If the item is CONTENT_KEY then we return the result from
-        self.getData().
+        If the item is ``CONTENT_KEY``, it calls ``get_data``,
+        otherwise it calls ``get_metadata``.  Don't override this.
 
-        This is just a convenience method for getData(...) and
-        getMetadata(...).
+        .. Warning::
 
-        There's no reason to override this--override getData and
-        getMetadata instead.
+            There's no reason to override this--override ``get_data``
+            and ``get_metadata`` instead.
 
-        @param key: the key being sought
-        @type  key: varies
+        :param key: the key being sought
 
-        @param default: the default to return if the key does not
-            exist
-        @type  default: varies
+        :param default: the default to return if the key does not
+                        exist
 
-        @returns: the value of self._metadata.get(key, default) or
-            self.getData()
-        @rtype: varies
+        :returns: the value of ``get_metadata`` or ``get_data``
         """
         if key == CONTENT_KEY:
-            return self.getData()
+            return self.get_data()
 
-        return self.getMetadata(key, default)
+        return self.get_metadata(key, default)
 
     def get(self, key, default=None):
         """
         Retrieves an item from the internal dict based on the key
         given.
 
-        All this does is turn aroun and call __getitem__.
+        All this does is turn aroun and call ``__getitem__``.
 
-        There's no reason to override this--override getData and
-        getMetadata instead.
+        .. Warning::
 
-        @param key: the key being sought
-        @type  key: varies
+            There's no reason to override this--override ``get_data``
+            and ``get_metadata`` instead.
 
-        @param default: the default to return if the key does not
-            exist
-        @type  default: varies
+        :param key: the key being sought
 
-        @returns: the value of self._metadata.get(key, default) or
-            self.getData() (through __getitem__)
-        @rtype: varies
+        :param default: the default to return if the key does not
+                        exist
+
+        :returns: the value of ``get_metadata`` or ``get_data``
+                  (through ``__getitem__``)
         """
         return self.__getitem__(key, default)
 
@@ -272,67 +275,75 @@ class EntryBase:
         """
         Sets the metadata[key] to the given value.
 
-        This is a convenience method for setData(...) and setMetadata(...).
+        This uses ``set_data`` and ``set_metadata``.  Don't override
+        this.
 
-        There's no reason to override this.  Override setData and
-        setMetadata.
+        :param key: the given key name
 
-        @param key: the given key name
-        @type key: varies
-
-        @param value: the given value
-        @type value: varies
+        :param value: the given value
         """
         if key == CONTENT_KEY:
-            self.setData(value)
+            self.set_data(value)
         else:
-            self.setMetadata(key, value)
+            self.set_metadata(key, value)
 
     def update(self, newdict):
         """
         Updates the contents in this entry with the contents in the
-        dict.  It does so by calling setData and setMetadata.
+        dict.  It does so by calling ``set_data`` and
+        ``set_metadata``.
 
-        @param newdict: the dict we're updating this one with
-        @type newdict: dict
+        .. Warning::
+
+            There's no reason to override this--override ``set_data``
+            and ``set_metadata`` instead.
+
+        :param newdict: the dict we're updating this one with
         """
         for mem in newdict.keys():
             if mem == CONTENT_KEY:
-                self.setData(newdict[mem])
+                self.set_data(newdict[mem])
             else:
-                self.setMetadata(mem, newdict[mem])
+                self.set_metadata(mem, newdict[mem])
 
     def has_key(self, key):
         """
-        Returns whether a given key is in the metadata dict.  If the key
-        is the CONTENT_KEY, then we automatically return true.
+        Returns whether a given key is in the metadata dict.  If the
+        key is the ``CONTENT_KEY``, then we automatically return true.
 
-        @param key: the key to check in the metadata dict for
-        @type  key: varies
+        .. Warning::
 
-        @returns: whether (1) or not (0) the key exists
-        @rtype: boolean
+            There's no reason to override this--override
+            ``get_metadata`` instead.
+
+        :param key: the key to check in the metadata dict for
+
+        :returns: whether (True) or not (False) the key exists
         """
         if key == CONTENT_KEY or key == CONTENT_KEY + "_escaped":
-            return 1
+            return True
 
-        value = self.getMetadata(key, DOESNOTEXIST)
+        value = self.get_metadata(key, DOESNOTEXIST)
         if value == DOESNOTEXIST:
-            value = self.getMetadata(key, DOESNOTEXIST2)
+            value = self.get_metadata(key, DOESNOTEXIST2)
             if value == DOESNOTEXIST2:
-                return 0
+                return False
 
-        return 1
+        return True
 
     def keys(self):
         """
         Returns a list of the keys that can be accessed through
-        __getitem__.
+        ``__getitem__``.
 
-        @returns: list of key names
-        @rtype: list of varies
+        .. Warning::
+
+            There's no reason to override this--override
+            ``get_metadata_keys`` instead.
+
+        :returns: list of key names
         """
-        keys = self.getMetadataKeys()
+        keys = self.get_metadata_keys()
         if CONTENT_KEY not in keys:
             keys.append(CONTENT_KEY)
         return keys
@@ -343,25 +354,21 @@ def generate_entry(request, properties, data, mtime=None):
     Takes a properties dict and a data string and generates a generic
     entry using the data you provided.
 
-    @param request: the Request object
-    @type  request: Request
+    :param request: the Request object
 
-    @param properties: the dict of properties for the entry
-    @type  properties: dict
+    :param properties: the dict of properties for the entry
 
-    @param data: the data content for the entry
-    @type  data: string
+    :param data: the data content for the entry
 
-    @param mtime: the mtime tuple (as given by time.localtime()).
-        if you pass in None, then we'll use localtime.
-    @type  mtime: tuple of ints
+    :param mtime: the mtime tuple (as given by ``time.localtime()``).
+                  if you pass in None, then we'll use localtime.
     """
     entry = EntryBase(request)
 
     entry.update(properties)
-    entry.setData(data)
+    entry.set_data(data)
     if mtime:
-        entry.setTime(mtime)
+        entry.set_time(mtime)
     else:
-        entry.setTime(time.localtime())
+        entry.set_time(time.localtime())
     return entry

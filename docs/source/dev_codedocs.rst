@@ -14,15 +14,16 @@ Pyblosxom.pyblosxom
 
 .. data:: VERSION
 
-   PyBlosxom version.
+   PyBlosxom version.  For example ``"1.5"``.
 
 .. data:: VERSION_DATA
 
-   PyBlosxom version with date.
+   PyBlosxom version with date.  For example ``"1.5 dev"``.
 
 .. data:: VERSION_SPLIT
 
    PyBlosxom version as a tuple--use this for version checking.
+   For example ``("1", "5")``.
 
 .. automodule:: Pyblosxom.pyblosxom
    :members:
@@ -32,4 +33,17 @@ Pyblosxom.tools
 ===============
 
 .. automodule:: Pyblosxom.tools
+   :members:
+
+
+Pyblosxom.renderers.base
+========================
+
+.. automodule:: Pyblosxom.renderers.base
+   :members:
+
+Pyblosxom.entries.base
+======================
+
+.. automodule:: Pyblosxom.entries.base
    :members:

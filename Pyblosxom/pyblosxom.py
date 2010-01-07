@@ -33,7 +33,7 @@ from Pyblosxom.entries.fileentry import FileEntry
 
 VERSION = "1.5"
 VERSION_DATE = VERSION + " dev"
-VERSION_SPLIT = tuple(VERSION.split('.'))
+VERSION_SPLIT = tuple(VERSION.split(" ")[0].split('.'))
 
 class PyBlosxom:
     """Main class for PyBlosxom functionality.  It handles
@@ -793,6 +793,8 @@ class Response(object):
         out.write('\n\n')
         self._headers_sent = True
 
+    sendHeaders = tools.deprecated_function(send_headers)
+
     def send_body(self, out):
         """Send the response body to the given output stream.
 
@@ -806,6 +808,7 @@ class Response(object):
             # connection.  so we skip it.
             pass
 
+    sendBody = tools.deprecated_function(send_body)
 #
 # blosxom behavior stuff
 #
@@ -904,15 +907,15 @@ def blosxom_handler(request):
 
     if renderer and not renderer.rendered:
         if entry_list:
-            renderer.setContent(entry_list)
+            renderer.set_content(entry_list)
             # Log it as success
             tools.run_callback("logrequest",
                                {'filename':config.get('logfile',''),
                                 'return_code': '200',
                                 'request': request})
         else:
-            renderer.addHeader('Status', '404 Not Found')
-            renderer.setContent(
+            renderer.add_header('Status', '404 Not Found')
+            renderer.set_content(
                 {'title': 'The page you are looking for is not available',
                  'body': 'Somehow I cannot find the page you want. ' +
                  'Go Back to <a href="%s">%s</a>?'
