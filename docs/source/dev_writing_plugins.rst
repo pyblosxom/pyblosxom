@@ -11,11 +11,23 @@ This chapter covers a bunch of useful things to know when writing
 PyBlosxom plugins.  This chapter, moreso than the rest of this manual,
 is very much a work in progress.
 
-FIXME - absorb from wiki, Will's tips, and tutorials
+If you need help with plugin development, sign up on the devel mailing
+list and/or join us on ``#pyblosxom`` on ``irc.freenode.net``.  More
+details in :ref:`project-details-and-contact`.
+
+FIXME - this needs more work
 
 
 Things that all plugins should have
 ===================================
+
+This section covers things that all plugins should have.  This makes
+plugins easier to distribute, maintain, update, and easier for users
+to use them.
+
+
+Documentation
+-------------
 
 All plugins should have a docstring at the top of the file that describes
 in detail:
@@ -26,10 +38,6 @@ in detail:
 4. the license the plugin is distributed under
 5. and any copyright information you have
 6. any notes about requirements (e.g. "Requires Python 2.3 or greater")
-
-
-Documentation
--------------
 
 For example, this is at the top of Will's wbgpager plugin::
 
@@ -207,7 +215,7 @@ function to your plugin module.  Something like this (taken from
 pycategories)::
 
     def verify_installation(request):
-        config = request.getConfiguration()
+        config = request.get_configuration()
 
         if not config.has_key("category_flavour"):
             print "missing optional config property 'category_flavour' "
@@ -238,7 +246,7 @@ Here's an example of ``verify_installation`` from Will's wbgpager
 plugin::
 
     def verify_installation(request):
-        config = request.getConfiguration()
+        config = request.get_configuration()
         if config.get("num_entries", 0) == 0:
             print "missing config property 'num_entries'.  wbgpager won't do "
             print "anything without num_entries set.  either set num_entries "
@@ -262,7 +270,7 @@ example::
 
     def cb_prepare(args):
         ...
-        logger = tools.getLogger()
+        logger = tools.get_logger()
         logger.info("blah blah blah...")
 
         try:
@@ -282,15 +290,16 @@ in the data dict of the Request object.  For example::
 
     def cb_date_head(args):
         request = args["request"]
-        data = request.getData()
+        data = request.get_data()
 
-        if data.has_key(STATE_KEY) and data[STATE_KEY]["blah"] == "blahblah":
+        if ((data.has_key(STATE_KEY) 
+             and data[STATE_KEY]["blah"] == "blahblah")):
             ...
 
 
     def cb_filelist(args):
         request = args["request"]
-        data = request.getData()
+        data = request.get_data()
 
         data[STATE_KEY] = {}
         data[STATE_KEY]["blah"] = "blahblah"
@@ -302,7 +311,7 @@ How to implement a callback
 If you want to implement a callback, you add a function corresponding
 to the callback name to your plugin module.  For example, if you
 wanted to modify the Request object just before rendering, you'd
-implement cb_prepare like this::
+implement ``cb_prepare`` like this::
 
     def cb_prepare(args):
         pass
@@ -319,20 +328,21 @@ values.  Check the architecture chapter for a list of all the
 callbacks that are available, their arguments, and return values.
 
 
+.. _writing-an-entryparser:
 
 Writing an entryparser
 ======================
 
 Entry parsing functions take in a filename and the Request object.
-They then open the file and parse it out.  They can call ``cb_preformat``
-and ``cb_postformat`` as they see fit.  They should return a dict
-containing at least ``"title"`` and ``"body"`` keys.  The "title" should be a
-single string.  The ``"body"`` should be a single string and should be
-formatted in HTML.
+They then open the file and parse it out.  They can call
+``cb_preformat`` and ``cb_postformat`` as they see fit.  They should
+return a dict containing at least ``"title"`` and ``"body"`` keys.
+The "title" should be a single string.  The ``"body"`` should be a
+single string and should be formatted in HTML.
 
-Here's an example code that reads ``.plain`` files which have the title as
-the first line, metadata lines that start with # and then after all
-the metadata the body of the entry::
+Here's an example code that reads ``.plain`` files which have the
+title as the first line, metadata lines that start with ``#`` and then
+after all the metadata the body of the entry::
 
     import os
 
@@ -345,8 +355,8 @@ the metadata the body of the entry::
 
     def parse(filename, request):
         """
-        We just read everything off the file here, using the filename as
-        title
+        We just read everything off the file here, using the filename
+        as the title.
         """
         entrydata = {}
 
@@ -365,8 +375,8 @@ You can also specify the template to use by setting the
 specified doesn't exist, PyBlosxom will use the ``story`` template for
 the specified flavour.
 
-For example, if you were creating a tumblelog and the file parsed was a
-image entry and you want image entries to be displayed on your blog
+For example, if you were creating a tumblelog and the file parsed was
+a image entry and you want image entries to be displayed on your blog
 with an image and then a caption below it and that's it, then you
 would create a template for that and set ``"template_name"`` to the
 name of the template::
@@ -380,8 +390,8 @@ name of the template::
 
     def parse_image(filename, request):
         """
-        An image entry consists of an image file name followed by the
-        caption.  Like this::
+        An image entry consists of an image file name followed by
+        the caption.  Like this::
 
             cimg_8229.jpg
             This is a picture of me standing on my head.
@@ -406,6 +416,8 @@ name of the template::
         return entrydata
 
 
+.. _writing-a-preformatter:
+
 Writing a preformatter plugin
 =============================
 
@@ -423,6 +435,24 @@ A typical preformatter plugin looks like this::
         text = re.sub('\\n','<br />',text)
         return '<p>%s</p>' % text
 
+
+.. _writing-a-postformatter:
+
+Writing a postformatter plugin
+==============================
+
+FIXME - write this section
+
+
+.. _writing-a-renderer:
+
+Writing a renderer
+==================
+
+FIXME - write this section
+
+
+.. _writing-a-command:
 
 Writing a plugin that adds a commandline command
 ================================================

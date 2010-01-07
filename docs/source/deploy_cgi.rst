@@ -52,7 +52,9 @@ Run your ``pyblosxom.cgi`` script by doing::
 
 If that doesn't work, double-check to make sure you've completed the
 above steps, then check the trouble-shooting section, then ask for
-help on IRC or the *pyblosxom-users* mailing list.
+help on IRC or the users mailing list.  More details in 
+:ref:`project-details-and-contact`.
+
 
 If that works, then try to run the CGI script from your web-browser.
 The url is dependent on where you put the ``pyblosxom.cgi`` script and
