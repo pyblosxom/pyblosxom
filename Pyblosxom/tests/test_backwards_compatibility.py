@@ -1,4 +1,4 @@
-from tests.helpers import UnitTestBase
+from Pyblosxom.tests.helpers import UnitTestBase
 from Pyblosxom.pyblosxom import Request
 
 class TestRequest(UnitTestBase):

@@ -2,7 +2,7 @@ import sys
 import os
 import time
 
-from tests.helpers import UnitTestBase
+from Pyblosxom.tests.helpers import UnitTestBase
 from Pyblosxom import tools
 
 def gen_time(s):

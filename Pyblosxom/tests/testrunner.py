@@ -3,7 +3,7 @@ import os
 
 def get_suite():
     names = os.listdir(os.path.dirname(__file__))
-    names = ["tests.%s" % m[:-3]
+    names = ["Pyblosxom.tests.%s" % m[:-3]
              for m in names
              if m.startswith("test_") and m.endswith(".py")]
     suite = unittest.TestLoader().loadTestsFromNames(names)

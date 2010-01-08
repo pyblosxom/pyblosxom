@@ -3,7 +3,7 @@ import string
 import os
 import os.path
 
-from tests.helpers import UnitTestBase
+from Pyblosxom.tests.helpers import UnitTestBase
 from Pyblosxom import tools, pyblosxom
 
 class TestVAR_REGEXP(UnitTestBase):
