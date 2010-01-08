@@ -5,4 +5,4 @@ pylint:
 	pylint Pyblosxom
 
 test:
-	nosetests -s --verbose --with-coverage --cover-package=Pyblosxom --include unit
+	python setup.py test

@@ -1,5 +1,4 @@
-from nose.tools import eq_
-from Pyblosxom.tests.helpers import UnitTestBase
+from tests.helpers import UnitTestBase
 from Pyblosxom.pyblosxom import Request
 
 class TestRequest(UnitTestBase):

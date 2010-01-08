@@ -1,7 +1,7 @@
 import time
 from StringIO import StringIO
 
-from Pyblosxom.tests.helpers import req_, UnitTestBase
+from tests.helpers import req_, UnitTestBase
 
 from Pyblosxom.tools import STANDARD_FILTERS
 from Pyblosxom.pyblosxom import Request

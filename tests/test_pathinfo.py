@@ -1,4 +1,4 @@
-from Pyblosxom.tests.helpers import UnitTestBase
+from tests.helpers import UnitTestBase
 
 from Pyblosxom.pyblosxom import blosxom_process_path_info
 from Pyblosxom import tools

@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-from nose.tools import with_setup, eq_
-
 import string
 import os
 import os.path
 
-from Pyblosxom.tests.helpers import UnitTestBase
+from tests.helpers import UnitTestBase
 from Pyblosxom import tools, pyblosxom
 
 class TestVAR_REGEXP(UnitTestBase):

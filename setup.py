@@ -45,6 +45,7 @@ setup(name="pyblosxom",
     packages=find_packages(exclude=["ez_setup"]),
     scripts=["bin/pyblosxom-cmd"],
     zip_safe=False,
+    test_suite="tests.testrunner.test_suite",
     include_package_data=True,
     install_requires=[], # FIXME
     classifiers=[

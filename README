@@ -76,15 +76,13 @@ fixing.
 How to run unit tests
 =====================
 
-We use nose_ for test discovery and running unit tests.  You'll need
-to have that installed to run our tests.
+Tests are written with the Python unittest module.
 
-.. _nose: http://somethingaboutorange.com/mrl/projects/nose/
+To run core tests, do this::
 
-To run the tests, execute::
+    python setup.py test
 
-   nosetests --verbose --include unit
-   nosetests --verbose --include functional
+This will build PyBlosxom, then run the tests.
 
 If you would like to add tests to the test suite, please do and send
 us patches!
