@@ -142,22 +142,26 @@ def convert_configini_values(configini):
     :raises ConfigSyntaxErrorException: when there's a syntax error
     """
     def s_or_i(text):
-        """Takes a string and if it begins with " or ' and ends with
-        " or ', then it returns the string.  If it's an int, returns
+        """
+        Takes a string and if it begins with \" or \' and ends with
+        \" or \', then it returns the string.  If it's an int, returns
         the int.  Otherwise it returns the text.
         """
-        if text.startswith('"'):
-            if text.endswith('"'):
-                return text[1:-1]
-            raise ConfigSyntaxErrorException("config syntax error: "
-                                             "string '%s' missing end \"" %
-                                             text)
-        elif text.startswith("'"):
-            if text.endswith("'"):
-                return text[1:-1]
-            raise ConfigSyntaxErrorException("config syntax error: "
-                                             "string '%s' missing end '" %
-                                             text)
+        text = text.strip()
+        if (((text.startswith('"') and not text.endswith('"'))
+             or (not text.startswith('"') and text.endswith('"')))):
+            raise ConfigSyntaxErrorException(
+                "config syntax error: string '%s' missing start or end \"" %
+                text)
+        elif (((text.startswith("'") and not text.endswith("'"))
+               or (not text.startswith("'") and text.endswith("'")))):
+            raise ConfigSyntaxErrorException(
+                "config syntax error: string '%s' missing start or end '" %
+                text)
+        elif text.startswith('"') and text.endswith('"'):
+            return text[1:-1]
+        elif text.startswith("'") and text.endswith("'"):
+            return text[1:-1]
         elif text.isdigit():
             return int(text)
         return text
@@ -170,18 +174,18 @@ def convert_configini_values(configini):
             continue
 
         value = value.strip()
-        if value.startswith("["):
-            if value.endswith("]"):
-                value2 = value[1:-1].strip().split(",")
-                if len(value2) == 1 and value2[0] == "":
-                    # handle the foo = [] case
-                    config[key] = []
-                else:
-                    config[key] = [s_or_i(s.strip()) for s in value2]
+        if (((value.startswith("[") and not value.endswith("]"))
+             or (not value.startswith("[") and value.endswith("]")))):
+            raise ConfigSyntaxErrorException(
+                "config syntax error: list '%s' missing [ or ]" %
+                value)
+        elif value.startswith("[") and value.endswith("]"):
+            value2 = value[1:-1].strip().split(",")
+            if len(value2) == 1 and value2[0] == "":
+                # handle the foo = [] case
+                config[key] = []
             else:
-                raise ConfigSyntaxErrorException("config syntax error: "
-                                                 "list '%s' missing end ]" %
-                                                 value)
+                config[key] = [s_or_i(s.strip()) for s in value2]
         else:
             config[key] = s_or_i(value)
 
