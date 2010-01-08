@@ -679,7 +679,7 @@ def importname(modulename, name):
         logger.error("Module %s in package %s won't import: %s" % \
                      (repr(modulename), repr(name), ie))
 
-    except Exception, e:
+    except StandardError, e:
         logger.error("Module %s not in in package %s: %s" % \
                      (repr(modulename), repr(name), e))
 
