@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-import _path_pyblosxom
 from nose.tools import with_setup, eq_
 
 import string
 import os
 import os.path
 
+from Pyblosxom.tests.helpers import UnitTestBase
 from Pyblosxom import tools, pyblosxom
 
-class TestVAR_REGEXP:
+class TestVAR_REGEXP(UnitTestBase):
     """tools._VAR_REGEXP
 
-    This tests the various syntaxes for variables in PyBlosxom templates.
+    This tests the various syntaxes for variables in PyBlosxom
+    templates.
     """
     def _get_match(self, compiled_regexp, s):
         r = compiled_regexp.search(s)
@@ -19,9 +20,9 @@ class TestVAR_REGEXP:
         return r and r.group(1)
 
     def test_escaped_variables(self):
-        yield eq_, self._get_match(tools._VAR_REGEXP, "\\$test"), None
+        self.eq_(self._get_match(tools._VAR_REGEXP, "\\$test"), None)
         # FIXME - this is bad behavior
-        yield eq_, self._get_match(tools._VAR_REGEXP, "\\\\$test"), None
+        self.eq_(self._get_match(tools._VAR_REGEXP, "\\\\$test"), None)
 
     def test_dollar_then_string(self):
         for mem in (("$test", "test"),
@@ -32,30 +33,30 @@ class TestVAR_REGEXP:
                     ("other $test stuff", "test"),
                     ("other $test $test2 stuff", "test"),
                     ("español $test stuff", "test")):
-            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
+            self.eq_(self._get_match(tools._VAR_REGEXP, mem[0]), mem[1])
 
     def test_delimiters(self):
         for c in ('|', '=', '+', ' ', '$', '<', '>'):
-            yield eq_, self._get_match(tools._VAR_REGEXP, "$test%s1" % c), "test"
+            self.eq_(self._get_match(tools._VAR_REGEXP, "$test%s1" % c), "test")
 
     def test_namespace(self):
         for mem in (("$foo::bar", "foo::bar"),
                     (" $foo::bar ", "foo::bar"),
                     ("other $foo::bar stuff", "foo::bar")):
-            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
+            self.eq_(self._get_match(tools._VAR_REGEXP, mem[0]), mem[1])
 
     def test_single_function(self):
         for mem in (("$foo()", "foo()"),
                     (" $foo() ", "foo()"),
                     ("other $foo() stuff", "foo()"),
                     ("other $foo::bar() stuff", "foo::bar()")):
-            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
+            self.eq_(self._get_match(tools._VAR_REGEXP, mem[0]), mem[1])
 
     def test_function_with_arguments(self):
         for mem in (('$foo("arg1")', 'foo("arg1")'),
                     ('$foo("arg1", 1)', 'foo("arg1", 1)'),
                     ('$foo("español", 1)', 'foo("español", 1)')):
-            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
+            self.eq_(self._get_match(tools._VAR_REGEXP, mem[0]), mem[1])
 
     def test_parens(self):
         for mem in (("$(foo)", "(foo)"),
@@ -63,12 +64,15 @@ class TestVAR_REGEXP:
                     ("$(foo::bar)", "(foo::bar)"),
                     ("$(foo::bar())", "(foo::bar())"),
                     ("$(foo::bar(1, 2, 3))", "(foo::bar(1, 2, 3))")):
-            yield eq_, self._get_match(tools._VAR_REGEXP, mem[0]), mem[1]
+            self.eq_(self._get_match(tools._VAR_REGEXP, mem[0]), mem[1])
 
 req = pyblosxom.Request({}, {}, {})
 
-class Testparse:
+class Testparse(UnitTestBase):
     """tools.parse"""
+    def setUp(self):
+        UnitTestBase.setUp(self)
+
     def test_simple(self):
         env = {"foo": "FOO",
                "country": "España"}
@@ -77,7 +81,7 @@ class Testparse:
                     ("foo $foo foo", "foo FOO foo"),
                     ("foo $foor foo", "foo  foo"),
                     ("foo $country foo", "foo España foo")):
-            yield eq_, tools.parse(req, env, mem[0]), mem[1]
+            self.eq_(tools.parse(req, env, mem[0]), mem[1])
 
     def test_delimited(self):
         env = {"foo": "FOO",
@@ -86,7 +90,7 @@ class Testparse:
         for mem in (("foo $(foo) foo", "foo FOO foo"),
                     ("foo $(foor) foo", "foo  foo"),
                     ("foo $(country) foo", "foo España foo")):
-            yield eq_, tools.parse(req, env, mem[0]), mem[1]
+            self.eq_(tools.parse(req, env, mem[0]), mem[1])
 
     def test_functions(self):
         for mem in (({"foo": lambda req, vd: "FOO"}, "foo foo foo", "foo foo foo"),
@@ -100,20 +104,20 @@ class Testparse:
                     # Note: functions can return unicode which will get 
                     # converted to blog_encoding
                     ({"lang": lambda req, vd: u"español"}, "español $(lang)", "español español")):
-            yield eq_, tools.parse(req, mem[0], mem[1]), mem[2]
+            self.eq_(tools.parse(req, mem[0], mem[1]), mem[2])
 
     def test_functions_old_behavior(self):
         # test the old behavior that allowed for functions that have no
         # arguments--in this case we don't pass a request object in
-        eq_(tools.parse(req, {"foo": (lambda : "FOO")}, "foo $foo() foo"), "foo FOO foo")
+        self.eq_(tools.parse(req, {"foo": (lambda : "FOO")}, "foo $foo() foo"), "foo FOO foo")
 
     def test_functions_with_args_that_have_commas(self):
-        env = { "foo": lambda req, vd, x: (x + "A"),
-                "foo2": lambda req, vd, x, y: (y + x) }
+        env = {"foo": lambda req, vd, x: (x + "A"),
+               "foo2": lambda req, vd, x, y: (y + x)}
 
         for mem in (('$foo("ba,ar")', "ba,arA"),
                     ('$foo2("a,b", "c,d")', "c,da,b")):
-            yield eq_, tools.parse(req, env, mem[0]), mem[1]
+            self.eq_(tools.parse(req, env, mem[0]), mem[1])
 
     def test_functions_with_var_args(self):
         def pt(d, t):
@@ -138,7 +142,7 @@ class Testparse:
                     # variables that have utf-8 characters
                     ("foo $foo(lang) foo", "foo EspañolA foo"),
                     ("foo $foo(ulang) foo", "foo EspañolA foo")):
-            yield eq_, tools.parse(req, vd, mem[0]), mem[1]
+            self.eq_(tools.parse(req, vd, mem[0]), mem[1])
 
     def test_escaped(self):
         def pt(d, t):
@@ -158,10 +162,10 @@ class Testparse:
 
                     # escaping with utf-8 characters
                     ("$escape(lang)", "&#x27;español&#x27;")):
-            yield eq_, pt(vd, mem[0]), mem[1]
+            self.eq_(pt(vd, mem[0]), mem[1])
 
 
-class Testcommasplit:
+class Testcommasplit(UnitTestBase):
     """tools.commasplit"""
     def test_commasplit(self):
         tcs = tools.commasplit
@@ -172,9 +176,9 @@ class Testcommasplit:
                     ("a, b, c", ["a", " b", " c"]),
                     ("a, 'b, c'", ["a", " 'b, c'"]),
                     ("a, \"b, c\"", ["a", " \"b, c\""])):
-            yield eq_, tools.commasplit(mem[0]), mem[1]
+            self.eq_(tools.commasplit(mem[0]), mem[1])
  
-class Testis_year:
+class Testis_year(UnitTestBase):
     """tools.is_year"""
     def test_must_be_four_digits(self):
         for mem in (("abab", 0),
@@ -183,26 +187,26 @@ class Testis_year:
                     ("19999", 0),
                     ("1997", 1),
                     ("2097", 1)):
-            yield eq_, tools.is_year(mem[0]), mem[1]
+            self.eq_(tools.is_year(mem[0]), mem[1])
 
     def test_must_start_with_19_or_20(self):
         for mem in (("3090", 0),
                     ("0101", 0)):
-            yield eq_, tools.is_year(mem[0]), mem[1]
+            self.eq_(tools.is_year(mem[0]), mem[1])
 
     def test_everything_else_returns_false(self):
         for mem in ((None, 0),
                     ("", 0),
                     ("ab", 0),
                     ("97", 0)):
-            yield eq_, tools.is_year(mem[0]), mem[1]
+            self.eq_(tools.is_year(mem[0]), mem[1])
 
-class TestgenerateRandStr:
-    """tools.generateRandStr
+class Test_generate_rand_str(UnitTestBase):
+    """tools.generate_rand_str
 
-    Note: This is a mediocre test because generateRandStr produces
-    a string that's of random length and random content.
-    It's possible for this test to pass even when the code is bad.
+    Note: This is a mediocre test because generate_rand_str produces a
+    string that's of random length and random content.  It's possible
+    for this test to pass even when the code is bad.
     """
     def _gen_checker(self, s, minlen, maxlen):
         assert len(s) >= minlen and len(s) <= maxlen
@@ -211,74 +215,74 @@ class TestgenerateRandStr:
 
     def test_generates_a_random_string(self):
         for i in range(5):
-            self._gen_checker(tools.generateRandStr(), 5, 10)
+            self._gen_checker(tools.generate_rand_str(), 5, 10)
 
     def test_generates_a_random_string_between_minlen_and_maxlen(self):
         for i in range(5):
-             self._gen_checker(tools.generateRandStr(4, 10), 4, 10)
+             self._gen_checker(tools.generate_rand_str(4, 10), 4, 10)
 
         for i in range(5):
-            self._gen_checker(tools.generateRandStr(3, 12), 3, 12)
+            self._gen_checker(tools.generate_rand_str(3, 12), 3, 12)
 
-class Testescape_text:
+class Testescape_text(UnitTestBase):
     """tools.escape_text"""
     def test_none_to_none(self):
-        eq_(tools.escape_text(None), None)
+        self.eq_(tools.escape_text(None), None)
 
     def test_empty_string_to_empty_string(self):
-        eq_(tools.escape_text(""), "")
+        self.eq_(tools.escape_text(""), "")
 
     def test_single_quote_to_pos(self):
-        eq_(tools.escape_text("a'b"), "a&#x27;b")
+        self.eq_(tools.escape_text("a'b"), "a&#x27;b")
 
     def test_double_quote_to_quot(self):
-        eq_(tools.escape_text("a\"b"), "a&quot;b")
+        self.eq_(tools.escape_text("a\"b"), "a&quot;b")
 
     def test_greater_than(self):
-        eq_(tools.escape_text("a>b"), "a&gt;b")
+        self.eq_(tools.escape_text("a>b"), "a&gt;b")
 
     def test_lesser_than(self):
-        eq_(tools.escape_text("a<b"), "a&lt;b")
+        self.eq_(tools.escape_text("a<b"), "a&lt;b")
 
     def test_ampersand(self):
-        eq_(tools.escape_text("a&b"), "a&amp;b")
+        self.eq_(tools.escape_text("a&b"), "a&amp;b")
 
     def test_complicated_case(self):
-        eq_(tools.escape_text("a&>b"), "a&amp;&gt;b")
+        self.eq_(tools.escape_text("a&>b"), "a&amp;&gt;b")
 
     def test_everything_else_unchanged(self):
         for mem in ((None, None),
                     ("", ""),
                     ("abc", "abc")):
-            yield eq_, tools.escape_text(mem[0]), mem[1]
+            self.eq_(tools.escape_text(mem[0]), mem[1])
 
-class Testurlencode_text:
+class Testurlencode_text(UnitTestBase):
     """tools.urlencode_text"""
     def test_none_to_none(self):
-        eq_(tools.urlencode_text(None), None)
+        self.eq_(tools.urlencode_text(None), None)
 
     def test_empty_string_to_empty_string(self):
-        eq_(tools.urlencode_text(""), "")
+        self.eq_(tools.urlencode_text(""), "")
 
     def test_equals_to_3D(self):
-        eq_(tools.urlencode_text("a=c"), "a%3Dc")
+        self.eq_(tools.urlencode_text("a=c"), "a%3Dc")
 
     def test_ampersand_to_26(self):
-        eq_(tools.urlencode_text("a&c"), "a%26c")
+        self.eq_(tools.urlencode_text("a&c"), "a%26c")
 
     def test_space_to_20(self):
-        eq_(tools.urlencode_text("a c"), "a%20c")
+        self.eq_(tools.urlencode_text("a c"), "a%20c")
 
     def test_utf8(self):
-        eq_(tools.urlencode_text("español"), "espa%C3%B1ol")
+        self.eq_(tools.urlencode_text("español"), "espa%C3%B1ol")
 
     def test_everything_else_unchanged(self):
         for mem in ((None, None),
                     ("", ""),
                     ("abc", "abc")):
-            yield eq_, tools.urlencode_text(mem[0]), mem[1]
+            self.eq_(tools.urlencode_text(mem[0]), mem[1])
 
-class TestStripper:
+class TestStripper(UnitTestBase):
     """tools.Stripper class"""
 
     def _strip(self, text):
@@ -295,15 +299,18 @@ class TestStripper:
                     ("abc<br />", "abc "),
                     ("abc <b>def</b> ghi", "abc  def  ghi"),
                     ("abc <b>español</b> ghi", "abc  español  ghi")):
-            yield eq_, self._strip(mem[0]), mem[1]
+            self.eq_(self._strip(mem[0]), mem[1])
 
-class Testimportname:
+class Testimportname(UnitTestBase):
     """tools.importname"""
     def setUp(self):
+        UnitTestBase.setUp(self)
         tools._config = {}
 
-    def teartDown(self):
-        del tools.__dict__["_config"]
+    def tearDown(self):
+        UnitTestBase.tearDown(self)
+        if "_config" in tools.__dict__:
+            del tools.__dict__["_config"]
 
     def _c(self, mn, n):
         m = tools.importname(mn, n)
@@ -312,56 +319,45 @@ class Testimportname:
 
     def test_goodimport(self):
         import string
-        yield eq_, tools.importname("", "string"), string
+        self.eq_(tools.importname("", "string"), string)
 
         import os.path
-        yield eq_, tools.importname("os", "path"), os.path
+        self.eq_(tools.importname("os", "path"), os.path)
 
     def test_badimport(self):
-        yield eq_, tools.importname("", "foo"), None
+        self.eq_(tools.importname("", "foo"), None)
 
-class Testwhat_ext:
+class Testwhat_ext(UnitTestBase):
     """tools.what_ext"""
-    def __init__(self):
-        self._files = ["a.txt", "b.html", "c.txtl", "español.txt"]
-        d = os.path.dirname(__file__)
-        self._d = os.path.join(d, "what_ext_test_dir")
+    def get_ext_dir(self):
+        return os.path.join(self.get_temp_dir(), "ext")
         
     def setUp(self):
         """
         Creates the directory with some files in it.
         """
-        os.mkdir(self._d)
+        UnitTestBase.setUp(self)
+        self._files = ["a.txt", "b.html", "c.txtl", "español.txt"]
+        os.mkdir(self.get_ext_dir())
 
         for mem in self._files:
-            f = open(os.path.join(self._d, mem), "w")
+            f = open(os.path.join(self.get_ext_dir(), mem), "w")
             f.write("lorem ipsum")
             f.close()
 
-    def tearDown(self):
-        """
-        Cleans up the test files and the directory that we created.
-        """
-        for mem in self._files:
-            try:
-                os.remove(os.path.join(self._d, mem))
-            except:
-                pass
-
-        try:
-            os.rmdir(self._d)
-        except:
-            pass
-    
     def test_returns_extension_if_file_has_extension(self):
-        # FIXME - can't turn this into a generator for some reason
-        eq_(tools.what_ext(["txt", "html"], os.path.join(self._d, "a")), "txt")
-        eq_(tools.what_ext(["txt", "html"], os.path.join(self._d, "b")), "html")
-        eq_(tools.what_ext(["txt", "html"], os.path.join(self._d, "español")), "txt")
+        d = self.get_ext_dir()
+        self.eq_(tools.what_ext(["txt", "html"], os.path.join(d, "a")),
+                 "txt")
+        self.eq_(tools.what_ext(["txt", "html"], os.path.join(d, "b")),
+                 "html")
+        self.eq_(tools.what_ext(["txt", "html"], os.path.join(d, "español")),
+                 "txt")
 
     def test_returns_None_if_extension_not_present(self):
-        eq_(tools.what_ext([], os.path.join(self._d, "a")), None)
-        eq_(tools.what_ext(["html"], os.path.join(self._d, "a")), None)
+        d = self.get_ext_dir()
+        self.eq_(tools.what_ext([], os.path.join(d, "a")), None)
+        self.eq_(tools.what_ext(["html"], os.path.join(d, "a")), None)
 
 ## class Testrun_callback:
 ##     """tools.run_callback
@@ -386,16 +382,16 @@ class Testwhat_ext:
 ##                                  mappingfunc=lambda x,y: y)
 ##         eq_(ret["x"], 3)
 
-class Testconvert_configini_values:
+class Testconvert_configini_values(UnitTestBase):
     """tools.convert_configini_values
 
     This tests config.ini -> config conversions.
     """
     def test_empty(self):
-        eq_(tools.convert_configini_values({}), {})
+        self.eq_(tools.convert_configini_values({}), {})
 
     def test_no_markup(self):
-        eq_(tools.convert_configini_values({"a": "b"}), {"a": "b"})
+        self.eq_(tools.convert_configini_values({"a": "b"}), {"a": "b"})
 
     def test_integers(self):
         for mem in (({"a": "1"}, {"a": 1}),
@@ -403,7 +399,7 @@ class Testconvert_configini_values:
                     ({"a": "10"}, {"a": 10}),
                     ({"a": "100"}, {"a": 100}),
                     ({"a": " 100  "}, {"a": 100})):
-            yield eq_, tools.convert_configini_values(mem[0]), mem[1]
+            self.eq_(tools.convert_configini_values(mem[0]), mem[1])
 
     def test_strings(self):
         for mem in (({"a": "'b'"}, {"a": "b"}),
@@ -411,7 +407,7 @@ class Testconvert_configini_values:
                     ({"a": "   \"b\" "}, {"a": "b"}),
                     ({"a": "español"}, {"a": "español"}),
                     ({"a": "'español'"}, {"a": "español"})):
-            yield eq_, tools.convert_configini_values(mem[0]), mem[1]
+            self.eq_(tools.convert_configini_values(mem[0]), mem[1])
 
     def test_lists(self):
         for mem in (({"a": "[]"}, {"a": []}),
@@ -419,25 +415,17 @@ class Testconvert_configini_values:
                     ({"a": "[1, 2]"}, {"a": [1, 2]}),
                     ({"a": "  [1 ,2 , 3]"}, {"a": [1, 2, 3]}),
                     ({"a": "['1' ,\"2\" , 3]"}, {"a": ["1", "2", 3]})):
-            yield eq_, tools.convert_configini_values(mem[0]), mem[1]
+            self.eq_(tools.convert_configini_values(mem[0]), mem[1])
 
     def test_syntax_exceptions(self):
-        def checkbadsyntax(d):
-            try:
-                tools.convert_configini_values( d )
-            except tools.ConfigSyntaxErrorException, csee:
-                assert True
-            except Exception, e:
-                # print repr(e)
-                assert False
-
-        for mem in ({ "a": "'b" },
-                    { "a": "b'" },
-                    { "a": "\"b" },
-                    { "a": "b\"" },
-                    { "a": "[b" },
-                    { "a": "b]" }):
-            yield checkbadsyntax, mem
+        for mem in ({"a": "'b"},
+                    {"a": "b'"},
+                    {"a": "\"b"},
+                    {"a": "b\""},
+                    {"a": "[b"},
+                    {"a": "b]"}):
+            self.assertRaises(tools.ConfigSyntaxErrorException,
+                              tools.convert_configini_values, mem)
 
     # FIXME - test tools.walk
 

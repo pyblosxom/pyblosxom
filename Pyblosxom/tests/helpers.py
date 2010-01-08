@@ -1,25 +1,41 @@
-import _path_pyblosxom
-
 import os
 import os.path
 import shutil
 import tempfile
 import StringIO
+import unittest
 
 from Pyblosxom.pyblosxom import Request
 from Pyblosxom import tools
 
-class UnitTestBase:
-    _tempdir = tempfile.mkdtemp()
+def req_():
+    return Request({}, {}, {})
 
-    def _gettempdir(self):
-        return UnitTestBase._tempdir
+class UnitTestBase(unittest.TestCase):
+    def setUp(self):
+        self._tempdir = None
 
-    def _setup(self, files):
+    def tearDown(self):
+        if self._tempdir:
+            try:
+                shutil.rmtree(self._tempdir)
+            except OSError:
+                pass
+
+    def eq_(self, a, b, text=None):
+        self.assertEquals(a, b, text)
+
+    def get_temp_dir(self):
+        if self._tempdir == None:
+            self._tempdir = tempfile.mkdtemp()
+        return self._tempdir
+
+    def setup_files(self, files):
         # sort so that we're building the directories in order
         files.sort()
 
-        os.makedirs(os.path.join(self._gettempdir(), "entries"))
+        tempdir = self.get_temp_dir()
+        os.makedirs(os.path.join(tempdir, "entries"))
 
         for fn in files:
             d, f = os.path.split(fn)
@@ -34,13 +50,11 @@ class UnitTestBase:
                 f.write("test file: %s\n" % fn)
                 f.close()
             
-    def _teardown(self):
-        shutil.rmtree(self._gettempdir())
+    def build_file_set(self, filelist):
+        return [os.path.join(self.get_temp_dir(), "entries/%s" % fn)
+                for fn in filelist]
 
-    def _buildfileset(self, filelist):
-        return [ os.path.join(self._gettempdir(), "entries/%s" % fn) for fn in filelist ]
-
-    def _build_request(self, cfg=None, http=None, data=None, inputstream=""):
+    def build_request(self, cfg=None, http=None, data=None, inputstream=""):
         """
         process_path_info uses:
         - req.pyhttp["PATH_INFO"]         - string
@@ -57,37 +71,39 @@ class UnitTestBase:
         - req.pyhttp["REQUEST_METHOD"]    - GET or POST
         - req.pyhttp["CONTENT_LENGTH"]    - integer
         """
-        _config = { "default_flavour": "html", 
-                    "datadir": os.path.join(self._gettempdir(), "entries"),
-                    "blog_title": "Joe's blog",
-                    "base_url": "http://www.example.com/" }
-        if cfg: _config.update(cfg)
+        _config = {"default_flavour": "html",
+                   "datadir": os.path.join(self.get_temp_dir(), "entries"),
+                   "blog_title": "Joe's blog",
+                   "base_url": "http://www.example.com/"}
+        if cfg:
+            _config.update(cfg)
 
-        _data = { "extensions": { "txt": 0 } }
-        if data: _data.update(data)
+        _data = {"extensions": {"txt": 0}}
+        if data:
+            _data.update(data)
 
-        _http = { "wsgi.input": StringIO.StringIO(inputstream),
-                  "REQUEST_METHOD": len(inputstream) and "GET" or "POST",
-                  "CONTENT_LENGTH": len(inputstream) }
+        _http = {"wsgi.input": StringIO.StringIO(inputstream),
+                 "REQUEST_METHOD": len(inputstream) and "GET" or "POST",
+                 "CONTENT_LENGTH": len(inputstream)}
         if http: _http.update(http)
 
         return Request(_config, _http, _data)
         
     def test_setup_teardown(self):
-        fileset1 = self._buildfileset( [ "file.txt",
-                                         "cata/file.txt",
-                                         "cata/subcatb/file.txt" ] )
+        fileset1 = self.build_file_set(["file.txt",
+                                        "cata/file.txt",
+                                        "cata/subcatb/file.txt"])
 
-        self._setup(fileset1)
+        self.setup_files(fileset1)
         try:
             for mem in fileset1:
-                assert os.path.isfile( mem )
+                assert os.path.isfile(mem)
 
         finally:
-            self._teardown()
+            self.tearDown()
 
         for mem in fileset1:
-            assert not os.path.isfile( mem )
+            assert not os.path.isfile(mem)
 
     def cmpdict(self, expected, actual):
         """expected <= actual
@@ -98,5 +114,3 @@ class UnitTestBase:
             else:
                 assert False
 
-def req_():
-    return Request({}, {}, {})
