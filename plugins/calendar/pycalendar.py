@@ -78,19 +78,19 @@ class PyblCalendar:
         Returns the on-demand generated string.
         """
         if self._cal == None:
-            self.generateCalendar()
+            self.generate_calendar()
 
         return self._cal
 
-    def generateCalendar(self):
+    def generate_calendar(self):
         """
         Generates the calendar.  We'd like to walk the archives
         for things that happen in this month and mark the dates
         accordingly.  After doing that we pass it to a formatting
         method which turns the thing into HTML.
         """
-        config = self._request.getConfiguration()
-        data = self._request.getData()
+        config = self._request.get_configuration()
+        data = self._request.get_data()
         entry_list = data["entry_list"]
 
         root = config["datadir"]
@@ -140,11 +140,11 @@ class PyblCalendar:
         except:
             pass
 
-        archiveList = tools.Walk(self._request, root)
+        archive_list = tools.walk(self._request, root)
 
         yearmonth = {}
 
-        for mem in archiveList:
+        for mem in archive_list:
             timetuple = tools.filestat(self._request, mem)
 
             # if we already have an entry for this date, we skip to the
@@ -211,7 +211,7 @@ class PyblCalendar:
         # insert the month name and next/previous links
         cal.insert(0, [prev, time.strftime("%B %Y", view), next])
 
-        self._cal = self.formatWithCSS(cal)
+        self._cal = self.format_with_css(cal)
 
 
     def _fixlink(self, link):
@@ -257,7 +257,7 @@ class PyblCalendar:
         return "<td class=\"blosxomCalendarWeekHeader\">%s</td>" % item
 
 
-    def formatWithCSS(self, cal):
+    def format_with_css(self, cal):
         """
         This formats the calendar using HTML table and CSS.  The output
         can be made to look prettier.
@@ -281,8 +281,6 @@ class PyblCalendar:
 
 def cb_prepare(args):
     request = args["request"]
-    data = request.getData()
+    data = request.get_data()
     if data.has_key("entry_list") and data["entry_list"]:
         data["calendar"] = PyblCalendar(request)
-
-# vim: tabstop=4 shiftwidth=4

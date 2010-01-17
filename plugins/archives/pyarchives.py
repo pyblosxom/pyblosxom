@@ -48,7 +48,7 @@ from Pyblosxom import tools
 import time, os
 
 def verify_installation(request):
-    config = request.getConfiguration()
+    config = request.get_configuration()
     if not config.has_key("archive_template"):
         print "missing optional config property 'archive_template' which "
         print "allows you to specify how the archive links are created.  "
@@ -62,22 +62,22 @@ class PyblArchives:
 
     def __str__(self):
         if self._archives == None:
-            self.genLinearArchive()
+            self.gen_linear_archive()
         return self._archives
 
-    def genLinearArchive(self):
-        config = self._request.getConfiguration()
-        data = self._request.getData()
+    def gen_linear_archive(self):
+        config = self._request.get_configuration()
+        data = self._request.get_data()
         root = config["datadir"]
         archives = {}
-        archiveList = tools.Walk(self._request, root)
+        archive_list = tools.walk(self._request, root)
         fulldict = {}
         fulldict.update(config)
         fulldict.update(data)
         
         template = config.get('archive_template', 
                     '<a href="%(base_url)s/%(Y)s/%(b)s">%(Y)s-%(b)s</a><br />')
-        for mem in archiveList:
+        for mem in archive_list:
             timetuple = tools.filestat(self._request, mem)
             timedict = {}
             for x in ["B", "b", "m", "Y", "y"]:
@@ -87,15 +87,15 @@ class PyblArchives:
             if not archives.has_key(timedict['Y'] + timedict['m']):
                 archives[timedict['Y'] + timedict['m']] = (template % fulldict)
 
-        arcKeys = archives.keys()
-        arcKeys.sort()
-        arcKeys.reverse()
+        arc_keys = archives.keys()
+        arc_keys.sort()
+        arc_keys.reverse()
         result = []
-        for key in arcKeys:
+        for key in arc_keys:
             result.append(archives[key])
         self._archives = '\n'.join(result)
 
 def cb_prepare(args):
     request = args["request"]
-    data = request.getData()
+    data = request.get_data()
     data["archivelinks"] = PyblArchives(request)

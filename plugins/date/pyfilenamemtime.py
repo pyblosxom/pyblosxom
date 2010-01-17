@@ -53,7 +53,7 @@ def cb_filestat(args):
                 hr = int(mtch.group(5))
                 minute = int(mtch.group(6)) 
             mtime = time.mktime((year,mo,day,hr,minute,0,0,0,-1))
-        except:
+        except StandardError:
             # TODO: Some sort of debugging code here?
             pass
 

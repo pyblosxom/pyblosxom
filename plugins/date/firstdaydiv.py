@@ -40,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Copyright 2004, 2005 Blake Winton
+Copyright 2010 Will Kahn-Greene
 """
 __author__ = "Blake Winton - bwinton@latte.ca"
 __version__ = "$Id$"
@@ -52,36 +53,22 @@ class PyFirstDate:
     supposed to return the first-day-div class or the
     not-the-first-day-div class.
 
-    @type _dayDiv: string
-    @ivar _dayDiv: The davDiv class to return.
+    @type _day_div: string
+    @ivar _day_div: The davDiv class to return.
     @type _count: int
     @ivar _count: The number of times we've been called (currently 0 or 1)
     """
     def __init__(self, request):
-        """
-        Initialize the PyFirstDate class.
-
-        @type request: L{Pyblosxom.pyblosxom.Request} object
-        @param request: A reference to the L{Pyblosxom.pyblosxom.Request} object.
-        """
-        config = request.getConfiguration()
-        self._dayDiv = config.get("firstDayDiv", "blosxomDayDiv")
+        config = request.get_configuration()
+        self._day_div = config.get("firstDayDiv", "blosxomDayDiv")
         self._count = 0
 
     def __str__(self):
-        """
-        Get a string representing the current state of this
-        object.
-
-        @rtype: string
-        @return: the user-specified firstDayDiv if it's the first
-                 time we're called, or "blosxomDayDiv" if it's not.
-        """
         if self._count == 0:
             self._count = 1
         else:
-            self._dayDiv = "blosxomDayDiv"
-        return self._dayDiv
+            self._day_div = "blosxomDayDiv"
+        return self._day_div
 
 def cb_prepare(args):
     """
@@ -90,5 +77,5 @@ def cb_prepare(args):
     """
     request = args["request"]
 
-    data = request.getData()
+    data = request.get_data()
     data["dayDivClass"] = PyFirstDate(request)
