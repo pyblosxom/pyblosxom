@@ -2,10 +2,10 @@
 
 import os.path, sys, os
 from distutils.sysconfig import get_python_lib
-
-from ez_setup import use_setuptools
-use_setuptools()
-from setuptools import setup, find_packages
+try:
+    from distribute import setup, find_packages
+except ImportError:
+    from setuptools import setup, find_packages
 
 version = "1.5"
 
@@ -15,10 +15,10 @@ DESC = """PyBlosxom
 Summary
 -------
 
-PyBlosxom is a file-based weblog engine originally inspired by Blosxom.  
-It supports user-created plugins to augment and extend the default 
-behavior.  It supports Paste, WSGI, and CGI and can run in a variety of 
-environments.
+PyBlosxom is a file-based weblog engine originally inspired by
+Blosxom.  It supports user-created plugins to augment and extend the
+default behavior.  It supports Paste, WSGI, and CGI and can run in a
+variety of environments.
 
 
 Download and installation
@@ -28,18 +28,23 @@ To download and install PyBlosxom you can get the .tar.gz file at::
 
    http://pyblosxom.sourceforge.net/
 
-Or you can use easy_install::
+Or you can use pip (http://pypi.python.org/pypi/pip)::
 
-   easy_install PyBlosxom
+   pip install pyblosxom
+
+If you have easy_install, but don't have pip, you can do::
+
+   easy_install pyblosxom
 """
 
-setup(name="pyblosxom",
+setup(
+    name="pyblosxom",
     version=version,
     description="PyBlosxom is a file-based weblog engine.",
     long_description=DESC,
     license='MIT',
     author="Will Kahn-Greene, et al",
-    author_email="pyblosxom-devel@lists.sourceforge.net",
+    author_email="willg@bluesock.org",
     keywords="blog pyblosxom cgi weblog",
     url="http://pyblosxom.sourceforge.net/",
     packages=find_packages(exclude=["ez_setup"]),
