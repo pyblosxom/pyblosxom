@@ -1,0 +1,18 @@
+
+<entry>
+  <title>Comment on $cmt_title</title>
+  <id>$base_url/$file_path_urlencoded#$cmt_time</id>
+  <link href="$base_url/$file_path_urlencoded#$cmt_time" />
+  <author>
+    <name>$cmt_author</name>
+    <email>$cmt_email</email>
+    <uri>$cmt_link</uri>
+  </author>
+  <content type="html"><![CDATA[
+$cmt_description
+]]></content>
+  <category term="$path" />
+  <category term="comment" />
+  <published>$cmt_w3cdate</published>
+  <updated>$cmt_w3cdate</updated>
+</entry>

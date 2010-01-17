@@ -1,0 +1,186 @@
+OVERVIEW
+--------
+
+This README covers installing comments, pingbacks, trackbacks, and the
+commentAPI.  Even though you may only want to install some or all of these 
+things, you should read through the whole file.
+
+In order for comments/trackbacks/pingbacks to work, you have to install
+the pyXML module.  It can be found at http://pyxml.sourceforge.net/ .
+
+
+INSTRUCTIONS
+------------
+
+1. Copy contrib/plugins/comments/plugins/comments.py to your plugins
+   directory.  Then add "comments" to the "load_plugins" property
+   in your config.py file.
+
+2. Comment spam is as prevalent as email spam, so consider adding a comment
+   spam filter. (This is optional, but strongly recommended.).
+   akismetcomments.py and check_javascript.py are a good combination to start
+   with. Check the manual and their docstrings for configuration and flavour
+   template details.
+
+3. If you want trackbacks (this is optional), copy 
+   contrib/plugins/comments/plugins/trackback.py to your plugins 
+   directory.  Then add "trackback" to the "load_plugins" property
+   in your config.py file.
+
+4. If you want pingbacks (this is optional), copy
+   contrib/plugins/comments/plugins/xmlrpc_pingback.py to your
+   plugins directory.  You must also define py["base_url"].
+   xmlrpc_pingback.py also uses Mark Pilgrin's rssfinder and
+   rssparser (available from http://diveintomark.org/projects) and 
+   expects them to be installed.  Then add "xmlrpc_pingback" to the
+   "load_plugins" property in your config.py file.
+
+5. If you want support for the CommentAPI, copy
+   contrib/plugins/comments/plugins/commentAPI.py to your plugins 
+   directory.  If you enable CommentAPI in your RSS feed (see below), 
+   some RSS aggregator programs will provide an interface that can 
+   post a comment to a blog entry.
+   For more information on CommentAPI, the specification is at
+   http://wellformedweb.org/story/9 and a list of implementations is at
+   http://wellformedweb.org/news/35
+
+   You need to have comments.py installed in order for this to work.  
+
+   Then you must add the CommentAPI tags to your RSS 2.0 feed.  The best 
+   way to do this is to add an XML namespace declaration to the rss
+   element:
+
+   xmlns:wfw="http://wellformedweb.org/CommentAPI"
+    
+   Then inside your RSS items you need to add a wfw:comment element:
+    
+   <wfw:comment>###commentAPI###/$file_path</wfw:comment>
+    
+   where ###commentAPI### is replaced by the URI that you mapped your
+   CommentAPI.cgi to  At the moment, you need to map to a URI one level
+   below the $base_url of the blog
+
+6. Comments are stored in a directory which will parallel the data
+   directory.  The comments themselves are stored as XML files named
+   entryname-datetime.suffix.  The comment system allows you to specify
+   the directory where the comment directory tree will stored, and the
+   suffix used for comment files.  You need to make sure that this
+   directory is writable by the pyblosxom CGI scripts.
+
+   Set py['comment_dir'] to the directory (in your data directory)
+   where you want the comments to be stored.  The default value is a
+   directory named 'comments' in your data directory.
+
+   Set py['comment_ext'] to the change comment file extension.  The
+   default file extension is 'cmt'.
+
+7. The comment system can notify you via e-mail when new
+   comments/trackbacks/pingbacks are posted.  If you want to enable this 
+   feature, create the following config.py entries:
+
+   py['comment_smtp_from']   - the address sending the notification
+   py['comment_smtp_to']     - the address receiving the notification
+
+   py['comment_smtp_server'] - your SMTP server
+   OR
+   py['comment_mta_cmd']     - the path to your MTA, e.g. /usr/bin/mail
+
+   For example:
+
+   py['comment_smtp_from']   = "joe@joe.com"
+   py['comment_smtp_to']     = "joe@joe.com"
+
+   py['comment_smtp_server'] = "localhost"
+   OR
+   py['comment_mta_cmd']     = "/usr/bin/mail"
+   
+
+8. Copy the flavour files from the contrib/plugins/comments/flavours 
+   directory.  There are flavours for .html and rss.  You should copy all
+   the files to your data directory.  
+
+   The "comment-story" template is used to format a single entry that 
+   has comments .  
+
+   The "comment" template is used to format a single
+   comment/trackback/pingback.  
+
+   The "comment-form" template provides the form used to enter new 
+   comments.
+
+9. Edit the "comment-story", "comment", and "comment-form" templates. 
+   Variables that are available are:
+
+   Available in the "story" and "comment-story" templates:
+
+      $num_comments - Contains an integer count of the number of comments
+                      associated with this entry
+   
+   Available in the "comment" template:
+
+      $cmt_title - the title of the comment
+      $cmt_description - the content of the comment or excerpt of the 
+                         trackback/pingback
+      $cmt_link - the pingback link referring to this entry
+      $cmt_author - the author of the comment or trackback
+      $cmt_optionally_linked_author - the author, wrapped in an <a href> tag
+                                      to their link if one was provided
+      $cmt_pubDate - the date and time of the comment/trackback/pingback
+      $cmt_source - the source of the trackback
+
+   If you want trackbacks you need to advertise the trackback ping URL
+   for a particular entry.  There are two possible ways of doing this.
+
+   1.  You advertise a manual trackback ping link.  You can do this by
+       inserting the following HTML in story.html and comment-story.html
+       files:
+ 
+       <a href="$base_url/trackback.cgi/$file_path" title="Trackback">TB</a> 
+
+       You may need to change the $base_url/trackback.cgi portion of the
+       URL to match the way that you have configured your webserver / CGI 
+       scripts.
+
+   2.  You can supply an embedded RDF description of the trackback ping
+
+<!--
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/"
+             xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+     <rdf:Description
+      about="$base_url/$file_path"
+      dc:title="$title"
+      dc:identifier="$base_url/$file_path"
+      trackback:ping="$base_url/trackback.cgi/$file_path"
+ />
+    </rdf:RDF>
+-->
+
+       You may need to change the $base_url/trackback.cgi portion of the
+       trackback:ping attribute to match the way that you have configured
+       your webserver / CGI scripts.
+
+       This RDF should also be inserted in story.html and
+       comment-story.html.  Since it is in an HTML comment, it doesn't
+       matter where you put it.
+
+10. Edit your story template and add a link to the comments.  There
+   are two ways to do this.  
+
+     1. have "showcomments=yes" in the query string
+     2. have the comments link be the same as the permalink
+
+   Comments are shown for a given blog entry either if the showcomments=yes
+   is in the querystring of the HTTP request or if the story is the
+   only story being displayed.
+  
+
+That should be about it!
+
+Good luck!
+
+
+LICENSE
+-------
+All files in the comments plugin are licensed under either the MIT License or
+the GPL. See each file for license details and copyright notice.

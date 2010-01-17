@@ -1,0 +1,14 @@
+
+<item>
+  <title>Comment on $cmt_title</title>
+  <guid isPermaLink="true">$base_url/$file_path_urlencoded#$cmt_time</guid>
+  <link>$base_url/$file_path_urlencoded#$cmt_time</link>
+  <description><![CDATA[
+$cmt_description
+]]></description>
+  <author>$cmt_email ($cmt_author)</author>
+  <source url="$base_url/?flav=rss20">$blog_title</source>
+  <category domain="$base_url">$path</category>
+  <category domain="$base_url">comment</category>
+  <pubDate>$rfc822date</pubDate>
+</item>
