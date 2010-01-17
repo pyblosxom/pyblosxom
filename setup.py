@@ -4,8 +4,10 @@ import os.path, sys, os
 from distutils.sysconfig import get_python_lib
 try:
     from distribute import setup, find_packages
+    print "Using distribute...."
 except ImportError:
     from setuptools import setup, find_packages
+    print "Using setuptools...."
 
 version = "1.5"
 
