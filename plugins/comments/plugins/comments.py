@@ -2,7 +2,7 @@
 This module contains an extension to Blosxom file entries to support
 comments.
 
-Copyright 2003-2007 by contributors:
+Copyright 2003-2010 by contributors:
   Ted Leung
   Will Guaraldi
   Wari Wahab
@@ -212,7 +212,7 @@ LATEST_PICKLE_FILE = 'LATEST.cmt'
 
 def cb_start(args):
     request = args["request"]
-    config = request.getConfiguration()
+    config = request.get_configuration()
 
     if not 'comment_dir' in config:
         config['comment_dir'] = os.path.join(config['datadir'],'comments')
@@ -224,12 +224,13 @@ def cb_start(args):
         config['comment_nofollow'] = 0
     
 def verify_installation(request):
-    config = request.getConfiguration()
+    config = request.get_configuration()
 
     retval = 1
 
     if 'comment_dir' in config and not os.path.isdir(config['comment_dir']):
-        print 'The "comment_dir" property in the config file must refer to a directory'
+        print ('The "comment_dir" property in the config file must refer '
+               'to a directory')
         retval = 0
 
     smtp_keys_defined = []
@@ -241,17 +242,17 @@ def verify_installation(request):
     if smtp_keys_defined:
         for i in smtp_keys:
             if i not in smtp_keys_defined:
-                print("Missing comment SMTP property: '%s'" % i)
+                print "Missing comment SMTP property: '%s'" % i
                 retval = 0
     
     optional_keys = ['comment_dir', 'comment_ext', 'comment_draft_ext']
     for i in optional_keys:
         if not i in config:
-            print("missing optional property: '%s'" % i)
+            print "missing optional property: '%s'" % i
 
     return retval
 
-def createhtmlmail (html, headers):
+def createhtmlmail(html, headers):
     """
     Create a mime-message that will render HTML in popular
     MUAs, text in better ones
@@ -267,7 +268,8 @@ def createhtmlmail (html, headers):
 
     text = re.sub('<.*?>', '', html)
     txtin = cStringIO.StringIO(text)
-    
+
+    # FIXME MimeWriter is deprecated as of Python 2.6
     writer = MimeWriter.MimeWriter(out)
     for header,value in headers:
         writer.addheader(header, value)
@@ -293,22 +295,22 @@ def createhtmlmail (html, headers):
 
     return msg
 
-def readComments(entry, config):
+def read_comments(entry, config):
     """
     @param: a file entry
     @type: dict
     
     @returns: a list of comment dicts
     """
-    filelist = glob.glob(cmtExpr(entry, config))
+    filelist = glob.glob(cmt_expr(entry, config))
     comments = []
     for f in filelist:
-        comments += readFile(f, config)
+        comments += read_file(f, config)
     comments = [(cmt['cmt_time'], cmt) for cmt in comments]
     comments.sort()
     return [c[1] for c in comments]
     
-def cmtExpr(entry, config):
+def cmt_expr(entry, config):
     """
     Return a string containing the regular expression for comment entries
     
@@ -321,11 +323,11 @@ def cmtExpr(entry, config):
     
     @returns: a string containing the regular expression for comment entries
     """
-    cmtDir = os.path.join(config['comment_dir'], entry['absolute_path'])
-    cmtExpr = os.path.join(cmtDir,entry['fn']+'-*.'+config['comment_ext'])
-    return cmtExpr
+    cmt_dir = os.path.join(config['comment_dir'], entry['absolute_path'])
+    cmt_expr = os.path.join(cmt_dir, entry['fn'] + '-*.' + config['comment_ext'])
+    return cmt_expr
 
-def readFile(filename, config):
+def read_file(filename, config):
     """
     Read comment(s) from filename
     
@@ -340,7 +342,7 @@ def readFile(filename, config):
     from xml.sax import make_parser, SAXException
     from xml.sax.handler import feature_namespaces, ContentHandler
 
-    class cmtHandler(ContentHandler):
+    class cmt_handler(ContentHandler):
         def __init__(self, cmts):
             self.cmts = cmts
         def startElement(self, name, atts):
@@ -359,18 +361,22 @@ def readFile(filename, config):
     try:
         parser = make_parser()
         parser.setFeature(feature_namespaces, 0)
-        handler = cmtHandler(cmts)
+        handler = cmt_handler(cmts)
         parser.setContentHandler(handler)
         parser.parse(filename)
-    except: # don't error out on a bad comment
-        logger = tools.getLogger()
+        
+    # FIXME - bare except here--bad!
+    except:
+        logger = tools.get_logger()
         logger.error("bad comment file: %s\nerror was: %s" %
                      (filename, traceback.format_exception(*sys.exc_info())))
         return []
 
     for cmt in cmts:
-        cmt['cmt_time'] = float(cmt['cmt_pubDate'])                #time.time()
-        cmt['cmt_pubDate'] = time.ctime(float(cmt['cmt_pubDate'])) #pretty time
+        # time.time()
+        cmt['cmt_time'] = float(cmt['cmt_pubDate'])
+        # pretty time
+        cmt['cmt_pubDate'] = time.ctime(float(cmt['cmt_pubDate']))
         cmt['cmt_w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%SZ',
                                            time.gmtime(cmt['cmt_time']))
         cmt['cmt_date'] = time.strftime('%a %d %b %Y',
@@ -385,7 +391,7 @@ def readFile(filename, config):
 
     return cmts
 
-def writeComment(request, config, data, comment, encoding):
+def write_comment(request, config, data, comment, encoding):
     """
     Write a comment
     
@@ -411,53 +417,53 @@ def writeComment(request, config, data, comment, encoding):
     if not os.path.isdir(cdir):
         os.makedirs(cdir)
 
-    cfn = os.path.join(cdir,entry['fn']+"-"+comment['pubDate']+"."+config['comment_draft_ext'])
+    cfn = os.path.join(cdir, entry['fn'] + "-" + comment['pubDate'] + "." + config['comment_draft_ext'])
 
-    def makeXMLField(name, field):
-        return "<"+name+">" + cgi.escape(field.get(name, "")) + "</"+name+">\n";
+    def make_xml_field(name, field):
+        return "<" + name + ">" + cgi.escape(field.get(name, "")) + "</"+name+">\n";
 
     filedata = '<?xml version="1.0" encoding="%s"?>\n' % encoding
     filedata += "<item>\n"
     for key in comment:
-        filedata += makeXMLField(key, comment)
+        filedata += make_xml_field(key, comment)
     filedata += "</item>\n"
 
     try :
         cfile = codecs.open(cfn, "w", encoding)
     except IOError:
-        logger = tools.getLogger()
+        logger = tools.get_logger()
         logger.error("couldn't open comment file '%s' for writing" % cfn)
         return "Internal error: Your comment could not be saved."
  
     cfile.write(filedata)
     cfile.close()
  
-    #write latest pickle
+    # write latest pickle
     latest = None
-    latestFilename = os.path.join(config['comment_dir'], LATEST_PICKLE_FILE)
+    latest_filename = os.path.join(config['comment_dir'], LATEST_PICKLE_FILE)
     try:
-        latest = open(latestFilename,"w")
+        latest = open(latest_filename, "w")
     except IOError:
-        logger = tools.getLogger()
+        logger = tools.get_logger()
         logger.error("couldn't open latest comment pickle for writing")
         return "Couldn't open latest comment pickle for writing."
     else:
-        modTime = float(comment['pubDate'])
+        mod_time = float(comment['pubDate'])
 
     try:
-        cPickle.dump(modTime, latest)
+        cPickle.dump(mod_time, latest)
         latest.close()
     except IOError:
         if latest:
             latest.close()
 
-        logger = tools.getLogger()
+        logger = tools.get_logger()
         logger.error("comment may not have been saved to pickle file.")
         return "Internal error: Your comment may not have been saved."
 
-    if (('comment_mta_cmd' in config or
-         'comment_smtp_server' in config) and
-        'comment_smtp_to' in config):
+    if ((('comment_mta_cmd' in config
+          or 'comment_smtp_server' in config)
+         and 'comment_smtp_to' in config)):
         # FIXME - removed grabbing send_email's return error message
         # so there's no way to know if email is getting sent or not.
         send_email(config, entry, comment, cdir, cfn)
@@ -477,7 +483,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
     @param entry: a file entry
     @type config: dictionary
 
-    @param comment: comment as generated by readComment
+    @param comment: comment as generated by read_comments
     @type comment: dictionary
 
     @param comment_dir: the comment directory
@@ -496,13 +502,13 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
     from socket import gethostbyaddr
 
     author = escape_SMTP_commands(clean_author(comment['author']))
-    description = escape_SMTP_commands(comment['description'])
-    ipaddress = escape_SMTP_commands(comment.get('ipaddress', '?'))
+    description = escape_smtp_commands(comment['description'])
+    ipaddress = escape_smtp_commands(comment.get('ipaddress', '?'))
 
     if 'comment_smtp_from' in config:
         email = config['comment_smtp_from']
     else:
-        email = escape_SMTP_commands(clean_author(comment['email']))
+        email = escape_smtp_commands(clean_author(comment['email']))
 
     try:
         curl = "%s/%s" % (config['base_url'],
@@ -519,13 +525,14 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         try:
             host_name = gethostbyaddr(ipaddress)[0]
             message.append("Hostname: %s (%s)" % (host_name, ipaddress))
+        # FIXME - bare except here--bad!
         except:
             message.append("IP: %s" % ipaddress)
         message.append("Entry URL: %s" % curl)
         message.append("Comment location: %s" % comment_filename)
         message.append("\n\n%s" % description)
  
-        if ('comment_mta_cmd' in config):
+        if 'comment_mta_cmd' in config:
             # set the message headers
             message.insert(0, "")
             message.insert(0, "Subject: comment on %s" % curl)
@@ -539,17 +546,18 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
                     '-s',
                     '"comment on %s"' % curl,
                     config['comment_smtp_to']]
-            # TODO: switch to subprocess when we can require python 2.4
+            # FIXME - switch to subprocess when we can require python 2.4
             process = popen2.Popen3(argv, capturestderr=True)
             process.tochild.write(body)
             process.tochild.close()
             process.wait()
             stdout = process.fromchild.read()
             stderr = process.childerr.read()
-            tools.getLogger().debug('Ran MTA command: ' + ' '.join(argv))
-            tools.getLogger().debug('Received stdout: ' + stdout)
-            tools.getLogger().debug('Received stderr: ' + stderr)
-            assert stderr == '', stderr  # the except clause below will catch this
+            tools.get_logger().debug('Ran MTA command: ' + ' '.join(argv))
+            tools.get_logger().debug('Received stdout: ' + stdout)
+            tools.get_logger().debug('Received stderr: ' + stderr)
+            # the except clause below will catch this
+            assert stderr == '', stderr
 
         else:
             assert 'comment_smtp_server' in config
@@ -569,7 +577,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
             server.quit()
 
     except Exception, e:
-        tools.getLogger().error("error sending email: %s" %
+        tools.get_logger().error("error sending email: %s" %
                                 traceback.format_exception(*sys.exc_info()))
 
 def clean_author(s):
@@ -586,7 +594,7 @@ def clean_author(s):
     """
     return s.splitlines()[0]
 
-def escape_SMTP_commands(s):
+def escape_smtp_commands(s):
     """
     Guard against blasterattacko style attacks that embed SMTP commands by
     using an HTML span to make the command syntactically invalid to SMTP but
@@ -618,70 +626,73 @@ def sanitize(body):
                 '\\1<a href="\\2">\\2</a>',body)
 
     # html characters used in text become escaped
-    body=escape(body)
+    body = escape(body)
 
     # passthru <a href>, <em>, <i>, <b>, <blockquote>, <br/>, <p>, 
     # <abbr>, <acronym>, <big>, <cite>, <code>, <dfn>, <kbd>, <pre>, <small>
     # <strong>, <sub>, <sup>, <tt>, <var>
-    body=re.sub('&lt;a href="([^"]*)"&gt;([^&]*)&lt;/a&gt;',
+    body = re.sub('&lt;a href="([^"]*)"&gt;([^&]*)&lt;/a&gt;',
+                 '<a href="\\1">\\2</a>', body)
+    body = re.sub('&lt;a href=\'([^\']*)\'&gt;([^&]*)&lt;/a&gt;',
                 '<a href="\\1">\\2</a>', body)
-    body=re.sub('&lt;a href=\'([^\']*)\'&gt;([^&]*)&lt;/a&gt;',
-                '<a href="\\1">\\2</a>', body)
-    body=re.sub('&lt;em&gt;([^&]*)&lt;/em&gt;', '<em>\\1</em>', body)
-    body=re.sub('&lt;i&gt;([^&]*)&lt;/i&gt;', '<i>\\1</i>', body)
-    body=re.sub('&lt;b&gt;([^&]*)&lt;/b&gt;', '<b>\\1</b>', body)
-    body=re.sub('&lt;blockquote&gt;([^&]*)&lt;/blockquote&gt;', 
+    body = re.sub('&lt;em&gt;([^&]*)&lt;/em&gt;', '<em>\\1</em>', body)
+    body = re.sub('&lt;i&gt;([^&]*)&lt;/i&gt;', '<i>\\1</i>', body)
+    body = re.sub('&lt;b&gt;([^&]*)&lt;/b&gt;', '<b>\\1</b>', body)
+    body = re.sub('&lt;blockquote&gt;([^&]*)&lt;/blockquote&gt;', 
                 '<blockquote>\\1</blockquote>', body)
-    body=re.sub('&lt;br\s*/?&gt;\n?','\n',body)
+    body = re.sub('&lt;br\s*/?&gt;\n?','\n',body)
 
-    body=re.sub('&lt;abbr&gt;([^&]*)&lt;/abbr&gt;', '<abbr>\\1</abbr>', body)
-    body=re.sub('&lt;acronym&gt;([^&]*)&lt;/acronym&gt;', '<acronym>\\1</acronym>', body)
-    body=re.sub('&lt;big&gt;([^&]*)&lt;/big&gt;', '<big>\\1</big>', body)
-    body=re.sub('&lt;cite&gt;([^&]*)&lt;/cite&gt;', '<cite>\\1</cite>', body)
-    body=re.sub('&lt;code&gt;([^&]*)&lt;/code&gt;', '<code>\\1</code>', body)
-    body=re.sub('&lt;dfn&gt;([^&]*)&lt;/dfn&gt;', '<dfn>\\1</dfn>', body)
-    body=re.sub('&lt;kbd&gt;([^&]*)&lt;/kbd&gt;', '<kbd>\\1</kbd>', body)
-    body=re.sub('&lt;pre&gt;([^&]*)&lt;/pre&gt;', '<pre>\\1</pre>', body)
-    body=re.sub('&lt;small&gt;([^&]*)&lt;/small&gt;', '<small>\\1</small>', body)
-    body=re.sub('&lt;strong&gt;([^&]*)&lt;/strong&gt;', '<strong>\\1</strong>', body)
-    body=re.sub('&lt;sub&gt;([^&]*)&lt;/sub&gt;', '<sub>\\1</sub>', body)
-    body=re.sub('&lt;sup&gt;([^&]*)&lt;/sup&gt;', '<sup>\\1</sup>', body)
-    body=re.sub('&lt;tt&gt;([^&]*)&lt;/tt&gt;', '<tt>\\1</tt>', body)
-    body=re.sub('&lt;var&gt;([^&]*)&lt;/var&gt;', '<var>\\1</var>', body)
+    body = re.sub('&lt;abbr&gt;([^&]*)&lt;/abbr&gt;', '<abbr>\\1</abbr>', body)
+    body = re.sub('&lt;acronym&gt;([^&]*)&lt;/acronym&gt;', '<acronym>\\1</acronym>', body)
+    body = re.sub('&lt;big&gt;([^&]*)&lt;/big&gt;', '<big>\\1</big>', body)
+    body = re.sub('&lt;cite&gt;([^&]*)&lt;/cite&gt;', '<cite>\\1</cite>', body)
+    body = re.sub('&lt;code&gt;([^&]*)&lt;/code&gt;', '<code>\\1</code>', body)
+    body = re.sub('&lt;dfn&gt;([^&]*)&lt;/dfn&gt;', '<dfn>\\1</dfn>', body)
+    body = re.sub('&lt;kbd&gt;([^&]*)&lt;/kbd&gt;', '<kbd>\\1</kbd>', body)
+    body = re.sub('&lt;pre&gt;([^&]*)&lt;/pre&gt;', '<pre>\\1</pre>', body)
+    body = re.sub('&lt;small&gt;([^&]*)&lt;/small&gt;', '<small>\\1</small>', body)
+    body = re.sub('&lt;strong&gt;([^&]*)&lt;/strong&gt;', '<strong>\\1</strong>', body)
+    body = re.sub('&lt;sub&gt;([^&]*)&lt;/sub&gt;', '<sub>\\1</sub>', body)
+    body = re.sub('&lt;sup&gt;([^&]*)&lt;/sup&gt;', '<sup>\\1</sup>', body)
+    body = re.sub('&lt;tt&gt;([^&]*)&lt;/tt&gt;', '<tt>\\1</tt>', body)
+    body = re.sub('&lt;var&gt;([^&]*)&lt;/var&gt;', '<var>\\1</var>', body)
 
-    body=re.sub('&lt;/?p&gt;','\n\n',body).strip()
+    body = re.sub('&lt;/?p&gt;','\n\n',body).strip()
 
     # wiki like support: _em_, *b*, [url title]
-    body=re.sub(r'\b_(\w.*?)_\b', r'<em>\1</em>', body)
-    body=re.sub(r'\*(\w.*?)\*', r'<b>\1</b>', body)
-    body=re.sub(r'\[(\w+:\S+\.gif) (.*?)\]', r'<img src="\1" alt="\2" />', body)
-    body=re.sub(r'\[(\w+:\S+\.jpg) (.*?)\]', r'<img src="\1" alt="\2" />', body)
-    body=re.sub(r'\[(\w+:\S+\.png) (.*?)\]', r'<img src="\1" alt="\2" />', body)
-    body=re.sub(r'\[(\w+:\S+) (.*?)\]', r'<a href="\1">\2</a>', body).strip()
+    body = re.sub(r'\b_(\w.*?)_\b', r'<em>\1</em>', body)
+    body = re.sub(r'\*(\w.*?)\*', r'<b>\1</b>', body)
+    body = re.sub(r'\[(\w+:\S+\.gif) (.*?)\]', r'<img src="\1" alt="\2" />', body)
+    body = re.sub(r'\[(\w+:\S+\.jpg) (.*?)\]', r'<img src="\1" alt="\2" />', body)
+    body = re.sub(r'\[(\w+:\S+\.png) (.*?)\]', r'<img src="\1" alt="\2" />', body)
+    body = re.sub(r'\[(\w+:\S+) (.*?)\]', r'<a href="\1">\2</a>', body).strip()
 
     # unordered lists: consecutive lines starting with spaces and an asterisk
-    chunk=re.compile(r'^( *\*.*(?:\n *\*.*)+)',re.M).split(body)
+    chunk = re.compile(r'^( *\*.*(?:\n *\*.*)+)',re.M).split(body)
     for i in range(1, len(chunk), 2):
-        (html,stack)=('', [''])
-        for indent,line in re.findall(r'( +)\* +(.*)', chunk[i]) + [('','')]:
-            if indent>stack[-1]: (stack,html)=(stack+[indent],html+'<ul>\r')
-            while indent<stack[-1]: (stack,html)=(stack[:-1],html+'</ul>\r')
-            if line: html += '<li>'+line+'</li>\r'
-            chunk[i]=html
+        html, stack = '', ['']
+        for indent, line in re.findall(r'( +)\* +(.*)', chunk[i]) + [('','')]:
+            if indent > stack[-1]:
+                stack, html = stack + [indent], html + '<ul>\r'
+            while indent<stack[-1]:
+                stack, html = stack[:-1], html + '</ul>\r'
+            if line:
+                html += '<li>' + line + '</li>\r'
+            chunk[i] = html
 
     # white space
-    chunk=re.split('\n\n+', ''.join(chunk))
+    chunk = re.split('\n\n+', ''.join(chunk))
 #    if len(chunk)>1: body='<p>' + '</p>\r<p>'.join(chunk) + '</p>\r'
-    body=re.sub('\n','<br />\n', body)
-    body=re.compile('<p>(<ul>.*?</ul>)\r</p>?',re.M).sub(r'\1',body)
-    body=re.compile('<p>(<blockquote>.*?</blockquote>)</p>?',re.M).sub(r'\1',body)
-    body=re.sub('\r', '\n', body)
-    body=re.sub('  +', '&nbsp; ', body)
+    body = re.sub('\n','<br />\n', body)
+    body = re.compile('<p>(<ul>.*?</ul>)\r</p>?',re.M).sub(r'\1',body)
+    body = re.compile('<p>(<blockquote>.*?</blockquote>)</p>?',re.M).sub(r'\1',body)
+    body = re.sub('\r', '\n', body)
+    body = re.sub('  +', '&nbsp; ', body)
 
     return body        
         
 def dont_follow(mo):
-    return '<a rel="nofollow" '+mo.group(1)+'>'
+    return '<a rel="nofollow" ' + mo.group(1) + '>'
 
 def add_dont_follow(s, config):
     url_pat_str = '<a ([^>]+)>'
@@ -699,10 +710,10 @@ def cb_prepare(args):
     @type request: a Pyblosxom request object
     """
     request = args["request"]
-    form = request.getHttp()['form']
-    config = request.getConfiguration()
-    data = request.getData()
-    pyhttp = request.getHttp()
+    form = request.get_http()['form']
+    config = request.get_configuration()
+    data = request.get_data()
+    pyhttp = request.get_http()
 
     # first we check to see if we're going to print out comments
     # the default is not to show comments
@@ -725,10 +736,10 @@ def cb_prepare(args):
     # need to write the comment to disk.
     posting = (('ajax' in form and form['ajax'].value == 'post') or
                not "preview" in form)
-    if ("title" in form and "author" in form and
-        "body" in form and posting):
+    if (("title" in form and "author" in form
+         and "body" in form and posting)):
 
-        encoding = config.get('blog_encoding', 'iso-8859-1')
+        encoding = config.get('blog_encoding', 'utf-8')
         decode_form(form, encoding)
 
         body = form['body'].value
@@ -748,16 +759,17 @@ def cb_prepare(args):
         w3cdate = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(cmt_time))
         date = time.strftime('%a %d %b %Y', time.gmtime(cmt_time))
         cdict = {'title': title,
-                 'author' : author,
-                 'pubDate' : str(cmt_time),
+                 'author': author,
+                 'pubDate': str(cmt_time),
                  'w3cdate': w3cdate,
                  'date': date,
-                 'link' : massage_link(url),
-                 'source' : '',
-                 'description' : add_dont_follow(body, config) }
+                 'link': massage_link(url),
+                 'source': '',
+                 'description': add_dont_follow(body, config)}
 
         keys = form.keys()
-        keys = [k for k in keys if k not in ["title", "url", "author", "body", "description"]]
+        keys = [k for k in keys
+                if k not in ["title", "url", "author", "body", "description"]]
         for k in keys:
             cdict[k] = form[k].value
 
@@ -770,12 +782,12 @@ def cb_prepare(args):
         # back alone, without the rest of the page, if the request was ajax.
         data['cmt_time'] = float(cdict['pubDate'])
 
-        argdict = { "request": request, "comment": cdict }
+        argdict = {"request": request, "comment": cdict}
         reject = tools.run_callback("comment_reject",
                                     argdict,
                                     donefunc=lambda x:x != 0)
-        if ((isinstance(reject, tuple) or isinstance(reject, list)) and
-            len(reject) == 2):
+        if (((isinstance(reject, tuple) or isinstance(reject, list))
+             and len(reject) == 2)):
             reject_code, reject_message = reject
         else:
             reject_code, reject_message = reject, "Comment rejected."
@@ -783,66 +795,67 @@ def cb_prepare(args):
             data["comment_message"] = reject_message
             data["rejected"] = True
         else:
-            data["comment_message"] = writeComment(request, config, data, \
+            data["comment_message"] = write_comment(request, config, data, \
                                                    cdict, encoding)
 
 class AjaxRenderer(blosxom.Renderer):
-    """ The renderer used when responding to AJAX requests to preview and post
-    comments. Renders *only* the comment and comment-preview divs.
+    """ The renderer used when responding to AJAX requests to preview
+    and post comments. Renders *only* the comment and comment-preview
+    divs.
     """
     def __init__(self, request, data):
-        out = request.getConfiguration().get('stdoutput', sys.stdout)
+        out = request.get_configuration().get('stdoutput', sys.stdout)
         blosxom.Renderer.__init__(self, request, out)
-        self._ajax_type = request.getHttp()['form']['ajax'].value
+        self._ajax_type = request.get_http()['form']['ajax'].value
         self._data = data
 
-    def __shouldOutput(self, entry, template_name):
+    def _should_output(self, entry, template_name):
         """ Return whether we should output this template, depending on the
         type of ajax request we're responding to.
         """
         if self._ajax_type == 'preview' and template_name == 'comment-preview':
             return True
-        elif (self._ajax_type == 'post' and template_name == 'comment' and
-              round(self._data.get('cmt_time', 0)) == round(entry['cmt_time'])):
+        elif (self._ajax_type == 'post' and template_name == 'comment'
+              and round(self._data.get('cmt_time', 0)) == round(entry['cmt_time'])):
             return True
         else:
             return False
 
-    def outputTemplate(self, output, entry, template_name, override=0):
-        if self.__shouldOutput(entry, template_name):
-            blosxom.Renderer.outputTemplate(self, output, entry,
-                                            template_name, override)
+    def render_template(self, entry, template_name, override=0):
+        if self._should_output(entry, template_name):
+            return blosxom.Renderer.render_template(
+                entry, template_name, override)
 
-    def _outputFlavour(self, entry, template_name):
-        if self.__shouldOutput(entry, template_name):
-            blosxom.Renderer._outputFlavour(self, entry, template_name)
+    def _output_flavour(self, entry, template_name):
+        if self._should_output(entry, template_name):
+            blosxom.Renderer._output_flavour(self, entry, template_name)
 
 def cb_renderer(args):
     request = args['request']
-    config = request.getConfiguration()
-    http = request.getHttp()
+    config = request.get_configuration()
+    http = request.get_http()
     form = http['form']
 
     # intercept ajax requests with our renderer
-    if ('ajax' in form and http.get('REQUEST_METHOD', '') == 'POST'):
+    if 'ajax' in form and http.get('REQUEST_METHOD', '') == 'POST':
         data = '&'.join(['%s=%s' % (arg.name, arg.value) for arg in form.list])
-        tools.getLogger().info('AJAX request: %s' % data)
-        return AjaxRenderer(request, request.getData())
+        tools.get_logger().info('AJAX request: %s' % data)
+        return AjaxRenderer(request, request.get_data())
 
 def cb_handle(args):
     request = args['request']
-    config = request.getConfiguration()
+    config = request.get_configuration()
 
     # serve /comments.js for ajax comments
-    if (request.getHttp()['PATH_INFO'] == '/comments.js'):
-        response = request.getResponse()
-        response.addHeader('Content-Type', 'text/javascript')
+    if request.get_http()['PATH_INFO'] == '/comments.js':
+        response = request.get_response()
+        response.add_header('Content-Type', 'text/javascript')
 
         # look for it in each of the plugin_dirs
         for dir in config['plugin_dirs']:
             comments_js = os.path.join(dir, 'comments.js')
             if os.path.isfile(comments_js):
-                f = file(comments_js, 'r')
+                f = open(comments_js, 'r')
                 response.write(f.read())
                 f.close()
                 return True
@@ -861,22 +874,25 @@ def decode_form(d, blog_encoding):
 
     If the Content-type header in the HTTP request includes a charset, try
     that first. Then, try the encoding specified in the pybloscom config file.
-    if Those fail, try iso-8859-1, utf-8, and ascii."""
+    if Those fail, try iso-8859-1, utf-8, and ascii.
+    """
     encodings = [blog_encoding, 'iso-8859-1', 'utf-8', 'ascii']
     charset = get_content_type_charset()
     if charset:
-      encodings = [charset] + encodings
+        encodings = [charset] + encodings
 
     for key in d.keys():
         for e in encodings:
             try:
                 d[key].value = d[key].value.decode(e)
                 break
+            # FIXME - bare except--bad!
             except:
                 continue
 
 def get_content_type_charset():
-    """Extract and return the charset part of the HTTP Content-Type header.
+    """Extract and return the charset part of the HTTP Content-Type
+    header.
 
     Returns None if the Content-Type header doesn't specify a charset.
     """
@@ -885,7 +901,7 @@ def get_content_type_charset():
     if match:
         return match.group(1)
     else:
-      return None
+        return None
 
 def cb_head(args):
     renderer = args['renderer']
@@ -903,17 +919,18 @@ def cb_head(args):
     return template
 
 def cb_story(args):
-    """For single entry requests, when commenting is enabled and the flavour
-    has a comment-story template, append its contents to the story template's.
+    """For single entry requests, when commenting is enabled and the
+    flavour has a comment-story template, append its contents to the
+    story template's.
     """
     renderer = args['renderer']
     entry = args['entry']
     template = args['template']
     request = args["request"]
-    data = request.getData()
-    config = request.getConfiguration()
+    data = request.get_data()
+    config = request.get_configuration()
     if entry['absolute_path'] and not entry.has_key("nocomments"):
-        entry['comments'] = readComments(entry, config)
+        entry['comments'] = read_comments(entry, config)
         entry['num_comments'] = len(entry['comments'])
         template = renderer.flavour.get('comment-story','')
         args['template'] = args['template'] + template
@@ -977,35 +994,37 @@ def cb_story_end(args):
     entry = args['entry']
     template = args['template']
     request = args["request"]
-    data = request.getData()
-    form = request.getHttp()['form']
-    config = request.getConfiguration()
-    if (entry['absolute_path'] and
-        len(renderer.getContent()) == 1 and 'comment-story' in renderer.flavour
-        and not entry.has_key('nocomments') and data['display_comment_default'] == 1):
+    data = request.get_data()
+    form = request.get_http()['form']
+    config = request.get_configuration()
+    if ((entry['absolute_path']
+         and len(renderer.get_content()) == 1
+         and 'comment-story' in renderer.flavour
+         and not entry.has_key('nocomments')
+         and data['display_comment_default'] == 1)):
         output = []
         if entry['comments']:
             comment_entry_base = dict(entry)
             del comment_entry_base['comments']
             for key in entry.keys():
-                if isinstance(entry[key], types.StringTypes):
+                if isinstance(entry[key], str):
                     comment_entry_base[key + '_escaped'] = entry[key + '_escaped']
                     comment_entry_base[key + '_urlencoded'] = entry[key + '_urlencoded']
             for comment in entry['comments']:
                 comment_entry = dict(comment_entry_base)
                 comment_entry.update(comment)
-                renderer.outputTemplate(output, comment_entry, 'comment')
-        if ('preview' in form
-            and 'comment-preview' in renderer.flavour):
+                output.append(renderer.render_template(comment_entry, 'comment'))
+        if (('preview' in form
+             and 'comment-preview' in renderer.flavour)):
             com = build_preview_comment(form, entry, config)
-            renderer.outputTemplate(output, com, 'comment-preview')
-        elif ('rejected' in data):
+            output.append(renderer.render_template(com, 'comment-preview'))
+        elif 'rejected' in data:
             rejected = build_preview_comment(form, entry, config)
             msg = '<span class="error">%s</span>' % data["comment_message"]
             rejected['cmt_description'] = msg
             rejected['cmt_description_escaped'] = escape(msg)
-            renderer.outputTemplate(output, rejected, 'comment')
-        renderer.outputTemplate(output, entry, 'comment-form')
-        args['template'] = template +u"".join(output)
+            output.append(renderer.render_template(rejected, 'comment'))
+        output.append(renderer.render_template(entry, 'comment-form'))
+        args['template'] = template + "".join(output)
 
     return template
