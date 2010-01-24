@@ -56,7 +56,7 @@ def verify_installation(request):
         print >>sys.stderr, "Missing module 'akismet'.",
       	return False
 
-    config = request.getConfiguration()
+    config = request.get_configuration()
  
     # try to check to se make sure that the config file has a key
     if not config.has_key("akismet_api_key"):
@@ -81,17 +81,17 @@ def cb_comment_reject(args):
 
     request = args['request']
     comment = args['comment']
-    config = request.getConfiguration()
+    config = request.get_configuration()
 
-    reqdata = request.getData()
-    http = request.getHttp()
+    reqdata = request.get_data()
+    http = request.get_http()
 
-    fields = { 'comment' : 'description',
-               'comment_author_email' : 'email',
-               'comment_author' : 'author',
-               'comment_author_url' : 'link',
-               'comment_type' : 'type',
-               }
+    fields = {'comment': 'description',
+              'comment_author_email': 'email',
+              'comment_author': 'author',
+              'comment_author_url': 'link',
+              'comment_type': 'type',
+              }
     data = {}
     for field in fields:
         if comment.has_key(fields[field]):
@@ -99,13 +99,14 @@ def cb_comment_reject(args):
             for char in list(comment[fields[field]]):
                 try:
                     char.encode('ascii')
+                # FIXME - bare except--bad!
                 except:
                     data[field] = data[field] + "&#" + str(ord(char)) + ";"
                 else:
                     data[field] = data[field] + char
 
-    if 'comment' not in data or not data['comment']:
-        print >>sys.stderr, "Comment info not enough."
+    if not data.get('comment'):
+        print >>sys.stderr, "Comment info not enough.",
         return False
     body = data['comment']
 
@@ -135,7 +136,6 @@ def cb_comment_reject(args):
     except AkismetError:
         print >>sys.stderr, "Rejecting comment (AkismetError)",
         return (True, "Missing essential data (e.g., a UserAgent string).")
-
 
 # akismet can handle trackback spam too
 cb_trackback_reject = cb_comment_reject
