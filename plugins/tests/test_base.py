@@ -1,8 +1,9 @@
 """
-A base class and utilities for unit testing PyBlosxom plugins.
+A base class and utilities for external unit testing of PyBlosxom
+plugins.
 
-Includes up a number of mocks, environment variables, and PyBlosxom data
-structures for useful testing plugins.
+Includes up a number of mocks, environment variables, and PyBlosxom
+data structures for useful testing plugins.
 """
 
 __author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
@@ -31,34 +32,37 @@ class FrozenTime:
             return getattr(time, attr)
 
 class PluginTest(unittest.TestCase):
-    """Base class for plugin unit tests. Subclass this to test plugins.
+    """Base class for plugin unit tests. Subclass this to test
+    plugins.
 
-    Many common PyBlosxom data structures are populated as attributes of this
-    class, including self.environ, self.config, self.data, self.request, and
-    self.args.
+    Many common PyBlosxom data structures are populated as attributes
+    of this class, including self.environ, self.config, self.data,
+    self.request, and self.args.
 
-    By default, self.request is configured as a request for a single entry;
-    its name is stored in self.entry_name. This can be overridden by modifying
-    the attributes above in your test's setUp() method. The entry's timestamp,
-    as seconds since the epoch, is stored in self.timestamp. String
-    representations in self.timestamp_str and self.timestamp_w3c.
+    By default, self.request is configured as a request for a single
+    entry; its name is stored in self.entry_name. This can be
+    overridden by modifying the attributes above in your test's
+    setUp() method. The entry's timestamp, as seconds since the epoch,
+    is stored in self.timestamp. String representations in
+    self.timestamp_str and self.timestamp_w3c.
 
-    You can change any of the data structures by modifying them directly in
-    your tests or your subclass's setUp() method.
+    You can change any of the data structures by modifying them
+    directly in your tests or your subclass's setUp() method.
 
-    The datadir is set to a unique temporary directory in /tmp. This directory
-    is created fresh for each test, and deleted when the test is done.
+    The datadir is set to a unique temporary directory in /tmp. This
+    directory is created fresh for each test, and deleted when the
+    test is done.
 
-    NOTE(ryanbarrett): Creating and deleting multiple files and directories
-    for each test is inefficient. If this becomes a bottleneck, it might need
-    to be reconsidered.
+    NOTE(ryanbarrett): Creating and deleting multiple files and
+    directories for each test is inefficient. If this becomes a
+    bottleneck, it might need to be reconsidered.
     """
 
     def setUp(self, plugin_module):
         """Subclasses should call this in their setUp() methods.
 
-        The plugin_module arg is the plugin module being tested. This is used
-        to set the plugin_dir config variable.
+        The plugin_module arg is the plugin module being tested. This
+        is used to set the plugin_dir config variable.
         """
         # freeze time
         self.timestamp = TIMESTAMP
@@ -81,19 +85,17 @@ class PluginTest(unittest.TestCase):
         tools.initialize(self.config)
 
         # set up environment vars and http request
-        self.environ = {'PATH_INFO': '/', 'REMOTE_ADDR': '' }
+        self.environ = {'PATH_INFO': '/', 'REMOTE_ADDR': ''}
         self.form_data = ''
         self.request = pyblosxom.Request(self.config, self.environ, {})
-        self.http = self.request.getHttp()
+        self.http = self.request.get_http()
 
         # set up entries and data dict
         self.entry_name = 'test_entry'
         entry_properties = {'absolute_path': '.',
                             'fn': self.entry_name}
-        self.entry = entries.base.generate_entry(self.request,
-                                                 entry_properties,
-                                                 {},  # data
-                                                 gmtime)
+        self.entry = entries.base.generate_entry(
+            self.request, entry_properties, {}, gmtime)
         self.entry_list = [self.entry]
         self.data = {'entry_list': self.entry_list,
                      'bl_type': 'file',
@@ -102,7 +104,7 @@ class PluginTest(unittest.TestCase):
 
         # set up renderer and templates
         self.renderer = Renderer(self.request)
-        self.renderer.setContent(self.entry_list)
+        self.renderer.set_content(self.entry_list)
         templates = ('content_type', 'head', 'story', 'foot', 'date_head',
                      'date_foot')
         self.renderer.flavour = dict([(t, t) for t in templates])
@@ -114,9 +116,10 @@ class PluginTest(unittest.TestCase):
                      'template': 'template starts:',
                      }
 
-        # this stores the callbacks that have been injected. it maps callback
-        # names to the injected methods to call. any callbacks that haven't
-        # been injected are passed through to pyblosxom's callback chain.
+        # this stores the callbacks that have been injected. it maps
+        # callback names to the injected methods to call. any
+        # callbacks that haven't been injected are passed through to
+        # pyblosxom's callback chain.
         #
         # use inject_callback() to inject a callback.
         self.injected_callbacks = {}
@@ -158,16 +161,17 @@ class PluginTest(unittest.TestCase):
         method to POST.
         """
         self.environ['REQUEST_METHOD'] = 'POST'
-        self.request.addHttp({'REQUEST_METHOD': 'POST'})
+        self.request.add_http({'REQUEST_METHOD': 'POST'})
 
         encoded = ['%s=%s' % (arg, urllib.quote(val))
                    for arg, val in args.items()]
         self.form_data += ('&' + '&'.join(encoded))
-        input = cStringIO.StringIO(self.form_data)
-        self.request._form = cgi.FieldStorage(fp=input, environ=self.environ)
+        input_ = cStringIO.StringIO(self.form_data)
+        self.request._form = cgi.FieldStorage(fp=input_, environ=self.environ)
 
     def set_form_data(self, args):
-        """Clears the request's form data, then adds the given arguments.
+        """Clears the request's form data, then adds the given
+        arguments.
         """
         self.form_data = ''
         self.add_form_data(args)
@@ -175,12 +179,14 @@ class PluginTest(unittest.TestCase):
     def inject_callback(self, name, callback):
         """Injects a callback to be run by tools.run_callback().
 
-        The callback is run *instead* of Pyblosxom's standard callback chain.
+        The callback is run *instead* of Pyblosxom's standard callback
+        chain.
         """
         self.injected_callbacks[name] = callback
 
     def remove_dir(self, dir):
-        """Recursively removes a directory and all files and subdirectories.
+        """Recursively removes a directory and all files and
+        subdirectories.
 
         If dir doesn't exist or is not a directory, does nothing.
         """
