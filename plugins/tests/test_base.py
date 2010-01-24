@@ -12,7 +12,7 @@ __url__ = 'http://pyblosxom.sourceforge.net/wiki/index.php/Framework_for_testing
 from Pyblosxom import pyblosxom, tools, entries
 from Pyblosxom.renderers.blosxom import Renderer
 import cgi, cStringIO, os, tempfile, time, urllib
-
+import shutil
 import unittest
 
 TIMESTAMP = time.mktime(time.strptime('Wed Dec 26 11:00:00 2007'))
@@ -73,8 +73,7 @@ class PluginTest(unittest.TestCase):
         self.timestamp_w3c = time.strftime('%Y-%m-%dT%H:%M:%SZ', gmtime)
 
         # set up config, including datadir and plugin_dirs
-        self.datadir = tempfile.mkdtemp(prefix='pyblosxom_test_datadir',
-                                        dir='/tmp')
+        self.datadir = tempfile.mkdtemp(prefix='pyblosxom_test_datadir')
 
         plugin_file = os.path.dirname(plugin_module.__file__)
         self.config_base = {'datadir': self.datadir,
@@ -190,10 +189,4 @@ class PluginTest(unittest.TestCase):
 
         If dir doesn't exist or is not a directory, does nothing.
         """
-        if os.path.isdir(self.datadir):
-            for root, subdirs, files in os.walk(dir, topdown=False):
-                for name in files:
-                    os.remove(os.path.join(root, name))
-                for name in subdirs:
-                    os.rmdir(os.path.join(root, name))
-            os.rmdir(dir)
+        shutil.rmtree(self.datadir, ignore_errors=True)
