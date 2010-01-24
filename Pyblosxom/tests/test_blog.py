@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import shutil
 
 from Pyblosxom.tests.helpers import UnitTestBase
 from Pyblosxom import tools
@@ -34,19 +35,7 @@ class BlogTest(UnitTestBase):
                                mem["body"])
 
     def cleanup_blog(self):
-        datadir = self.get_datadir()
-        for root, dirs, files in os.walk(datadir, topdown=False):
-            for name in files:
-                print "removing %s" % (os.path.join(root, name))
-                os.remove(os.path.join(root, name))
-
-            for name in dirs:
-                print "removing dir %s" % (os.path.join(root, name))
-                os.rmdir(os.path.join(root, name))
-
-        print "removing dir %s" % datadir
-        os.rmdir(datadir)
-    
+        shutil.rmtree(self.get_datadir(), ignore_errors=True)
 
 class TestBlogTest(BlogTest):
     blog = [{"category": "cat1",
