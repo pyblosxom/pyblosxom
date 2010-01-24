@@ -97,10 +97,10 @@ class YearArchives:
         baseurl = config.get("base_url", "")
 
         archives = {}
-        archiveList = tools.walk(self._request, root)
+        archive_list = tools.walk(self._request, root)
         items = []
 
-        for mem in archiveList:
+        for mem in archive_list:
             timetuple = tools.filestat(self._request, mem)
 
             y = time.strftime("%Y", timetuple)

@@ -128,17 +128,15 @@ class PyblCalendar:
         self._view = view
 
         # if we're looking at a specific day, we figure out what it is
-        try:
-            if data["pi_yr"] and data["pi_mo"] and data["pi_da"]:
-                if data["pi_mo"].isdigit():
-                    mon = data["pi_mo"]
-                else:
-                    mon = tools.month2num[data["pi_mo"]]
+        if data["pi_yr"] and data["pi_mo"] and data["pi_da"]:
+            if data["pi_mo"].isdigit():
+                mon = data["pi_mo"]
+            else:
+                mon = tools.month2num[data["pi_mo"]]
 
-                self._specificday = [data["pi_yr"], mon, data["pi_da"]]
-                self._specificday = tuple([int(mem) for mem in self._specificday])
-        except:
-            pass
+        self._specificday = (int(data["pi_yr"]),
+                             int(mon),
+                             int(data["pi_da"]))
 
         archive_list = tools.walk(self._request, root)
 
@@ -200,13 +198,17 @@ class PyblCalendar:
         if index == 0:
             prev = None
         else:
-            prev = ("%s/%s/%s" % (baseurl, keys[index-1][:4], yearmonth[keys[index-1]]), "&lt;")
+            prev = ("%s/%s/%s" % (baseurl, keys[index-1][:4],
+                                  yearmonth[keys[index-1]]),
+                    "&lt;")
 
         # build the next link
         if index == len(yearmonth)-1:
             next = None
         else:
-            next = ("%s/%s/%s" % (baseurl, keys[index+1][:4], yearmonth[keys[index+1]]), "&gt;")
+            next = ("%s/%s/%s" % (baseurl, keys[index+1][:4],
+                                  yearmonth[keys[index+1]]),
+                    "&gt;")
 
         # insert the month name and next/previous links
         cal.insert(0, [prev, time.strftime("%B %Y", view), next])
