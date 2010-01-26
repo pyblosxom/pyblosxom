@@ -19,29 +19,48 @@ pyblosxom-devel mailing list.
 Thanks!
 
 
-MILESTONE VERSION 1.5
-=====================
+Version 1.6
+===========
 
-CODE CLEANUP
+Plugins
+-------
 
- - port over code cleanup from experimental
-
-UNIT TESTING
-
- - add more tests
-
-MANUAL
-
- - re-work this, use sphinx, tie documentation with api docs
-
-COMMAND-LINE
-
- - port over command line changes from experimental
- - re-work command line handling to be more like git
+* plugin for importing and exporting mtimes to and from a file.
+* fix static renderer so that it queries plugins for additional
+  urls that need to be rendered
+* fix yeararchives to render year archives
 
 
-MILESTONE VERSION 1.4
-=====================
+Verion 1.5
+==========
+
+Code cleanup
+------------
+
+* port over code cleanup from experimental
+* pylint pass
+* pep-8 pass
+
+Unit testing
+------------
+
+* add more tests
+* add plugin tests
+
+Manual
+------
+
+* rework manual to use sphinx and tie in docs with api docs
+
+Command-line
+------------
+
+* port over command line changes from experimental
+* rework command line handling to work like git command line does
+
+
+Version 1.4
+===========
 
 Prospective release date: 
 
@@ -68,127 +87,50 @@ ANYTHING ELSE?
 
 
 
-PROJECT INFRASTRUCTURE
-======================
+Infrastructure
+==============
 
-UNIT TESTING
+Unit testing
+------------
 
- - We need additional unit and functional tests.  Part of the testing
-   framework is in as of PyBlosxom 1.4.  This needs to be fleshed out.
+* Always need more unit tests and functional tests.
+* Plugins need more tests.
 
-MANUAL
 
- - Go through and clarify the config.py properties if we haven't already
-   and provide examples in the PyBlosxom Manual.
- - Need to take out a lot of the blah blah blah content and clean up
-   the language so it's clearer with more examples.  Also look at trimming
-   text if possible.
- - Need to add installation instructions for PyBlosxom with SCGI/FCGI with 
-   flup.
- - Need to add installation instructions for PyBlosxom for IIS.
- - Need to add information on migrating entries from other blog systems
-   (Drupal?  WordPress?  LiveJournal? ...) to PyBlosxom.
- - Add instructions for PyBlosxom with FastCGI.
- - Add instructions for servers with multiple users (look at Martin Kraaft's 
-   stuff).
+Manual
+------
+
+* Continue to clarify config.py properties.
+* Continue to clean up the language.
+* Glossary/index
+* Add installation instructions for flup.
+* Instructions for migration?
+* Instructions for servers with multiple users.  (Look at Martin Kraaft's
+  stuff.)
 
 
 PYBLOSXOM
 =========
 
-DATA CACHING
+Configuration
+-------------
 
- - build a global caching mechanism that dumps old data?  look at 
-   memcache?
+* It'd be nice if PyBlosxom could run with no config.py at all.
+* config.py should have defaults centralized into one place.
+* How to do site-wide configurations?
 
-CONFIGURATION DEFAULTS
+Entry variables
+---------------
 
- - Defaults for config.py variables need to be centralized somewhere,
-   copied, and then updated with whatever is in config.py.  This should
-   be done instead of get defaults floating across the codebase.
+* For each entry, we calculate $path and $absolute_path.  Why do
+  we have both of them?  Are there inherent differences between the
+  two?  What does blosxom do?
 
- - We should look into setting defaults to sane values allowing PyBlosxom
-   to run with no config.py file at all.
+  Regardless, it looks like $path behaves differently in 1.3 than
+  in previous versions.
 
-PATH AND ABSOLUTE PATH
+Flavours
+--------
 
- - For each entry, we calculate $path and $absolute_path.  Why do
-   we have both of them?  Are there inherent differences between the
-   two?  What does blosxom do?
-
-   Regardless, it looks like $path behaves differently in 1.3 than
-   in previous versions.
-
-WINDOWS
-
- - Does PyBlosxom currently work in Windows?
-
-MAC OSX
-
- - Does PyBlosxom currently work in Mac OSX?
-
-PYTHON VERSIONS
-
- - Which versions of Python do PyBlosxom work in?
-
-CONFIGURATION
-
- - The Debian package (it might not do this anymore) assumes that
-   config.py is a site-wide configuration file rather than a user-specific
-   configuration file.  MoinMoin has both a site-wide configuration file
-   and a user-specific (well...  wiki-specific) configuration file.
-
-   Need to look into how they did their stuff and look into changing our
-   configuration system to do something similar.
-
-MTIMES
-
- - pyblosxom-cmd should go through the datadir and export the mtimes for
-   all files (by calling cb_filestat) into a file index
-   (There's an rdate module that copies mtimes into the entries.  We
-   might want to fold this functionality into pyblosxom-cmd.)
- - adjust pyblosxom so that it looks for the file index cache before
-   the default of stating the file
-
-TEMPLATES
-
- - Flavours are specific to the blosxom rendering engine that PyBlosxom
-   has.  It's about time we add other rendering engines.  For example,
-   Myghty, Cheetah, ...  This might make it easier/more-useful for
-   using PyBlosxom inside of a TurboGears or a Pylons application.
-
-FLAVOUR FILES
-
- - We still have one problem with making flavour files easy to use and
-   install: resources.  If a flavour file requires a .css file or images 
-   or something like that, it needs to be handled outside of PyBlosxom
-   by the web-server.  That makes documentation a mild pain in the ass
-   and makes it harder to explain in a generic sense how to install
-   flavour files.  It'd be cool if there was a way to specify whether
-   a given resource belonged to a specific flavour and if so allow
-   PyBlosxom to serve that resource (with the correct mime-type) from
-   the flavour's flavour directory.
-
-I18N
-
- - Are we internationalization friendly?  I think parts of the PyBlosxom
-   system are, but we've got an awful lot of English strings in there.
-   We should look at Internationalizing the error messages and other
-   messages as well.  This might include internationalizing the flavour
-   files--but I'm not entirely sure how that would work.
-
-TAGS
-
- - There are a series of tags/folksonomy kinds of plugins now.  All of
-   these (at least, last time I looked) suffer the problem that tags
-   get stored inside the entry file and we don't open up and read the
-   entry file until after we know we're going to render it.
- - This might be something we want to address inside of PyBlosxom.
-
-STORAGE
-
- - Walk is less than optimal.  We should probably split it into a couple
-   of different functions with hooks allowing for other data persistence
-   methods.  This should make the API easier to use in regards to entries
-   and it'll allow us to optimize the functions using caching more easily.
- - how many plugins use Walk?  for what purposes?
+* Flavour templates refer to static files.  Need to figure out how
+  to officially support static files (.css, .jpg, ...)
