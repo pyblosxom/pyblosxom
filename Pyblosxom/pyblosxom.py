@@ -31,8 +31,8 @@ from Pyblosxom import tools
 from Pyblosxom import plugin_utils
 from Pyblosxom.entries.fileentry import FileEntry
 
-VERSION = "1.5"
-VERSION_DATE = VERSION + " dev"
+VERSION = "1.5-rc1"
+VERSION_DATE = VERSION + " 20100129"
 VERSION_SPLIT = tuple(VERSION.split(" ")[0].split('.'))
 
 class PyBlosxom:

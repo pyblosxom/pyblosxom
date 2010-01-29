@@ -9,7 +9,7 @@ except ImportError:
     from setuptools import setup, find_packages
     print "Using setuptools...."
 
-version = "1.5"
+version = "1.5-rc1"
 
 DESC = """PyBlosxom
 =========
