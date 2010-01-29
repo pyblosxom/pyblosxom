@@ -30,6 +30,7 @@ Contents:
    dev_codedocs
    notes/AUTHORS
    notes/THANKS
+   glossary
 
 
 Indices and tables
@@ -38,4 +39,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

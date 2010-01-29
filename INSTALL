@@ -3,7 +3,7 @@ Installing PyBlosxom
 ====================
 
 This guide walks through two different ways to install PyBlosxom:
-system-wide and individual.
+site-wide and individual.
 
 If this file doesn't meet your needs, ask us on the pyblosxom-users
 mailing list or on IRC.  Information on both is on the website_.
@@ -12,10 +12,14 @@ mailing list or on IRC.  Information on both is on the website_.
 
 .. Note::
 
-    If you're testing PyBlosxom, use ``virtualenv`` and deploy with
-    Paste.  It'll save you a lot of time and it's easy to clean up
-    afterwards.
+   If you're testing PyBlosxom, use ``virtualenv`` and deploy with
+   Paste.  It'll save you a lot of time and it's easy to clean up
+   afterwards.
 
+.. Note::
+
+   If you're upgrading from a previous version, make sure to read
+   the Changelog.
 
 Requirements
 ============
@@ -32,54 +36,61 @@ WSGI application, and might work in other contexts.
 Install
 =======
 
-easy_install
+Install
+-------
+
+Single user install
+-------------------
+
+If you want to install PyBlosxom for a single user or want to install
+it in a virtual environment where it can't get naughty with anything
+else, use `virtualenv`_.
+
+First build a virtual environment::
+
+   virtualenv --no-site-packages <dest_dir>
+
+Then activate the virtual environment::
+
+   <dest_dir>/usr/bin/activate
+
+Then install PyBlosxom using one of the instructions below.
+
+.. _virtualenv: http://pypi.python.org/pypi/virtualenv
+
+
+Installation
 ------------
 
-Best way to install PyBlosxom is with *easy_install*.
+If you have `distribute`_ and `pip`_ installed and want to do a
+site-wide installation, do::
 
-If you don't have easy_install installed, you can install it and
-PyBlosxom by downloading the script from
-http://peak.telecommunity.com/dist/ez_setup.py and running::
+   pip install pyblosxom
 
-    python ez_setup.py pyblosxom
+.. _distribute: http://pypi.python.org/pypi/distribute
+.. _pip: http://pypi.python.org/pypi/pip
 
-If you do have *easy_install* installed, run::
+If you have `setuptools`_ installed and want to do a site-wide
+installation, do::
 
-    easy_install pyblosxom
+   easy_install pyblosxom
 
-If you don't want to install PyBlosxom system-wide, we encourage that
-you use `virtualenv`_.
+.. _setuptools: http://pypi.python.org/pypi/setuptools
 
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
-
-
-Source install
---------------
-
-You can download PyBlosxom from
+You can download the tarball.  Tarballs are at
 http://sourceforge.net/project/showfiles.php?group_id=67445 .  Extract
-the ``tar.gz`` file.
+the ``tar.gz`` file and run::
 
-Instructions for checking PyBlosxom out from SVN are at
+   python setup.py install
+
+Lastly, you can do an svn checkout.  Instructions are at
 http://sourceforge.net/scm/?type=svn&group_id=67445 .  Generally,
-*trunk* is unstable but any of the tags are stable.
+*trunk* is unstable but any of the tags are stable.  Then run::
 
-Run::
+   python setup.py install
 
-    python setup.py install
-
-to install PyBlosxom to your system.
-
-
-virtualenv
-----------
-
-If you don't want to install PyBlosxom system-wide, we encourage that
-you use `virtualenv`_.
-
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
-
-FIXME - need instructions here
+If none of those methods works for you, then you might want to
+reconsider using PyBlosxom.
 
 
 Creating a blog
@@ -87,7 +98,7 @@ Creating a blog
 
 To create a blog, do::
 
-    pyblosxom-cmd create ./blog/
+   pyblosxom-cmd create ./blog/
 
 That generates the directory structure, required files, and a first
 post in the ``./blog/`` directory.
