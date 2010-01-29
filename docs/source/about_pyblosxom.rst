@@ -86,36 +86,36 @@ Overview of PyBlosxom
 
 Entries, categories, storage:
 
- * PyBlosxom stores everything as files on the file system--there is no
-   database
- * Each blog entry is a file.
- * Blog entry files are stored in a directory hierarchy in your *datadir*.
- * Each subdirectory in your *datadir* corresponds to a category of
-   your blog.
+* PyBlosxom stores everything as files on the file system--there is no
+  database
+* Each blog entry is a file.
+* Blog entry files are stored in a directory hierarchy in your *datadir*.
+* Each subdirectory in your *datadir* corresponds to a category of
+  your blog.
 
 Themes:
 
- * Themes in PyBlosxom are called *flavours*.
- * A flavour consists of a set of templates.
- * Flavours are stored in a directory called the *flavourdir*.
- * PyBlosxom comes with several flavours: html, rss20, and atom.
- * The `PyBlosxom web-site`_ maintains a flavour registry for flavours
-   contributed by people like you.
- * There's more information in the chapter on
-   :ref:`Flavours and Templates <flavours-and-templates>`.
+* Themes in PyBlosxom are called *flavours*.
+* A flavour consists of a set of templates.
+* Flavours are stored in a directory called the *flavourdir*.
+* PyBlosxom comes with several flavours: html, rss20, and atom.
+* The `PyBlosxom web-site`_ maintains a flavour registry for flavours
+  contributed by people like you.
+* There's more information in the chapter on
+  :ref:`Flavours and Templates <flavours-and-templates>`.
 
 Plugins:
 
- * PyBlosxom has a plugin system.
- * Plugins are written in Python.
- * Plugins are loaded using the ``plugin_dirs`` and ``load_plugins``
-   configuration variables.
- * For more information on using plugins see
-   :ref:`Plugins <using-plugins>`.
- * For more information on writing plugins see
-   :ref:`Writing Plugins <writing-plugins>`.
- * The `PyBlosxom web-site`_ maintains a plugin registry for plugins 
-   submitted by people like you.
+* PyBlosxom has a plugin system.
+* Plugins are written in Python.
+* Plugins are loaded using the ``plugin_dirs`` and ``load_plugins``
+  configuration variables.
+* For more information on using plugins see
+  :ref:`Plugins <using-plugins>`.
+* For more information on writing plugins see
+  :ref:`Writing Plugins <writing-plugins>`.
+* The `PyBlosxom web-site`_ maintains a plugin registry for plugins 
+  submitted by people like you.
 
 .. _PyBlosxom web-site: http://pyblosxom.sourceforge.net/
 
