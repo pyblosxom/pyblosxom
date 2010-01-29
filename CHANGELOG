@@ -103,6 +103,8 @@ Pertinent to users:
 
         py["truncate_frontpage"] = True
 
+18. Plugins are included in the PyBlosxom source tarball again.
+
 
 Pertinent to developers:
 ------------------------
