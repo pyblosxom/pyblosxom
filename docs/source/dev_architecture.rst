@@ -349,6 +349,40 @@ the next function to see if it will return a list of entries.  When a
 function returns a list of entries, the callback will stop.
 
 
+cb_sortlist
+-----------
+
+The sortlist callback allows plugins to implement their own sorting
+of entries.  This callback gets called by filelist handlers.
+
+Functions that implement this callback will get an args dict
+containing:
+
+``request``
+   A Request object
+
+``entry_list``
+   The list of entries to be sorted.
+
+Return ``None`` if the function doesn't truncate the list.  Return
+the sorted list if the function does sort the list.
+
+Example of a ``cb_sortlist`` function::
+
+   def cb_sortlist(args):
+       """Sorts the list from oldest (beginning) to newest (end)
+       for a site that's less like a blog and more like a 
+       journal.
+       """
+       entrylist = args["entry_list"]
+
+       entrylist = [(e._mtime, e) for e in entrylist]
+       entrylist.sort()
+       entrylist = [e[1] for e in entrylist]
+
+       return entrylist
+
+
 cb_truncatelist
 ---------------
 

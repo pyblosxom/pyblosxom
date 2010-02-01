@@ -1029,10 +1029,12 @@ def blosxom_file_list_handler(args):
         entrylist = [x for x in entrylist
                      if time.strftime("%Y%m%d%H%M%S", x["timetuple"]).startswith(datestr)]
 
-    entrylist = [(e._mtime, e) for e in entrylist]
-    entrylist.sort()
-    entrylist.reverse()
-    entrylist = [e[1] for e in entrylist]
+
+    args = {"request": request, "entry_list": entrylist}
+    entrylist = tools.run_callback("sortlist",
+                                   args,
+                                   donefunc=lambda x: x != None,
+                                   defaultfunc=blosxom_sort_list_handler)
 
     args = {"request": request, "entry_list": entrylist}    
     entrylist = tools.run_callback("truncatelist",
@@ -1042,6 +1044,22 @@ def blosxom_file_list_handler(args):
 
     return entrylist
 
+def blosxom_sort_list_handler(args):
+    """Sorts the list based on ``_mtime`` attribute such that
+    most recently written entries are at the beginning of the list
+    and oldest entries are at the end.
+
+    :param args: args dict with ``request`` object and ``entry_list``
+                 list of entries
+    """
+    entrylist = args["entry_list"]
+
+    entrylist = [(e._mtime, e) for e in entrylist]
+    entrylist.sort()
+    entrylist.reverse()
+    entrylist = [e[1] for e in entrylist]
+
+    return entrylist
 
 def blosxom_truncate_list_handler(args):
     """If ``config["num_entries"]`` is not 0 and ``data["truncate"]``
