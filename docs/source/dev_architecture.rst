@@ -349,6 +349,41 @@ the next function to see if it will return a list of entries.  When a
 function returns a list of entries, the callback will stop.
 
 
+cb_truncatelist
+---------------
+
+The truncatelist callback allows plugins to implement their own
+truncation rules.  This callback gets called by filelist handlers.
+
+Functions that implement this callback will get an args dict
+containing:
+
+``request``
+   A Request object
+
+``entry_list``
+   The list of entries to be truncated.
+
+Return ``None`` if the function doesn't truncate the list.  Return
+the new list if the function does truncate the list.
+
+Example of a ``cb_truncatelist`` function::
+
+   def cb_truncatelist(args):
+       request = args["request"]
+       entrylist = args["entry_list"]
+
+       data = request.data
+       config = request.config
+
+       num_entries = config.get("num_entries", 5)
+       truncate = data.get("truncate", 0)
+       if num_entries and truncate:
+           entrylist = entrylist[:num_entries]
+           return entrylist
+
+       return None
+
 
 cb_filestat
 -----------
