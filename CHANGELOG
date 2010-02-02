@@ -105,6 +105,17 @@ Pertinent to users:
 
 18. Plugins are included in the PyBlosxom source tarball again.
 
+19. Templates in a flavourdir directory no longer require the flavour
+    as the file extension.  e.g. This will work fine::
+        
+        blog/
+         |- flavourdir/
+             |- html.flav/
+                 |- content_type
+                 |- head
+                 |- story
+                 |- ...
+
 
 Pertinent to developers:
 ------------------------
@@ -192,8 +203,11 @@ Pertinent to developers:
 10. Added a commandline callback for allowing plugins to add to the
     command line.
 
-11. Added a truncate callback for allowing plugins to augment the
+11. Added a truncatelist callback allowing plugins to augment the
     truncate (``num_entries``) behavior.
+
+12. Added a sortlist callback allowing plugins to augment entrylist sorting
+    behavior.
 
 
 Changes between 1.4.2 and 1.4.3
