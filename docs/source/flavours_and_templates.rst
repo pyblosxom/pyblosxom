@@ -7,28 +7,9 @@ Flavours and Templates
 Summary
 =======
 
-PyBlosxom renderers take a bunch of entries and data accumulated over
-the course of handling the request and renders it into some kind of
-output which is delivered to the browser.
-
-Output can be in a variety of text-based formats: html, xhtml, xml,
-etc.
-
-PyBlosxom comes with two renderers: blosxom and debug.
-
-The debug renderer displays all the data in the various parts of the
-PyBlosxom Request object.  This is really helpful to see what
-variables are at your disposal and also to debug problems you might be
-having with plugins you've installed.
-
-The blosxom renderer renders entries just like Blosxom does.
-
-The renderer can be set in your config file like this::
-
-   py["renderer"] = "blosxom"
-
-The blosxom renderer is the default renderer, so if you don't specify
-a renderer, then the blosxom renderer is used.
+This chapter covers the blosxom renderer in PyBlosxom.  There are other
+renderers (like the debug renderer) that operate differently.  See
+the chapter on :ref:`renderers <renderers>` for more details.
 
 If you want your blog rendered using a different template system--say
 Cheetah or htmltmpl--implement a renderer that renders the output.
@@ -49,10 +30,6 @@ The blosxom renderer renders the output of a request with a
 A :term:`flavour` is a group of templates for a specific output format
 or style.  For example, html, xhtml, atom, rss, rdf, etc.
 
-A :term:`template` is a small bit of a flavour that specifies a
-specific portion of the output.  For example, the head of an html page
-is a template.
-
 A flavour consists of at least the following templates:
 
 * **content_type** - holds the content type of the flavour
@@ -68,6 +45,20 @@ A flavour consists of at least the following templates:
    addition ot the standard templates listed above.  See the
    documentation for the plugin for more information.
 
+More on flavours, how they're stored, and such later.
+
+A :term:`template` is one piece of a flavour that specifies a specific
+portion of the output.  For example, the head template of an html
+flavour would be in a file called ``head`` and might look like this::
+
+    <html>
+    <head>
+       <title>$(blog_title)</title>
+    </head>
+    <body>
+
+More on templates later.
+
 PyBlosxom allows you to manage the flavours and templates for your
 blog in several different ways:
 
@@ -81,7 +72,7 @@ blog in several different ways:
    PyBlosxom.  You can put your flavour files iny our datadir.  You
    can also put your flavour files in the categories of your datadir.
    However you cannot have a flavourdir and put flavour files in your
-   datadir--PyBlosxom will look at EITHER your datadir OR your
+   datadir--PyBlosxom will look at **EITHER** your datadir **OR** your
    flavourdir for flavour files.
 
 
@@ -89,16 +80,16 @@ Storing flavours in the flavourdir
 ----------------------------------
 
 This is the easiest way to store your flavours separately from the
-entries in your blog.  It is the preferred way.
+entries in your blog.  This is the preferred way.
 
 If you specify the ``flavourdir`` directory in your ``config.py`` file,
 you can store each flavour in a directory in the flavourdir.
 
-For example, if your ``config.py`` file had this::
+For example, Joe has this in his ``config.py``::
 
    py["flavourdir"] = "/home/joe/blog/flavours/"
 
-Then the blog directory structure might look like this::
+Joe's blog directory structure would look like this::
 
    /home/joe/blog/
              |- entries/             <-- datadir
@@ -119,21 +110,9 @@ Then the blog directory structure might look like this::
                 |  |- foot
                 |  |- story
                 |  |- ...
-                |
-                |- work/
-                   |- html.flav/     <-- html flavour for the work category
-                   |- ...
 
-
-You can parallel the category directories in your datadir allowing you
-to have different flavours apply to different directories.  In the
-example above, the work category has a different html flavour than the
-root and home categories.
-
-This structure also makes it easier to use flavour packs found in the
-flavour registry on the `PyBlosxom website`_.
-
-.. _PyBlosxom website: http://pyblosxom.sourceforge.net/
+The ``flavourdir`` specifies the directory in which Joe stores his
+flavours.
 
 .. Note::
 
@@ -143,32 +122,57 @@ flavour registry on the `PyBlosxom website`_.
 
    Templates in the flavour directory don't need an extension.
 
+This structure also makes it easier to use flavour packs found in the
+flavour registry on the `PyBlosxom website`_.
+
+.. _PyBlosxom website: http://pyblosxom.sourceforge.net/
+
+
 
 Storing flavours in flavour directories in the datadir
 ------------------------------------------------------
 
 Flavours can be stored in directories in the directory specified by
-your datadir.  This works similarly to the flavourdir method except
-that the flavourdir is not a separate directory tree--it's the same as
-your datadir.
+your datadir.  This works exactly the same as having a separate
+flavourdir except that the flavourdir is not a separate directory
+tree--it's the same tree as your datadir.
+
+For example, Joe stores his flavours alongside his entries and his
+blog directory tree looks like this::
+
+   /home/joe/blog/
+             |- entries/             <-- datadir
+                |- html.flav/        <-- html flavour
+                |  |- content_type
+                |  |- head
+                |  |- foot
+                |  |- story
+                |  |- ...
+                |
+                |- work/             <-- work category of entries
+                |  |- html.flav/     <-- html flavour for the work category
+                |  |- ...
+                |
+                |- home/             <-- home category of entries
 
 In this way your entries are intermixed with your flavour directories.
-
-.. Note::
-
-   Flavour directories must end in ``.flav``.
 
 
 Storing flavours in the datadir
 -------------------------------
 
-You can also put flavour templates alongside the blog entries.  If you
-do this, then the flavour template files must end in the flavour name.
+Instead of storing flavour templates in separate flavour directories
+in either your datadir or your flavourdir, you can store the templates
+alongside your entries.
 
-The template files for a given flavour all have the same file
-extension which is the flavour's name.  For example, if you were using
-an "html" flavour, the flavour itself would be composed of the
-following files:
+This is not recommended--it's a pain in the ass to maintain and
+everything gets all mixed up.  It's supported since this is how
+PyBlosxom used to work.
+
+The template files for a given flavour all have to have the flavour
+name as the extension of the file.  For example, if you were using an
+"html" flavour, the flavour itself would be composed of the following
+files:
 
 * ``content_type.html``
 * ``head.html``
@@ -177,21 +181,21 @@ following files:
 * ``date_head.html``
 * ``date_foot.html``
 
-If you want to create a "joy" flavour, you would have the following
+If you want to create an "atom" flavour, you would have the following
 files:
 
-* ``content_type.joy``
-* ``head.joy``
-* ``story.joy``
-* ``foot.joy``
-* ``date_head.joy``
-* ``date_foot.joy``
+* ``content_type.atom``
+* ``head.atom``
+* ``story.atom``
+* ``foot.atom``
+* ``date_head.atom``
+* ``date_foot.atom``
 
 .. Warning::
 
-   If you intermix flavour templates with entries, then one thing you
-   need to be aware of is creating a flavour where the name is the
-   same as the extension of your blog entries.
+   If you intermix flavour templates with entries, make sure you don't
+   have flavours that have the same name as the extension of your blog
+   entries.
 
    For example, if ``.txt`` is the extension for entries in your blog,
    don't create a **txt** flavour!
@@ -209,30 +213,55 @@ PyBlosxom comes with the following flavours:
 These flavours are included with PyBlosxom and they will work out of the
 box with no modifications and no configuration changes.
 
+When you run ``pyblosxom-cmd create <blog-dir>``, these get copied
+into the flavourdir.
+
+Play with them!  Modify them!  Extend them!
+
 
 Overriding included flavours
 ============================
 
-You can override all or portions of the included flavours by providing
-the template files you want to override in your flavourdir (or
-datadir).
+PyBlosxom allows you to override templates and flavours on a
+category-by-category basis.
 
-For example::
+For example, Joe has a category devoted to his work on plants which he
+wants branded differently than the rest of his blog.  Joe uses the
+category *work* for all his plant work and has a different flavour for
+this category of his blog.
 
-   blog/
-     |- flavours/
-        |- html.flav
-           |- head
+Joe's blog directory looks like this::
 
-When rendering the ``html`` flavour, the ``head`` template will be
-taken from ``flavours/html.flav/`` and the rest of the templates will
-be taken from the included html flavour.
+   /home/joe/blog/
+             |- entries/             <-- datadir
+             |  |- work/             <-- work category of entries
+             |  |- home/             <-- home category of entries
+             |
+             |- flavours/
+                |- html.flav/        <-- html flavour
+                |  |- content_type
+                |  |- head
+                |  |- foot
+                |  |- story
+                |  |- ...
+                |
+                |- work/
+                   |- html.flav/     <-- html flavour for the work category
+                   |- ...
 
-Second example::
+There is a ``work`` directory in his ``flavours`` directory that
+parallels the ``work`` directory in his ``entries`` directory.  In
+Joe's blog, the work category has a different html flavour than the
+root and home categories.
+
+You can override individual templates, too.
+
+For example, if you had a math category and wanted the story template
+to look different, you could set up your blog like this::
 
    blog/
      |- entries/
-     |  |- math/
+     |  |- math/             <-- math category in datadir
      |
      |- flavours/
         |- html.flav/
@@ -243,7 +272,7 @@ Second example::
         |  |- date_foot
         |  |- foot
         |
-        |- math/
+        |- math/             <-- math category in flavourdir
            |- html.flav/
               |- story
 
@@ -293,8 +322,8 @@ documentationfor a list of which variables they add and in which
 templates they're available.
 
 
-Syntax
-------
+Variable syntax
+---------------
 
 To use a variable in a template, prefix the variable name with a $.
 For example, this would expand to the blog's title as a h2::
@@ -326,7 +355,6 @@ property in your ``config.py`` file to ``debug`` like this::
 That will tell you all kinds of stuff about the data structures
 involved in the request.  Don't forget to change it back when you're
 done!
-
 
 
 URL Encoding and Escaping of Template Variables
@@ -672,7 +700,6 @@ The order in which we figure out which flavour to use is this:
 3. look at the ``default_flavour`` property in the ``config.py`` 
    file: if there is one, then we use that.
 4. use the ``html`` flavour.
-
 
 
 Examples of Templates

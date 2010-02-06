@@ -23,6 +23,7 @@ Contents:
    writing_entries
    flavours_and_templates
    syndication
+   renderers
    comments
    plugins
    dev_architecture

@@ -525,7 +525,7 @@ containing:
 ``request``
    a Request object
 
-Functions that implement this callback should return None if they
+Functions that implement this callback should return ``None`` if they
 don't want to specify a renderer or the renderer object instanct if
 they do.  When a function returns a renderer instance, processing
 stops.
