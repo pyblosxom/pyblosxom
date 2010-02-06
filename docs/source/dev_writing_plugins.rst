@@ -57,7 +57,7 @@ For example, this is at the top of Will's wbgpager plugin::
    To install wbgpager, do the following:
 
      1. add "wbgpager" to your load_plugins list variable in your
-        config.py file--make sure it's the first thing listed so
+        config.py file---make sure it's the first thing listed so
         that it has a chance to operate on the entry list before
         other plugins.
      2. add the $page_navigation variable to your head or foot
@@ -71,7 +71,7 @@ For example, this is at the top of Will's wbgpager plugin::
      wbgpager_count_from
        datatype:       int
        default value:  0
-       description:    Some folks like their paging to start at 1--this
+       description:    Some folks like their paging to start at 1---this
                        enables you to do that.
 
      wbgpager_previous_text

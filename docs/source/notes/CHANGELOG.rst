@@ -18,7 +18,7 @@ Pertinent to users:
 
 3. To install PyBlosxom on your system, you will now need setuptools.
 
-4. The ``pyblosxom.cgi`` file has changed significantly---if you're
+4. The ``pyblosxom.cgi`` file has changed significantly--if you're
    using it you should grab the new one that comes with this
    distribution.  We've gutted the ``pyblosxom.cgi`` script and turned
    it into a stub.  This will reduce the need for you to update your
@@ -249,7 +249,7 @@ Pertinent to users:
 Pertinent to developers:
 ------------------------
 
-1. Fixed tools.importname---it now logs errors to the logger.
+1. Fixed tools.importname--it now logs errors to the logger.
 
 2. Fixed PyBlosxomWSGIApp so that it's WSGI compliant as an
    application.  Thanks Michael!
@@ -441,7 +441,7 @@ Pertinent to users:
    what will get logged:
 
    * "log_file" - the file that PyBlosxom events will be logged
-     to---the web-server MUST be able to write to this file.
+     to--the web-server MUST be able to write to this file.
 
    * "log_level" - the level of events to write to the log.  options
      are "critical", "error", "warning", "info", and "debug"
@@ -505,8 +505,8 @@ Pertinent to developers and plugin developers:
 1. We now have a Request and a Response object.  See API documentation
    for more details.
 
-2. Don't use ``os.environ`` directly---use the http dict.  For
-   example, this is bad::
+2. Don't use os.environ directly--use the http dict.  For example,
+   this is bad::
 
       path_info = os.environ["HTTP_PATHINFO"]
 
@@ -590,10 +590,10 @@ Changes between 0.9 and 1.0
 Pertinent to users:
 -------------------
 
-1. We ditched ``blosxom_custom_flavours``---you can remove it from your
+1. We ditched ``blosxom_custom_flavours``--you can remove it from your
    ``config.py`` file.
 
-2. We added static rendering---see the howto in the PyBlosxom manual.
+2. We added static rendering--see the howto in the PyBlosxom manual.
 
 3. Rewrote comments to use the new handler system.  You should replace
    the comments, pingbacks, trackbacks, and other comments-oriented
@@ -630,7 +630,7 @@ Pertinent to users:
 Pertinent to developers and plugin developers:
 ----------------------------------------------
 
-1. Rewrote the startup for PyBlosxom request handling---we ditched the
+1. Rewrote the startup for PyBlosxom request handling--we ditched the
    common_start function and picked up a common initialize function.
 
 2. Unhardcoded where contrib and web files go when doing a multi-user

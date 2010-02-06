@@ -57,7 +57,7 @@ timestamp.  There are plugins that change this behavior, but require
 extra configuration to use.
 
 There are a lot of other weblog systems out there.  If it's apparent
-that PyBlosxom won't work for you, don't force it--use something else.
+that PyBlosxom won't work for you, don't force it---use something else.
 Possibilities include:
 
 **WordPress**
@@ -86,8 +86,8 @@ Overview of PyBlosxom
 
 Entries, categories, storage:
 
-* PyBlosxom stores everything as files on the file system--there is no
-  database
+* PyBlosxom stores everything as files on the file system---there is
+  no database
 * Each blog entry is a file.
 * Blog entry files are stored in a directory hierarchy in your *datadir*.
 * Each subdirectory in your *datadir* corresponds to a category of

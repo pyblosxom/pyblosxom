@@ -86,7 +86,7 @@ that and try running ``./pyblosxom.cgi`` again.
 
 If Python is installed on your system and the first line of
 ``pyblosxom.cgi`` is correct, check for permissions issues:
-``pyblosxom.cgi`` is a script--so it needs execute permission in order
+``pyblosxom.cgi`` is a script---so it needs execute permission in order
 to function.  If those aren't set, then fix that and try running
 ``./pyblosxom.cgi`` again.
 

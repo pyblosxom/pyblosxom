@@ -5,20 +5,21 @@ Syndication
 Summary
 =======
 
-Syndicating your blog is very important as it provides a mechanism
-for readers of your blog to keep up to date.  Typically this is done
-with newsreader software.  Additionally, there are web-sites that post
-blog entries from a variety of blogs that have similar content.  Both
+Syndicating your blog is very important as it provides a mechanism for
+readers of your blog to keep up to date.  Typically this is done with
+newsreader software.  Additionally, there are web-sites that post blog
+entries from a variety of blogs that have similar content.  Both
 newsreaders and planet-type web-sites need a semantically marked up
 version of your blog.
 
-Most newsreaders read most of the syndication formats.  So you shouldn't
-feel that you have to implement each one of them in your blog--you can most
-assuredly get away with implementing RSS 2.0 or Atom 1.0 and be just fine.
+Most newsreaders read most of the syndication formats.  So you
+shouldn't feel that you have to implement each one of them in your
+blog---you can most assuredly get away with implementing RSS 2.0 or
+Atom 1.0 and be just fine.
 
-The syndication flavours that come with PyBlosxom should be fine for most
-blogs.  When pointing people to your syndication feed, just use one
-of the syndication flavours:
+The syndication flavours that come with PyBlosxom should be fine for
+most blogs.  When pointing people to your syndication feed, just use
+one of the syndication flavours:
 
 * ``http://your-server/path-to-blog/index.rss``
 * ``http://your-server/path-to-blog/index.rss20``

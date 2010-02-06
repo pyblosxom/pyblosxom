@@ -1,0 +1,20 @@
+=========
+ Authors
+=========
+
+* Wari Wahab
+* Blake Winton
+* Will Kahn-Greene
+* Ted Leung
+* Steven Armstrong
+* Doug Ransom
+* Abe Fettig
+* Bill Mill
+* Robert Wall
+* Ryan Barrett
+* Benjamin Mako Hill
+
+
+If you think your name should be on this list, but it isn't _please_
+let us know.  It's likely that it was left off by accident and not on
+purpose.

@@ -53,7 +53,7 @@ do the following:
    2.2. Verify that your ``WSGIScriptAlias`` points to a valid
         directory on your file system that stores WSGI scripts.
 
-3. Create a blog--see the instructions for the blog directories,
+3. Create a blog---see the instructions for the blog directories,
    ``config.py`` setup and other bits of **Setting up a blog** in
    ``install_cgi``.
 

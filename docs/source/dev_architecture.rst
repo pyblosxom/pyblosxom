@@ -123,7 +123,7 @@ The PyBlosxom request lifecycle starts with the web-server executing
    4. PyBlosxom instance, ``run`` method: calls the end callback to
       allow plugins to do any cleanup they need to do.
 
-FIXME - add lifecycle for long-running processes through WSGI--it's
+FIXME - add lifecycle for long-running processes through WSGI---it's
 slightly different.
 
 
@@ -220,7 +220,7 @@ callback function.  In this way, each plugin has a chance to modify
 and transform the data.
 
 There's no reason you can't implement a handler-type callback and use
-it for notification purposes--that's fine.  You should know that in
+it for notification purposes---that's fine.  You should know that in
 the case of handler callbacks and modifier callbacks, the return value
 that your plugin gives will affect PyBlosxom's execution.
 
@@ -275,7 +275,7 @@ containing:
    a Request object
 
 Functions that implement this callback can return whatever they
-want--it doesn't affect the callback chain.
+want---it doesn't affect the callback chain.
 
 Example of a ``cb_prepare`` function in a plugin::
 
@@ -317,7 +317,7 @@ containing:
 
 
 Functions that implement this callback can return whatever they
-want--it doesn't affect the callback chain.
+want---it doesn't affect the callback chain.
 
 ``cb_logrequest`` is called after rendering and will contain all the
 modifications to the Request object made by the plugins.
@@ -332,7 +332,7 @@ cb_filelist
 -----------
 
 The filelist callback allows plugins to generate the list of entries
-to be rendered.  Entries should be EntryBase derivatives--either by
+to be rendered.  Entries should be EntryBase derivatives---either by
 instantiating EntryBase, FileEntry, or creating your own EntryBase
 subclass.
 
@@ -428,7 +428,7 @@ For example, one of the contributed plugins uses this to set the mtime
 to the time specified in the entry's filename.
 
 Plugins may also use this to provide a cheaper alternative to
-filesystem stat calls--a notorious performance drag.  The
+filesystem stat calls---a notorious performance drag.  The
 hardcodedates plugin, for example, stores mtimes in a file: it reads
 the file once at startup then returns mtimes from its in-memory
 database.
@@ -485,7 +485,7 @@ containing:
    a Request object
 
 Functions that implement this callback should make the modifications
-to the data dict in place--no need to return anything.
+to the data dict in place---no need to return anything.
 
 
 cb_commandline
@@ -614,7 +614,7 @@ Functions that implement this callback will get an args dict containing:
    a Request object
 
 Functions that implement this callback don't need to return
-anything--modifications to the ``entry_data`` dict are done in place.
+anything---modifications to the ``entry_data`` dict are done in place.
 
 See :ref:`writing-a-postformatter`.
 

@@ -4,6 +4,7 @@ Flavours and Templates
 
 .. _flavours-and-templates:
 
+
 Summary
 =======
 
@@ -11,8 +12,8 @@ This chapter covers the blosxom renderer in PyBlosxom.  There are other
 renderers (like the debug renderer) that operate differently.  See
 the chapter on :ref:`renderers <renderers>` for more details.
 
-If you want your blog rendered using a different template system--say
-Cheetah or htmltmpl--implement a renderer that renders the output.
+If you want your blog rendered using a different template system---say
+Cheetah or htmltmpl---implement a renderer that renders the output.
 This new renderer can be implemented as a PyBlosxom plugin.  See the
 chapter on writing plugins for more information.
 
@@ -69,11 +70,11 @@ blog in several different ways:
 .. Note::
 
    PyBlosxom is backwards compatible with previous versions of
-   PyBlosxom.  You can put your flavour files iny our datadir.  You
+   PyBlosxom.  You can put your flavour files in your datadir.  You
    can also put your flavour files in the categories of your datadir.
    However you cannot have a flavourdir and put flavour files in your
-   datadir--PyBlosxom will look at **EITHER** your datadir **OR** your
-   flavourdir for flavour files.
+   datadir---PyBlosxom will look at **EITHER** your datadir **OR**
+   your flavourdir for flavour files.
 
 
 Storing flavours in the flavourdir
@@ -135,7 +136,7 @@ Storing flavours in flavour directories in the datadir
 Flavours can be stored in directories in the directory specified by
 your datadir.  This works exactly the same as having a separate
 flavourdir except that the flavourdir is not a separate directory
-tree--it's the same tree as your datadir.
+tree---it's the same tree as your datadir.
 
 For example, Joe stores his flavours alongside his entries and his
 blog directory tree looks like this::
@@ -165,7 +166,7 @@ Instead of storing flavour templates in separate flavour directories
 in either your datadir or your flavourdir, you can store the templates
 alongside your entries.
 
-This is not recommended--it's a pain in the ass to maintain and
+This is not recommended---it's a pain in the ass to maintain and
 everything gets all mixed up.  It's supported since this is how
 PyBlosxom used to work.
 
@@ -317,7 +318,7 @@ Template Variables
 
 This is the list of variables that are available to your templates.
 Templates contain variables that are expanded when the template is
-rendered.  Plugins may add additional variables--refer to plugin
+rendered.  Plugins may add additional variables---refer to plugin
 documentationfor a list of which variables they add and in which
 templates they're available.
 

@@ -37,10 +37,10 @@ These are the instructions for configuring static rendering in PyBlosxom.
    If you can't or don't want to do that, then just untar the pyblosxom
    .tar.gz file into a directory.
 
-   If you're using a version of PyBlosxom prior to 1.4, when you're 
-   copying the ``pyblosxom.cgi`` and ``config.py`` files, you don't have 
-   to put them in a CGI directory--you can put them in any directory 
-   you have permissions in. 
+   If you're using a version of PyBlosxom prior to 1.4, when you're
+   copying the ``pyblosxom.cgi`` and ``config.py`` files, you don't
+   have to put them in a CGI directory---you can put them in any
+   directory you have permissions in.
 
    For example, I created a directory ``/home/joe/pyblosxom/`` and put 
    both files in there.

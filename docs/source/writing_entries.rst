@@ -21,7 +21,7 @@ would be ``/status``.
 
    A warning about category names:
 
-   Be careful when you create your categories--be sure to use
+   Be careful when you create your categories---be sure to use
    characters that are appropriate in directory names for the file
    system you're using.
 
@@ -33,7 +33,7 @@ would be ``/status``.
 
 
 Don't worry about making sure you have all the categories you need up
-front--you can add them as you need them.
+front---you can add them as you need them.
 
 
 

@@ -22,7 +22,7 @@ Pyblosxom.pyblosxom
 
 .. data:: VERSION_SPLIT
 
-   PyBlosxom version as a tuple--use this for version checking.
+   PyBlosxom version as a tuple---use this for version checking.
    For example ``("1", "5")``.
 
 .. automodule:: Pyblosxom.pyblosxom
