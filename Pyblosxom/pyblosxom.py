@@ -949,7 +949,7 @@ def blosxom_entry_parser(filename, request):
     :param filename: a filename to extract data and metadata from
     :param request: a standard request object
     """
-    config = request.getConfiguration()
+    config = request.get_configuration()
 
     entry_data = {}
 
@@ -962,12 +962,8 @@ def blosxom_entry_parser(filename, request):
     if len(lines) == 0:
         return {"title": "", "body": ""}
 
-    # NOTE: you can probably use the next bunch of lines verbatim for
-    # all entryparser plugins.  this pulls the first line off as the
-    # title, the next bunch of lines that start with # as metadata
-    # lines, and then everything after that is the body of the entry.
-    title = lines.pop(0).strip()
-    entry_data['title'] = title
+    # the first line is the title
+    entry_data["title"] = lines.pop(0).strip()
 
     # absorb meta data lines which begin with a #
     while lines and lines[0].startswith("#"):
@@ -976,17 +972,17 @@ def blosxom_entry_parser(filename, request):
         meta = meta.split(" ", 1)
         entry_data[meta[0].strip()] = meta[1].strip()
 
-    # Call the preformat function
+    # call the preformat function
     args = {'parser': entry_data.get('parser', config.get('parser', 'plain')),
             'story': lines,
             'request': request}
-    otmp = tools.run_callback('preformat',
-                              args,
-                              donefunc = lambda x:x != None,
-                              defaultfunc = lambda x: ''.join(x['story']))
-    entry_data['body'] = otmp
+    entry_data["body"] = tools.run_callback(
+        'preformat',
+        args,
+        donefunc=lambda x: x != None,
+        defaultfunc=lambda x: ''.join(x['story']))
 
-    # Call the postformat callbacks
+    # call the postformat callbacks
     tools.run_callback('postformat',
                       {'request': request,
                        'entry_data': entry_data})
