@@ -45,13 +45,9 @@ class PyBlosxom:
         """Sets configuration and environment and creates the Request
         object.
 
-        :Parameters:
-           config : dict
-              Dict containing the configuration variables.
-           environ : dict
-              Dict containing the environment variables.
-           data : dict
-              Dict containing data variables.
+        :param config: dict containing the configuration variables.
+        :param environ: dict containing the environment variables.
+        :param data: dict containing data variables.
         """
         config['pyblosxom_name'] = "pyblosxom"
         config['pyblosxom_version'] = VERSION_DATE
@@ -187,9 +183,9 @@ class PyBlosxom:
         If you want to run a callback from a plugin, use
         ``tools.run_callback`` instead.
 
-        Returns the results of the callback.
-
         :param callback: the name of the callback to execute.
+
+        :returns: the results of the callback.
         """
         self.initialize()
 
@@ -406,15 +402,14 @@ class PyBlosxomWSGIApp:
         """
         Make WSGI app for PyBlosxom.
 
-        :Parameters:
-            environ : ?
-                FIXME
-            start_response : ?
-                FIXME
-            configini : dict
-                Dict encapsulating information from a ``config.ini`` file or
-                any other property file that will override the ``config.py``
-                file.
+        :param environ: FIXME
+
+        :param start_response: FIXME
+
+        :param configini: Dict encapsulating information from a
+                          ``config.ini`` file or any other property
+                          file that will override the ``config.py``
+                          file.
         """
         self.environ = environ
         self.start_response = start_response
@@ -456,6 +451,8 @@ class PyBlosxomWSGIApp:
 
 def pyblosxom_app_factory(global_config, **local_config):
     """App factory for paste.
+
+    :returns: CgitbMiddleware
     """
     from paste import cgitb_catcher
 
@@ -619,7 +616,7 @@ class Request(object):
         ``form`` instance is created only when requested to prevent
         overhead and unnecessary consumption of the input stream.
 
-        Returns a ``cgi.FieldStorage`` instance.
+        :returns: a ``cgi.FieldStorage`` instance.
         """
         if self._form == None:
             self._form = self._getform()
@@ -758,8 +755,8 @@ class Response(object):
         >>> resp.add_header("Content-type", "text/plain")
         >>> resp.add_header("Content-Length", "10500")
 
-        :exception ValueError: This happens when the parameters are
-                               not correct.
+        :raises ValueError: This happens when the parameters are
+                            not correct.
         """
         key = key.strip()
         if key.find(' ') != -1 or key.find(':') != -1:
@@ -943,11 +940,11 @@ def blosxom_entry_parser(filename, request):
     becomes the title of the entry.  The other lines are the body of
     the entry.
 
-    Returns A dict containing parsed data and meta data with the
-    particular file (and plugin).
-
     :param filename: a filename to extract data and metadata from
     :param request: a standard request object
+
+    :returns: dict containing parsed data and meta data with the
+              particular file (and plugin)
     """
     config = request.get_configuration()
 
@@ -995,9 +992,9 @@ def blosxom_file_list_handler(args):
     default behavior that we want to show and generates a list of
     EntryBase subclass objects which it returns.
 
-    Returns the content we want to render.
-
     :param args: dict containing the incoming Request object
+
+    :returns: the content we want to render
     """
     request = args["request"]
 
@@ -1047,6 +1044,8 @@ def blosxom_sort_list_handler(args):
 
     :param args: args dict with ``request`` object and ``entry_list``
                  list of entries
+
+    :returns: the sorted ``entry_list``
     """
     entrylist = args["entry_list"]
 
@@ -1062,10 +1061,10 @@ def blosxom_truncate_list_handler(args):
     is not 0, then this truncates ``args["entry_list"]`` by
     ``config["num_entries"]``.
 
-    Returns the truncated ``entry_list``.
-
     :param args: args dict with ``request`` object and ``entry_list``
                  list of entries
+
+    :returns: the truncated ``entry_list``.
     """
     request = args["request"]
     entrylist = args["entry_list"]

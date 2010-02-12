@@ -34,8 +34,7 @@ def catalogue_plugin(plugin_module):
     Goes through the plugin's contents and catalogues all the functions
     that start with cb_.  Functions that start with cb_ are callbacks.
 
-    @param plugin_module: the module to catalogue
-    @type  plugin_module: module
+    :param plugin_module: the module to catalogue
     """
     listing = dir(plugin_module)
 
@@ -71,13 +70,11 @@ def initialize_plugins(plugin_dirs, plugin_list):
     NOTE: If PyBlosxom is part of a long-running process, you must
     restart PyBlosxom in order to pick up any changes to your plugins.
 
-    @param plugin_dirs: the list of directories to add to the sys.path
-        because that's where our plugins are located.
-    @type  plugin_dirs: list of strings
+    :param plugin_dirs: the list of directories to add to the sys.path
+                        because that's where our plugins are located.
 
-    @param plugin_list: the list of plugins to load, or if None, we'll
-        load all the plugins we find in those dirs.
-    @type  plugin_list: list of strings or None
+    :param plugin_list: the list of plugins to load, or if None, we'll
+                        load all the plugins we find in those dirs.
     """
     if plugins:
         return
@@ -107,11 +104,9 @@ def get_plugin_by_name(name):
     This retrieves a plugin instance (it's a Python module instance)
     by name.
 
-    @param name: the name of the plugin to retrieve (ex: "xmlrpc")
-    @type  name: string
+    :param name: the name of the plugin to retrieve (ex: "xmlrpc")
 
-    @returns: the Python module instance for the plugin or None
-    @rtype: Python module
+    :returns: the Python module instance for the plugin or None
     """
     if plugins:
         for mem in plugins:
@@ -125,11 +120,9 @@ def get_module_name(filename):
 
     Example: passing in "/blah/blah/blah/module.ext" returns "module"
 
-    @param filename: the filename in question (with a full path)
-    @type  filename: string
+    :param filename: the filename in question (with a full path)
 
-    @returns: the filename without path or extension
-    @rtype:   string
+    :returns: the filename without path or extension
     """
     return os.path.splitext(os.path.split(filename)[1])[0]
 
@@ -140,14 +133,11 @@ def get_plugin_list(plugin_list, plugin_dirs):
     from those dirs.  In this case, we load all possible plugins except
     the ones whose names being with _ .
 
-    @param plugin_list: List of plugins to load
-    @type plugin_list: list or None
+    :param plugin_list: List of plugins to load
 
-    @param plugin_dirs: A list of directories where plugins can be loaded from
-    @type plugin_dirs: list
+    :param plugin_dirs: A list of directories where plugins can be loaded from
 
-    @return: list of python module names of the plugins to load
-    @rtype: list of strings
+    :return: list of python module names of the plugins to load
     """
     if plugin_list == None:
         plugin_list = []

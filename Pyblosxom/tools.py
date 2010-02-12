@@ -140,6 +140,8 @@ def convert_configini_values(configini):
     :param confini: dict containing the config.ini style keys and values
 
     :raises ConfigSyntaxErrorException: when there's a syntax error
+
+    :returns: new config dict
     """
     def s_or_i(text):
         """
@@ -301,9 +303,9 @@ def commasplit(s):
     >>> tools.commasplit("'a', \"b, c\"")
     ["a", " \"b, c\""]
 
-    This returns a list of strings.
-
     :param s: the string to split
+
+    :returns: list of strings
     """
     if s is None:
         return []
@@ -391,9 +393,9 @@ class Replacer:
             $escape(id)
             $urlencode(id)
 
-        It returns the substituted string.
-
         :param matchobj: the regular expression match object
+
+        :returns: the substituted string
         """
         vd = self.var_dict
         request = self._request
@@ -473,11 +475,11 @@ def parse(request, var_dict, template):
 
     Originally based on OPAGCGI, but mostly re-written.
 
-    This returns the template string with template variables expanded.
-
     :param request: the Request object
     :param var_dict: the dict holding name/value pair variable replacements
     :param template: the string template we're expanding variables in.
+
+    :returns: the template string with template variables expanded.
     """
     encoding = request.config.get("blog_encoding", "utf-8")
     replacer = Replacer(request, encoding, var_dict)
@@ -502,8 +504,6 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
 
     It will also skip all directories that start with a period.
 
-    Returns a list of file paths.
-
     :param request: the Request object
     :param root: the root directory to walk
     :param recurse: the depth of recursion; defaults to 0 which goes all
@@ -514,6 +514,8 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
                     handle
     :param return_folders: True if you want only folders, False if you
                     want files AND folders
+
+    :returns: a list of file paths.
     """
     # expand pattern
     if not pattern:
@@ -591,6 +593,8 @@ def filestat(request, filename):
 
     :param request: the Request object
     :param filename: the file name of the file to stat
+
+    :returns: the filestat (tuple of 9 ints) on the given file
     """
     data = request.getData()
     filestat_cache = data.setdefault("filestat_cache", {})
@@ -625,11 +629,11 @@ def what_ext(extensions, filepath):
     Takes in a filepath and a list of extensions and tries them all
     until it finds the first extension that works.
 
-    Returns the extension (string) of the file or ``None``.
-
     :param extensions: the list of extensions to test
     :param filepath: the complete file path (minus the extension) to
                      test and find the extension for
+
+    :returns: the extension (string) of the file or ``None``.
     """
     for ext in extensions:
         if os.path.isfile(filepath + '.' + ext):
@@ -645,9 +649,9 @@ def is_year(s):
     1. four digits
     2. first two digits are either 19 or 20.
 
-    Returns ``True`` if it is a year and ``False`` otherwise.
-
     :param s: the string to check for "year-hood"
+
+    :returns: ``True`` if it is a year and ``False`` otherwise.
     """
     if not s:
         return False
@@ -661,11 +665,11 @@ def importname(modulename, name):
     """
     Safely imports modules for runtime importing.
 
-    Returns the module object or ``None`` if there were problems
-    importing.
-
     :param modulename: the package name of the module to import from
     :param name: the name of the module to import
+
+    :returns: the module object or ``None`` if there were problems
+              importing.
     """
     logger = getLogger()
     if not modulename:
@@ -698,6 +702,8 @@ def generate_rand_str(minlen=5, maxlen=10):
 
     :param minlen: the minimum length of the generated random string
     :param maxlen: the maximum length of the generated random string
+
+    :returns: generated string
     """
     import random, string
     chars = string.letters + string.digits
@@ -757,6 +763,8 @@ def run_callback(chain, input,
                         have returned something that satisfies the
                         donefunc, then we'll execute the defaultfunc
                         with the latest version of the input dict.
+
+    :returns: varies
     """
     chain = plugin_utils.get_callback_chain(chain)
 
@@ -798,6 +806,8 @@ def addcr(text):
     foo\\n
     >>> addcr("foo\\n")
     foo\\n
+
+    :returns: string with \\n at the end
     """
     if not text.endswith("\n"):
         return text + "\n"
@@ -854,9 +864,9 @@ def get_cache(request):
     Retrieves the cache from the request or fetches a new CacheDriver
     instance.
 
-    Returns a BlosxomCache object
-
     :param request: the Request object
+
+    :returns: a BlosxomCache object
     """
     data = request.getData()
     mycache = data.get("data_cache", "")
@@ -942,12 +952,12 @@ def render_url(cdict, pathinfo, querystring=""):
     corresponds with that by creating a Request and a PyBlosxom object
     and passing it through.  It then returns the resulting Response.
 
-    This returns a PyBlosxom ``Response`` object.
-
     :param cdict: the config.py dict
     :param pathinfo: the ``PATH_INFO`` string;
                      example: ``/dev/pyblosxom/firstpost.html``
     :param querystring: the querystring (if any); example: debug=yes
+
+    :returns: a PyBlosxom ``Response`` object. 
     """
     from pyblosxom import PyBlosxom
 
@@ -1008,13 +1018,13 @@ def get_logger(log_file=None):
     config.py is used. If a log_file is given that's where the created
     logger logs to.
 
-    Returns a log channel (logger instance) which you can call
-    ``error``, ``warning``, ``debug``, ``info``, ... on.
-
     :param log_file: the file to log to.  defaults to None which
                      causes PyBlosxom to check for the ``log_file``
                      config.py property and if that's blank, then the
                      log_file is stderr
+
+    :returns: a log channel (logger instance) which you can call
+              ``error``, ``warning``, ``debug``, ``info``, ... on.
     """
     custom_log_file = False
     if log_file == None:

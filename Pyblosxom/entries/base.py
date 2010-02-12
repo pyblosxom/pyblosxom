@@ -31,6 +31,13 @@ class EntryBase:
     instance of an Entry class represents a single entry in the
     weblog, whether it came from a file, or a database, or even
     somewhere off the InterWeeb.
+
+    EntryBase derivatives are dict-like except for one key difference:
+    when doing ``__getitem__`` on a nonexistent key, it returns an
+    empty string.  For example:
+
+    >>> entry["some_nonexistent_key"]
+    ""
     """
     def __init__(self, request):
         self._data = ""
