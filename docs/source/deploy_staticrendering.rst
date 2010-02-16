@@ -104,13 +104,13 @@ Render Everything
 If you're using PyBlosxom 1.4 or later, run the static renderer like
 this to render all pages in your blog::
 
-   % pyblosxom-cmd --config <config-file> staticrender
+   % pyblosxom-cmd staticrender --config <config-file>
 
 
 where ``<config-file>`` is replaced by the absolute full path of your
 ``config.py`` file.  For example::
 
-   % pyblosxom-cmd --config /home/joe/blog/config.py staticrender
+   % pyblosxom-cmd staticrender --config /home/joe/blog/config.py
 
 
 **PyBlosxom 1.4**: If you're using PyBlosxom 1.4, then the command line 
@@ -140,7 +140,7 @@ comparing the mtime on the entry file with the mtime on the rendered file.
 
 In PyBlosxom 1.5 and later, incremental static rendering works like this::
 
-   % pyblosxom-cmd --config <config-file> staticrender --incremental
+   % pyblosxom-cmd staticrender --config <config-file> --incremental
 
 
 **PyBlosxom 1.4**: If you're using PyBlosxom 1.4, run the static renderer 
@@ -199,7 +199,7 @@ a shell script like this::
    CONFIG=<path to config.py here>
    STATIC_DIR=<your static dir here>
  
-   pyblosxom-cmd --config ${CONFIG} static
+   pyblosxom-cmd staticrender --config ${CONFIG}
    find ${STATIC_DIR} -mmin +30 -exec 'rm' '{}' ';' 
 
 
