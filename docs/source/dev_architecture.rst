@@ -1,3 +1,6 @@
+.. highlight:: python
+   :linenothreshold: 5
+
 ======================
 PyBlosxom Architecture
 ======================

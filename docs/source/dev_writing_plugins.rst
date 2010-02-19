@@ -1,3 +1,6 @@
+.. highlight:: python
+   :linenothreshold: 5
+
 ===============
 Writing Plugins
 ===============
@@ -269,13 +272,14 @@ example::
     from pyblosxom import tools
 
     def cb_prepare(args):
-        ...
+        # ...
         logger = tools.get_logger()
         logger.info("blah blah blah...")
 
         try:
-            ...
-        except Exception, e:
+            pass
+            # ...
+        except ValueError, e:
             logger.error(e)
 
 
@@ -294,7 +298,8 @@ in the data dict of the Request object.  For example::
 
         if ((data.has_key(STATE_KEY) 
              and data[STATE_KEY]["blah"] == "blahblah")):
-            ...
+            pass
+            # ...
 
 
     def cb_filelist(args):
