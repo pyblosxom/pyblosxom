@@ -55,7 +55,7 @@ Finding Plugins
 
 You can find plugins in the `PyBlosxom plugin registry`_.
 
-.. _PyBlosxom plugin registry: http://pyblosxom.sourceforge.net/blog/registry/
+.. _PyBlosxom plugin registry: http://pyblosxom.sourceforge.net/registry/
 
 Additionally, some people write plugins, but never register with the plugin 
 registry. Sometimes this is because the author doesn't feel the plugin is 
