@@ -26,10 +26,10 @@ Example::
     <title>$(blog_title)$(entry_title)</title>
 
 """
-__author__ = "Will Guaraldi - willg at bluesock dot org"
-__version__ = "$Date: 2009-06-13 03:18:19 +0000 (Sat, 13 Jun 2009) $"
+__author__ = "Will Kahn-Greene - willg at bluesock dot org"
+__version__ = "2010-04-14"
 __url__ = "http://pyblosxom.sourceforge.net/"
-__description__ = "Year-based archives handler."
+__description__ = "Populates $(entry_title) for head template."
 
 def verify_installation(request):
     return 1
