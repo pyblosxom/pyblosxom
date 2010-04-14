@@ -330,7 +330,6 @@ An example input args dict is like this::
    {'filename': filename, 'return_code': '200', 'request': Request()}
 
 
-
 cb_filelist
 -----------
 
@@ -451,7 +450,6 @@ stop as soon as a callback modifies mtime.  If no plugin handles the
 callback, PyBlosxom will fall back to calling ``os.stat()``.
 
 
-
 cb_pathinfo
 -----------
 
@@ -532,7 +530,6 @@ Functions that implement this callback should return ``None`` if they
 don't want to specify a renderer or the renderer object instanct if
 they do.  When a function returns a renderer instance, processing
 stops.
-
 
 
 cb_entryparser
@@ -653,7 +650,6 @@ containing:
 Functions that implement this callback don't need to return anything.
 
 
-
 cb_end
 ------
 
@@ -683,6 +679,35 @@ Functions that implement this callback don't need to return anything.
    regardless of whether it's handled by the default blosxom handler
    or not.  This is slightly different than blosxom.
 
+
+cb_staticrender_filelist
+------------------------
+
+Gives plugins a chance to modify the list of (url, query) tuples that
+are about to be rendered statically.  Plugins can add additional
+tuples, remove tuples, modify tuples, ...
+
+Functions that implement this callback will get an args dict
+containing:
+
+``request``
+    a request object
+
+``filelist``
+    list of (url, query) tuples of all urls to be rendered
+
+``flavours``
+    list of flavours to be rendered
+
+Functions that implement this callback can modify the filelist
+in-place and don't have to return anything.
+
+Example in which the plugin adds the search page url so that the
+search page gets rendered::
+
+   def cb_staticrender_filelist(args):
+       filelist = args["filelist"]
+       filelist.append(("/search", ""))
 
 
 cb_head
