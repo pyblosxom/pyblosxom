@@ -25,6 +25,18 @@ Example::
 
     <title>$(blog_title)$(entry_title)</title>
 
+The default $(entry_title) starts with a :: and ends with the title of
+the entry.  For example::
+
+    :: Guess what happened today
+
+You can set the entry title template in the configuration properties
+with the ``entry_title_template`` variable.
+
+    config["entry_title_template"] = ":: %(title)s"
+
+The ``%(title)s`` is a Python string formatter that gets filled in with
+the entry title.
 """
 __author__ = "Will Kahn-Greene - willg at bluesock dot org"
 __version__ = "2010-04-14"
@@ -39,9 +51,10 @@ def cb_head(args):
     entry = args["entry"]
     
     data = req.get_data()
-
-    entry_list = data["entry_list"]
+    entry_list = data.get("entry_list", [])
     if len(entry_list) == 1:
-        entry["entry_title"] = ":: " + entry_list[0].get("title", "No title")
+        config = req.get_configuration()
+        tmpl = config.get("entry_title_template", ":: %(title)s")
+        entry["entry_title"] = tmpl % {"title": entry_list[0].get("title", "No title")}
 
     return args

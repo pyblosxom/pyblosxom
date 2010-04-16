@@ -9,8 +9,10 @@
 
 import unittest
 
+from plugins.tests.categories.test_pycategories import *
+
 from plugins.tests.comments.test_akismetcomments import *
 from plugins.tests.comments.test_check_javascript import *
 from plugins.tests.comments.test_comments import *
 
-from plugins.tests.categories.test_pycategories import *
+from plugins.tests.display.test_entrytitle import *
