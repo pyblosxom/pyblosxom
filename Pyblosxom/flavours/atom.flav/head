@@ -16,8 +16,8 @@ $(blog_description)
 <email>$(blog_email)</email>
 </author>
 <rights>$(blog_rights)</rights>
-<generator uri="http://pyblosxom.sourceforge.net/" version="$(pyblosxom_version)">
-PyBlosxom http://pyblosxom.sourceforge.net/ $(pyblosxom_version)
+<generator uri="http://pyblosxom.bluesock.org/" version="$(pyblosxom_version)">
+PyBlosxom http://pyblosxom.bluesock.org/ $(pyblosxom_version)
 </generator>
 
 <updated>$(latest_w3cdate)</updated>

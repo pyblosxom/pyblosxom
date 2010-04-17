@@ -126,7 +126,7 @@ flavours.
 This structure also makes it easier to use flavour packs found in the
 flavour registry on the `PyBlosxom website`_.
 
-.. _PyBlosxom website: http://pyblosxom.sourceforge.net/
+.. _PyBlosxom website: http://pyblosxom.bluesock.org/
 
 
 
@@ -289,7 +289,7 @@ There is a flavour registry on the `PyBlosxom website`_.  You can find
 flavours here that have been created by other people and submit
 flavours that you've created and want to share.
 
-.. _PyBlosxom website: http://pyblosxom.sourceforge.net/
+.. _PyBlosxom website: http://pyblosxom.bluesock.org/
 
 Additionally, you can use flavours from `Blosxom`_ and themes from
 `WordPress`_ after spending some time converting them.

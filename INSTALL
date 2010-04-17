@@ -8,7 +8,7 @@ site-wide and individual.
 If this file doesn't meet your needs, ask us on the pyblosxom-users
 mailing list or on IRC.  Information on both is on the website_.
 
-.. _website: http://pyblosxom.sourceforge.net/
+.. _website: http://pyblosxom.bluesock.org/
 
 .. Note::
 
@@ -78,14 +78,14 @@ installation, do::
 .. _setuptools: http://pypi.python.org/pypi/setuptools
 
 You can download the tarball.  Tarballs are at
-http://sourceforge.net/project/showfiles.php?group_id=67445 .  Extract
+http://pyblosxom.bluesock.org/download/ .  Extract
 the ``tar.gz`` file and run::
 
    python setup.py install
 
-Lastly, you can do an svn checkout.  Instructions are at
-http://sourceforge.net/scm/?type=svn&group_id=67445 .  Generally,
-*trunk* is unstable but any of the tags are stable.  Then run::
+Lastly, you can do a git clone.  Instructions are at 
+http://gitorious.org/pyblosxom/ .  Generally, master is unstable,
+but any of the tags are stable.  Then run::
 
    python setup.py install
 

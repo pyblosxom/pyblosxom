@@ -20,7 +20,7 @@ setup(
     author="Will Kahn-Greene, et al",
     author_email="willg@bluesock.org",
     keywords="blog pyblosxom cgi weblog",
-    url="http://pyblosxom.sourceforge.net/",
+    url="http://pyblosxom.bluesock.org/",
     packages=find_packages(exclude=["ez_setup"]),
     scripts=["bin/pyblosxom-cmd"],
     zip_safe=False,

@@ -116,6 +116,13 @@ Pertinent to users:
                  |- story
                  |- ...
 
+20. We moved the main PyBlosxom site to
+    http://pyblosxom.bluesock.org/ .  There's a "powered by
+    pyblosxom" image at
+    http://pyblosxom.bluesock.org/images/pb_pyblosxom.gif
+
+    You should adjust your templates accordingly.
+
 
 Pertinent to developers:
 ------------------------

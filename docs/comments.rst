@@ -5,7 +5,7 @@ Comments
 This chapter briefly walks you through installing the comments,
 trackback, pingback, and CommentAPI plugins.
 
-FIXME - September 27th, 2009 - I have no idea how accurate this is.
+FIXME - September 27th, 2009 - This needs to be updated. Srsly.
 
 
 Summary
@@ -18,7 +18,7 @@ ignore.
 
 You can get the latest stable version of the comments plugin from the
 `contributed plugins pack`_. Alternatively, you can get the latest
-version `from SVN`_, which is even more recent but may be broken.
+version `from Git`_, which is even more recent but may be broken.
 Caveat hacker!
 
 .. _contributed plugins pack: http://sourceforge.net/project/showfiles.php?group_id=67445&amp;package_id=145140

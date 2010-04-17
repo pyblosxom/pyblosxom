@@ -13,4 +13,4 @@
    <ttl>60</ttl>
    <pubDate>$(latest_rfc822date)</pubDate>
    <managingEditor>$(blog_email)</managingEditor>
-   <generator>PyBlosxom http://pyblosxom.sourceforge.net/ $(pyblosxom_version)</generator>
+   <generator>PyBlosxom http://pyblosxom.bluesock.org/ $(pyblosxom_version)</generator>

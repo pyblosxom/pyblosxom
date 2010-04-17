@@ -6,7 +6,7 @@ This is the manual for PyBlosxom.
 
 This manual will always be free.  It's licensed under the MIT License
 along with the rest of PyBlosxom.  The manual is version controlled along 
-with the rest of PyBlosxom in the SVN repository at SourceForge.
+with the rest of PyBlosxom in the Git repository at http://gitorious.org/pyblosxom/ .
 
 This manual is a work in progress.  In many cases, missing information
 is denoted with a *FIXME* in the text.

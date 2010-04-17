@@ -207,7 +207,7 @@ plugins allow you to use other markup formats.  Check the Plugin
 Registry on the `PyBlosxom web-site`_ for other available entry
 parsers.
 
-.. _PyBlosxom web-site: http://pyblosxom.sourceforge.net/
+.. _PyBlosxom web-site: http://pyblosxom.bluesock.org/
 
 Entry parsers can be written by anyone.  The entry parsers that
 currently exist were written by people who needed that functionality.

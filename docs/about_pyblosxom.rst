@@ -117,7 +117,7 @@ Plugins:
 * The `PyBlosxom web-site`_ maintains a plugin registry for plugins 
   submitted by people like you.
 
-.. _PyBlosxom web-site: http://pyblosxom.sourceforge.net/
+.. _PyBlosxom web-site: http://pyblosxom.bluesock.org/
 
 
 .. _project-details-and-contact:
@@ -127,7 +127,7 @@ Project details, contact information, and where to go for help
 
 **Web-site and documentation**
 
-    http://pyblosxom.sourceforge.net/
+    http://pyblosxom.bluesock.org/
 
 **IRC**
 
@@ -141,6 +141,6 @@ Project details, contact information, and where to go for help
 
     http://lists.sourceforge.net/lists/listinfo/pyblosxom-devel
 
-**SVN repository**
+**Git repository**
 
-    http://pyblosxom.svn.sourceforge.net/viewvc/pyblosxom/
+    http://gitorious.org/pyblosxom/
