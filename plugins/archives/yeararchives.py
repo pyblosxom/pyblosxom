@@ -194,8 +194,14 @@ def cb_filelist(args):
     items.sort()
     items.reverse()
     
+    # Use current (or default) flavour for permalinks
+    try:
+        flavour = data["flavour"]
+    except KeyError:
+        flavour = config.get("default_flavour", "html")
+
     l = ("(%(path)s) <a href=\"" + baseurl +
-         "/%(file_path)s.html\">%(title)s</a><br>")
+         "/%(file_path)s." + flavour + "\">%(title)s</a><br>")
     e = "<tr>\n<td valign=\"top\" align=\"left\">%s</td>\n<td>%s</td></tr>\n"
     d = ""
     m = ""
