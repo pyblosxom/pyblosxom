@@ -53,6 +53,7 @@ __license__ = "Python"
 
 import rfc822
 import time
+import os
 from Pyblosxom import tools
 
 def iso8601_hack_tostring(t, timezone):
@@ -129,8 +130,19 @@ class W3CDateTest(unittest.TestCase):
     
     def test_get_formatted_date(self):
         gfd = get_formatted_date
+        #save old TZ environment for restoring
+        tz = os.environ.get('TZ')
+        #we expect US EASTERN time without DST
+        os.environ['TZ'] = 'EST+05EST+05,M4.1.0,M10.5.0'
+        time.tzset()
         self.assertEquals(gfd(self.entry1),
                           "2010-01-17T15:48:20-05:00")
+        # reset time zone to whatever it was
+        if tz is None:
+            del os.environ['TZ']
+        else:
+            os.environ['TZ'] = tz
+        time.tzset()
 
     def test_head_and_foot(self):
         from Pyblosxom.pyblosxom import Request
