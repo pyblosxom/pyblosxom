@@ -145,6 +145,21 @@ def cb_filelist(args):
     if not year:
         return
 
+    # Use current (or default) flavour for permalinks
+    # note: for date URLs, data["flavor"] is not set in the pyblosxom handler
+    # if it is passed as an extension.
+    # If we find a valid date URL, we will therefore set data["flavour"] accordingly
+    # a few lines down.
+    try:
+        flavour = data["flavour"]
+    except KeyError:
+        flavour = config.get("default_flavour", "html")
+
+
+    # if a flavor is appended drop it for the date calculation
+    # and save it, so we can set the rendering flavour.
+    if os.path.basename(year).find('.') != -1:
+        year, flavour = year.rsplit('.',1)
     if year.startswith("/"):
         year = year[1:]
     if year.endswith("/"):
@@ -152,6 +167,8 @@ def cb_filelist(args):
     if not year.isdigit() or not len(year) == 4:
         return
 
+    data["flavour"] = flavour
+    
     data[INIT_KEY] = 1
 
     # get all the entries
@@ -165,12 +182,6 @@ def cb_filelist(args):
     items.sort()
     items.reverse()
     
-    # Use current (or default) flavour for permalinks
-    try:
-        flavour = data["flavour"]
-    except KeyError:
-        flavour = config.get("default_flavour", "html")
-
     l = ("(%(path)s) <a href=\"" + baseurl +
          "/%(file_path)s." + flavour + "\">%(title)s</a><br>")
     e = "<tr>\n<td valign=\"top\" align=\"left\">%s</td>\n<td>%s</td></tr>\n"
@@ -200,7 +211,7 @@ def cb_filelist(args):
             d = mem[1]
             day = []
         entry = entries.fileentry.FileEntry(
-            request, mem[3], data['root_datadir'])
+            request, mem[3], config['datadir'])
         day.append(l % entry)
 
     if day:
