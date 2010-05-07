@@ -1,3 +1,12 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2009, 2010 Will Kahn-Greene
+#
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
+#######################################################################
+
 """
 Summary
 =======
@@ -160,38 +169,10 @@ from the directory your ``config.py`` is in or::
     pyblosxom-cmd categorytotags --config=/path/to/config/file
 
 from anywhere.
-
-
-----
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify,
-merge, publish, distribute, sublicense, and/or sell copies of the
-Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-Copyright 2009 Will Guaraldi Kahn-Greene
-
-Revisions:
-1.0 - 2009-06-02 - initial writing
 """
 
 __author__ = "Will Kahn-Greene - willg at bluesock dot org"
-__version__ = "1.0"
+__version__ = "2010-05-07"
 __url__ = "http://pyblosxom.sourceforge.net/"
 __description__ = "Tags plugin"
 
@@ -200,7 +181,6 @@ import cPickle as pickle
 import shutil
 import unittest
 import tempfile
-
 
 def savefile(path, tagdata):
     """Saves tagdata to file at path."""
