@@ -26,7 +26,7 @@ setup(
     zip_safe=False,
     test_suite="Pyblosxom.tests.testrunner.test_suite",
     include_package_data=True,
-    install_requires=[], # FIXME
+    install_requires=[],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
