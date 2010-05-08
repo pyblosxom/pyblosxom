@@ -110,7 +110,7 @@ class UnitTestBase(unittest.TestCase):
         """
         for mem in expected.keys():
             if mem in actual:
-                assert expected[mem] == actual[mem]
+                self.assertEquals(expected[mem], actual[mem])
             else:
-                assert False
+                assert False, "%s not in actual" % mem
 
