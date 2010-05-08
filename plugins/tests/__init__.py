@@ -16,3 +16,5 @@ from plugins.tests.comments.test_check_javascript import *
 from plugins.tests.comments.test_comments import *
 
 from plugins.tests.display.test_entrytitle import *
+
+from plugins.tests.text.test_acronyms import *

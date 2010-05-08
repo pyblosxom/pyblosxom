@@ -1,0 +1,79 @@
+import time
+import os
+import re
+
+from Pyblosxom import pyblosxom
+from plugins.tests.test_base import PluginTest, TIMESTAMP
+from plugins.text import acronyms
+
+class Test_acronyms(PluginTest):
+    def setUp(self):
+        PluginTest.setUp(self, acronyms)
+
+    def tearDown(self):
+        PluginTest.tearDown(self)
+
+    def test_get_acronym_file(self):
+        config = dict(self.config_base)
+        self.assert_(acronyms.get_acronym_file(config),
+                     os.path.join(self.datadir, os.pardir, "acronyms.txt"))
+
+        config["acronym_file"] = os.path.join(self.datadir, "foo.txt")
+        self.assert_(acronyms.get_acronym_file(config),
+                     os.path.join(self.datadir, "foo.txt"))
+
+    def test_verify_installation(self):
+        config = dict(self.config_base)
+        req = pyblosxom.Request(config, self.environ, {})
+        self.assert_(acronyms.verify_installation(req) == 0)
+
+        config["acronym_file"] = os.path.join(self.datadir, "foo.txt")
+        req = pyblosxom.Request(config, self.environ, {})
+        filename = acronyms.get_acronym_file(config)
+        fp = open(filename, "w")
+        fp.write("...")
+        fp.close()
+        
+        self.assert_(acronyms.verify_installation(req) == 1)
+
+    def test_build_acronyms(self):
+        def check_this(lines, output):
+            for inmem, outmem in zip(acronyms.build_acronyms(lines), output):
+                self.assertEquals(inmem[0].pattern, outmem[0])
+                self.assertEquals(inmem[1], outmem[1])
+
+        check_this(["FOO = bar"],
+                   [("(\\bFOO\\b)", "<acronym title=\"bar\">\\1</acronym>")])
+        check_this(["FOO. = bar"],
+                   [("(\\bFOO.\\b)", "<abbr title=\"bar\">\\1</abbr>")])
+        check_this(["FOO = abbr|bar"],
+                   [("(\\bFOO\\b)", "<abbr title=\"bar\">\\1</abbr>")])
+        check_this(["FOO = acronym|bar"],
+                   [("(\\bFOO\\b)", "<acronym title=\"bar\">\\1</acronym>")])
+        # this re doesn't compile, so it gets skipped
+        check_this(["FOO[ = bar"], [])
+
+    def test_cb_story(self):
+        req = pyblosxom.Request(
+            self.config, self.environ,
+            {"acronyms":acronyms.build_acronyms(["FOO = bar"])})
+
+        # basic test
+        args = {"request": req,
+                "entry": {"body": "<p>This is FOO!</p>"}}
+
+        ret = acronyms.cb_story(args)
+
+        self.assertEquals(
+            args["entry"]["body"],
+            "<p>This is <acronym title=\"bar\">FOO</acronym>!</p>")
+
+        # test to make sure substitutions don't happen in tags
+        args = {"request": req,
+                "entry": {"body": "<FOO>This is FOO!</FOO>"}}
+
+        ret = acronyms.cb_story(args)
+
+        self.assertEquals(
+            args["entry"]["body"],
+            "<FOO>This is <acronym title=\"bar\">FOO</acronym>!</FOO>")
