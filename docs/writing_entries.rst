@@ -75,6 +75,26 @@ template variable ``$mood`` would be filled in with ``bored`` and
 ``$music`` would be filled in with ``The Doors - Greatest Hits Vol
 1``.
 
+.. Note::
+
+   Metadata is not collected in a multi-dict.  If you include two
+   pieces of metadata with the same key, the second one will overwrite
+   the first one.
+
+   Example::
+
+      #mood bored
+      #mood happy
+
+   will result in ``'mood'`` --> ``'happy'`` in the metadata.   
+
+
+.. Note::
+
+   You can provide metadata keys with no value.  If you do this, then
+   the default value is ``'1'``.  This seems a bit weird, but it makes
+   it easier for plugin developers to use these as flags.
+
 
 Body
 ----
