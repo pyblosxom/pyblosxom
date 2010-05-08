@@ -370,7 +370,7 @@ def cb_story(args):
     form = request.get_form()
     try:
         flavour = form["flav"].value
-    except AttributeError:
+    except KeyError:
         flavour = config.get("default_flavour", "html")
     baseurl = config.get("base_url", "")
     trigger = config.get("tags_trigger", "tag")
