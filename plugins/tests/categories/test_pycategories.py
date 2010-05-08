@@ -45,10 +45,6 @@ class Test_pycategories(PluginTest):
         self.generate_entry("cat1/test_cat1.txt")
         self.generate_entry("cat2/test_cat2.txt")
 
-        for root, dirs, files in os.walk(self.datadir):
-            print "dirs: ", dirs
-            print "files: ", files
-        
         pycategories.cb_prepare(self.args)
         self.assertEquals(
             str(self.request.get_data()["categorylinks"]),

@@ -64,4 +64,4 @@ class Test_entrytitle(PluginTest):
         self.assertEquals(newargs["entry"].get("entry_title", ""), "")
 
     def test_verify_installation(self):
-        self.assert_(entrytitle.verify_installation)
+        self.assert_(entrytitle.verify_installation(self.request))
