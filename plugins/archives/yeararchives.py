@@ -1,3 +1,12 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2004, 2005, 2006, 2007, 2008, 2009, 2010 Will Kahn-Greene
+#
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
+#######################################################################
+
 """
 Summary
 =======
@@ -29,47 +38,9 @@ year.  Mine is::
 I don't have anything configurable in ``config.py``--so you'll have to 
 edit the html stuff directly in the plugin.  If you dislike this, please 
 take some time to fix it and send me a diff and I'll make the adjustments.
-
-
-----
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify,
-merge, publish, distribute, sublicense, and/or sell copies of the
-Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-Copyright 2004-2010 Will Guaraldi
-
-Revisions:
-2010-01-07 - updated to yeararchives, updated for PyBlosxom 1.5.
-2008-01-01 - fixed a problem between wbgarchives and comments and also
-             fixed the ordering of months displayed.
-2007-07-07 - converted documentation to reST.
-2005-11-11 - Pulled into new VCS.
-1.4 - (26 October, 2005) pulled into new VCS
-1.3 - (14 March, 2005) added categories
-1.2 - (09 December, 2004) fixed date_head issue
-1.1 - (22 August, 2004) fixed a bug involving four-letter category names
-                        (thanks Ludvig)
-1.0 - (15 August, 2004) initial writing
 """
-__author__ = "Will Guaraldi - willg at bluesock dot org"
-__version__ = "$Date: 2009-06-13 03:18:19 +0000 (Sat, 13 Jun 2009) $"
+__author__ = "Will Kahn-Greene - willg at bluesock dot org"
+__version__ = "2010-05-08"
 __url__ = "http://pyblosxom.sourceforge.net/"
 __description__ = "Year-based archives handler."
 
