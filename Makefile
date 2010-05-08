@@ -1,5 +1,6 @@
 clean:
-	find . -name "*.pyc" -exec 'rm' '{}' ';'
+	find . -name "*.pyc" | xargs rm
+	find . -name "*~" | xargs rm
 
 pylint:
 	pylint Pyblosxom
