@@ -29,6 +29,7 @@ Contents:
    dev_architecture
    dev_writing_plugins
    dev_codedocs
+   dev_testing
    notes/AUTHORS
    notes/THANKS
    glossary
