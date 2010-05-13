@@ -20,8 +20,8 @@ your head or foot template.
 Usage
 =====
 
-When the user clicks on one of the year links (i.e. http://base_url/2004/), 
-then yeararchives will display a summary page for that year.  The summary is 
+When the user clicks on one of the year links (i.e. http://base_url/2004/),
+then yeararchives will display a summary page for that year.  The summary is
 generated using the ``yearsummarystory.html`` template for each month in the
 year.  Mine is::
 
@@ -35,8 +35,8 @@ year.  Mine is::
    </div>
 
 
-I don't have anything configurable in ``config.py``--so you'll have to 
-edit the html stuff directly in the plugin.  If you dislike this, please 
+I don't have anything configurable in ``config.py``--so you'll have to
+edit the html stuff directly in the plugin.  If you dislike this, please
 take some time to fix it and send me a diff and I'll make the adjustments.
 """
 __author__ = "Will Kahn-Greene - willg at bluesock dot org"
@@ -133,6 +133,36 @@ def cb_date_head(args):
         args["template"] = ""
     return args
 
+def parse_path_info(path):
+    """Returns None or (year, flav) tuple.
+
+    Handles urls of this type:
+
+    - /2003
+    - /2003/
+    - /2003/index
+    - /2003/index.flav
+    """
+    path = path.split("/")
+    path = [m for m in path if m]
+    if not path:
+        return
+
+    year = path[0]
+    if not year.isdigit() or not len(year) == 4:
+        return
+
+    if len(path) == 1:
+        return (year, None)
+
+    if len(path) == 2 and path[1].startswith("index"):
+        flav = None
+        if "." in path[1]:
+            flav = path[1].split(".", 1)[1]
+        return (year, flav)
+
+    return
+
 def cb_filelist(args):
     request = args["request"]
     pyhttp = request.get_http()
@@ -140,35 +170,16 @@ def cb_filelist(args):
     config = request.get_configuration()
     baseurl = config.get("base_url", "")
 
-    year = pyhttp["PATH_INFO"]
+    path = pyhttp["PATH_INFO"]
 
-    if not year:
+    ret = parse_path_info(path)
+    if ret == None:
         return
 
-    # Use current (or default) flavour for permalinks
-    # note: for date URLs, data["flavor"] is not set in the pyblosxom handler
-    # if it is passed as an extension.
-    # If we find a valid date URL, we will therefore set data["flavour"] accordingly
-    # a few lines down.
-    try:
-        flavour = data["flavour"]
-    except KeyError:
-        flavour = config.get("default_flavour", "html")
-
-
-    # if a flavor is appended drop it for the date calculation
-    # and save it, so we can set the rendering flavour.
-    if os.path.basename(year).find('.') != -1:
-        year, flavour = year.rsplit('.',1)
-    if year.startswith("/"):
-        year = year[1:]
-    if year.endswith("/"):
-        year = year[:-1]
-    if not year.isdigit() or not len(year) == 4:
-        return
+    year, flavour = ret
 
     data["flavour"] = flavour
-    
+
     data[INIT_KEY] = 1
 
     # get all the entries
@@ -181,7 +192,12 @@ def cb_filelist(args):
 
     items.sort()
     items.reverse()
-    
+
+    # Use current (or default) flavour for permalinks
+    if not flavour:
+        flavour = data.get(
+            "flavour", config.get("default_flavour", "html"))
+
     l = ("(%(path)s) <a href=\"" + baseurl +
          "/%(file_path)s." + flavour + "\">%(title)s</a><br>")
     e = "<tr>\n<td valign=\"top\" align=\"left\">%s</td>\n<td>%s</td></tr>\n"
