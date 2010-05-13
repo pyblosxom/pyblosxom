@@ -36,11 +36,12 @@ year.  Mine is::
 
 
 The ``$(archivelinks)`` link can be configured with the
-``archive_template`` config variable.
+``archive_template`` config variable.  It uses the Python string
+formatting syntax.
 
 Example::
 
-    py['archive_template'] = '<a href="%(base_url)s/%(Y)s/index.%(f)s">%(Y)ss</a><br />'
+    py['archive_template'] = '<a href="%(base_url)s/%(Y)s/index.%(f)s">%(Y)s</a><br />'
 
 The vars available with typical example values are::
 
