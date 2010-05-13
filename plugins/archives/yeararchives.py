@@ -71,13 +71,16 @@ class YearArchives:
         archive_list = tools.walk(self._request, root)
         items = []
 
+        flavour = data.get(
+            "flavour", config.get("default_flavour", "html"))
+
         for mem in archive_list:
             timetuple = tools.filestat(self._request, mem)
 
             y = time.strftime("%Y", timetuple)
             m = time.strftime("%m", timetuple)
             d = time.strftime("%d", timetuple)
-            l = "<a href=\"%s/%s/\">%s</a><br>" % (baseurl, y, y)
+            l = "<a href=\"%s/%s/index.%s\">%s</a><br>" % (baseurl, y, flavour, y)
 
             if not archives.has_key(y):
                 archives[y] = l
