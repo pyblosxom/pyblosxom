@@ -176,9 +176,8 @@ def cb_filelist(args):
     if ret == None:
         return
 
+    # note: returned flavour is None if there is no .flav appendix
     year, flavour = ret
-
-    data["flavour"] = flavour
 
     data[INIT_KEY] = 1
 
@@ -193,10 +192,12 @@ def cb_filelist(args):
     items.sort()
     items.reverse()
 
-    # Use current (or default) flavour for permalinks
+    # Set and use current (or default) flavour for permalinks
     if not flavour:
         flavour = data.get(
             "flavour", config.get("default_flavour", "html"))
+
+    data["flavour"] = flavour
 
     l = ("(%(path)s) <a href=\"" + baseurl +
          "/%(file_path)s." + flavour + "\">%(title)s</a><br>")
