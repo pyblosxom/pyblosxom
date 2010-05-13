@@ -35,9 +35,21 @@ year.  Mine is::
    </div>
 
 
-I don't have anything configurable in ``config.py``--so you'll have to
-edit the html stuff directly in the plugin.  If you dislike this, please
-take some time to fix it and send me a diff and I'll make the adjustments.
+The ``$(archivelinks)`` link can be configured with the
+``archive_template`` config variable.
+
+Example::
+
+    py['archive_template'] = '<a href="%(base_url)s/%(Y)s/index.%(f)s">%(Y)ss</a><br />'
+
+The vars available with typical example values are::
+
+    b      short month    ex: 'Jun'
+    m      month number   ex: '6'
+    Y      4-digit year   ex: '1978'
+    y      2-digit year   ex: '78'
+    f      the flavour    ex: 'html'
+
 """
 __author__ = "Will Kahn-Greene - willg at bluesock dot org"
 __version__ = "2010-05-08"
@@ -48,6 +60,11 @@ from Pyblosxom import tools, entries
 import time, os
 
 def verify_installation(request):
+    config = request.get_configuration()
+    if not config.has_key("archive_template"):
+        print "missing optional config property 'archive_template' which "
+        print "allows you to specify how the archive links are created.  "
+        print "refer to yeararchives plugin documentation for more details."
     return 1
 
 class YearArchives:
@@ -71,21 +88,35 @@ class YearArchives:
         archive_list = tools.walk(self._request, root)
         items = []
 
+        fulldict = {}
+        fulldict.update(config)
+        fulldict.update(data)
+
         flavour = data.get(
             "flavour", config.get("default_flavour", "html"))
+
+        template = config.get(
+            'archive_template',
+            '<a href="%(base_url)s/%(Y)s/index.%(f)s">%(Y)s</a><br />')
 
         for mem in archive_list:
             timetuple = tools.filestat(self._request, mem)
 
-            y = time.strftime("%Y", timetuple)
-            m = time.strftime("%m", timetuple)
-            d = time.strftime("%d", timetuple)
-            l = "<a href=\"%s/%s/index.%s\">%s</a><br>" % (baseurl, y, flavour, y)
+            timedict = {}
+            for x in ["B", "b", "m", "Y", "y", "d"]:
+                timedict[x] = time.strftime("%" + x, timetuple)
 
-            if not archives.has_key(y):
-                archives[y] = l
-            items.append(["%s-%s" % (y, m), "%s-%s-%s" % (y, m, d),
-                          time.mktime(timetuple), mem])
+            fulldict.update(timedict)
+            fulldict["f"] = flavour
+            year = fulldict["Y"]
+
+            if not archives.has_key(year):
+                archives[year] = template % fulldict
+            items.append(
+                ["%(Y)s-%(m)s" % fulldict,
+                 "%(Y)s-%(m)s-%(d)s" % fulldict,
+                 time.mktime(timetuple),
+                 mem])
 
         arc_keys = archives.keys()
         arc_keys.sort()
