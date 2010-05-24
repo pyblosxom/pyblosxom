@@ -15,6 +15,7 @@ Contents:
    notes/CHANGELOG
    notes/INSTALL
    notes/UPGRADE
+   pyblosxom_cmd
    deploy_cgi
    deploy_paste
    deploy_wsgi
