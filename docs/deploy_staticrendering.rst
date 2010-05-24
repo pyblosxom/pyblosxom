@@ -1,3 +1,5 @@
+.. _static-rendering:
+
 ======================================
 Deploy PyBlosxom with Static Rendering
 ======================================

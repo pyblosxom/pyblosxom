@@ -18,3 +18,5 @@ options available as well as those implemented in plugins you have installed.
 For example::
 
     pyblosxom-cmd --config=/path/to/config.py --help
+
+For more information on static rendering, see :ref:`static-rendering`.

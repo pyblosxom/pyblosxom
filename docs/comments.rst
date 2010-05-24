@@ -22,7 +22,7 @@ version `from Git`_, which is even more recent but may be broken.
 Caveat hacker!
 
 .. _contributed plugins pack: http://sourceforge.net/project/showfiles.php?group_id=67445&amp;package_id=145140
-.. _from SVN: http://pyblosxom.svn.sourceforge.net/viewvc/pyblosxom/trunk/contrib/plugins/comments/
+.. _from Git: http://gitorious.org/pyblosxom/pyblosxom/trees/master/plugins/comments
 
 The comments plugin also has a `README file`_ that has more
 information on installing comments, traceback, pingback, and the
