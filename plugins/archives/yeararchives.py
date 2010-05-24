@@ -45,8 +45,6 @@ Example::
 
 The vars available with typical example values are::
 
-    b      short month    ex: 'Jun'
-    m      month number   ex: '6'
     Y      4-digit year   ex: '1978'
     y      2-digit year   ex: '78'
     f      the flavour    ex: 'html'
@@ -104,7 +102,7 @@ class YearArchives:
             timetuple = tools.filestat(self._request, mem)
 
             timedict = {}
-            for x in ["B", "b", "m", "Y", "y", "d"]:
+            for x in ["m", "Y", "y", "d"]:
                 timedict[x] = time.strftime("%" + x, timetuple)
 
             fulldict.update(timedict)
