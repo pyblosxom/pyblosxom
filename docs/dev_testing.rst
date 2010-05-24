@@ -52,7 +52,7 @@ Writing tests for the core is pretty easy:
 There are a bunch of existing examples in the directory.
 
 
-testing plugins
+Testing plugins
 ===============
 
 Plugins are a lot harder because we want to make sure they remain
@@ -67,8 +67,8 @@ To run all the plugin tests, I do something like this::
     PYTHONPATH=. python plugins/testrunner.py
 
 
-Tests in the plugin
--------------------
+Tests in the plugin file
+------------------------
 
 Testing inside a plugin is pretty limited because you can't take
 advantage of the helper infrastructure--you're limited to what you can
@@ -82,6 +82,8 @@ load from Python and PyBlosxom core.
 
 4. create a function at the module level called ``get_test_suite``
    that returns the tests loaded from the test class(es)
+
+For an example, look at ``plugins/date/w3cdate.py``.
 
 
 Tests in the parallel directory
@@ -114,6 +116,8 @@ flavours, ...
    from your new test module
 
 
+For examples, see files in ``plugins/test/``.
+
 Summary
 =======
 
@@ -127,8 +131,8 @@ better testing.  Help on this front would be fantastic.
 
 Having said that, adding tests for the code we're writing helps us a
 TON in the quality department.  PyBlosxom 1.5 is ten times as good as
-previous versions if only because we've got a better testing
-infrastructure and we're testing plugin functionality.
+previous versions because we've got a better testing infrastructure 
+and we're testing plugin functionality.
 
 Many thanks to Ryan Barret for the awesome work he did a while back.
 The infrastructure we have now is based largely on his efforts.

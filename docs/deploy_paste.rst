@@ -29,8 +29,8 @@ Python 2.5, then you'll also need:
 * wsgiref library from http://svn.eby-sarna.com/wsgiref/
 
 
-Deployment
-==========
+Deployment for testing
+======================
 
 Create a new blog by doing::
 
@@ -42,12 +42,46 @@ Then do::
     paster serve blog.ini
 
 The ``paster`` script will print the URL for your blog on the command
-line and your blog is now available on your local machine to your
-local machine.
+line and your blog is now available on your local machine to a
+browser on your local machine.
+
+This allows you to test your blog and make sure it works.
 
 
-Configuration
-=============
+Deployment with mod_wsgi
+========================
+
+Paste makes it really easy to use with ``mod_wsgi``.
+
+1. Create a file named ``something.wsgi`` like this one::
+
+       # If you're using a virtualenv, uncomment the next two lines and
+       # change '/path/to/activate_this.py'.
+       # activate_this = '/path/to/activate_this.py'
+       # execfile(activate_this, dict(__file__=activate_this))
+
+       from Pyblosxom.pyblosxom import pyblosxom_app_factory
+       from paste.deploy import loadapp
+
+       # Fill in path to Paste .ini config file here
+       application = loadapp('config:/path/to/wsgi.ini')
+
+2. In the Apache httpd.conf file::
+
+       WSGIScriptAlias /myblog /path/to/something.wsgi
+
+       <Directory /path/to>
+           Order deny,allow
+           Allow from all
+       </Directory>
+
+
+For more details, consult the ``mod_wsgi`` documentation at
+http://code.google.com/p/modwsgi/ .
+
+
+Paste .ini file configuration
+=============================
 
 Paste configuration is done in an ``.ini`` file.
 

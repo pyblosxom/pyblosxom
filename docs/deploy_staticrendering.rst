@@ -21,7 +21,7 @@ pages that need re-rendering.
 Beyond that, it's not particularly sophisticated.
 
 
-Configuring Static Rendering
+Configuring static rendering
 ============================
 
 These are the instructions for configuring static rendering in PyBlosxom.
@@ -89,7 +89,7 @@ Here's an example of static rendering configuration::
 
 
 
-Running Static Rendering
+Running static rendering
 ========================
 
 There are two ways to run static rendering.  The first is to render
@@ -98,7 +98,7 @@ is to render only the parts of the blog that will be different because
 of new blog entries or updated blog entries (see "incremental rendering").
 
 
-Render Everything
+Render everything
 -----------------
 
 If you're using PyBlosxom 1.4 or later, run the static renderer like
@@ -131,7 +131,7 @@ to be rendered and then renders them.
 
 
 
-Incremental Rendering
+Incremental rendering
 ---------------------
 
 We have incremental rendering which will find all the entries that have 
@@ -156,7 +156,7 @@ than 1.4, then run the static renderer like this::
 
 
 
-Rendering Other URIs
+Rendering other URIs
 ====================
 
 Some plugins provide other URIs that are part of your site, but not 
@@ -183,7 +183,7 @@ for my main page, I would set it like this::
 
 
 
-Additional Thoughts
+Additional thoughts
 ===================
 
 Static rendering is pretty simplistic. We use the ``tools.render_url`` 

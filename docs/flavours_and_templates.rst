@@ -22,7 +22,7 @@ the blosxom renderer which comes with PyBlosxom.
 
 
 
-Flavours and Templates
+Flavours and templates
 ======================
 
 The blosxom renderer renders the output of a request with a
@@ -313,7 +313,7 @@ This allows you to easily override specific templates in your blog
 looking at.
 
 
-Template Variables
+Template variables
 ==================
 
 This is the list of variables that are available to your templates.
@@ -358,7 +358,7 @@ involved in the request.  Don't forget to change it back when you're
 done!
 
 
-URL Encoding and Escaping of Template Variables
+URL encoding and escaping of template variables
 -----------------------------------------------
 
 PyBlosxom 1.5 and later has two filters allowing for escaped and
@@ -598,7 +598,7 @@ variables that come from metadata in the entry are available.  See
 those sections in this document for more details.
 
 
-Template Variables from Plugins
+Template variables from plugins
 -------------------------------
 
 Many plugins will create additional variables that are available in
@@ -606,7 +606,7 @@ templates.  Refer to the documentation of the plugins that you have
 installed to see what variables are available and what they do.
 
 
-Template Variables from Entry Metadata
+Template variables from entry metadata
 --------------------------------------
 
 You can add metadata to your entries on an individual basis and this
@@ -629,7 +629,7 @@ available in your story templates.
 
 
 
-Invoking a Flavour
+Invoking a flavour
 ==================
 
 The flavour for a given page is specified in the extension of the file
@@ -661,7 +661,7 @@ variable in the query-string.  Examples:
   brings up the index for May of 2004 in the "joy" flavour
 
 
-Setting Default Flavour
+Setting default flavour
 =======================
 
 You can change the default flavour from ``html`` to some other flavour
@@ -684,7 +684,7 @@ flavour::
    http://www.joe.com/cgi-bin/pyblosxom.cgi/2005/03/?flav=html
 
 
-Order of Operations to Figure Out Which Flavour to Use
+Order of operations to figure out which flavour to use
 ======================================================
 
 We know that you can specify the default flavour to use in the
@@ -703,7 +703,7 @@ The order in which we figure out which flavour to use is this:
 4. use the ``html`` flavour.
 
 
-Examples of Templates
+Examples of templates
 =====================
 
 For examples of templates and flavours, see the included flavours that

@@ -65,7 +65,7 @@ PyBlosxom's behavior and output is then augmented by:
 
 
 
-Lifecycle of a PyBlosxom Request
+Lifecycle of a PyBlosxom request
 ================================
 
 This is the life cycle of a single PyBlosxom CGI request. It involves
@@ -195,7 +195,7 @@ that specific piece.
 
 
 
-About Callbacks
+About callbacks
 ===============
 
 Callbacks allow plugins to override behavior in PyBlosxom or provide

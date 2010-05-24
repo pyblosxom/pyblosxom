@@ -175,7 +175,7 @@ If you're reading this documentation online, then it is
 :ref:`here <writing-entries>`.
 
 
-Advanced Installation
+Advanced installation
 =====================
 
 We encourage you not to try any of this until you've gotten a blog up
@@ -222,7 +222,7 @@ So, we have some options:
 Both methods are described here in more detail.
 
 
-Change the Name of the pyblosxom.cgi Script
+Change the name of the pyblosxom.cgi script
 -------------------------------------------
 
 There's no reason that ``pyblosxom.cgi`` has to be named

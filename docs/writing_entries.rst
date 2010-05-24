@@ -37,7 +37,7 @@ front---you can add them as you need them.
 
 
 
-The Format of an Entry
+The format of an entry
 ======================
 
 PyBlosxom entries consist of three parts: the title, the metadata, and
@@ -144,7 +144,7 @@ Here's an example of a post with title, metadata, and a body::
    </p>
 
 
-Posting Date
+Posting date
 ============
 
 The posting date of the entry file is the modification time (also
@@ -199,7 +199,7 @@ You can see this in the following example of output::
 
 
 
-Entry Parsers
+Entry parsers
 =============
 
 PyBlosxom supports one format for entry files by default.  This format
@@ -241,7 +241,7 @@ Details on the various entry parsers should be at the top of the entry
 parser plugin itself in the Python doc-string.
 
 
-Beyond Editors
+Beyond editors
 ==============
 
 There's no reason that all your entries have to come from editing blog

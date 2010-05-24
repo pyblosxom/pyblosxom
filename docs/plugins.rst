@@ -15,7 +15,7 @@ create images; and a variety of other things.
 
 
 
-Setting PyBlosxom up to Use Plugins
+Setting PyBlosxom up to use plugins
 ===================================
 
 There are two properties in your ``config.py`` file that affect the behavior 
@@ -50,7 +50,7 @@ if other plugins are in the directory and it will load them in that order.
 
 
 
-Finding Plugins
+Finding plugins
 ===============
 
 You can find plugins in the `PyBlosxom plugin registry`_.
@@ -65,7 +65,7 @@ a plugin that has the functionality you desire.
 
 
 
-Installing Plugins
+Installing plugins
 ==================
 
 When you're installing a plugin, refer to its documentation.  The 
@@ -99,7 +99,7 @@ have to change the code in the plugin itself to meet your specific needs.
 
 
 
-Writing Your Own Plugins
+Writing Your Own plugins
 ========================
 
 You may find that you desire functionality and there is no plugin that anyone 
