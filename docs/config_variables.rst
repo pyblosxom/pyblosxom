@@ -123,10 +123,10 @@ this::
 
 .. Note::
 
-   A note about datadir on Windows:
+   A note about ``datadir`` on Windows:
 
-   Use ``/`` to separate directories in the datadir path even if you
-   are using Windows.  Examples of valid datadirs on Windows::
+   Use ``/`` to separate directories in the ``datadir`` path even if
+   you are using Windows.  Examples of valid datadirs on Windows::
 
       py["datadir"] = "/blog/entries/"
 
@@ -239,7 +239,7 @@ directories in your datadir should be ignored by PyBlosxom.
 This defaults to an empty list (i.e. PyBlosxom will not ignore any
 directories).
 
-For example, if you use CVS to manage the entries in your datadir, then 
+For example, if you use CVS to manage the entries in your datadir, then
 you would want to ignore all CVS-related directories like this::
 
    py["ignore_directories"] = [ "CVS" ]
@@ -363,12 +363,12 @@ This value should be in the meta section of any HTML- or XHTML-based flavours
 and it's also in the header for any feed-based flavours.  An improper
 encoding will gummy up some/most feed readers and web-browsers.
 
-W3C has `a nice tutorial on encoding`__.  You may refer to 
-`IANA charset registry`__ for a complete list of encoding names. 
+W3C has a nice `tutorial on encoding`_.  You may refer to
+`IANA charset registry`_ for a complete list of encoding names.
 
 
-__ http://www.w3.org/International/tutorials/tutorial-char-enc/
-__ http://www.iana.org/assignments/character-sets
+.. _tutorial on encoding: http://www.w3.org/International/tutorials/tutorial-char-enc/
+.. _IANA charset registry: http://www.iana.org/assignments/character-sets
 
 
 blog_language
@@ -389,14 +389,14 @@ For example, English users should use ``en``::
 This gets used in the RSS flavours.
 
 
-Refer to `ISO 639-2`__ for language codes.  Many systems use two-letter
+Refer to `ISO 639-2`_ for language codes.  Many systems use two-letter
 ISO 639-1 codes supplemented by three-letter ISO 639-2 codes when no
 two-letter code is applicable.  Often ISO 639-2 is sufficient.  If you use
-very special languages, you may want to refer to `ISO 639-3`__, which is a
+very special languages, you may want to refer to `ISO 639-3`_, which is a
 super set of ISO 639-2 and contains languages used thousands of years ago.
 
-__ http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
-__ http://www.sil.org/iso639-3/
+.. _ISO 639-2: http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
+.. _ISO 639-3: http://www.sil.org/iso639-3/
 
 
 blog_title
@@ -489,7 +489,7 @@ log_level
 
 **DEFAULT VALUE**: no default value set
 
-**POSSIBLE VALUES**: 
+**POSSIBLE VALUES**:
 
 * ``critical``
 * ``error``
@@ -535,7 +535,7 @@ This let's you specify which channels should be logged.
 If ``log_filter`` is set, then ONLY messages from the specified channels
 are logged.  Everything else is silently ignored.
 
-Each plugin can log messages on its own channel.  Therefore channel 
+Each plugin can log messages on its own channel.  Therefore channel
 name == plugin name.
 
 PyBlosxom logs its messages to a channel named "root".

@@ -5,16 +5,16 @@ Deploying PyBlosxom with Paste
 Summary
 =======
 
-PyBlosxom supports Paste from version 1.4.  This document covers
+PyBlosxom 1.4 and later support Paste.  This document covers
 installing and using PyBlosxom with Paste.
 
 This installation assumes you have some understanding of Python Paste.
 If this doesn't sound like you, then you can read up on Paste on
-the `Paste web-site`_ or the `wikipedia page`_.
+the `Paste web-site`_ or the `Wikipedia page`_.
 
 
 .. _Paste web-site: http://pythonpaste.org/
-.. _wikipedia page: http://en.wikipedia.org/wiki/Python_Paste
+.. _Wikipedia page: http://en.wikipedia.org/wiki/Python_Paste
 
 Dependencies
 ============
