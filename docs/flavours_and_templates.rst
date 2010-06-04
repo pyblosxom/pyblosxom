@@ -43,7 +43,7 @@ A flavour consists of at least the following templates:
 .. Note::
 
    Many plugins require additional templates to render their output in
-   addition ot the standard templates listed above.  See the
+   addition to the standard templates listed above.  See the
    documentation for the plugin for more information.
 
 More on flavours, how they're stored, and such later.
@@ -319,7 +319,7 @@ Template variables
 This is the list of variables that are available to your templates.
 Templates contain variables that are expanded when the template is
 rendered.  Plugins may add additional variables---refer to plugin
-documentationfor a list of which variables they add and in which
+documentation for a list of which variables they add and in which
 templates they're available.
 
 

@@ -36,8 +36,6 @@ WSGI application, and might work in other contexts.
 Install
 =======
 
-Install
--------
 
 Single user install
 -------------------
@@ -115,7 +113,9 @@ Post-install
 ============
 
 After you finish installing PyBlosxom, you should sign up on the
-*pyblosxom-users* mailing list.
+*pyblosxom-users* `mailing list`__.
+
+__ https://lists.sourceforge.net/lists/listinfo/pyblosxom-users
 
 Additionally, please hop on the ``#pyblosxom`` IRC channel on
 ``irc.freenode.net`` and say hi.  It'll almost certainly help you get

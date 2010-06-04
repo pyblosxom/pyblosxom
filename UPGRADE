@@ -27,7 +27,11 @@ At the command line, type::
 
     easy_install -U pyblosxom
 
+or::
 
+    pip install --upgrade pyblosxom
+
+    
 Individual upgrade
 ==================
 

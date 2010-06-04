@@ -628,7 +628,7 @@ followed by ``plugin_b`` followed by ``plugin_c``.
 If you wanted PyBlosxom to load ``plugin_a`` and ``plugin_c``, then you
 would set ``load_plugins`` to::
 
-   py["load_plugins"] = ["pluginA", "pluginC"]
+   py["load_plugins"] = ["plugin_a", "plugin_c"]
 
 
 .. Note::

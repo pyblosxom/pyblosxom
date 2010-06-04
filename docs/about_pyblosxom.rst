@@ -87,7 +87,7 @@ Overview of PyBlosxom
 Entries, categories, storage:
 
 * PyBlosxom stores everything as files on the file system---there is
-  no database
+  no database.
 * Each blog entry is a file.
 * Blog entry files are stored in a directory hierarchy in your *datadir*.
 * Each subdirectory in your *datadir* corresponds to a category of
