@@ -12,7 +12,8 @@ scripts with the correct permissions on your server.
 Deployment
 ==========
 
-Copy the ``pyblosxom.cgi`` file into your CGI directory.
+Copy the ``pyblosxom.cgi`` file from the blog directory (the directory
+which you created with ``pyblosxom-cmd creat ./blog/``) into your CGI directory.
 
 Edit the ``pyblosxom.cgi`` file.
 
@@ -51,7 +52,7 @@ Run your ``pyblosxom.cgi`` script by doing::
     % ./pyblosxom.cgi test
 
 If that doesn't work, double-check to make sure you've completed the
-above steps, then check the trouble-shooting section, then ask for
+above steps, then check the trouble-shooting section below, then ask for
 help on IRC or the users mailing list.  More details in 
 :ref:`project-details-and-contact`.
 
@@ -77,12 +78,19 @@ contact page.
 Running ./pyblosxom.cgi doesn't work
 ------------------------------------
 
-First, you should check to see if you have Python installed on your
+First, you should check to see if you have Python (>=2.3) installed on your
 system.  If not, then please install Python.
 
 If Python is installed on your system, make sure the first line in
-``pyblosxom.cgi`` points to your Python interpreter.  If not, fix
-that and try running ``./pyblosxom.cgi`` again.
+``pyblosxom.cgi`` points to your Python interpreter.  By default,
+``pyblosxom.cgi`` uses env to execute the Python interpreter.  But in
+some rare systems, /usr/bin/env may doesn't exist.  Or the system may have
+odd environment settings.  In those cases, you may edit the first line to
+point to your Python interpreter directly, e.g.::
+
+    #!/home/username/bin/python
+
+Then try running ``./pyblosxom.cgi`` again.
 
 If Python is installed on your system and the first line of
 ``pyblosxom.cgi`` is correct, check for permissions issues:
@@ -112,8 +120,7 @@ trouble-shooting, go back and review the deployment instructions.
 
 When you try to look at your blog in a web-browser and get a HTTP 500
 error, the first thing you should do is uncomment the line in
-``pyblosxom.cgi`` (remove the # at the beginning of the line)
-that looks like this::
+``pyblosxom.cgi`` that looks like this::
 
     #import cgitb; cgitb.enable()
 

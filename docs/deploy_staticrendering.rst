@@ -183,6 +183,19 @@ for my main page, I would set it like this::
 
    py["static_urls"] = ["/booklist/index.html", "/index.xml"]
 
+Pitfalls
+============
+
+- You should use **absolute path** when specifying ``config.py`` path when
+  invoking ``pyblosxom-cmd``, relative path *won't work*.  
+  
+- Also, ``static_dir``
+  in config.py must be in **absolute path** and the directory name must end
+  with ``/``.  For example, ``/var/www`` will not work.  You should use
+  ``/var/www/`` instead.
+
+- Both rendering everything and incremental rendering *won't* remove outdated
+  files.
 
 
 Additional thoughts
@@ -208,7 +221,8 @@ a shell script like this::
 That'll re-render everything, then delete any files in your static 
 dir that are older than 30 minutes in case you moved entries from 
 one category to another or deleted an entry or something along those
-lines.
+lines.  Be careful.  If you have copied other files (CSS, images, etc)
+to the ``static_dir`` manually before, you will lost them!
 
 
 .. Note::
