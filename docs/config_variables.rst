@@ -363,8 +363,12 @@ This value should be in the meta section of any HTML- or XHTML-based flavours
 and it's also in the header for any feed-based flavours.  An improper
 encoding will gummy up some/most feed readers and web-browsers.
 
-FIXME - where can we find more information about what constitutes a
-valid encoding value?
+W3C has `a nice tutorial on encoding`__.  You may refer to 
+`IANA charset registry`__ for a complete list of encoding names. 
+
+
+__ http://www.w3.org/International/tutorials/tutorial-char-enc/
+__ http://www.iana.org/assignments/character-sets
 
 
 blog_language
@@ -382,10 +386,17 @@ For example, English users should use ``en``::
 
    py["blog_language"] = "en"
 
-
-FIXME - where's a list of valid language codes?
-
 This gets used in the RSS flavours.
+
+
+Refer to `ISO 639-2`__ for language codes.  Many systems use two-letter
+ISO 639-1 codes supplemented by three-letter ISO 639-2 codes when no
+two-letter code is applicable.  Often ISO 639-2 is sufficient.  If you use
+very special languages, you may want to refer to `ISO 639-3`__, which is a
+super set of ISO 639-2 and contains languages used thousands of years ago.
+
+__ http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
+__ http://www.sil.org/iso639-3/
 
 
 blog_title
