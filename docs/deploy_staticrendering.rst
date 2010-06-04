@@ -28,51 +28,29 @@ Configuring static rendering
 
 These are the instructions for configuring static rendering in PyBlosxom.
 
-1. **Install PyBlosxom.**
-
-   You can install PyBlosxom as a Python library like this::
-
-      easy_install pyblosxom
-
-   and move on to step 2.
-
-   If you can't or don't want to do that, then just untar the pyblosxom
-   .tar.gz file into a directory.
-
-   If you're using a version of PyBlosxom prior to 1.4, when you're
-   copying the ``pyblosxom.cgi`` and ``config.py`` files, you don't
-   have to put them in a CGI directory---you can put them in any
-   directory you have permissions in.
-
-   For example, I created a directory ``/home/joe/pyblosxom/`` and put 
-   both files in there.
-
-   If you're using PyBlosxom 1.4 or later, copy ``bin/pyblosxom-cmd`` and
-   ``web/config.py``.
-
-2. **Add ``static_dir`` to your ``config.py`` file.**
+1. **Add ``static_dir`` to your ``config.py`` file.**
 
    This is the directory we will save all the static output.  The value of 
-   ``static_dir`` should be a string representing the absolute path of the 
+   ``static_dir`` should be a string representing the **absolute path** of the 
    output directory for static rendering.
 
-3. **Add ``static_flavours`` to your ``config.py`` file.**
+2. **Add ``static_flavours`` to your ``config.py`` file.**
 
    The value of ``static_flavours`` should be a list of strings representing 
    all the flavours that should be rendered.  This defaults to 
    ``[ "html" ]``.
 
-4. **Add ``static_monthnames`` to your ``config.py`` file.**
+3. **Add ``static_monthnames`` to your ``config.py`` file.**
 
    The value (either ``1`` or ``0``) will determine if you want month 
    names (such as ``April``) in the static pages.
 
-5. **Add ``static_monthnumbers`` to your ``config.py`` file.**
+4. **Add ``static_monthnumbers`` to your ``config.py`` file.**
 
    The value (either ``1`` or ``0``) will determine if you want month 
    numbers (such as ``04`` for ``April``) in the static pages.
 
-6. **Set ``base_url`` in your ``config.py`` file to the base url your 
+5. **Set ``base_url`` in your ``config.py`` file to the base url your 
    blog will have.**
 
    For example, if your ``static_dir`` were set to ``/home/joe/public_html`` 
@@ -103,34 +81,18 @@ of new blog entries or updated blog entries (see "incremental rendering").
 Render everything
 -----------------
 
-If you're using PyBlosxom 1.4 or later, run the static renderer like
-this to render all pages in your blog::
+Render all pages in your blog::
 
    % pyblosxom-cmd staticrender --config <config-file>
 
 
-where ``<config-file>`` is replaced by the absolute full path of your
+where ``<config-file>`` is replaced by the **absolute full path** of your
 ``config.py`` file.  For example::
 
    % pyblosxom-cmd staticrender --config /home/joe/blog/config.py
 
-
-**PyBlosxom 1.4**: If you're using PyBlosxom 1.4, then the command line 
-is slightly different::
-
-   % pyblcmd --config /home/joe/blog/config.py --static
-
-
-**Before PyBlosxom 1.4**: If you're using a version of PyBlosxom earlier 
-than 1.4, then the ``config.py`` file must be in the same directory 
-as the ``pyblosxom.cgi`` file::
-
-   % ./pyblosxom.cgi --static
-
-
 Lots of output will appear as PyBlosxom figures out all the urls that need 
 to be rendered and then renders them.
-
 
 
 Incremental rendering
@@ -140,22 +102,11 @@ We have incremental rendering which will find all the entries that have
 changed since we rendered them and then re-render them.  It does this by 
 comparing the mtime on the entry file with the mtime on the rendered file.
 
-In PyBlosxom 1.5 and later, incremental static rendering works like this::
+Incremental static rendering works like this::
 
    % pyblosxom-cmd staticrender --config <config-file> --incremental
 
-
-**PyBlosxom 1.4**: If you're using PyBlosxom 1.4, run the static renderer 
-like this to render new pages in your blog::
-
-   % pyblcmd --config <config-file> --static incremental
-   
-
-**Before PyBlosxom 1.4**: If you're using a version of PyBlosxom earlier 
-than 1.4, then run the static renderer like this::
-
-   % ./pyblosxom.cgi --static --incremental 
-
+Again the ``<config-file>`` must be in **absolute full path**.
 
 
 Rendering other URIs

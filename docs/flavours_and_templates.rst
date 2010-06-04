@@ -327,17 +327,15 @@ Variable syntax
 ---------------
 
 To use a variable in a template, prefix the variable name with a $.
-For example, this would expand to the blog's title as a h2::
+For example, this would expand to the blog's title as an h2::
 
    <h2>$title</h2>
 
-PyBlosxom 1.4.3 and later support parenthesized variables, too::
+To reduce ambiguity, use parenthesized variables.::
 
    <h2>$(title)</h2>
 
-This reduced ambiguity.
-
-PyBlosxom 1.5 also supports variables that expand into functions which
+You can also use variables that expand into functions which
 are evaluated::
 
    <h2>$(escape(title))</h2>
@@ -361,8 +359,7 @@ done!
 URL encoding and escaping of template variables
 -----------------------------------------------
 
-PyBlosxom 1.5 and later has two filters allowing for escaped and
-urlencoded values:
+There are two filters allowing for escaped and urlencoded values:
 
 * ``$escape(title)`` - escapes ``$title``
 * ``$urlencode(title)`` - urlencoded ``$title``

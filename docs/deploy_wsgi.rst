@@ -22,9 +22,7 @@ If you can help with the documentation efforts, please let us know.
 Dependencies
 ============
 
-* Pyblosxom 1.4.2 or a later version
-
-* Either:
+Either:
 
   * Python 2.5, OR
 
@@ -71,9 +69,9 @@ do the following:
 
       # if you have PyBlosxom installed in a directory and NOT as a Python
       # library, then call add_to_path with the directory that PyBlosxom
-      # lives in.  For example, if I untar'd pyblosxom-1.4.1.tar.gz into
+      # lives in.  For example, if I untar'd pyblosxom-1.5.tar.gz into
       # /home/joe/, then add like this:
-      # add_to_path("/home/joe/pyblosxom-1.4.1/")
+      # add_to_path("/home/joe/pyblosxom-1.5/")
 
       import Pyblosxom.pyblosxom
       application = Pyblosxom.pyblosxom.PyBlosxomWSGIApp()
