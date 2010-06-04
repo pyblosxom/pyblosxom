@@ -37,26 +37,6 @@ Install
 =======
 
 
-Single user install
--------------------
-
-If you want to install PyBlosxom for a single user or want to install
-it in a virtual environment where it can't get naughty with anything
-else, use `virtualenv`_.
-
-First build a virtual environment::
-
-   virtualenv --no-site-packages <dest_dir>
-
-Then activate the virtual environment::
-
-   <dest_dir>/usr/bin/activate
-
-Then install PyBlosxom using one of the instructions below.
-
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
-
-
 Installation
 ------------
 
@@ -89,6 +69,27 @@ but any of the tags are stable.  Then run::
 
 If none of those methods works for you, then you might want to
 reconsider using PyBlosxom.
+
+
+Single user install
+-------------------
+
+If you want to install PyBlosxom for a single user or want to install
+it in a virtual environment where it can't get naughty with anything
+else, use `virtualenv`_.
+
+First build a virtual environment::
+
+   virtualenv --no-site-packages <dest_dir>
+
+Then activate the virtual environment::
+
+   <dest_dir>/usr/bin/activate
+
+Then install PyBlosxom using one of the instructions below.
+
+.. _virtualenv: http://pypi.python.org/pypi/virtualenv
+
 
 
 Creating a blog
