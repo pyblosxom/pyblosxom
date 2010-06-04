@@ -26,7 +26,7 @@ Requirements
 
 Minimally, PyBlosxom requires Python 2.3 to install.
 
-PyBlosxom is well supported on GNU/Linux, probably works on Mac OSX,
+PyBlosxom is well supported on GNU/Linux, works well on Mac OS X,
 and might work on Windows.
 
 PyBlosxom works with any web-server as a CGI application, works as a
