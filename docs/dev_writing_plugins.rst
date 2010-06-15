@@ -165,7 +165,7 @@ verifies that the plugin is configured correctly.  As of PyBlosxom 0.9,
 PyBlosxom allows users to test their configuration and installation from
 the console.
 
-In PyBlosxom 1.5 and later, you can test using either the ``pyblosxom.cgi``
+You can test using either the ``pyblosxom.cgi``
 script or the ``pyblosxom-cmd`` script::
 
     % ./pyblosxom.cgi test
@@ -191,19 +191,6 @@ or::
 
     Checking plugin configuration
     =============================
-    ....
-
-
-Prior to PyBlosxom 1.5, you would just execute the ``pyblosxom.cgi``
-script::
-
-    % ./pyblosxom.cgi
-    Trying to import the config module....
-    PyBlosxom version: 1.4.3-rc1 12/11/2007
-    Welcome to PyBlosxom's installation verification system.
-    ------
-    ]] printing diagnostics [[
-    pyblosxom:   1.4.3-rc1 12/11/2007
     ....
 
 
@@ -329,8 +316,9 @@ prepare callback.
 
 Each callback passes in arguments through a single dictionary.  Each
 callback passes in different arguments and expects different return
-values.  Check the architecture chapter for a list of all the
-callbacks that are available, their arguments, and return values.
+values.  Check the doc:`dev_architecture <architecture>` chapter
+for a list of all the callbacks that are available, their arguments,
+and return values.
 
 
 .. _writing-an-entryparser:

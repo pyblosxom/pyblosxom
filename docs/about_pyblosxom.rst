@@ -80,6 +80,12 @@ Possibilities include:
     ikiwiki is written in Perl and melds blogging with wiki with
     version control storage.
 
+**jekyll**
+
+    http://github.com/mojombo/jekyll
+
+    A blog-aware, static site generator in Ruby.
+
 
 Overview of PyBlosxom
 =====================

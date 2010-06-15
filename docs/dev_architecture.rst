@@ -46,7 +46,7 @@ PyBlosxom is composed of several parts:
       templates, htmltmpl templates, Cheetah templates, hard-coded RSS
       2.0 markup, ...
 
-      PyBlosxom comes with two renderers: default and blosxom.
+      PyBlosxom comes with two renderers: blosxom and debug.
 
    3. the ``cache`` package - PyBlosxom allows for entry-level
       caching.  This helps in cases where your entries are stored in a
@@ -345,8 +345,8 @@ containing:
    a Request object
 
 Functions that implement this callback should return ``None`` if they
-don't plan on generating the entry list or a list of entries.  if they
-do.  When a function returns ``None``, the callback will continue to
+don't plan on generating the entry list or a list of entries if they do. 
+When a function returns ``None``, the callback will continue to
 the next function to see if it will return a list of entries.  When a
 function returns a list of entries, the callback will stop.
 
@@ -366,7 +366,7 @@ containing:
 ``entry_list``
    The list of entries to be sorted.
 
-Return ``None`` if the function doesn't truncate the list.  Return
+Return ``None`` if the function doesn't sort the list.  Return
 the sorted list if the function does sort the list.
 
 Example of a ``cb_sortlist`` function::

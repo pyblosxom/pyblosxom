@@ -46,6 +46,12 @@ A flavour consists of at least the following templates:
    addition to the standard templates listed above.  See the
    documentation for the plugin for more information.
 
+.. Note::
+
+    Refer to :ref:`lifecycle-of-the-blosxom-renderer <Pyblosxom Architecture>`
+    for detailed information on how Pyblosxom's default renderer blosxom
+    uses these templates.
+
 More on flavours, how they're stored, and such later.
 
 A :term:`template` is one piece of a flavour that specifies a specific
