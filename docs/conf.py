@@ -36,7 +36,7 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'PyBlosxom'
-copyright = '2009, Will Kahn-Greene'
+copyright = '2009, 2010, Will Kahn-Greene'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
