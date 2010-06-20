@@ -123,6 +123,38 @@ Pertinent to users:
 
     You should adjust your templates accordingly.
 
+21. The following plugins have been added to the pyblosxom release
+    tarball:
+
+    * archives/
+      * pyarchives
+      * yeararchives (was wbgarchives)
+    * categories/
+      * pycategories
+    * comments/plugins/
+      * akismetcomments
+      * comments
+      * no_old_comments
+      * trackback
+      * xmlrpc_pingback
+    * date/
+      * pycalendar
+      * firstdaydiv
+      * pyfilenamemtime
+      * w3cdate
+    * display/
+      * paginate (was wbgpager)
+      * entrytitle
+    * headers/
+      * conditionalhttp
+    * tags/
+      * tags (was wbgtags)
+    * text/
+      * acronyms
+
+    If you have older versions of these plugins, better to switch to
+    the new versions.
+
 
 Pertinent to developers:
 ------------------------
