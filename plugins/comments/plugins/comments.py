@@ -501,7 +501,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         from rfc822 import formatdate
     from socket import gethostbyaddr
 
-    author = escape_SMTP_commands(clean_author(comment['author']))
+    author = escape_smtp_commands(clean_author(comment['author']))
     description = escape_smtp_commands(comment['description'])
     ipaddress = escape_smtp_commands(comment.get('ipaddress', '?'))
 
