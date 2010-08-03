@@ -31,8 +31,19 @@ from Pyblosxom import tools
 from Pyblosxom import plugin_utils
 from Pyblosxom.entries.fileentry import FileEntry
 
-VERSION = "1.5-dev"
-VERSION_DATE = VERSION + " git-master"
+# valid version formats:
+# * x.y      - final release
+# * x.ya1    - alpha 1
+# * x.yb1    - beta 1
+# * x.yrc1   - release candidate 1
+# * x.y-dev  - dev
+
+# see http://www.python.org/dev/peps/pep-0386/
+
+# VERSION = "1.5-dev"
+# VERSION_DATE = VERSION + " git-master"
+VERSION = "1.5rc2"
+VERSION_DATE = VERSION + " 20100803"
 VERSION_SPLIT = tuple(VERSION.split(" ")[0].split('.'))
 
 class PyBlosxom:
