@@ -62,15 +62,13 @@ How to report bugs, send in patches, fix problems
 
 We really appreciate people helping out.
 
-If you discover a problem with PyBlosxom, please log it in our
-bug-tracker_.
-
-.. _bug-tracker: http://sf.net/tracker/?atid=517918&group_id=67445
+If you discover a problem with PyBlosxom, please let us know on IRC
+(#pyblosxom on freenode.net) or on the mailing lists.
 
 If you can additionally fix it, attach a patch file to the bug or send
 the patch as an attachment to the pyblosxom-devel mailing list.
-**Please** make sure to describe the details of the problem you are
-fixing.
+When sending a patch, **please** make sure to describe the details of 
+the problem you are fixing.
 
 
 How to run unit tests
