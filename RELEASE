@@ -1,0 +1,33 @@
+===================
+ PyBlosxom Release
+===================
+
+1. Update the version number and date in:
+   * setup.py 
+   * Pyblosxom/pyblosxom.py
+   * docs/conf.py
+
+2. Commit the changes
+
+3. Tag the commit::
+
+      git tag -a pyblosxom_x_y
+
+4. Build the tarball::
+
+      git archive \
+          --format=tar \
+          --prefix=pyblosxom-x.y/ $TAG > pyblosxom-x.y.tar
+
+   This builds the tarball.
+
+5. Build the docs::
+
+      cd docs/
+      make html
+
+6. Push the docs and the new tarball to the web-site.
+
+7. Update PYPI::
+
+      python setup.py register
