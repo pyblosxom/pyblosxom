@@ -965,7 +965,6 @@ def build_preview_comment(form, entry, config):
         c['cmt_date'] = time.strftime('%a %d %b %Y',
                                       time.gmtime(cmt_time))
         c['cmt_description'] = sanitize(form['body'].value)
-        c['cmt_description_escaped'] = escape(sanitize(form['body'].value))
 
         # optional fields
         c['cmt_optionally_linked_author'] = c['cmt_author']
@@ -1006,10 +1005,6 @@ def cb_story_end(args):
         if entry['comments']:
             comment_entry_base = dict(entry)
             del comment_entry_base['comments']
-            for key in entry.keys():
-                if isinstance(entry[key], str):
-                    comment_entry_base[key + '_escaped'] = entry[key + '_escaped']
-                    comment_entry_base[key + '_urlencoded'] = entry[key + '_urlencoded']
             for comment in entry['comments']:
                 comment_entry = dict(comment_entry_base)
                 comment_entry.update(comment)
