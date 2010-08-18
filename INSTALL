@@ -55,7 +55,7 @@ system installation of Python, use `virtualenv`_.
 
 3. Activate your virtual environment::
 
-      <dest_dir>/usr/bin/activate
+      <dest_dir>/bin/activate
 
 4. Install PyBlosxom using one of the instructions below.
 
