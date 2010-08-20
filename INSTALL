@@ -20,6 +20,7 @@ mailing list or on IRC.  Information on both is on the website_.
    If you're upgrading from a previous version, make sure to read
    the Changelog.
 
+
 Requirements
 ============
 
@@ -32,40 +33,17 @@ PyBlosxom works with any web-server as a CGI application, works as a
 WSGI application, and might work in other contexts.
 
 
-Install
-=======
-
-Installing in a virtual environment
------------------------------------
-
-If you want to install PyBlosxom for a single user or want to install
-it in a virtual environment where it can't get naughty with your
-system installation of Python, use `virtualenv`_.
-
-1. Install virtualenv::
-
-      easy_install virtualenv
-
-      pip install virtualenv
-
-2. Build a virtual environment in the directory specified by
-   ``<dest_dir>``::
-
-      virtualenv --no-site-packages <dest_dir>
-
-3. Activate your virtual environment::
-
-      <dest_dir>/bin/activate
-
-4. Install PyBlosxom using one of the instructions below.
-
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
-
-
 Installation
-------------
+============
 
-*Installing with distribute and pip*
+.. Note::
+
+   If you plan to install PyBlosxom to hack on it, see the section on
+   Installing PyBlosxom to hack on it.
+
+
+Installing with distribute and pip
+----------------------------------
 
 If you have `distribute`_ and `pip`_ installed and want to do a
 site-wide installation, do::
@@ -76,7 +54,8 @@ site-wide installation, do::
 .. _pip: http://pypi.python.org/pypi/pip
 
 
-*Installing with setuptools and easy_install*
+Installing with setuptools and easy_install
+-------------------------------------------
 
 If you have `setuptools`_ installed and want to do a site-wide
 installation, do::
@@ -84,46 +63,6 @@ installation, do::
    easy_install pyblosxom
 
 .. _setuptools: http://pypi.python.org/pypi/setuptools
-
-
-*Installing from a tarball*
-
-You can install PyBlosxom from a tarball.
-
-Tarballs are at http://pyblosxom.bluesock.org/download/ .
-
-Extract the ``tar.gz`` file and run::
-
-   python setup.py install
-
-If you're installing PyBlosxom for development, do::
-
-   python setup.py develop
-
-
-*Installing from a git clone*
-
-We develop PyBlosxom using git.  You can clone the git repository and
-install PyBlosxom from that.
-
-Instructions for cloning the git repository are at
-http://gitorious.org/pyblosxom/ .
-
-Generally, master is unstable, but any of the tags are stable.
-
-After you've cloned the repository, run::
-
-   python setup.py install
-
-If you're installing PyBlosxom for development, do::
-
-   python setup.py develop
-
-
-*None of these methods works for me*
-
-If none of those methods works for you, talk to us on pyblosxom-users
-mailing list or on IRC.
 
 
 Creating a blog
@@ -165,3 +104,104 @@ Additionally, please hop on the ``#pyblosxom`` IRC channel on
 ``irc.freenode.net`` and say hi.  It'll almost certainly help you get
 acquainted with PyBlosxom and it'll reduce the amount of time it takes
 to get your blog up and going.
+
+
+Installing PyBlosxom to hack on it
+==================================
+
+Installing PyBlosxom to hack on it is a little different since you:
+
+1. want to be running PyBlosxom from a git clone
+
+2. probably need a virtual environment to separate PyBlosxom things
+   from the rest of your environment
+
+
+To do that, we're going to use `virtualenv`_ and `paster`_.
+
+.. _virtualenv: http://pypi.python.org/pypi/virtualenv
+.. _paster: http://pypi.python.org/pypi/PasteScript
+
+
+1. Install virtualenv::
+
+      easy_install virtualenv
+
+   OR::
+
+      pip install virtualenv
+
+2. Build a virtual environment in the directory specified by
+   ``VEDIR``::
+
+      virtualenv --no-site-packages VEDIR
+
+   For example, if you want to create a virtual environment in 
+   ``~/pyblosxom_dev/venv/``, you'd do::
+
+      virtualenv --no-site-packages ~/pyblosxom_dev/venv/
+
+3. Activate your virtual environment::
+
+      source VEDIR/bin/activate
+
+4. Install paste into your virtual environment::
+
+      easy_install paste_deploy
+
+   OR::
+
+      pip install paste_deploy
+
+
+4. Using git, clone the PyBlosxom repository::
+
+      git clone git://gitorious.org/pyblosxom/pyblosxom.git pyblosxom
+
+   .. Note::
+
+      If you have a gitorious account, you can clone it to your
+      account.  That makes it easier to send us merge requests.
+
+      If you don't have a gitorious account, you can still clone the 
+      repository, but you can't send us merge requests as easily.
+      Instead, you'll have to send us patches.
+
+5. Change directories into the ``pyblosxom`` directory and run::
+
+      python setup.py develop
+
+6. Then you can create a blog into the directory specified by
+   ``BLOGDIR``::
+
+      pyblosxom-cmd create BLOGDIR
+
+   For example, if you wanted to create your blog in
+   ``~/blog/``, you'd do::
+
+      pyblosxom-cmd create ~/blog/
+
+That's all you have to do for set up.  You now have a new virtual
+environment, Paste and PyBlosxom installed in the virtual environment,
+and you have a fresh blog set up.
+
+
+When you want to run PyBlosxom from your git clone in your virtual
+environment, you will:
+
+1. Make sure the virtual environment is activated and if it isn't
+   do::
+
+      source VEDIR/bin/activate
+
+2. Change directories into where you have your blog and do::
+
+      paster serve blog.ini      
+
+
+Because you installed PyBlosxom with ``python setup.py develop``, when
+you make changes to the PyBlosxom code, they'll be available in the
+environment--you don't need to re-run ``python setup.py develop``.
+
+
+
