@@ -114,22 +114,27 @@ py["default_flavour"] = "html"
 # ====================
 
 # Plugin directories:
-# You can now specify where you plugins all lives, there are two types
-# of plugindirectories, the standard pyblosxom plugins, and the xmlrpc
-# plugins.  You can list out as many directories you want, but they
-# should only contain the related plugins.
-# Example: py['plugin_dirs'] = [ "/home/joe/blog/plugins",
-#                                "/var/lib/pyblosxom/plugins" ]
+# This allows you to specify which directories have plugins that you
+# want to load.  You can list as many plugin directories as you
+# want.
+# Example: py['plugin_dirs'] = ["/home/joe/blog/plugins",
+#                               "/var/lib/pyblosxom/plugins"]
 py["plugin_dirs"] = [os.path.join(blogdir, "plugins")]
 
-# There are two ways for PyBlosxom to load plugins.  The first is the
-# default way which involves loading all the plugins in the lib/plugins
-# directory in alphanumeric order.  The second is by specifying a
-# "load_plugins" key here.  Doing so will cause us to load only the
-# plugins you name and we will load them in the order you name them.
+# There are two ways for PyBlosxom to load plugins:
+# 
+# The first is the default way where PyBlosxom loads all plugins it
+# finds in the directories specified by "plugins_dir" in alphanumeric
+# order by filename.
+# 
+# The second is by specifying a "load_plugins" key here.  Specifying
+# "load_plugins" will cause PyBlosxom to load only the plugins you name 
+# and in in the order you name them.
+# 
 # The "load_plugins" key is a list of strings where each string is
 # the name of a plugin module (i.e. the filename without the .py at
 # the end).
+# 
 # If you specify an empty list, then this will load no plugins.
 # ex: py["load_plugins"] = ["pycalendar", "pyfortune", "pyarchives"]
 py["load_plugins"] = []
