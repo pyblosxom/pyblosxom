@@ -597,19 +597,24 @@ plugin_dirs
 
 **DEFAULT VALUE**: []
 
-The ``plugin_dirs`` variable lists the directories in which you have
-PyBlosxom plugins.
+The ``plugin_dirs`` variable allows you to specify which directories 
+have plugins that you want to load.  You can list as many plugin 
+directories as you want.
 
-When you set this variable, be sure to set the ``load_plugins``
-variable as well.
-
-This defaults to ``[]`` which is an empty list.
+This defaults to ``[]`` which is an empty list which means that you don't
+plan on loading any plugins.
 
 For example, if you stored your PyBlosxom plugins in
 ``/home/joe/blog/plugins/``, then you would set ``plugin_dirs`` like
 this::
 
    py["plugin_dirs"] = ["/home/joe/blog/plugins/"]
+
+.. Note::
+
+   Plugin directories are not searched recursively for plugins.  If you
+   have a tree of plugin directories that have plugins in them, you'll
+   need to specify each directory in the tree.
 
 
 load_plugins
@@ -621,22 +626,42 @@ load_plugins
 
 **DEFAULT VALUE**: no default value set
 
-If the ``load_plugins`` variable is set to a list of strings, then
-PyBlosxom will load the plugins specified in the order they were
-specified in.  If the ``load_plugins`` variable is set to ``[]``
-(i.e. an empty list), then PyBlosxom will not load any plugins.
+There are two ways for PyBlosxom to load plugins:
 
-If the ``load_plugins`` variable is not set at all, then PyBlosxom
-will load all plugins that it finds in the plugin directories in
-alphabetical order.
+The first is the default way where PyBlosxom loads all plugins it
+finds in the directories specified by ``plugins_dir`` in alphanumeric
+order by filename.
 
-For example, if you had ``plugin_dirs`` set to
-``["/home/joe/blog/plugins/"]`` and there were three plugins in that
-directory ``plugin_a.py``, ``plugin_b.py``, and ``plugin_c.py`` and
-you did NOT set load_plugins, then PyBlosxom will load ``plugin_a``
-followed by ``plugin_b`` followed by ``plugin_c``.
+The second is by specifying a ``load_plugins`` key here.  Specifying
+``load_plugins`` will cause PyBlosxom to load only the plugins you name 
+and in in the order you name them.
 
-If you wanted PyBlosxom to load ``plugin_a`` and ``plugin_c``, then you
+The ``load_plugins`` key is a list of strings where each string is
+the name of a plugin module (i.e. the filename without the .py at
+the end).
+
+If you specify an empty list, then this will load no plugins.
+
+For example, if you had::
+
+   py["plugin_dirs"] = ["/home/joe/blog/plugins/"]
+   # py["load_plugins"] = []
+
+in your ``config.py`` file and there were three plugins in 
+``/home/joe/blog/plugins/``::
+
+   /home/
+   +- joe/
+      +- blog/
+         +- plugins/
+            +- plugin_a.py
+            +- plugin_b.py
+            +- plugin_c.py
+
+then PyBlosxom will load all three plugins in alphabetical order by 
+filename: ``plugin_a``, then ``plugin_b``, then ``plugin_c``.
+
+If you wanted PyBlosxom to only load ``plugin_a`` and ``plugin_c``, then you
 would set ``load_plugins`` to::
 
    py["load_plugins"] = ["plugin_a", "plugin_c"]
@@ -662,9 +687,9 @@ would set ``load_plugins`` to::
 
    PyBlosxom loads plugins in the order specified by ``load_plugins``.
    This order also affects the order that callbacks are registered and
-   later executed.  For example, if plugin_a and plugin_b both
-   implement the handle callback and you load plugin_b first, then
-   plugin_b will execute before plugin_a when the handle callback
+   later executed.  For example, if ``plugin_a`` and ``plugin_b`` both
+   implement the ``handle`` callback and you load ``plugin_b`` first, then
+   ``plugin_b`` will execute before ``plugin_a`` when the ``handle`` callback
    kicks off.
 
    Usually this isn't a big deal, however it's possible that some
