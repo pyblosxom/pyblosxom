@@ -23,7 +23,8 @@ help:
 	@echo "  changes   to make an overview over all changed/added/deprecated items"
 	@echo "  linkcheck to check all external links for integrity"
 
-copyover:
+initialize:
+	mkdir -p _static/
 	mkdir -p notes/
 	cp ../AUTHORS notes/AUTHORS.rst
 	cp ../THANKS notes/THANKS.rst
@@ -34,7 +35,7 @@ copyover:
 clean:
 	-rm -rf $(BUILDDIR)/*
 
-html: copyover
+html: initialize
 	mkdir -p $(BUILDDIR)/html $(BUILDDIR)/doctrees
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
@@ -57,7 +58,7 @@ htmlhelp:
 	@echo "Build finished; now you can run HTML Help Workshop with the" \
 	      ".hhp project file in $(BUILDDIR)/htmlhelp."
 
-latex: copyover
+latex: initialize
 	mkdir -p $(BUILDDIR)/latex $(BUILDdIR)/doctrees
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
 	@echo
