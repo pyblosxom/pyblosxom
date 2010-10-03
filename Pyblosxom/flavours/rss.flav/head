@@ -4,7 +4,7 @@
 
 <rss version="0.91">
 <channel>
-<title>$(blog_title) $(pi_da) $(pi_mo) $(pi_yr)</title>
+<title>$(blog_title)</title>
 <link>$(base_url)</link>
 <description>$(blog_description)</description>
 <language>$(blog_language)</language>

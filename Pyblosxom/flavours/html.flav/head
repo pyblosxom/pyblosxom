@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>$(blog_title_with_path) $(pi_da) $(pi_mo) $(pi_yr)</title>
+  <title>$(blog_title) : $(pi_bl)</title>
 </head>
 <body>
 <h1>$(blog_title)</h1>
@@ -14,5 +14,4 @@
 <a href="$(base_url)/index.atom">ATOM 1.0</a>
 ]
 </p>
-<p>$(pi_da) $(pi_mo) $(pi_yr)</p>
 
