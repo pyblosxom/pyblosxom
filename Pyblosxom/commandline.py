@@ -382,7 +382,7 @@ def command_line_handler(scriptname, argv):
                 except IndexError:
                     print "Error: no config file argument specified."
                     print "Exiting."
-                    return 0
+                    return 1
 
     if configdir is not None:
         if configdir.endswith("config.py"):
@@ -392,12 +392,12 @@ def command_line_handler(scriptname, argv):
             pwrap("ERROR: '%s' does not exist--cannot find config.py "
                   "file." % configdir)
             pwrap("Exiting.")
-            return 0
+            return 1
         if not "config.py" in os.listdir(configdir):
             pwrap("Error: config.py not in '%s'.  Cannot find config.py "
                   "file." % configdir)
             pwrap("Exiting.")
-            return 0
+            return 1
 
         sys.path.append(configdir)
         print "Adding %s to sys.path...." % configdir
@@ -423,7 +423,7 @@ def command_line_handler(scriptname, argv):
         print "Commands:"
         for command_str, _, command_help in handlers:
             print "    %-14s %s" % (command_str, command_help)
-        return 0
+        return 1
 
     command = argv.pop(1)
     for (c, f, h) in handlers:
@@ -433,4 +433,4 @@ def command_line_handler(scriptname, argv):
     print "Command '%s' does not exist." % command
     for command_str, command_func, command_help in handlers:
         print "    %-14s %s" % (command_str, command_help)
-    return 0
+    return 1
