@@ -37,6 +37,18 @@ def pwrap(s):
 
     print starter + linesep.join(textwrap.wrap(s, 72))
 
+def pwrap_error(s):
+    """Wraps an error message and prints it to stderr.
+    """
+    starter = ""
+    linesep = os.linesep
+    if s.startswith("- "):
+        starter = "- "
+        s = s[2:]
+        linesep = os.linesep + "  "
+
+    sys.stderr.write (starter + linesep.join(textwrap.wrap(s, 72)) + "\n")
+
 def build_pyblosxom():
     """Imports config.py and builds an empty PyBlosxom object.
     """
@@ -47,10 +59,11 @@ def build_pyblosxom():
         h, t = os.path.split(sys.argv[0])
         scriptname = t or h
 
-        pwrap("ERROR: Cannot find your config.py file.  Please execute "
-              "%s in the directory with the config.py file in it or use "
-              "the --config flag.\n\n"
-              "See \"%s --help\" for more details." % (scriptname, scriptname))
+        pwrap_error("ERROR: Cannot find your config.py file.  Please execute "
+                    "%s in the directory with the config.py file in it or use "
+                    "the --config flag.\n\n"
+                    "See \"%s --help\" for more details." % (scriptname,
+		                                             scriptname))
         return None
 
     return PyBlosxom(cfg, {})
@@ -121,22 +134,23 @@ def test_installation(command, argv):
     config_keys = config.keys()
 
     if "datadir" not in config_keys:
-        pwrap("- ERROR: 'datadir' must be set.  Refer to installation "
+        pwrap_error("- ERROR: 'datadir' must be set.  Refer to installation "
               "documentation.")
 
     elif not os.path.isdir(config["datadir"]):
-        pwrap("- ERROR: datadir '%s' does not exist.  You need to create "
-              "your datadir and give it appropriate permissions.")
+        pwrap_error("- ERROR: datadir '%s' does not exist."
+	            "  You need to create your datadir and give it "
+		    " appropriate permissions.")
 
     else:
         pwrap("- datadir '%s' exists." % config["datadir"])
 
     if (("blog_encoding" in config_keys 
          and config["blog_encoding"].lower() != "utf-8")):
-        pwrap("- WARNING: 'blog_encoding' is set to something other than "
-              "'utf-8'.  As of PyBlosxom 2.0, this isn't a good idea "
-              "unless you're absolutely certain it's going to work for "
-              "your blog.")
+        pwrap_error("- WARNING: 'blog_encoding' is set to something other "
+	            "than 'utf-8'.  As of PyBlosxom 2.0, "
+		    "this isn't a good idea unless you're absolutely certain "
+		    "it's going to work for your blog.")
     pwrap("")
 
     pwrap("Checking plugin configuration")
@@ -163,9 +177,9 @@ def test_installation(command, argv):
                     if mem.verify_installation(request) == 1:
                         pwrap("PASS")
                     else:
-                        pwrap("FAIL")
+                        pwrap_error("FAIL")
                 except StandardError:
-                    pwrap("FAIL: Exception thrown:")
+                    pwrap_error("FAIL: Exception thrown:")
                     traceback.print_exc(file=sys.stdout)
 
                 pwrap("----")
@@ -207,7 +221,7 @@ def create_blog(command, argv):
     verbose = options.verbose
 
     if os.path.isfile(d) or os.path.isdir(d):
-        pwrap("ERROR: Cannot create '%s'--something is in the way." % d)
+        pwrap_error("ERROR: Cannot create '%s'--something is in the way." % d)
         return 0
 
     def _mkdir(d):
@@ -380,8 +394,8 @@ def command_line_handler(scriptname, argv):
                     configdir = argv[i+1]
                     break
                 except IndexError:
-                    print "Error: no config file argument specified."
-                    print "Exiting."
+                    pwrap_error ("Error: no config file argument specified.")
+                    pwrap_error ("Exiting.")
                     return 1
 
     if configdir is not None:
@@ -389,14 +403,14 @@ def command_line_handler(scriptname, argv):
             configdir = configdir[0:-9]
 
         if not os.path.exists(configdir):
-            pwrap("ERROR: '%s' does not exist--cannot find config.py "
-                  "file." % configdir)
-            pwrap("Exiting.")
+            pwrap_error("ERROR: '%s' does not exist--cannot find config.py "
+                        "file." % configdir)
+            pwrap_error("Exiting.")
             return 1
         if not "config.py" in os.listdir(configdir):
-            pwrap("Error: config.py not in '%s'.  Cannot find config.py "
-                  "file." % configdir)
-            pwrap("Exiting.")
+            pwrap_error("Error: config.py not in '%s'.  "
+	                "Cannot find config.py file." % configdir)
+            pwrap_error("Exiting.")
             return 1
 
         sys.path.append(configdir)
@@ -418,11 +432,11 @@ def command_line_handler(scriptname, argv):
 
     # then we execute the named command with options, or print help
     if argv[1].startswith("-"):
-        print "Command '%s' does not exist." % argv[1]
-        print
-        print "Commands:"
+        pwrap_error ( "Command '%s' does not exist." % argv[1])
+        pwrap_error ('')
+        pwrap_error ( "Commands:")
         for command_str, _, command_help in handlers:
-            print "    %-14s %s" % (command_str, command_help)
+            pwrap_error ( "    %-14s %s" % (command_str, command_help))
         return 1
 
     command = argv.pop(1)
@@ -430,7 +444,7 @@ def command_line_handler(scriptname, argv):
         if c == command:
             return f(command, argv)
 
-    print "Command '%s' does not exist." % command
+    pwrap_error ( "Command '%s' does not exist." % command)
     for command_str, command_func, command_help in handlers:
-        print "    %-14s %s" % (command_str, command_help)
+        pwrap_error ( "    %-14s %s" % (command_str, command_help))
     return 1
