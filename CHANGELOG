@@ -198,13 +198,10 @@ Pertinent to developers:
 
 5. Added a lot of documentation.
 
-6. Plugins can now do command-line things.  See the ``commandline``
-   callback in the documentation.
-
-7. Removed the portalocker code so PyBlosxom no longer provides a way
+6. Removed the portalocker code so PyBlosxom no longer provides a way
    to lock/unlock text files.
 
-8. Changed a lot of camel-case function/method names to PEP-8
+7. Changed a lot of camel-case function/method names to PEP-8
    versions.  Camel case names are deprecated and will be removed in a
    future version:
 
@@ -250,17 +247,17 @@ Pertinent to developers:
    * BlosxomRenderer: getContent -> get_content
    * BlosxomRenderer: outputTemplate -> output_template
 
-9. Changed ``add_header`` in the ``Response`` class to take a key and
+8. Changed ``add_header`` in the ``Response`` class to take a key and
    value instead of a list of strings that it has to use * magic and
    then munge through.
 
-10. Added a commandline callback for allowing plugins to add to the
+9. Added a commandline callback for allowing plugins to add to the
     command line.
 
-11. Added a truncatelist callback allowing plugins to augment the
+10. Added a truncatelist callback allowing plugins to augment the
     truncate (``num_entries``) behavior.
 
-12. Added a sortlist callback allowing plugins to augment entrylist sorting
+11. Added a sortlist callback allowing plugins to augment entrylist sorting
     behavior.
 
 
