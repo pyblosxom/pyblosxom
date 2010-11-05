@@ -29,6 +29,25 @@ plugins easier to distribute, maintain, update, and easier for users
 to use them.
 
 
+Name
+----
+
+All plugins need a good name that's unique so that your plugin doesn't get
+confused with other plugins.  Additionally, the filename for your plugin
+needs to be unique.
+
+.. Warning::
+
+   Make sure the filename for your plugin is unique!  PyBlosxom imports your
+   plugin using Python import machinery which means that if your plugin has
+   the same name as a package on your system, then depending on how sys.path
+   is set up, PyBlosxom may load the package on your system and NOT your
+   plugin.
+
+   If you think this might be happening to you, do ``pyblosxom-cmd test`` and
+   it'll tell you the paths of what it's loading.
+
+
 Documentation
 -------------
 
