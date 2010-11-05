@@ -71,9 +71,9 @@ class PyBlosxom:
         setting additional information in the ``data`` dict,
         registering plugins, and entryparsers.
         """
-        data = self._request.getData()
-        pyhttp = self._request.getHttp()
-        config = self._request.getConfiguration()
+        data = self._request.get_data()
+        pyhttp = self._request.get_http()
+        config = self._request.get_configuration()
 
         # initialize the locale, if wanted (will silently fail if locale
         # is not available)
@@ -226,7 +226,7 @@ class PyBlosxom:
         """
         self.initialize()
 
-        config = self._request.getConfiguration()
+        config = self._request.get_configuration()
 
         if url.find("?") != -1:
             url = url[:url.find("?")]
@@ -260,8 +260,8 @@ class PyBlosxom:
         """
         self.initialize()
 
-        config = self._request.getConfiguration()
-        data = self._request.getData()
+        config = self._request.get_configuration()
+        data = self._request.get_data()
         print "Performing static rendering."
         if incremental:
             print "Incremental is set."
@@ -582,7 +582,7 @@ class Request(object):
         offer the same functionallity as ``sys.stdin``.
         """
         # TODO: tests on memory consumption when uploading huge files
-        pyhttp = self.getHttp()
+        pyhttp = self.get_http()
         winput = pyhttp['wsgi.input']
         method = pyhttp["REQUEST_METHOD"]
 
@@ -605,7 +605,7 @@ class Request(object):
         """
         self._response = response
         # for backwards compatibility
-        self.getConfiguration()['stdoutput'] = response
+        self.get_configuration()['stdoutput'] = response
     setResponse = tools.deprecated_function(set_response)
 
     def get_response(self):
@@ -817,6 +817,8 @@ class Response(object):
             pass
 
     sendBody = tools.deprecated_function(send_body)
+
+
 #
 # blosxom behavior stuff
 #
@@ -840,8 +842,8 @@ def blosxom_handler(request):
 
     :param request: the request object.
     """
-    config = request.getConfiguration()
-    data = request.getData()
+    config = request.get_configuration()
+    data = request.get_data()
 
     # go through the renderer callback to see if anyone else wants to
     # render.  this renderer gets stored in the data dict for
@@ -1013,8 +1015,8 @@ def blosxom_file_list_handler(args):
     """
     request = args["request"]
 
-    data = request.getData()
-    config = request.getConfiguration()
+    data = request.get_data()
+    config = request.get_configuration()
 
     if data['bl_type'] == 'dir':
         filelist = tools.walk(request,
@@ -1110,9 +1112,9 @@ def blosxom_process_path_info(args):
     :param args: dict containing the incoming Request object
     """
     request = args['request']
-    config = request.getConfiguration()
-    data = request.getData()
-    pyhttp = request.getHttp()
+    config = request.get_configuration()
+    data = request.get_data()
+    pyhttp = request.get_http()
 
     form = request.getForm()
 
