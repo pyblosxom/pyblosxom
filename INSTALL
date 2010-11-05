@@ -2,12 +2,14 @@
 Installing PyBlosxom
 ====================
 
-This guide walks through how to install PyBlosxom.
+This walks through how to install PyBlosxom.  This documentation is
+available as an ``INSTALL`` file with the source tarball and also
+available on the PyBlosxom web-site at http://pyblosxom.bluesock.org/ .
 
-If this file doesn't meet your needs, ask us on the pyblosxom-users
-mailing list or on IRC.  Information on both is on the website_.
+.. Note::
 
-.. _website: http://pyblosxom.bluesock.org/
+   If you see descrepancies between this document and the one on the
+   web-site, assume the web-site is more recent!
 
 .. Note::
 
@@ -15,10 +17,18 @@ mailing list or on IRC.  Information on both is on the website_.
    Paste.  It'll save you a lot of time and it's easy to clean up
    afterwards.
 
-.. Note::
+If the instructions here don't meet your needs, ask us on the 
+pyblosxom-users mailing list or on IRC.  Information on both is on 
+the website_.
 
-   If you're upgrading from a previous version, make sure to read
-   the Changelog.
+.. _website: http://pyblosxom.bluesock.org/
+
+
+Upgrading
+=========
+
+If you're upgrading from a previous version, make sure to read
+this file, ``UPGRADE``, and the Changelog.
 
 
 Requirements
