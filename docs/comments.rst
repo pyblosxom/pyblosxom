@@ -11,48 +11,111 @@ FIXME - September 27th, 2009 - This needs to be updated. Srsly.
 Summary
 =======
 
-PyBlosxom does not come with comments functionality built-in.
-Instead, comments are implemented as a plugin which people who are
-interested in in having comments can install and everyone else can
-ignore.
+PyBlosxom does not come with comments functionality built-in.  There are 
+several ways you can add comments functionality to your blog.  This chapter
+talks about those.
 
-You can get the latest stable version of the comments plugin from the
-`contributed plugins pack`_. Alternatively, you can get the latest
-version `from Git`_, which is even more recent but may be broken.
-Caveat hacker!
 
-.. _contributed plugins pack: http://sourceforge.net/project/showfiles.php?group_id=67445&amp;package_id=145140
+Disqus
+======
+
+Disqus is a comments platform web service that allows you to add comments to
+your blog.
+
+Pros:
+
+* it's easy to install
+* it handles spam for you
+* supports notifications and replies
+
+Cons:
+
+* it's a web-service that you have no control over
+* it might be difficult to move your comments over to a new system
+
+If this is interesting to you, `sign up for a Disqus account`_.
+
+.. _sign up for a Disqus account: http://disqus.com/
+
+
+Writing your own comments plugin
+================================
+
+PyBlosxom allows for plugins allowing you to write a plugin to add comments
+to your website.  This isn't for the feint of heart--there are a lot of bits
+to think about.
+
+Pros:
+
+* you're in complete control over how comments work on your site
+
+Cons:
+
+* not for the feint of heart
+
+
+Comments plugin
+===============
+
+There's a comments plugin that many PyBlosxom users use and which is sort
+of supported, but needs a lot of work.
+
+Pros:
+
+* it's entirely in your control
+* you can extend and modify it to meet your needs
+* a lot of PyBlosxom users use it
+
+Cons:
+
+* many people find it difficult to install
+* it's missing common comment system features like replies, threads, ...
+* you have to implement and maintain your own anti-spam measures
+* it hasn't been well maintained in the last couple of years
+
+The comments plugin comes in the ``.tar.gz`` file alongside PyBlosxom as
+of PyBlosxom 1.5.  Prior to that, you can get the latest stable version 
+of the comments plugin from the `contributed plugins pack`_. Alternatively, 
+you can get the latest version `from Git`_, which is even more recent but 
+may be broken.  Caveat hacker!
+
+.. _contributed plugins pack: http://pyblosxom.bluesock.org/download/
 .. _from Git: http://gitorious.org/pyblosxom/pyblosxom/trees/master/plugins/comments
 
-The comments plugin also has a `README file`_ that has more
-information on installing comments, traceback, pingback, and the
-comment API.
+.. Note::
 
-.. _README file: http://pyblosxom.svn.sourceforge.net/viewvc/*checkout*/pyblosxom/trunk/contrib/plugins/comments/README
+   The comments plugin also has a `README file`_ that has more
+   information on installing comments, traceback, pingback, and the
+   comment API.
 
+.. _README file: http://gitorious.org/pyblosxom/pyblosxom/blobs/master/plugins/comments/README
 
 
 Installing the comments plugin
-==============================
+------------------------------
 
 Requirements:
 
-* A directory the web-server has writable permissions to.
+1. A directory the web-server has writable permissions to.
+2. Time and patience.
 
 
 After making sure you have the requirements, do the following:
 
-1. Copy ``contrib/plugins/comments/plugins/comments.py`` to your
+1. Copy ``plugins/comments/plugins/comments.py`` to your
    plugins directory.  Then add ``"comments"`` to the ``load_plugins``
    property in your ``config.py`` file.
 
 2. Comments are stored in a directory tree which will parallel the
    data directory tree.  The comments themselves are stored as XML
-   files named ``entryname-datetime.suffix``.  The comment system
-   allows you to specify the directory where the comment directory
-   tree will stored, and the suffix used for comment files.  You need
-   to make sure that this directory is writable by the pyblosxom CGI
-   scripts.
+   files named ``entryname-datetime.suffix``.  For example::
+
+      video_audio_podcast_enhancements_in_firefox_3-1244176234.0.cmt
+
+   The comment system allows you to specify the directory where the comment 
+   directory tree will stored, and the suffix used for comment files.  You 
+   need to make sure that this directory is writable by PyBlosxom however
+   you have it installed.
 
    Set ``comment_dir`` to the directory (in your data directory) where
    you want the comments to be stored.  The default value is a
@@ -61,17 +124,18 @@ After making sure you have the requirements, do the following:
    Set ``comment_ext`` to the change comment file extension.  The
    default file extension is ``cmt``.
 
-3. Copy the flavour files from the contrib/plugins/comments/flavours
-   directory.  There are flavours for ``html`` and ``rss``. You should
-   copy all the files to your data directory.
+3. Copy the flavour files from the ``plugins/comments/flavours``
+   directory to the appropriate places alongside your flavour files.
 
-   The ``comment-story`` template is used to format a single entry
-   that has comments.  The ``comment`` template is used to format a
-   single comment/trackback/pingback.  The ``comment-form`` template
-   provides the form used to enter new comments.
+   ``comment-story`` template is used to format a single entry that has 
+   comments.
+
+   ``comment`` template is used to format a single comment/trackback/pingback.
+
+   ``comment-form`` template provides the form used to enter new comments.
 
 4. Edit the ``comment-story``, ``comment``, and ``comment-form``
-   templates.  Variables that are available are:
+   templates if you need to.  Variables that are available are:
 
    Available in the ``story`` and ``comment-story`` templates:
 
@@ -111,11 +175,7 @@ After making sure you have the requirements, do the following:
 
 
 Email notification
-==================
-
-
-Enabling email notification
----------------------------
+------------------
 
 The comment system can notify you via e-mail when new
 comments/trackbacks/pingbacks are posted.  There are two ways to
@@ -128,11 +188,11 @@ your ``config.py`` file::
 
     py['comment_smtp_server'] - your SMTP server
 
-    OR 
+OR::
 
     py['comment_mta_cmd']     - alternatively, the path to your MTA
 
-    AND THEN 
+AND THEN::
 
     py['comment_smtp_from']   - the address sending the notification
     py['comment_smtp_to']     - the address receiving the notification
@@ -151,15 +211,8 @@ This sends email through your MTA via the command ``/usr/bin/mail``::
     py['comment_smtp_to']     = "joe@joe.com"
 
 
-Problems you might have
------------------------
-
-FIXME
-
-
-
 Writing comments plugin templates
-=================================
+---------------------------------
 
 This "diagram" shows which templates are responsible for what for
 rendering a single entry::
@@ -188,7 +241,7 @@ rendering a single entry::
 
 
 AJAX commenting
-===============
+---------------
 
 Comment previewing and posting can optionally use `AJAX`_, as opposed
 to full HTTP POST requests. This avoids a full-size roundtrip and
@@ -201,9 +254,7 @@ browser doesn't support JavaScript or XmlHttpRequest, or if the user
 has turned JavaScript off, comment posting and preview will use normal
 HTTP POST.
 
-
-Enabling
---------
+**Enabling**
 
 To enable AJAX commenting in your pyblosxom installation, just copy
 ``comments.js`` to your plugin directory and add the following
@@ -243,9 +294,7 @@ closing tag::
 The separate closing ``&lt;/script&gt;`` tag is necessary for
 IE. Without it, IE won't actually run the code in ``comments.js``.
 
-
-Disabling
----------
+**Disabling**
 
 To disable AJAX support, simply remove the JavaScript ``onsubmit`` and
 ``onclick`` handlers from your ``comment-form`` template. The comments
@@ -254,7 +303,7 @@ plugin will fall back to traditional HTTP POST commenting.
 
 
 Dealing with comment spam
-=========================
+-------------------------
 
 Expect it to happen.  Some folks get comment spam trickling in and
 others get a torrential downpour.  It's best to deal with it from the
@@ -282,8 +331,7 @@ supports Javascript.  (Spam bots almost never do.)
 .. _Akismet: http://akismet.com/
 
 
-akismetcomments
----------------
+**akismetcomments**
 
 `Akismet`_ is a spam filter service developed and operated by
 `Automattic`_, the people behind `WordPress`_.  Akismet maintains an
@@ -323,8 +371,7 @@ Winton`_.
 .. _Blake Winton: http://bwinton.latte.ca/
 
 
-check_javascript
-----------------
+**check_javascript**
 
 Comment spam is usually sent by automated spam bots, which blindly
 send HTTP POSTs to a large, static list of blog addresses. These spam
@@ -361,8 +408,8 @@ you're good to go.
 .. _Ryan Barrett: http://snarfed.org/
 
 
-rolling your own
-----------------
+**Rolling your own**
+
 
 It's not hard to roll your own comment rejection plugin.  First figure
 out what the heuristics involved would be.  Then write a plugin with a
@@ -408,10 +455,10 @@ Example: Template for plugin for rejecting comments
 
 
 Installing trackback
-====================
+--------------------
 
 If you want to support `trackbacks`_, copy
-``contrib/plugins/comments/plugins/trackback.py`` to your plugins
+``plugins/comments/plugins/trackback.py`` to your plugins
 directory.  Then add ``"trackback"`` to the ``load_plugins`` property
 in your ``config.py`` file.
 
@@ -448,14 +495,12 @@ This RDF should also be inserted in story.html and comment-story.html.
 Since it is in an HTML comment, it doesn't matter where you put it.
 
 
-
-
 Installing pingback
-===================
+-------------------
 
 If you want to support `pingbacks`_, copy
-``contrib/plugins/comments/plugins/xmlrpc_pingback.py`` and
-``contrib/xmlrpc_plugins/xmlrpc.py`` to your plugins directory.  Make
+``plugins/comments/plugins/xmlrpc_pingback.py`` and
+``xmlrpc_plugins/xmlrpc.py`` to your plugins directory.  Make
 sure you have the ``base_url`` property defined in your ``config.py``
 file.  Then add ``"xmlrpc_pingback"`` to the ``load_plugins`` property
 in your ``config.py`` file.
@@ -468,35 +513,3 @@ template. Add the following tag to the ``meta`` section::
     <link rel="pingback" href="http://joe.com/RPC" />
 
 Replace ``joe.com`` with your ``baseurl``.
-
-
-
-
-Installing the CommentAPI
-=========================
-
-FIXME - this text probably needs fixing.
-
-If you want to support `CommentAPI`_, copy
-``contrib/plugins/comments/plugins/commentAPI.py`` to your plugins
-directory.  If you enable CommentAPI in your RSS feed (see below),
-some RSS aggregator programs will provide an interface that can post a
-comment to a blog entry.
-
-.. _CommentAPI: http://wellformedweb.org/story/9
-
-You need to have ``comments.py`` installed in order for this to work.
-
-Then you must add the CommentAPI tags to your RSS 2.0 feed.  The best
-way to do this is to add an XML namespace declaration to the rss
-element::
-
-    xmlns:wfw="http://wellformedweb.org/CommentAPI"
-
-Then inside your RSS items you need to add a wfw:comment element::
-
-    <wfw:comment>###commentAPI###/$file_path</wfw:comment>
-    
-where ###commentAPI### is replaced by the URI that you mapped your
-CommentAPI.cgi to At the moment, you need to map to a URI one level
-below the $base_url of the blog
