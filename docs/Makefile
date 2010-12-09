@@ -25,12 +25,6 @@ help:
 
 initialize:
 	mkdir -p _static/
-	mkdir -p notes/
-	cp ../AUTHORS notes/AUTHORS.rst
-	cp ../THANKS notes/THANKS.rst
-	cp ../CHANGELOG notes/CHANGELOG.rst
-	cp ../UPGRADE notes/UPGRADE.rst
-	cp ../INSTALL notes/INSTALL.rst
 
 clean:
 	-rm -rf $(BUILDDIR)/*

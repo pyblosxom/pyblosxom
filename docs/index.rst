@@ -12,9 +12,9 @@ Contents:
 
    introduction
    about_pyblosxom
-   notes/CHANGELOG
-   notes/INSTALL
-   notes/UPGRADE
+   changelog
+   install
+   upgrade
    pyblosxom_cmd
    deploy_cgi
    deploy_paste
@@ -31,8 +31,8 @@ Contents:
    dev_writing_plugins
    dev_codedocs
    dev_testing
-   notes/AUTHORS
-   notes/THANKS
+   authors
+   thanks
    glossary
 
 
