@@ -932,8 +932,11 @@ def cb_story(args):
     if 'absolute_path' in entry and not entry.has_key("nocomments"):
         entry['comments'] = read_comments(entry, config)
         entry['num_comments'] = len(entry['comments'])
-        template = renderer.flavour.get('comment-story','')
-        args['template'] = args['template'] + template
+        if (len(renderer.getContent()) == 1
+            and 'comment-story' in renderer.flavour
+            and data['display_comment_default'] == 1):
+            template = renderer.flavour.get('comment-story','')
+            args['template'] = args['template'] + template
 
     return template
 
