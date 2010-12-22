@@ -154,7 +154,7 @@ Each entry has to have the following properties in order to work with
 comments:
 
  1. absolute_path - the category of the entry.  
-    ex. "dev/pyblosxom"
+    ex. "dev/pyblosxom" or ""
  2. fn - the filename of the entry without the file extension and without
     the directory.  
     ex. "staticrendering"
@@ -929,7 +929,7 @@ def cb_story(args):
     request = args["request"]
     data = request.get_data()
     config = request.get_configuration()
-    if entry['absolute_path'] and not entry.has_key("nocomments"):
+    if 'absolute_path' in entry and not entry.has_key("nocomments"):
         entry['comments'] = read_comments(entry, config)
         entry['num_comments'] = len(entry['comments'])
         template = renderer.flavour.get('comment-story','')
@@ -996,7 +996,7 @@ def cb_story_end(args):
     data = request.get_data()
     form = request.get_http()['form']
     config = request.get_configuration()
-    if ((entry['absolute_path']
+    if (('absolute_path' in entry
          and len(renderer.get_content()) == 1
          and 'comment-story' in renderer.flavour
          and not entry.has_key('nocomments')
