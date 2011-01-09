@@ -929,7 +929,7 @@ def cb_story(args):
     request = args["request"]
     data = request.get_data()
     config = request.get_configuration()
-    if 'absolute_path' in entry and not entry.has_key("nocomments"):
+    if entry.has_key('absolute_path') and not entry.has_key("nocomments"):
         entry['comments'] = read_comments(entry, config)
         entry['num_comments'] = len(entry['comments'])
         if (len(renderer.getContent()) == 1
@@ -999,7 +999,7 @@ def cb_story_end(args):
     data = request.get_data()
     form = request.get_http()['form']
     config = request.get_configuration()
-    if (('absolute_path' in entry
+    if ((entry.has_key('absolute_path')
          and len(renderer.get_content()) == 1
          and 'comment-story' in renderer.flavour
          and not entry.has_key('nocomments')
