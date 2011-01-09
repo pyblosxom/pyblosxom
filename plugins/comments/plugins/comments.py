@@ -142,8 +142,8 @@ actually run the code in comments.js.)
 NOFOLLOW SUPPORT
 ================
 
-This plugin implements Google's nofollow support for links in the body of the 
-comment. If you display the link of the comment poster in your HTML template 
+This plugin implements Google's nofollow support for links in the body of the
+comment. If you display the link of the comment poster in your HTML template
 then you must add the rel="nofollow" attribute to your template as well
 
 
@@ -153,12 +153,12 @@ NOTE TO DEVELOPERS WHO ARE WRITING PLUGINS THAT CREATE COMMENTS
 Each entry has to have the following properties in order to work with
 comments:
 
- 1. absolute_path - the category of the entry.  
+ 1. absolute_path - the category of the entry.
     ex. "dev/pyblosxom" or ""
  2. fn - the filename of the entry without the file extension and without
-    the directory.  
+    the directory.
     ex. "staticrendering"
- 3. file_path - the absolute_path plus the fn.  
+ 3. file_path - the absolute_path plus the fn.
     ex. "dev/pyblosxom/staticrendering"
 
 Also, if you don't want comments for an entry, add "nocomments" = 1
@@ -222,7 +222,7 @@ def cb_start(args):
         config['comment_draft_ext'] = config['comment_ext']
     if not 'comment_nofollow' in config:
         config['comment_nofollow'] = 0
-    
+
 def verify_installation(request):
     config = request.get_configuration()
 
@@ -244,7 +244,7 @@ def verify_installation(request):
             if i not in smtp_keys_defined:
                 print "Missing comment SMTP property: '%s'" % i
                 retval = 0
-    
+
     optional_keys = ['comment_dir', 'comment_ext', 'comment_draft_ext']
     for i in optional_keys:
         if not i in config:
@@ -262,8 +262,8 @@ def createhtmlmail(html, headers):
     import MimeWriter
     import mimetools
     import cStringIO
-    
-    out = cStringIO.StringIO() # output buffer for our message 
+
+    out = cStringIO.StringIO() # output buffer for our message
     htmlin = cStringIO.StringIO(html)
 
     text = re.sub('<.*?>', '', html)
@@ -299,7 +299,7 @@ def read_comments(entry, config):
     """
     @param: a file entry
     @type: dict
-    
+
     @returns: a list of comment dicts
     """
     filelist = glob.glob(cmt_expr(entry, config))
@@ -309,18 +309,18 @@ def read_comments(entry, config):
     comments = [(cmt['cmt_time'], cmt) for cmt in comments]
     comments.sort()
     return [c[1] for c in comments]
-    
+
 def cmt_expr(entry, config):
     """
     Return a string containing the regular expression for comment entries
-    
+
     @param: a file entry
     @type: dict
     @returns: a string with the directory path for the comment
-    
+
     @param: configuratioin dictionary
     @type: dict
-    
+
     @returns: a string containing the regular expression for comment entries
     """
     cmt_dir = os.path.join(config['comment_dir'], entry['absolute_path'])
@@ -330,13 +330,13 @@ def cmt_expr(entry, config):
 def read_file(filename, config):
     """
     Read comment(s) from filename
-    
+
     @param filename: filename containing comment(s)
     @type filename: string
 
     @param config: the pyblosxom configuration settings
     @type config: dictionary
-    
+
     @returns: a list of comment dicts
     """
     from xml.sax import make_parser, SAXException
@@ -357,14 +357,14 @@ def read_file(filename, config):
             self._data += content
 
     cmts = []
-    
+
     try:
         parser = make_parser()
         parser.setFeature(feature_namespaces, 0)
         handler = cmt_handler(cmts)
         parser.setContentHandler(handler)
         parser.parse(filename)
-        
+
     # FIXME - bare except here--bad!
     except:
         logger = tools.get_logger()
@@ -394,13 +394,13 @@ def read_file(filename, config):
 def write_comment(request, config, data, comment, encoding):
     """
     Write a comment
-    
+
     @param config: dict containing pyblosxom config info
     @type  config: dict
-    
+
     @param data: dict containing entry info
     @type  data: dict
-    
+
     @param comment: dict containing comment info
     @type  comment: dict
 
@@ -434,10 +434,10 @@ def write_comment(request, config, data, comment, encoding):
         logger = tools.get_logger()
         logger.error("couldn't open comment file '%s' for writing" % cfn)
         return "Internal error: Your comment could not be saved."
- 
+
     cfile.write(filedata)
     cfile.close()
- 
+
     # write latest pickle
     latest = None
     latest_filename = os.path.join(config['comment_dir'], LATEST_PICKLE_FILE)
@@ -531,7 +531,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         message.append("Entry URL: %s" % curl)
         message.append("Comment location: %s" % comment_filename)
         message.append("\n\n%s" % description)
- 
+
         if 'comment_mta_cmd' in config:
             # set the message headers
             message.insert(0, "")
@@ -572,7 +572,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
 
             # send the message via smtp
             server.sendmail(from_addr=email,
-                            to_addrs=config['comment_smtp_to'], 
+                            to_addrs=config['comment_smtp_to'],
                             msg=mimemsg.as_string())
             server.quit()
 
@@ -620,7 +620,7 @@ def sanitize(body):
     body=re.sub('\r\n?','\n', body)
 
     # naked urls become hypertext links
-    body=re.sub('(^|[\\s.:;?\\-\\]<])' + 
+    body=re.sub('(^|[\\s.:;?\\-\\]<])' +
                 '(http://[-\\w;/?:@&=+$.!~*\'()%,#]+[\\w/])' +
                 '(?=$|[\\s.:;?\\-\\[\\]>])',
                 '\\1<a href="\\2">\\2</a>',body)
@@ -628,7 +628,7 @@ def sanitize(body):
     # html characters used in text become escaped
     body = escape(body)
 
-    # passthru <a href>, <em>, <i>, <b>, <blockquote>, <br/>, <p>, 
+    # passthru <a href>, <em>, <i>, <b>, <blockquote>, <br/>, <p>,
     # <abbr>, <acronym>, <big>, <cite>, <code>, <dfn>, <kbd>, <pre>, <small>
     # <strong>, <sub>, <sup>, <tt>, <var>
     body = re.sub('&lt;a href="([^"]*)"&gt;([^&]*)&lt;/a&gt;',
@@ -638,7 +638,7 @@ def sanitize(body):
     body = re.sub('&lt;em&gt;([^&]*)&lt;/em&gt;', '<em>\\1</em>', body)
     body = re.sub('&lt;i&gt;([^&]*)&lt;/i&gt;', '<i>\\1</i>', body)
     body = re.sub('&lt;b&gt;([^&]*)&lt;/b&gt;', '<b>\\1</b>', body)
-    body = re.sub('&lt;blockquote&gt;([^&]*)&lt;/blockquote&gt;', 
+    body = re.sub('&lt;blockquote&gt;([^&]*)&lt;/blockquote&gt;',
                 '<blockquote>\\1</blockquote>', body)
     body = re.sub('&lt;br\s*/?&gt;\n?','\n',body)
 
@@ -689,8 +689,8 @@ def sanitize(body):
     body = re.sub('\r', '\n', body)
     body = re.sub('  +', '&nbsp; ', body)
 
-    return body        
-        
+    return body
+
 def dont_follow(mo):
     return '<a rel="nofollow" ' + mo.group(1) + '>'
 
@@ -705,7 +705,7 @@ def add_dont_follow(s, config):
 def cb_prepare(args):
     """
     Handle comment related HTTP POST's.
-    
+
     @param request: pyblosxom request object
     @type request: a Pyblosxom request object
     """
@@ -717,7 +717,7 @@ def cb_prepare(args):
 
     # first we check to see if we're going to print out comments
     # the default is not to show comments
-    data['display_comment_default'] = 0        
+    data['display_comment_default'] = 0
 
     # check to see if they have "showcomments=yes" in the querystring
     qstr = pyhttp.get('QUERY_STRING', None)
@@ -731,7 +731,7 @@ def cb_prepare(args):
     if "bl_type" in data and data["bl_type"] == "file":
         data["bl_type_file"] = "yes"
         data['display_comment_default'] = 1
- 
+
     # second, we check to see if they're posting a comment and we
     # need to write the comment to disk.
     posting = (('ajax' in form and form['ajax'].value == 'post') or
@@ -753,7 +753,7 @@ def cb_prepare(args):
         title = sanitize(title)
 
         # it doesn't make sense to add nofollow to link here, but we should
-        # escape it. If you don't like the link escaping, I'm not attached 
+        # escape it. If you don't like the link escaping, I'm not attached
         # to it.
         cmt_time = time.time()
         w3cdate = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(cmt_time))

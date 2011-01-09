@@ -398,7 +398,7 @@ class TestComments(PluginTest):
         check_no_comments('template starts:')
 
     def test_cb_story_comment_story_template(self):
-        """Check that cb_story() appends the comment-story template.."""
+        # check that cb_story() appends the comment-story template
         self.data['display_comment_default'] = True
         self.assert_(self.renderer.flavour['comment-story'] == 'comment-story')
         comments.cb_story(self.args)
@@ -408,10 +408,10 @@ class TestComments(PluginTest):
     def test_cb_story_end_renders_comments(self):
         self.comment()
 
-        # """Check that cb_story_end() renders comments."""
+        # check that cb_story_end() renders comments.
         self.data['display_comment_default'] = True
 
-        # no comments. check both cb_story_end's return value and
+        # no comments.  check both cb_story_end's return value and
         # args['template'].
         self.args['template'] = 'foo'
         self.assertEquals('foo', comments.cb_story_end(self.args))
