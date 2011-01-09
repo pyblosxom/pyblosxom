@@ -414,8 +414,8 @@ def command_line_handler(scriptname, argv):
             pwrap_error("Exiting.")
             return 1
 
-        sys.path.append(configdir)
-        print "Adding %s to sys.path...." % configdir
+        sys.path.insert(0, configdir)
+        print "Inserting %s to beginning of sys.path...." % configdir
 
     handlers = get_handlers()
 
