@@ -2,8 +2,8 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003-2006 Wari Wahab
-# Copyright (c) 2003-2010 Will Kahn-Greene
-# 
+# Copyright (c) 2003-2011 Will Kahn-Greene
+#
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
@@ -358,7 +358,16 @@ class BlosxomRenderer(RendererBase):
                                   {"entry": entry, "template": template})
 
         template = args["template"]
-        entry = args["entry"]
+
+        # FIXME - the finaltext.replace(...) below causes \$ to get
+        # unescaped in title and body text which is wrong.  this
+        # fix alleviates that somewhat, but there are still edge
+        # cases regarding function data.  need a real template
+        # engine with a real parser here.
+        entry = dict(args["entry"])
+        for k, v in entry.items():
+            if isinstance(v, basestring):
+                entry[k] = v.replace(r"\$", r"\\$")
 
         finaltext = tools.parse(self._request, entry, template)
         return finaltext.replace(r'\$', '$')
