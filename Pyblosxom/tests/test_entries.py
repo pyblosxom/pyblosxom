@@ -85,10 +85,12 @@ class TestEntryBase(UnitTestBase):
         self.eq_(e.has_key("foo"), True)
         self.eq_(e.has_key("foo2"), False)
         self.eq_(e.has_key("body"), True)
-        # yield eq_, "foo" in e, True
-        # yield eq_, "foo2" in e, False
-        # yield eq_, "foo2" not in e, True
-        # yield eq_, "body" in e, True
+
+        # FIXME - EntryBase doesn't support "in" operator.
+        # self.eq_("foo" in e, True)
+        # self.eq_("foo2" in e, False)
+        # self.eq_("foo2" not in e, True)
+        # self.eq_("body" in e, True)
 
         e.update({"foo": "bah", "faux": "pearls"})
         self.eq_(e["foo"], "bah")
