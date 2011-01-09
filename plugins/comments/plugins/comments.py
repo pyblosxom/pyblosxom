@@ -717,7 +717,7 @@ def cb_prepare(args):
 
     # first we check to see if we're going to print out comments
     # the default is not to show comments
-    data['display_comment_default'] = 0
+    data['display_comment_default'] = False
 
     # check to see if they have "showcomments=yes" in the querystring
     qstr = pyhttp.get('QUERY_STRING', None)
@@ -725,12 +725,12 @@ def cb_prepare(args):
         parsed_qs = cgi.parse_qs(qstr)
         if 'showcomments' in parsed_qs:
             if parsed_qs['showcomments'][0] == 'yes':
-                data['display_comment_default'] = 1
+                data['display_comment_default'] = True
 
     # check to see if the bl_type is "file"
     if "bl_type" in data and data["bl_type"] == "file":
         data["bl_type_file"] = "yes"
-        data['display_comment_default'] = 1
+        data['display_comment_default'] = False
 
     # second, we check to see if they're posting a comment and we
     # need to write the comment to disk.
@@ -932,10 +932,10 @@ def cb_story(args):
     if entry.has_key('absolute_path') and not entry.has_key("nocomments"):
         entry['comments'] = read_comments(entry, config)
         entry['num_comments'] = len(entry['comments'])
-        if (len(renderer.getContent()) == 1
-            and 'comment-story' in renderer.flavour
-            and data['display_comment_default'] == 1):
-            template = renderer.flavour.get('comment-story','')
+        if ((len(renderer.get_content()) == 1
+             and 'comment-story' in renderer.flavour
+             and data['display_comment_default'])):
+            template = renderer.flavour.get('comment-story', '')
             args['template'] = args['template'] + template
 
     return template
@@ -1003,7 +1003,7 @@ def cb_story_end(args):
          and len(renderer.get_content()) == 1
          and 'comment-story' in renderer.flavour
          and not entry.has_key('nocomments')
-         and data['display_comment_default'] == 1)):
+         and data['display_comment_default'])):
         output = []
         if entry['comments']:
             comment_entry_base = dict(entry)

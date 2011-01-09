@@ -367,10 +367,9 @@ class TestComments(PluginTest):
         check_num_comments(2)
 
     def test_when_to_render_comments(self):
-        """cb_story[_end]() should only render comment templates when
-        appropriate.
-        """
-        def check_no_comments(expected):
+        # cb_story[_end]() should only render comment templates when
+        # appropriate
+        def check_for_comments(expected):
             args_template = self.args['template']
             comments.cb_story(self.args)
             self.assertEquals(expected, self.args['template'])
@@ -378,24 +377,39 @@ class TestComments(PluginTest):
             self.assertEquals(expected, self.args['template'])
             self.args['template'] = args_template
 
+        # this is required by the comments plugin
+        self.entry['absolute_path'] = ''
+
         # with no comment-story template, there's nothing
         del self.renderer.flavour['comment-story']
         self.renderer.set_content([self.entry])
-        check_no_comments('template starts:')
-
-        # with a comment-story template, we show the template
-        # once
+        check_for_comments('template starts:')
         self.renderer.flavour['comment-story'] = 'comment-story'
-        self.renderer.set_content([self.entry, self.entry])
-        check_no_comments('template starts:comment-story')
 
+        # with a comment-story template and a single entry, we show
+        # the template once
+        self.renderer.set_content([self.entry])
+        self.data['display_comment_default'] = True
+        check_for_comments('template starts:comment-story')
+
+
+        # with a comment-story template and a multiple entries, we
+        # don't show the template
+        self.renderer.set_content([self.entry, self.entry])
+        self.data['display_comment_default'] = True
+        check_for_comments('template starts:')
+
+        # if display_comment_default is set to False, we don't
+        # show the template
         self.renderer.set_content([self.entry])
         self.data['display_comment_default'] = False
-        check_no_comments('template starts:comment-story')
+        check_for_comments('template starts:')
 
+        # if nocomments is true, we don't show the template
+        self.renderer.set_content([self.entry])
         self.data['display_comment_default'] = True
         self.entry['nocomments'] = True
-        check_no_comments('template starts:')
+        check_for_comments('template starts:')
 
     def test_cb_story_comment_story_template(self):
         # check that cb_story() appends the comment-story template
