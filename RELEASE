@@ -3,17 +3,21 @@
 ===================
 
 1. Update the version number and date in:
-   * setup.py 
+   * setup.py
    * Pyblosxom/pyblosxom.py
    * docs/conf.py
 
-2. Commit the changes
+2. Update AUTHORS::
 
-3. Tag the commit::
+      git log --pretty=format:%an | sort -u
+
+3. Commit the changes
+
+4. Tag the commit::
 
       git tag -a pyblosxom_x_y
 
-4. Build the tarball::
+5. Build the tarball::
 
       git archive \
           --format=tar \
@@ -21,13 +25,13 @@
 
    This builds the tarball.
 
-5. Build the docs::
+6. Build the docs::
 
       cd docs/
       make html
 
-6. Push the docs and the new tarball to the web-site.
+7. Push the docs and the new tarball to the web-site.
 
-7. Update PYPI::
+8. Update PYPI::
 
       python setup.py register
