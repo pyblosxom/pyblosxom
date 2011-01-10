@@ -145,7 +145,7 @@ def test_installation(command, argv):
     else:
         pwrap("- datadir '%s' exists." % config["datadir"])
 
-    if (("blog_encoding" in config_keys 
+    if (("blog_encoding" in config_keys
          and config["blog_encoding"].lower() != "utf-8")):
         pwrap_error("- WARNING: 'blog_encoding' is set to something other "
                     "than 'utf-8'.  As of PyBlosxom 2.0, "
@@ -159,6 +159,16 @@ def test_installation(command, argv):
     import traceback
 
     no_verification_support = []
+
+    if len(plugin_utils.bad_plugins) > 0:
+        pwrap("- Some plugins failed to load.")
+        pwrap("")
+        pwrap("----")
+        for mem in plugin_utils.bad_plugins:
+            pwrap("plugin:  %s" % mem[0])
+            pwrap("problem: %s" % mem[1])
+            print "%s" % mem[2]
+            pwrap("----")
 
     if len(plugin_utils.plugins) == 0:
         pwrap("- There are no plugins installed.")
@@ -343,9 +353,9 @@ def run_static_renderer(command, argv):
 
 DEFAULT_HANDLERS = (
     ("create", create_blog, "Creates directory structure for a new blog."),
-    ("test", test_installation, 
+    ("test", test_installation,
      "Tests installation and configuration for a blog."),
-    ("staticrender", run_static_renderer, 
+    ("staticrender", run_static_renderer,
      "Statically renders your blog into an HTML site."),
     ("renderurl", render_url, "Renders a single url of your blog.")
     )

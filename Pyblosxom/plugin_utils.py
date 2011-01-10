@@ -17,6 +17,7 @@ import os
 import glob
 import sys
 import os.path
+import traceback
 
 # this holds the list of plugins that have been loaded.  if you're running
 # PyBlosxom as a long-running process, this only gets cleared when the
@@ -28,6 +29,10 @@ plugins = []
 # if you're running PyBlosxom as a long-running process, this only
 # gets cleared when the process is restarted.
 callbacks = {}
+
+# this holds a list of (plugin name, exception) tuples for plugins that
+# didn't import.
+bad_plugins = []
 
 def catalogue_plugin(plugin_module):
     """
@@ -76,7 +81,7 @@ def initialize_plugins(plugin_dirs, plugin_list):
     :param plugin_list: the list of plugins to load, or if None, we'll
                         load all the plugins we find in those dirs.
     """
-    if plugins:
+    if plugins or bad_plugins:
         return
 
     # we clear out the callbacks dict so we can rebuild them
@@ -93,7 +98,12 @@ def initialize_plugins(plugin_dirs, plugin_list):
     plugin_list = get_plugin_list(plugin_list, plugin_dirs)
 
     for mem in plugin_list:
-        _module = __import__(mem)
+        try:
+            _module = __import__(mem)
+        except Exception, e:
+            bad_plugins.append((mem, e, "".join(traceback.format_exc())))
+            continue
+
         for comp in mem.split(".")[1:]:
             _module = getattr(_module, comp)
         catalogue_plugin(_module)
