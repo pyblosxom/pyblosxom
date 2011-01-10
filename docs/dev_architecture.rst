@@ -826,6 +826,22 @@ containing:
 Functions that implement this callback must return the input args dict
 whether or not they adjust anything in it.
 
+Example which adds a ``guid`` variable to the entry which is available
+to use in the story template.  The ``guid`` can be manually set by
+the user in the entry metadata and if it's not there, then it
+defaults to the ``file_path`` value::
+
+    def cb_story(args):
+        # grab the entry from the args dict.
+        entry = args["entry"]
+
+        # set the "guid" variable in the entry.  it's either the "guid"
+        # value (if the user set one in the entry metadata) or it's
+        # whatever the value of "file_path" is.
+        entry["guid"] = entry.get("guid", entry.get("file_path"))
+
+        # the cb_story function _must_ return the args dict.
+        return args
 
 
 cb_story_end
