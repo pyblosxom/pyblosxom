@@ -392,18 +392,6 @@ class BlosxomRenderer(RendererBase):
                                   mappingfunc=lambda x,y: x,
                                   defaultfunc=lambda x:x)
 
-    def get_content(self):
-        """
-        Return the content field
-
-        This is exposed for blosxom callbacks.
-
-        :returns: content
-        """
-        return self._content
-
-    getContent = tools.deprecated_function(get_content)
-
     def output_template(self, output, entry, template_name):
         """
         Deprecated.  Here for backwards compatibility.

@@ -133,6 +133,18 @@ class RendererBase:
 
     setContent = tools.deprecated_function(set_content)
 
+    def get_content(self):
+        """
+        Return the content field
+
+        This is exposed for blosxom callbacks.
+
+        :returns: content
+        """
+        return self._content
+
+    getContent = tools.deprecated_function(get_content)
+
     def needs_content_type(self, flag):
         """
         Use the renderer to determine 'Content-Type: x/x' default is
