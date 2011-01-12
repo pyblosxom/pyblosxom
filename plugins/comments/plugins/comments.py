@@ -730,7 +730,7 @@ def cb_prepare(args):
     # check to see if the bl_type is "file"
     if "bl_type" in data and data["bl_type"] == "file":
         data["bl_type_file"] = "yes"
-        data['display_comment_default'] = False
+        data['display_comment_default'] = True
 
     # second, we check to see if they're posting a comment and we
     # need to write the comment to disk.
