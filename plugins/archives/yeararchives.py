@@ -52,7 +52,7 @@ The vars available with typical example values are::
 """
 __author__ = "Will Kahn-Greene - willg at bluesock dot org"
 __version__ = "2010-05-08"
-__url__ = "http://pyblosxom.sourceforge.net/"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Year-based archives handler."
 
 from Pyblosxom import tools, entries

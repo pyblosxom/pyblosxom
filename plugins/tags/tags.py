@@ -173,7 +173,7 @@ from anywhere.
 
 __author__ = "Will Kahn-Greene - willg at bluesock dot org"
 __version__ = "2010-05-07"
-__url__ = "http://pyblosxom.sourceforge.net/"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Tags plugin"
 
 import os

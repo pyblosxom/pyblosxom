@@ -52,7 +52,7 @@ This plugin is hereby placed in the public domain.
 """
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
-__url__ = "http://pyblosxom.sourceforge.net/"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Displays a calendar on your blog."
 
 from Pyblosxom import tools

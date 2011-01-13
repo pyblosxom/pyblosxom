@@ -7,7 +7,7 @@ data structures for useful testing plugins.
 """
 
 __author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
-__url__ = 'http://pyblosxom.sourceforge.net/wiki/index.php/Framework_for_testing_plugins'
+__url__ = 'http://pyblosxom.bluesock.org/wiki/index.php/Framework_for_testing_plugins'
 
 from Pyblosxom import pyblosxom, tools, entries
 from Pyblosxom.renderers.blosxom import Renderer

@@ -174,7 +174,7 @@ the comments plugin.
 
 Additionally, there is a chapter in the PyBlosxom manual that
 covers installing and configuring the comments plugin.  The manual
-is on the PyBlosxom web-site: http://pyblosxom.sourceforge.net/
+is on the PyBlosxom web-site: http://pyblosxom.bluesock.org/
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -198,7 +198,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 __author__ = "Ted Leung"
 __version__ = "$Id$"
-__url__ = "http://pyblosxom.sourceforge.net/"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Allows for comments on each blog entry."
 
 import cgi, glob, os.path, re, time, cPickle, os, codecs, sys, popen2, \

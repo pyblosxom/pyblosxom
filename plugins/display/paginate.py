@@ -69,7 +69,7 @@ know.
 """
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "2010-05-07"
-__url__ = "http://pyblosxom.sourceforge.net/"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = ("Allows navigation by page for indexes that have too "
                    "many entries.")
 

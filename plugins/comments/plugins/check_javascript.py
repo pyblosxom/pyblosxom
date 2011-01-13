@@ -34,7 +34,7 @@ GNU General Public License for more details.
 """
 __author__      = "Ryan Barrett <pyblosxom@ryanb.org>"
 __version__     = "0.1"
-__url__         = "http://pyblosxom.sourceforge.net/"
+__url__         = "http://pyblosxom.bluesock.org/"
 __description__ = "Use JavaScript to filter out spam comments"
 
 from Pyblosxom import tools

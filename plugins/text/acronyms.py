@@ -131,7 +131,7 @@ http://noone.org/blosxom/acronyms .
 """
 __author__ = "Will Kahn-Greene - willg at bluesock dot org"
 __version__ = "2010-05-07"
-__url__ = "http://pyblosxom.sourceforge.net/"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Marks acronyms and abbreviations in blog entries."
 
 import os

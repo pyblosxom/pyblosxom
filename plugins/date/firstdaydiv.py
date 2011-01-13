@@ -44,7 +44,7 @@ Copyright 2010 Will Kahn-Greene
 """
 __author__ = "Blake Winton - bwinton@latte.ca"
 __version__ = "$Id$"
-__url__ = "http://pyblosxom.sourceforge.net/"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Adds a token which tells us whether we're the first day being displayed or not."
 
 class PyFirstDate:

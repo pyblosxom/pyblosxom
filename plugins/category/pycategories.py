@@ -76,7 +76,7 @@ Copyright 2004, 2005, 2006 Will Guaraldi
 """
 __author__ = "Will Guaraldi - willg at bluesock dot org"
 __version__ = "$Id$"
-__url__ = "http://pyblosxom.sourceforge.net/"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Builds a list of categories."
 
 from Pyblosxom import tools

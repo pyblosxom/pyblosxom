@@ -33,7 +33,7 @@ Copyright 2010 Will Kahn-Greene
 """
 __author__ = "Wari Wahab pyblosxom@wari.per.sg"
 __version__ = "$Id$"
-__url__ = "http://pyblosxom.sourceforge.net/"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Allows for caching if-not-modified-since...."
 
 def cb_prepare(args):
