@@ -17,10 +17,10 @@ You can set the start of the week using the 'calendar_firstweekday'
 configuration setting, for example:
 
    py['calendar_firstweekday'] = 0
-   
+
 will make the week start on Monday (day '0'), instead of Sunday (day '6').
 
-Pycalendar is locale-aware.  If you set the "locale" config property, 
+Pycalendar is locale-aware.  If you set the "locale" config property,
 then month and day names will be displayed according to your locale.
 
 It uses the following CSS classes:
@@ -36,7 +36,7 @@ It uses the following CSS classes:
   - blosxomCalendarCell
     - for calendar days that aren't today
   - blosxomCalendarBlogged
-    - for calendar days that aren't today that 
+    - for calendar days that aren't today that
       have entries
   - blosxomCalendarSpecificDay
     - for the specific day we're looking at
@@ -95,7 +95,7 @@ class PyblCalendar:
 
         root = config["datadir"]
         baseurl = config.get("base_url", "")
-        
+
         self._today = time.localtime()
 
         if len(entry_list) == 0:
@@ -106,37 +106,36 @@ class PyblCalendar:
 
         view = list(entry_list[0]["timetuple"])
 
-        # this comes in as 2001, 2002, 2003, ...  so we can convert it
+        # this comes in as '', 2001, 2002, 2003, ...  so we can convert it
         # without an issue
-        temp = data.get("pi_yr", time.strftime("%Y", self._today))
-        if temp:
+        temp = data.get("pi_yr")
+        if not temp:
+            view[0] = int(self._today[0])
+        else:
             view[0] = int(temp)
 
         # the month is a bit harder since it can come in as "08", "", or
         # "Aug" (in the example of August).
-        temp = data.get("pi_mo", time.strftime("%m", self._today))
-        if temp.isdigit():
-            temp = int(temp)
+        temp = data.get("pi_mo")
+        if temp and temp.isdigit():
+            view[1] = int(temp)
+        elif temp and tools.month2num.has_key(temp):
+            view[1] = int(tools.month2num[temp])
         else:
-            if tools.month2num.has_key(temp):
-                temp = int(tools.month2num[temp])
-            else:
-                temp = view[1]
-        view[1] = temp
+            view[1] = int(self._today[1])
 
-        view = tuple(view)
-        self._view = view
+        self._view = view = tuple(view)
 
         # if we're looking at a specific day, we figure out what it is
-        if data["pi_yr"] and data["pi_mo"] and data["pi_da"]:
+        if data.get("pi_yr") and data.get("pi_mo") and data.get("pi_da"):
             if data["pi_mo"].isdigit():
                 mon = data["pi_mo"]
             else:
                 mon = tools.month2num[data["pi_mo"]]
 
-        self._specificday = (int(data["pi_yr"]),
-                             int(mon),
-                             int(data["pi_da"]))
+            self._specificday = (int(data.get("pi_yr", self._today[0])),
+                                 int(mon),
+                                 int(data.get("pi_da", self._today[2])))
 
         archive_list = tools.walk(self._request, root)
 
@@ -165,27 +164,26 @@ class PyblCalendar:
             datepiece = time.strftime("%Y/%b/%d", timetuple)
             self._entries[day] = (baseurl + "/" + datepiece, day)
 
-
         # Set the first day of the week (Sunday by default)
         first = config.get('calendar_firstweekday', 6)
         calendar.setfirstweekday(first)
-        
-		# create the calendar
+
+        # create the calendar
         cal = calendar.monthcalendar(view[0], view[1])
-        
+
         # insert the days of the week
         cal.insert(0, calendar.weekheader(2).split())
 
-        # figure out next and previous links by taking the dict of yyyymm
-        # strings we created, turning it into a list, sorting them,
-        # and then finding "today"'s entry.  then the one before it 
-        # (index-1) is prev, and the one after (index+1) is next.
+        # figure out next and previous links by taking the dict of
+        # yyyymm strings we created, turning it into a list, sorting
+        # them, and then finding "today"'s entry.  then the one before
+        # it (index-1) is prev, and the one after (index+1) is next.
         keys = yearmonth.keys()
         keys.sort()
         thismonth = time.strftime("%Y%m", view)
 
-        # do some quick adjustment to make sure we didn't pick
-        # a yearmonth that's outside the yearmonths of the entries we
+        # do some quick adjustment to make sure we didn't pick a
+        # yearmonth that's outside the yearmonths of the entries we
         # know about.
         if thismonth in keys:
             index = keys.index(thismonth)
@@ -195,7 +193,7 @@ class PyblCalendar:
             index = len(keys) - 1
 
         # build the prev link
-        if index == 0:
+        if index == 0 or len(keys) == 0:
             prev = None
         else:
             prev = ("%s/%s/%s" % (baseurl, keys[index-1][:4],
@@ -203,7 +201,7 @@ class PyblCalendar:
                     "&lt;")
 
         # build the next link
-        if index == len(yearmonth)-1:
+        if index == len(yearmonth)-1 or len(keys) == 0:
             next = None
         else:
             next = ("%s/%s/%s" % (baseurl, keys[index+1][:4],
@@ -214,7 +212,6 @@ class PyblCalendar:
         cal.insert(0, [prev, time.strftime("%B %Y", view), next])
 
         self._cal = self.format_with_css(cal)
-
 
     def _fixlink(self, link):
         if link:
@@ -243,7 +240,7 @@ class PyblCalendar:
         # if it's the day we're viewing
             if (self._view[0], self._view[1], day) == self._specificday:
                 td_class_str += "blosxomCalendarSpecificDay "
-        
+
         # if it's a day that's been blogged
         if self._entries.has_key(strday):
             td_class_str += "blosxomCalendarBlogged"
@@ -286,3 +283,39 @@ def cb_prepare(args):
     data = request.get_data()
     if data.has_key("entry_list") and data["entry_list"]:
         data["calendar"] = PyblCalendar(request)
+
+import unittest
+import tempfile
+import shutil
+
+class PyCalendarTest(unittest.TestCase):
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        if hasattr(self, 'tmpdir'):
+            shutil.rmtree(self.tmpdir)
+
+    def get_datadir(self):
+        return os.path.join(self.tmpdir, "datadir")
+
+    entry1 = {"timetuple": (2010, 1, 17, 15, 48, 20, 6, 17, 0)}
+
+    def test_generate_calendar(self):
+        entry1 = dict(PyCalendarTest.entry1)
+
+        from Pyblosxom.pyblosxom import Request
+        req = Request({"datadir": self.get_datadir()},
+                      {},
+                      {"entry_list": [entry1],
+                       "extensions": {}})
+        cb_prepare({"request": req})
+
+        data = req.get_data()
+        cal = data["calendar"]
+
+        cal.generate_calendar()
+
+def get_test_suite():
+    ret = unittest.TestLoader().loadTestsFromTestCase(PyCalendarTest)
+    return ret
