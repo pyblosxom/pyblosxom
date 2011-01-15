@@ -44,7 +44,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Copyright (c) 2003-2005 Ted Leung
-Copyright (c) 2010 Will Kahn-Greene         
+Copyright (c) 2010 Will Kahn-Greene
 """
 __author__ = "Ted Leung <twl@sauria.com>"
 __version__ = "$Id$"
@@ -100,7 +100,7 @@ def get_formatted_date(entry):
     # if is_dst flag set, adjust for daylight savings time
     if time_tuple[8] == 1:
         tzoffset = time.altzone
-    return format_date(time.mktime(time_tuple), tzoffset)    
+    return format_date(time.mktime(time_tuple), tzoffset)
 
 def cb_story(args):
     entry = args['entry']
@@ -127,7 +127,7 @@ class W3CDateTest(unittest.TestCase):
     entry1 = {"timetuple": (2010, 1, 17, 15, 48, 20, 6, 17, 0)}
     entry2 = {"timetuple": (2010, 1, 17, 15, 58, 45, 6, 17, 0)}
     entry3 = {"timetuple": (2010, 1, 11, 21, 6, 26, 0, 11, 0)}
-    
+
     def test_get_formatted_date(self):
         gfd = get_formatted_date
         #save old TZ environment for restoring
@@ -135,7 +135,7 @@ class W3CDateTest(unittest.TestCase):
         #we expect US EASTERN time without DST
         os.environ['TZ'] = 'EST+05EST+05,M4.1.0,M10.5.0'
         time.tzset()
-        self.assertEquals(gfd(self.entry1),
+        self.assertEquals(gfd(W3CDateTest.entry1),
                           "2010-01-17T15:48:20-05:00")
         # reset time zone to whatever it was
         if tz is None:
@@ -147,10 +147,10 @@ class W3CDateTest(unittest.TestCase):
     def test_head_and_foot(self):
         from Pyblosxom.pyblosxom import Request
         gfd = get_formatted_date
-        
-        entry1 = dict(self.entry1)
-        entry2 = dict(self.entry2)
-        entry3 = dict(self.entry3)
+
+        entry1 = dict(W3CDateTest.entry1)
+        entry2 = dict(W3CDateTest.entry2)
+        entry3 = dict(W3CDateTest.entry3)
 
         req = Request({}, {}, {"entry_list": [entry1, entry2, entry3]})
         entry = {}
@@ -169,7 +169,7 @@ class W3CDateTest(unittest.TestCase):
         args = {"entry": entry}
         cb_story(args)
         self.assertEquals(entry['w3cdate'], get_formatted_date(entry))
-        
+
 
 def get_test_suite():
     ret = unittest.TestLoader().loadTestsFromTestCase(W3CDateTest)
