@@ -24,19 +24,22 @@ To use this plugin, you must also install akismet.py in your python path (in
 the PyBlosxom plugin directory is fine):
 http://www.voidspace.org.uk/python/modules.shtml#akismet
 
-Additionally, you will need to get a Wordpress.com API key:
-  http://faq.wordpress.com/2005/10/19/api-key/
+Additionally, you will need to get a Wordpress.com API key::
+
+   http://faq.wordpress.com/2005/10/19/api-key/
 
 Then, use this key to put put the following line into your
-config.py file:
-  py['akismet_api_key'] = 'MYKEYID'
+config.py file::
 
-Additionally, if you haven't set it already, you will need to set:
-  py['base_url'] = 'mybaseurl'
+   py['akismet_api_key'] = 'MYKEYID'
+
+Additionally, if you haven't set it already, you will need to set::
+
+   py['base_url'] = 'mybaseurl'
 
 If a comment is rejected, a message explaining this will saved in a
 variable. You can place this into your template using the standard
-\"$comment_message\" variable.
+``$(comment_message)`` variable.
 
 This plugin merges the work done on the akismetComments.py Plugin by
 Blake Winton with the the akismet.py plugin by Benjamin Mako Hill.
