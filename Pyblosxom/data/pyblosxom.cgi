@@ -4,8 +4,8 @@
 # of gzip compressed content on Windows and OS/2
 #!/path/to/python -u
 
-# Uncomment this if something goes wrong (for debugging)
-#import cgitb; cgitb.enable()
+# Comment this cgitb line out when your blog is production-ready.
+import cgitb; cgitb.enable()
 
 import os, sys
 
@@ -13,8 +13,13 @@ import os, sys
 # python path:
 #sys.path.append("%(basedir)s")
 
-# You shouldn't have to adjust anything below this line.
-# --------------------------------------------------
+
+
+# -------------------------------------------------------
+# You shouldn't have to adjust anything below this point.
+# -------------------------------------------------------
+
+
 
 # this allows for a config.py override
 script = os.environ.get('SCRIPT_FILENAME', None)
