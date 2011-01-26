@@ -77,7 +77,7 @@ The idea came from::
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__author__ = "Will Guaraldi - willg at bluesock dot org"
+__author__ = "Will Kahn-Greene - willg at bluesock dot org"
 __version__ = "2011-01-15"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Rejects comments that aren't from a human."
@@ -102,7 +102,8 @@ def cb_comment_reject(args):
         if config.get("nonhuman_log", 0) and config.has_key("logdir"):
             fn = os.path.join(config["logdir"], "nothuman.log")
             f = open(fn, "a")
-            f.write("%s\n" % time.ctime(time.time()))
+            f.write("%s: %s\n" % (
+                    time.ctime(), c.get("ipaddress", None)))
             f.close()
         return (True, "Comment rejected: I don't think you're human.")
 
