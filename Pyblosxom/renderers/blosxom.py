@@ -238,7 +238,11 @@ class BlosxomRenderer(RendererBase):
                     if entry["date"] and entry["date"] != current_date:
                         if "date_foot" in self.flavour:
                             parse_vars = self.get_parse_vars()
-                            parse_vars.update({"date": current_date})
+                            parse_vars.update({"date": current_date,
+                                               "yr": content[0]["yr"],
+                                               "mo": content[0]["mo"],
+                                               "da": content[0]["da"]})
+
                             outputbuffer.append(
                                 self.render_template(parse_vars, "date_foot"))
 
