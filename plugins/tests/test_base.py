@@ -190,3 +190,6 @@ class PluginTest(unittest.TestCase):
         If dir doesn't exist or is not a directory, does nothing.
         """
         shutil.rmtree(self.datadir, ignore_errors=True)
+
+    # allows us to use shorthand
+    eq_ = unittest.TestCase.assertEquals
