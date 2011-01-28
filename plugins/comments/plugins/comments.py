@@ -20,27 +20,52 @@ changes. Thanks!
 This module supports the following config parameters (they are not
 required):
 
-   comment_dir - the directory we're going to store all our comments in.
-                 this defaults to datadir + "comments".
-   comment_ext - the file extension used to denote a comment file.
-                 this defaults to "cmt".
-   comment_draft_ext - the file extension used for new comments that have
-                       not been manually approved by you.  this defaults
-                       to comment_ext (i.e. there is no draft stage)
+   comment_dir
 
-   comment_smtp_server - the smtp server to send comments notifications
-                         through.
-   comment_mta_cmd - alternatively, a command line to invoke your MTA (e.g.
-                     sendmail) to send comment notifications through.
-   comment_smtp_from - the email address comment notifications will be from. If
-                       you're using SMTP, this should be an email address
-                       accepted by your SMTP server. If you omit this, the
-                       from address will be the e-mail address as input in
-                       the comment form.
-   comment_smtp_to - the email address to send comment notifications to.
-   comment_nofollow - set this to 1 to add rel="nofollow" attributes to
-                 links in the description -- these attributes are embedded
-                 in the stored representation.
+      the directory we're going to store all our comments in.  this
+      defaults to datadir + "comments".
+
+   comment_ext
+
+      the file extension used to denote a comment file.  this defaults
+      to "cmt".
+
+   comment_draft_ext
+
+      the file extension used for new comments that have not been
+      manually approved by you.  this defaults to comment_ext
+      (i.e. there is no draft stage)
+
+   comment_smtp_server
+
+      the smtp server to send comments notifications through.
+
+   comment_mta_cmd
+
+      alternatively, a command line to invoke your MTA (e.g.
+      sendmail) to send comment notifications through.
+
+   comment_smtp_from
+
+      the email address comment notifications will be from. If you're
+      using SMTP, this should be an email address accepted by your
+      SMTP server. If you omit this, the from address will be the
+      e-mail address as input in the comment form.
+
+   comment_smtp_to
+
+      the email address to send comment notifications to.
+
+   comment_nofollow
+
+      set this to 1 to add rel="nofollow" attributes to links in the
+      description -- these attributes are embedded in the stored
+      representation.
+
+   comment_disable_after_x_days
+
+      set this to a positive integer and users won't be able to leave
+      comments on entries older than x days.
 
 Comments are stored one or more per file in a parallel hierarchy to the
 datadir hierarchy. The filename of the comment is the filename of the blog
@@ -234,7 +259,10 @@ def verify_installation(request):
         retval = 0
 
     smtp_keys_defined = []
-    smtp_keys=['comment_smtp_server', 'comment_smtp_from', 'comment_smtp_to']
+    smtp_keys=[
+        'comment_smtp_server', 
+        'comment_smtp_from', 
+        'comment_smtp_to']
     for k in smtp_keys:
         if k in config:
             smtp_keys_defined.append(k)
@@ -245,10 +273,20 @@ def verify_installation(request):
                 print "Missing comment SMTP property: '%s'" % i
                 retval = 0
 
-    optional_keys = ['comment_dir', 'comment_ext', 'comment_draft_ext']
+    optional_keys = [
+        'comment_dir', 
+        'comment_ext', 
+        'comment_draft_ext',
+        'comment_nofollow',
+        'comment_disable_after_x_days']
     for i in optional_keys:
         if not i in config:
             print "missing optional property: '%s'" % i
+
+    if 'comment_disable_after_x_days' in config:
+        if ((not isinstance(config['comment_disable_after_x_days'], int) or
+             config['comment_disable_after_x_days'] <= 0)):
+            print "comment_disable_after_x_days has a non-positive integer value."
 
     return retval
 
@@ -580,6 +618,24 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         tools.get_logger().error("error sending email: %s" %
                                 traceback.format_exception(*sys.exc_info()))
 
+def check_comments_disabled(config, entry):
+    disabled_after_x_days = config.get("comment_disable_after_x_days", 0)
+    if not isinstance(disabled_after_x_days, int):
+        # FIXME - log an error?
+        return False
+
+    if disabled_after_x_days <= 0:
+        # FIXME - log an error?
+        return False
+
+    if not entry.has_key('mtime'):
+        return False
+
+    entry_age = (time.time() - entry['mtime']) / (60 * 60 * 24)
+    if entry_age > disabled_after_x_days:
+        return True
+    return False
+
 def clean_author(s):
     """
     Guard against blasterattacko style attacks that embedd SMTP commands in
@@ -738,6 +794,18 @@ def cb_prepare(args):
                not "preview" in form)
     if (("title" in form and "author" in form
          and "body" in form and posting)):
+
+        entry = data.get("entry_list", [])
+        if len(entry) == 0:
+            data["rejected"] = True
+            data["comment_message"] = "No such entry exists."
+            return
+        entry = entry[0]
+
+        if check_comments_disabled(config, entry):
+            data["rejected"] = True
+            data["comment_message"] = "Comments for that entry are disabled."
+            return
 
         encoding = config.get('blog_encoding', 'utf-8')
         decode_form(form, encoding)
@@ -1022,7 +1090,8 @@ def cb_story_end(args):
             rejected['cmt_description'] = msg
             rejected['cmt_description_escaped'] = escape(msg)
             output.append(renderer.render_template(rejected, 'comment'))
-        output.append(renderer.render_template(entry, 'comment-form'))
+        if not check_comments_disabled(config, entry):
+            output.append(renderer.render_template(entry, 'comment-form'))
         args['template'] = template + "".join(output)
 
     return template

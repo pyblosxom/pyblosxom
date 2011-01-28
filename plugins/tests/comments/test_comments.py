@@ -6,10 +6,15 @@ contrib/plugins/comments/plugins/comments.py.
 __author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
 __url__ = 'http://pyblosxom.bluesock.org/wiki/index.php/Framework_for_testing_plugins'
 
-from plugins.tests.test_base import PluginTest
+from plugins.tests.test_base import PluginTest, FrozenTime, TIMESTAMP
 from plugins.comments.plugins import comments
 
-import cgi, cPickle, os, cStringIO, sys
+import cgi
+import cPickle
+import os
+import cStringIO
+import sys
+import time
 
 class TestComments(PluginTest):
     """Test class for the comments plugin.
@@ -154,6 +159,39 @@ class TestComments(PluginTest):
         del self.config[smtp_vars[-1]]
 
         self.assertEquals(1, comments.verify_installation(self.request))
+
+    def test_check_comments_disabled(self):
+        time = FrozenTime(TIMESTAMP)
+
+        entry = self.entry
+        config = self.config
+        key = "comment_disable_after_x_days"
+        day = 60 * 60 * 24
+
+        # not set -> False
+        self.eq_(comments.check_comments_disabled(config, entry), False)
+
+        # set to non-int -> False
+        config[key] = "abc"
+        self.eq_(comments.check_comments_disabled(config, entry), False)
+
+        # set to negative int -> False
+        config[key] = -10
+        self.eq_(comments.check_comments_disabled(config, entry), False)
+
+        # entry has no mtime -> False
+        config[key] = 10
+        self.eq_(comments.check_comments_disabled(config, entry), False)
+
+        # inside range -> False
+        config[key] = 10 # 10 days
+        entry['mtime'] = time.time() - (5 * day)
+        self.eq_(comments.check_comments_disabled(config, entry), False)
+
+        # outside range -> True
+        config[key] = 10 # 10 days
+        entry['mtime'] = time.time() - (15 * day)
+        self.eq_(comments.check_comments_disabled(config, entry), True)
 
     def test_cb_handle(self):
         """cb_handle() should intercept requests for /comments.js."""
