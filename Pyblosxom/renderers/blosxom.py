@@ -298,13 +298,12 @@ class BlosxomRenderer(RendererBase):
             self.flavour = self.get_flavour(data.get("flavour", "html"))
 
         except NoSuchFlavourException, nsfe:
-            error_msg = nsfe._msg
+            error_msg = str(nsfe)
             try:
                 self.flavour = self.get_flavour("error")
             except NoSuchFlavourException:
                 self.flavour = get_included_flavour("error")
-                error_msg = (error_msg +
-                             "  And your error flavour doesn't exist.")
+                error_msg += "  And your error flavour doesn't exist, either."
 
             resp = self._request.getResponse()
             resp.set_status("404 Not Found")
