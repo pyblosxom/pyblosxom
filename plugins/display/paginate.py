@@ -33,7 +33,7 @@ To install paginate, do the following:
 Here are some additional configuration variables to adjust the 
 behavior::
 
-  wbgpager_count_from
+  paginate_count_from
     datatype:       int
     default value:  0
     description:    Some folks like their paging to start at 1--this
