@@ -226,8 +226,18 @@ __version__ = "$Id$"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Allows for comments on each blog entry."
 
-import cgi, glob, os.path, re, time, cPickle, os, codecs, sys, popen2, \
-  traceback, types
+import cgi
+import glob
+import re
+import time
+import cPickle
+import os
+import codecs
+import sys
+import popen2
+import traceback
+import types
+
 from email.MIMEText import MIMEText
 from xml.sax.saxutils import escape
 from Pyblosxom import tools
