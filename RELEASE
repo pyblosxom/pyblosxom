@@ -1,23 +1,25 @@
-===================
- PyBlosxom Release
-===================
+===========================
+ PyBlosxom Release Process
+===========================
 
-1. Update the version number and date in:
+1. Update the release process
+
+2. Update the version number and date in:
    * setup.py
    * Pyblosxom/pyblosxom.py
    * docs/conf.py
 
-2. Update AUTHORS::
+3. Update AUTHORS::
 
       git log --pretty=format:%an | sort -u
 
-3. Commit the changes
+4. Commit the changes
 
-4. Tag the commit::
+5. Tag the commit::
 
       git tag -a pyblosxom_x_y
 
-5. Build the tarball::
+6. Build the tarball::
 
       git archive \
           --format=tar \
@@ -25,13 +27,13 @@
 
    This builds the tarball.
 
-6. Build the docs::
+7. Build the docs::
 
       cd docs/
       make html
 
-7. Push the docs and the new tarball to the web-site.
+8. Push the docs and the new tarball to the web-site.
 
-8. Update PYPI::
+9. Update PYPI::
 
       python setup.py register
