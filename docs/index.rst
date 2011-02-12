@@ -12,7 +12,8 @@ Contents:
 
    introduction
    about_pyblosxom
-   changelog
+   whatsnew
+   whatsnewolder
    install
    upgrade
    pyblosxom_cmd
