@@ -4,22 +4,29 @@
 
 1. Update the release process
 
-2. Update the version number and date in:
+2. Update CHANGELOG with bugs fixed for this version from Roundup.
+
+3. Move old WHATSNEW content to docs/.
+
+4. Update WHATSNEW
+
+5. Update the version number and date in:
+
    * setup.py
    * Pyblosxom/pyblosxom.py
    * docs/conf.py
 
-3. Update AUTHORS::
+6. Update AUTHORS::
 
       git log --pretty=format:%an | sort -u
 
-4. Commit the changes
+7. Commit the changes
 
-5. Tag the commit::
+8. Tag the commit::
 
       git tag -a pyblosxom_x_y
 
-6. Build the tarball::
+9. Build the tarball::
 
       git archive \
           --format=tar \
@@ -27,13 +34,13 @@
 
    This builds the tarball.
 
-7. Build the docs::
+10. Build the docs::
 
-      cd docs/
-      make html
+       cd docs/
+       make html
 
-8. Push the docs and the new tarball to the web-site.
+11. Push the docs and the new tarball to the web-site.
 
-9. Update PYPI::
+12. Update PYPI::
 
-      python setup.py register
+       python setup.py register
