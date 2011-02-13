@@ -234,7 +234,7 @@ import cPickle
 import os
 import codecs
 import sys
-import popen2
+import subprocess
 import traceback
 import types
 
@@ -594,13 +594,15 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
                     '-s',
                     '"comment on %s"' % curl,
                     config['comment_smtp_to']]
-            # FIXME - switch to subprocess when we can require python 2.4
-            process = popen2.Popen3(argv, capturestderr=True)
-            process.tochild.write(body)
-            process.tochild.close()
+
+            process = subprocess.Popen(
+                argv, stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            process.stdin.write(body)
+            process.stdin.close()
             process.wait()
-            stdout = process.fromchild.read()
-            stderr = process.childerr.read()
+            stdout = process.stdout.read()
+            stderr = process.stderr.read()
             tools.get_logger().debug('Ran MTA command: ' + ' '.join(argv))
             tools.get_logger().debug('Received stdout: ' + stdout)
             tools.get_logger().debug('Received stderr: ' + stderr)
