@@ -128,6 +128,44 @@ class TestComments(PluginTest):
         if delete_datadir:
             self.delete_datadir()
 
+    def test_sanitize(self):
+        # test <ul> ... </ul>
+        ulbody = (
+            "<ul>\n"
+            "<li>entry within a ul list</li>\n"
+            "<li>entry within a ul list, with\n"
+            "newlines in between\n"
+            "</li>\n"
+            "</ul>")
+
+        self.assertEquals(
+            comments.sanitize(ulbody),
+            "<ul>"
+            "<li>entry within a ul list</li>"
+            "<li>entry within a ul list, with<br />\n"
+            "newlines in between<br />\n"
+            "</li>"
+            "</ul>")
+
+        # test <ol> ... </ol>
+        ulbody = (
+            "<ol>\n"
+            "<li>entry within a ol list</li>\n"
+            "<li>entry within a ol list, with\n"
+            "newlines in between\n"
+            "</li>\n"
+            "</ol>")
+
+        self.assertEquals(
+            comments.sanitize(ulbody),
+            "<ol>"
+            "<li>entry within a ol list</li>"
+            "<li>entry within a ol list, with<br />\n"
+            "newlines in between<br />\n"
+            "</li>"
+            "</ol>")
+
+
     def test_cb_start(self):
         """cb_start() should set defaults for some config variables."""
         self.config = self.config_base

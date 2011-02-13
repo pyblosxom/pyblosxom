@@ -696,7 +696,7 @@ def sanitize(body):
 
     # passthru <a href>, <em>, <i>, <b>, <blockquote>, <br/>, <p>,
     # <abbr>, <acronym>, <big>, <cite>, <code>, <dfn>, <kbd>, <pre>, <small>
-    # <strong>, <sub>, <sup>, <tt>, <var>
+    # <strong>, <sub>, <sup>, <tt>, <var>, <ul>, <ol>, <li>
     body = re.sub('&lt;a href="([^"]*)"&gt;([^&]*)&lt;/a&gt;',
                  '<a href="\\1">\\2</a>', body)
     body = re.sub('&lt;a href=\'([^\']*)\'&gt;([^&]*)&lt;/a&gt;',
@@ -706,7 +706,7 @@ def sanitize(body):
     body = re.sub('&lt;b&gt;([^&]*)&lt;/b&gt;', '<b>\\1</b>', body)
     body = re.sub('&lt;blockquote&gt;([^&]*)&lt;/blockquote&gt;',
                 '<blockquote>\\1</blockquote>', body)
-    body = re.sub('&lt;br\s*/?&gt;\n?','\n',body)
+    body = re.sub('&lt;br\s*/?&gt;\n?', '\n', body)
 
     body = re.sub('&lt;abbr&gt;([^&]*)&lt;/abbr&gt;', '<abbr>\\1</abbr>', body)
     body = re.sub('&lt;acronym&gt;([^&]*)&lt;/acronym&gt;', '<acronym>\\1</acronym>', body)
@@ -723,7 +723,15 @@ def sanitize(body):
     body = re.sub('&lt;tt&gt;([^&]*)&lt;/tt&gt;', '<tt>\\1</tt>', body)
     body = re.sub('&lt;var&gt;([^&]*)&lt;/var&gt;', '<var>\\1</var>', body)
 
-    body = re.sub('&lt;/?p&gt;','\n\n',body).strip()
+    # handle lists
+    body = re.sub('&lt;ul&gt;\s*', '<ul>', body)
+    body = re.sub('&lt;/ul&gt;\s*', '</ul>', body)
+    body = re.sub('&lt;ol&gt;\s*', '<ol>', body)
+    body = re.sub('&lt;/ol&gt;\s*', '</ol>', body)
+    body = re.sub('&lt;li&gt;([^&]*)&lt;/li&gt;\s*', '<li>\\1</li>', body)
+    body = re.sub('&lt;li&gt;', '<li>', body)
+
+    body = re.sub('&lt;/?p&gt;', '\n\n', body).strip()
 
     # wiki like support: _em_, *b*, [url title]
     body = re.sub(r'\b_(\w.*?)_\b', r'<em>\1</em>', body)
@@ -748,10 +756,9 @@ def sanitize(body):
 
     # white space
     chunk = re.split('\n\n+', ''.join(chunk))
-#    if len(chunk)>1: body='<p>' + '</p>\r<p>'.join(chunk) + '</p>\r'
-    body = re.sub('\n','<br />\n', body)
-    body = re.compile('<p>(<ul>.*?</ul>)\r</p>?',re.M).sub(r'\1',body)
-    body = re.compile('<p>(<blockquote>.*?</blockquote>)</p>?',re.M).sub(r'\1',body)
+    body = re.sub('\n', '<br />\n', body)
+    body = re.compile('<p>(<ul>.*?</ul>)\r</p>?', re.M).sub(r'\1', body)
+    body = re.compile('<p>(<blockquote>.*?</blockquote>)</p>?', re.M).sub(r'\1', body)
     body = re.sub('\r', '\n', body)
     body = re.sub('  +', '&nbsp; ', body)
 
