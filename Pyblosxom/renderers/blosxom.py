@@ -249,7 +249,10 @@ class BlosxomRenderer(RendererBase):
                         if "date_head" in self.flavour:
                             current_date = entry["date"]
                             parse_vars = self.get_parse_vars()
-                            parse_vars.update({"date": current_date})
+                            parse_vars.update({"date": current_date,
+                                               "yr": content[0]["yr"],
+                                               "mo": content[0]["mo"],
+                                               "da": content[0]["da"]})
                             outputbuffer.append(
                                 self.render_template(parse_vars, "date_head"))
 
