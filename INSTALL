@@ -7,7 +7,7 @@ available as an ``INSTALL`` file in the git repository, with the
 source tarball and also available on the website_ in the documentation
 section.
 
-If you see descrepancies between this document and the one on the
+If you see discrepancies between this document and the one on the
 web-site, assume the web-site is more recent!
 
 If the instructions here don't meet your needs, ask us on the
@@ -136,7 +136,7 @@ To install:
 
       source <VIRTUAL-ENV-DIR>/bin/activate
 
-   Rememver to activate the virtual environment EVERY time you do
+   Remember to activate the virtual environment EVERY time you do
    something with PyBlosxom.
 
    Additionally, if you're running PyBlosxom from CGI or a cron job,
@@ -268,10 +268,6 @@ If you're reading this on disk, then see the ``deploy*`` files in the
 `docs/` directory.
 
 If you want to deploy your blog in a way that's not covered in the
-documentation, ask on the pyblosxom-users mailing list or on IRC.
-
-
-If you want to deploy your blog in a way that's not covered in the
 documentation, ask on the *pyblosxom-users* `mailing list`_ or on the
 ``#pyblosxom`` IRC channel on ``irc.freenode.net``.
 
@@ -290,4 +286,3 @@ Additionally, please hop on the ``#pyblosxom`` IRC channel on
 ``irc.freenode.net`` and say hi.  It'll almost certainly help you get
 acquainted with PyBlosxom and it'll reduce the amount of time it takes
 to get your blog up and going.
-
