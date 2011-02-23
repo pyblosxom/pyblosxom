@@ -25,6 +25,14 @@ feel of your blog.
 PyBlosxom supports plugins to modify the existing default behavior.
 
 
+Requirements
+============
+
+* Python 2.4 or higher, but not Python 3
+* (optional) Sphinx for building documentation
+* (optional) other things depending on what plugins you install
+
+
 How to install PyBlosxom
 ========================
 
