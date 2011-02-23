@@ -7,9 +7,9 @@ Summary
 
 Syndicating your blog is very important as it provides a mechanism for
 readers of your blog to keep up to date.  Typically this is done with
-newsreader software.  Additionally, there are web-sites that post blog
+newsreader software.  Additionally, there are websites that post blog
 entries from a variety of blogs that have similar content.  Both
-newsreaders and planet-type web-sites need a semantically marked up
+newsreaders and planet-type websites need a semantically marked up
 version of your blog.
 
 Most newsreaders read most of the syndication formats.  So you

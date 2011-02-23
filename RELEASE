@@ -39,7 +39,7 @@
        cd docs/
        make html
 
-11. Push the docs and the new tarball to the web-site.
+11. Push the docs and the new tarball to the website.
 
 12. Update PYPI::
 

@@ -14,7 +14,7 @@ run PyBlosxom for one of a myriad of other reasons.  Static rendering
 allows these people to run PyBlosxom on their local machine, write
 blog entries, render their entire site into HTML, and then use ftp or
 some other file copy method to move the pages up to their static
-web-site.
+website.
 
 PyBlosxom's static rendering allows for incremental building.  It can
 scan your entries, figure out what's changed, and render only the
@@ -180,6 +180,6 @@ to the ``static_dir`` manually before, you will lost them!
 
    A note about other files:
 
-   If your web-site requires more files than just the ones that are rendered 
+   If your website requires more files than just the ones that are rendered 
    by PyBlosxom (images, CSS, ...), then you should copy those over with 
    your shell script as well.

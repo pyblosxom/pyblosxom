@@ -10,10 +10,10 @@ installing and using PyBlosxom with Paste.
 
 This installation assumes you have some understanding of Python Paste.
 If this doesn't sound like you, then you can read up on Paste on
-the `Paste web-site`_ or the `Wikipedia page`_.
+the `Paste website`_ or the `Wikipedia page`_.
 
 
-.. _Paste web-site: http://pythonpaste.org/
+.. _Paste website: http://pythonpaste.org/
 .. _Wikipedia page: http://en.wikipedia.org/wiki/Python_Paste
 
 Dependencies

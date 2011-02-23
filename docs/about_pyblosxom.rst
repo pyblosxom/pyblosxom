@@ -18,7 +18,7 @@ PyBlosxom focuses on three things:
   tools, version control, scripts, grep, ...  for managing your blog.
 
   PyBlosxom can run as a CGI script, WSGI component or you can use it
-  to statically compile your web-site into HTML/XML files.
+  to statically compile your website into HTML/XML files.
 
   Your workflow is your workflow.
 
@@ -105,7 +105,7 @@ Themes:
 * A flavour consists of a set of templates.
 * Flavours are stored in a directory called the *flavourdir*.
 * PyBlosxom comes with several flavours: html, rss20, and atom.
-* The `PyBlosxom web-site`_ maintains a flavour registry for flavours
+* The `PyBlosxom website`_ maintains a flavour registry for flavours
   contributed by people like you.
 * There's more information in the chapter on
   :ref:`Flavours and Templates <flavours-and-templates>`.
@@ -120,10 +120,10 @@ Plugins:
   :ref:`Plugins <using-plugins>`.
 * For more information on writing plugins see
   :ref:`Writing Plugins <writing-plugins>`.
-* The `PyBlosxom web-site`_ maintains a plugin registry for plugins 
+* The `PyBlosxom website`_ maintains a plugin registry for plugins 
   submitted by people like you.
 
-.. _PyBlosxom web-site: http://pyblosxom.bluesock.org/
+.. _PyBlosxom website: http://pyblosxom.bluesock.org/
 
 
 .. _project-details-and-contact:
@@ -131,7 +131,7 @@ Plugins:
 Project details, contact information, and where to go for help
 ==============================================================
 
-**Web-site and documentation**
+**Website and documentation**
 
     http://pyblosxom.bluesock.org/
 

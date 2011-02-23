@@ -18,7 +18,7 @@ page.  These last two shouldn't be blog entries.  Well, if they're not
 blog entries, then how can you have them in your blog?
 
 This plugin solves that problem.  It allows you to have pages in your
-web-site that aren't blog entries that are served up by PyBlosxom.  These
+website that aren't blog entries that are served up by PyBlosxom.  These
 pages can also have plugins.
 
 It looks for urls like::

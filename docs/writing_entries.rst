@@ -224,10 +224,10 @@ formats.
 PyBlosxom allows you to install entry parser plugins which are
 PyBlosxom plugins that implement an entry parser.  These entry parser
 plugins allow you to use other markup formats.  Check the Plugin
-Registry on the `PyBlosxom web-site`_ for other available entry
+Registry on the `PyBlosxom website`_ for other available entry
 parsers.
 
-.. _PyBlosxom web-site: http://pyblosxom.bluesock.org/
+.. _PyBlosxom website: http://pyblosxom.bluesock.org/
 
 Entry parsers can be written by anyone.  The entry parsers that
 currently exist were written by people who needed that functionality.

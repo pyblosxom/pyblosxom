@@ -199,7 +199,7 @@ the comments plugin.
 
 Additionally, there is a chapter in the PyBlosxom manual that
 covers installing and configuring the comments plugin.  The manual
-is on the PyBlosxom web-site: http://pyblosxom.bluesock.org/
+is on the PyBlosxom website: http://pyblosxom.bluesock.org/
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

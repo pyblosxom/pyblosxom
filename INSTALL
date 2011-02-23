@@ -4,15 +4,15 @@
 
 This walks through how to install PyBlosxom.  This documentation is
 available as an ``INSTALL`` file in the git repository, with the
-source tarball and also available on the website_ in the documentation
-section.
+source tarball and also available on the `website`_ in the
+documentation section.
 
 If you see discrepancies between this document and the one on the
-web-site, assume the web-site is more recent!
+website, assume the website is more recent!
 
 If the instructions here don't meet your needs, ask us on the
 pyblosxom-users mailing list or on IRC.  Information for both is on
-the website_.
+the `website`_.
 
 .. _website: http://pyblosxom.bluesock.org/
 
@@ -253,7 +253,7 @@ Deploying
 =========
 
 We use the word "deploy" to cover the steps and setup required to turn
-your blog into a web-site.  This could be any of the following:
+your blog into a website.  This could be any of the following:
 
 1. static rendering where your blog is compiled into a set of HTML pages
 2. running your blog as a CGI program
