@@ -78,23 +78,26 @@ contact page.
 Running ./pyblosxom.cgi doesn't work
 ------------------------------------
 
-First, you should check to see if you have Python (>=2.3) installed on your
-system.  If not, then please install Python.
+First, you should check to see if you have the minimum requirements
+for PyBlosxom on your system.  If not, then please install them.
+They're listed in the :ref:`Requirements section of the Install
+chapter <requirements>`.
 
 If Python is installed on your system, make sure the first line in
 ``pyblosxom.cgi`` points to your Python interpreter.  By default,
-``pyblosxom.cgi`` uses env to execute the Python interpreter.  But in
-some rare systems, /usr/bin/env may doesn't exist.  Or the system may have
-odd environment settings.  In those cases, you may edit the first line to
-point to your Python interpreter directly, e.g.::
+``pyblosxom.cgi`` uses ``env`` to execute the Python interpreter.  But
+in some rare systems, ``/usr/bin/env`` may doesn't exist.  Or the
+system may have odd environment settings.  In those cases, you may
+edit the first line to point to your Python interpreter directly,
+e.g.::
 
-    #!/home/username/bin/python
+    #!/usr/bin/python
 
 Then try running ``./pyblosxom.cgi`` again.
 
 If Python is installed on your system and the first line of
-``pyblosxom.cgi`` is correct, check for permissions issues:
-``pyblosxom.cgi`` is a script---so it needs execute permission in order
+``pyblosxom.cgi`` is correct, check for permissions issues.
+``pyblosxom.cgi`` is a script, so it needs execute permission in order
 to function.  If those aren't set, then fix that and try running
 ``./pyblosxom.cgi`` again.
 
@@ -105,10 +108,13 @@ I see a HTTP 404 error when I try to bring up my blog
 -----------------------------------------------------
 
 When you try to look at your blog and you get a HTTP 404 error, then
-you're using the wrong URL.  Are you futzing with ``.htaccess``?
-Does your server allow you to run CGI scripts?  Do other CGI scripts
-in this directory work?  Does the URL you're trying to use to access
-PyBlosxom look like other URLs that work on your system?
+you're using the wrong URL.  Here are some questions to ask yourself:
+
+* Are you using an ``.htaccess`` file?
+* Does your server allow you to run CGI scripts?
+* Do other CGI scripts in this directory work?
+* Does the URL you're trying to use to access PyBlosxom look like
+  other URLs that work on your system?
 
 
 I see a HTTP 500 error when I try to bring up my blog
@@ -171,6 +177,7 @@ Read the documentation regarding Flavours and Templates to help you out.
 If you're reading this documentation online, then it is 
 :ref:`here <flavours-and-templates>`.
 
+
 I hate writing in HTML!
 -----------------------
 
@@ -204,7 +211,6 @@ Renaming the pyblosxom.cgi script
 
 In the default installation, the PyBlosxom script is named
 ``pyblosxom.cgi``.
-
 
 For a typical user on an Apache installation with user folders turned
 on, PyBlosxom URLs could look like this::

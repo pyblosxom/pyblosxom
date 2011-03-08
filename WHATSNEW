@@ -1,12 +1,32 @@
-===========
- Changelog
-===========
+===================
+ What's new in 1.5
+===================
 
-.. _changelog:
+.. _whatsnew:
 
 
-Changes between 1.4.3 and 1.5
-=============================
+What's new in 1.5 rc3
+=====================
+
+Summary
+-------
+
+It's been a long time since the last release and we've done a lot of
+work on fixing bugs in the plugins, making the documentation better,
+fixing project infrastructure, and fixing bugs in the core code.
+
+FIXME - go through 1.5 notes and split it up into the separate
+relase candidates.
+
+
+What's new in 1.5 rc2
+=====================
+
+
+
+
+What's new in 1.5 rc1
+=====================
 
 Pertinent to users:
 -------------------

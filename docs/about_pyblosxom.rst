@@ -2,6 +2,9 @@
 About PyBlosxom
 ===============
 
+What is PyBlosxom
+=================
+
 PyBlosxom is a lightweight weblog system.  It was originally a Python
 clone of `Blosxom`_ but has since evolved into a weblog system of its
 own reminiscent of `Blosxom`_.
@@ -42,8 +45,8 @@ PyBlosxom is built to let you use existing text-manipulation tools
 without having to build the whole ecology from scratch.
 
 
-Why you wouldn't want to use PyBlosxom
-======================================
+Why you might not want to use PyBlosxom
+=======================================
 
 PyBlosxom is a small open source project and while there is a
 community, it's pretty small.  PyBlosxom's features are great
