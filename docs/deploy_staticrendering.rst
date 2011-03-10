@@ -95,6 +95,10 @@ that contains your ``config.py`` file.  For example::
 
    % pyblosxom-cmd staticrender --config /home/joe/blog/
 
+Or, if the location of your ``config.py`` file is on your
+``$PYTHONPATH`` then you can run ``pyblosxom-cmd staticrender`` from
+any directory without giving the ``--config`` option.
+
 Lots of output will appear as PyBlosxom figures out all the urls that need 
 to be rendered and then renders them.
 
