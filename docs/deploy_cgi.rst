@@ -84,7 +84,7 @@ chapter <requirements>`.
 If Python is installed on your system, make sure the first line in
 ``pyblosxom.cgi`` points to your Python interpreter.  By default,
 ``pyblosxom.cgi`` uses ``env`` to execute the Python interpreter.  But
-in some rare systems, ``/usr/bin/env`` may doesn't exist.  Or the
+in some rare systems, ``/usr/bin/env`` doesn't exist.  Or the
 system may have odd environment settings.  In those cases, you may
 edit the first line to point to your Python interpreter directly,
 e.g.::
