@@ -34,9 +34,6 @@ The top of the file looks something like this::
     # python path:
     #sys.path.append("/path/to/directory/")
 
-Uncomment the ``import cgitb; cgitb.enable()`` line to help you get
-PyBlosxom working.
-
 Uncomment the ``sys.path.append("/path/to/directory/")`` line and
 make sure the path being appended is the directory that your ``config.py``
 file is in.
@@ -61,8 +58,9 @@ If that works, then try to run the CGI script from your web-browser.
 The url is dependent on where you put the ``pyblosxom.cgi`` script and
 how CGI works on your web-server.
 
-If that works, then make sure to comment out the cgitb line in your
-``pyblosxom.cgi`` script.
+If that works, then make sure to turn off errors and debugging
+information by commenting out the ``import cgitb; cgitb.enable()`` line 
+near the top of the ``pyblosxom.cgi`` file.
 
 
 Trouble-shooting
