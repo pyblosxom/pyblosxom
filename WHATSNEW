@@ -36,7 +36,8 @@ Pertinent to users:
 2. PyBlosxom now requires Python 2.3.  We've removed the _logging
    module that provided logging facilities to pre-Python 2.3 versions.
 
-3. To install PyBlosxom on your system, you will now need setuptools.
+3. You can now install PyBlosxom on your system with pip or
+   easy_install.
 
 4. The ``pyblosxom.cgi`` file has changed significantly---if you're
    using it you should grab the new one that comes with this
