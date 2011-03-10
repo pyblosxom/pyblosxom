@@ -28,24 +28,24 @@ Configuring static rendering
 
 These are the instructions for configuring static rendering in PyBlosxom.
 
-1. **Add ``static_dir`` to your ``config.py`` file.**
+1. **Uncomment ``static_dir`` in your ``config.py`` file.**
 
    This is the directory we will save all the static output.  The value of 
    ``static_dir`` should be a string representing the **absolute path** of the 
    output directory for static rendering.
 
-2. **Add ``static_flavours`` to your ``config.py`` file.**
+2. **Uncomment ``static_flavours`` in your ``config.py`` file.**
 
    The value of ``static_flavours`` should be a list of strings representing 
    all the flavours that should be rendered.  This defaults to 
    ``[ "html" ]``.
 
-3. **Add ``static_monthnames`` to your ``config.py`` file.**
+3. **Uncomment ``static_monthnames`` in your ``config.py`` file.**
 
    The value (either ``1`` or ``0``) will determine if you want month 
    names (such as ``April``) in the static pages.
 
-4. **Add ``static_monthnumbers`` to your ``config.py`` file.**
+4. **Uncomment ``static_monthnumbers`` in your ``config.py`` file.**
 
    The value (either ``1`` or ``0``) will determine if you want month 
    numbers (such as ``04`` for ``April``) in the static pages.
@@ -81,15 +81,19 @@ of new blog entries or updated blog entries (see "incremental rendering").
 Render everything
 -----------------
 
-Render all pages in your blog::
+To render all pages in your blog, ``cd`` into the directory that
+contains your ``config.py`` file and run::
 
-   % pyblosxom-cmd staticrender --config <config-file>
+   % pyblosxom-cmd staticrender
 
+Or from any directory run::
 
-where ``<config-file>`` is replaced by the **absolute full path** of your
-``config.py`` file.  For example::
+   % pyblosxom-cmd staticrender --config </path/to/blog_dir>
 
-   % pyblosxom-cmd staticrender --config /home/joe/blog/config.py
+where ``</path/to/blog_dir>`` is replaced by the path of the directory
+that contains your ``config.py`` file.  For example::
+
+   % pyblosxom-cmd staticrender --config /home/joe/blog/
 
 Lots of output will appear as PyBlosxom figures out all the urls that need 
 to be rendered and then renders them.
@@ -98,15 +102,17 @@ to be rendered and then renders them.
 Incremental rendering
 ---------------------
 
-We have incremental rendering which will find all the entries that have 
-changed since we rendered them and then re-render them.  It does this by 
-comparing the mtime on the entry file with the mtime on the rendered file.
+To find all the entries that have changed since you last rendered
+them and then re-render just those entries, do::
 
-Incremental static rendering works like this::
+   % pyblosxom-cmd staticrender --config </path/to/blog_dir> --incremental
 
-   % pyblosxom-cmd staticrender --config <config-file> --incremental
+Again the ``</path/to/blog_dir>`` must be the path of the directory
+that contains your ``config.py`` file.
 
-Again the ``<config-file>`` must be in **absolute full path**.
+Incremental static rendering works by comparing the mtime of the
+entry file with the mtime of the rendered file.
+
 
 
 Rendering other URIs
@@ -137,14 +143,6 @@ for my main page, I would set it like this::
 Pitfalls
 ============
 
-- You should use **absolute path** when specifying ``config.py`` path when
-  invoking ``pyblosxom-cmd``, relative path *won't work*.  
-  
-- Also, ``static_dir``
-  in config.py must be in **absolute path** and the directory name must end
-  with ``/``.  For example, ``/var/www`` will not work.  You should use
-  ``/var/www/`` instead.
-
 - Both rendering everything and incremental rendering *won't* remove outdated
   files.
 
@@ -162,7 +160,7 @@ a shell script like this::
 
    #!/bin/bash 
 
-   CONFIG=<path to config.py here>
+   CONFIG=<path to directory containing config.py here>
    STATIC_DIR=<your static dir here>
  
    pyblosxom-cmd staticrender --config ${CONFIG}
@@ -173,7 +171,7 @@ That'll re-render everything, then delete any files in your static
 dir that are older than 30 minutes in case you moved entries from 
 one category to another or deleted an entry or something along those
 lines.  Be careful.  If you have copied other files (CSS, images, etc)
-to the ``static_dir`` manually before, you will lost them!
+to the ``static_dir`` manually before, you will lose them!
 
 
 .. Note::
