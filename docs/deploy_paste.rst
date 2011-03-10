@@ -32,11 +32,11 @@ Deployment for testing
 
 Create a new blog by doing::
 
-    pyblosxom-cmd create ./blog
+    pyblosxom-cmd create <BLOG_DIR>
 
 Then do::
 
-    cd ./blog/
+    cd <BLOG_DIR>
     paster serve blog.ini
 
 The ``paster`` script will print the URL for your blog on the command
