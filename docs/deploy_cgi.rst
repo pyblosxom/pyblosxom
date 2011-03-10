@@ -122,19 +122,9 @@ At this point, running ``./pyblosxom.cgi`` at the command prompt
 should work fine.  If you haven't done that and you're busy
 trouble-shooting, go back and review the deployment instructions.
 
-When you try to look at your blog in a web-browser and get a HTTP 500
-error, the first thing you should do is uncomment the line in
-``pyblosxom.cgi`` that looks like this::
-
-    #import cgitb; cgitb.enable()
-
-so that it looks like this::
-
-    import cgitb; cgitb.enable()
-
-Then refresh the page in your browser.  If the problem is with
-PyBlosxom and not your web-server, then you should see a pretty
-traceback that will help you figure out what the specific problem is.
+If the problem is with PyBlosxom and not your web-server, then you
+should see a pretty traceback that will help you figure out what the
+specific problem is.
 
 If it doesn't make any sense to you, you can copy and paste that into
 an email to the pyblosxom-users mailing list and we're in a better
