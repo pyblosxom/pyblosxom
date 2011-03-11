@@ -12,23 +12,23 @@ If you install any plugins, those plugins may ask you to set
 additional variables in your ``config.py`` file--those variables will
 not be documented in this file.
 
-Additionally, any variables you set in ``config.py`` will be available
-in your templates.  This is useful for allowing you to centralize any
-configuration for your blog into your ``config.py`` file and use it in
-templates and other places.  For example, you could move all your
-media files (JPEG images, GIF images, CSS, ...) into a directory on
-your server to be served by Apache and then set the variable
-``$media_url`` to the directory with media files and use that in your
-templates.
+You can also set your own variables, you can put any ``py["key"] =
+value`` statements (where *key* is the configuration property name
+and *value* is the value) that you want in ``config.py``. If the
+*value* is a string, it must be enclosed in quotes.
 
-If there are variables that are listed here that aren't in your
-``config.py`` file, you can add them yourself.  The format is::
+All configuration variables in ``config.py`` are available for use in
+your flavour templates.  This is useful for allowing you to
+centralize any configuration for your blog into your ``config.py``
+file and use it in templates and other places.  For example, you
+could move all your media files (JPEG images, GIF images, CSS, ...)
+into a directory on your server to be served by Apache and then set
+the variable ``$media_url`` to the directory with media files and
+use that in your templates.
 
-    py["key"] = value
-
-where *key* is the configuration property name and *value* is the
-value.  If the *value* is a string, it must be enclosed in quotes.
-
+If there are any variables listed below that aren't in your
+``config.py`` file, you can simply add them to the file yourself
+using the ``py["key"] = value`` format.
 
 Configuration variables
 =======================
@@ -315,7 +315,7 @@ Or if your blog covered development on PyBlosxom, your
    which indicates that the next line is a continuation of the current
    one.
 
-   Additionally, you can use """ ... """ and ''' ... ''' if you like.
+   Additionally, you can use ``""" ... """`` and ``''' ... '''`` if you like.
 
 
 blog_email
