@@ -13,7 +13,7 @@ Deployment
 ==========
 
 Copy the ``pyblosxom.cgi`` file from the blog directory (the directory
-which you created with ``pyblosxom-cmd creat ./blog/``) into your CGI directory.
+which you created with ``pyblosxom-cmd create ./blog/``) into your CGI directory.
 
 Edit the ``pyblosxom.cgi`` file.
 
