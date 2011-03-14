@@ -2,76 +2,45 @@
 Configuring PyBlosxom
 =====================
 
-Summary
-=======
+You configure a PyBlosxom blog by setting configuration variables in a
+simple Python file, ``config.py``. Each PyBlosxom blog has its own
+``config.py`` file. This chapter documents the default ``config.py``
+variables. Some of these are required, others are optional.
 
-This is a list of configuration variables in ``config.py``.  This list
-is not comprehensive!
+Each configuration variable is set with a line like::
 
-If you install any plugins, those plugins may ask you to set
-additional variables in your ``config.py`` file--those variables will
-not be documented in this file.
+    py["blog_title"] = "Another pyblosxom blog"
 
-You can also set your own variables, you can put any ``py["key"] =
-value`` statements (where *key* is the configuration property name
-and *value* is the value) that you want in ``config.py``. If the
-*value* is a string, it must be enclosed in quotes.
+where *blog_title* is the name of the configuration variable and
+*"Another pyblosxom blog"* is its value. Most configuration values are
+strings (and must be enclosed in quotes), but some are lists, numbers or
+other types of values.
 
-All configuration variables in ``config.py`` are available for use in
-your flavour templates.  This is useful for allowing you to
-centralize any configuration for your blog into your ``config.py``
-file and use it in templates and other places.  For example, you
-could move all your media files (JPEG images, GIF images, CSS, ...)
-into a directory on your server to be served by Apache and then set
-the variable ``$media_url`` to the directory with media files and
-use that in your templates.
+If you install any PyBlosxom plugins those plugins may ask you to set
+additional variables in your ``config.py`` file. Those variables will be
+documented in the documentation that comes with the plugin or at the top
+of the plugin's source code file. Additional plugin variables will not
+be documented here.
+
+You can add your own personal configuration variables to ``config.py``.
+You can put any ``py["name"] = value`` statements that you want in
+``config.py``. You can then refer to your configuration variables
+further down in your ``config.py`` file and in your flavour templates.
+This is useful for allowing you to centralize any configuration for your
+blog into your ``config.py`` file.
+
+For example, you could move all your media files (JPEG images, GIF
+images, CSS, ...) into a directory on your server to be served by Apache
+and then set the config.py variable ``py["media_url"]`` to the directory
+with media files and use ``$media_url`` to refer to this URL in your
+flavour templates.
 
 If there are any variables listed below that aren't in your
-``config.py`` file, you can simply add them to the file yourself
-using the ``py["key"] = value`` format.
+``config.py`` file, you can simply add them to the file yourself using
+the ``py["key"] = value`` format.
 
-Configuration variables
-=======================
-
-base_url
---------
-
-**REQUIRED**: no
-
-**DATATYPE**: string
-
-**DEFAULT VALUE**: calculated based on HTTP server variables
-
-This is the base url for your blog.  If someone were to type this url
-into their browser, then they would see the main index page for your
-blog.
-
-For example, if Joe Smith put his ``pyblosxom.cgi`` script into a
-cgi-bin directory and he was using Apache, his base_url might look
-like this:
-
-   py["base_url"] = "http://joesmith.net/~joe/cgi-bin/pyblosxom.cgi"
-
-However, it's common that this can be determined by PyBlosxom by
-looking at the HTTP environment variables--so if you're not doing any
-url re-writing, it's possible that PyBlosxom can correctly determine
-the url and you won't have to set the base_url variable at all.
-
-If Joe got tired of that long url, Joe might set up some url
-re-writing on my web-server so that the base_url looked like this:
-
-   py["base_url"] = "http://joesmith.net/~joe/blog"
-
-
-.. Note::
-
-   Your base_url property should NOT have a trailing slash.
-
-.. Note::
-
-   If you use mod_rewrite rules or some other url rewriting system on
-   your web-server, then you'll want to set this property.
-
+Codebase configuration
+======================
 
 codebase
 --------
@@ -80,19 +49,19 @@ codebase
 
 **DATATYPE**: string
 
-**DEFAULT VALUE**: no default set
+**DEFAULT VALUE**: no default
 
-This is the full path to where the PyBlosxom directory is on your
-system.
+If you have installed PyBlosxom on your web server using your
+distribution's package manager or Python setuptools then you don't need
+to set the codebase variable.
 
-If you have installed PyBlosxom as a Python library by running
-``python setup.py install`` then you don't need to set the codebase
-variable.
-
-If you have NOT installed PyBlosxom as a Python library, then you DO
-need to set the codebase variable.  Otherwise the Python interpreter
-won't be able to find the PyBlosxom codebase and your blog will not
-work.
+If you cannot install PyBlosxom on your web server then you can save the
+PyBlosxom source code to a location on your server and use the codebase
+setting instead. The codebase setting tells the Python interpreter where
+to find the PyBlosxom codebase. This should be the full path to where
+the PyBlosxom directory is on your system. It should be the path to the
+directory that holds the "Pyblosxom" directory (note the case--uppercase
+P lowercase b!).
 
 For example, if you untarred PyBlosxom into
 ``/home/joe/pyblosxom-1.5/``, then the Pyblosxom (uppercase P and
@@ -101,6 +70,204 @@ you would set your codebase variable like this::
 
    py["codebase"] = "/home/joe/pyblosxom-1.5/"
 
+Blog configuration
+==================
+
+blog_title
+----------
+
+**REQUIRED**: yes
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: "" (no default value--you must set this)
+
+This is the title of your blog.  Typically this should be short and is
+accompanied by a longer summary of your blog which is set in
+``blog_description``.
+
+For example, if Joe were writing a blog about cooking, he might title
+his blog::
+
+   py["blog_title"] = "Joe's blog about cooking"
+
+blog_description
+----------------
+
+**REQUIRED**: no
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: ""
+
+This is the description or byline of your blog.  Typically this is a
+phrase or a sentence that summarizes what your blog covers.
+
+If you were writing a blog about restaurants in the Boston area, you
+might have a ``blog_description`` of::
+
+   py["blog_description"] = "Critiques of restaurants in the Boston area"
+
+
+Or if your blog covered development on PyBlosxom, your
+``blog_description`` might go like this::
+
+   py["blog_description"] = "Ruminations on the development of " + \
+                            "PyBlosxom and related things"
+
+
+.. Note::
+
+   Remember that the ``config.py`` file is a Python code file just
+   like any other Python code file.  Splitting long lines into shorter
+   lines can be done with string concatenation and the ``\`` character
+   which indicates that the next line is a continuation of the current
+   one.
+
+   Alternatively, you could wrap a multi-line string in triple quotes:
+   ``""" ... """`` or ``''' ... '''``.
+
+blog_author
+-----------
+
+**REQUIRED**: no
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: ""
+
+This is the name of the author that you want to appear on your blog.
+Very often this is your name or your pseudonym.
+
+If Joe Smith had a blog, he might set his blog_author to "Joe Smith"::
+
+   py["blog_author"] = "Joe Smith"
+
+
+If Joe Smith had a blog, but went by the pseudonym "Magic Rocks", he
+might set his blog_author to "Magic Rocks"::
+
+   py["blog_author"] = "Magic Rocks"
+
+blog_email
+----------
+
+**REQUIRED**: no
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: ""
+
+This is the email address you want associated with your blog.
+
+For example, say Joe Smith had an email address ``joe@joesmith.net``
+and wanted that associated with his blog.  Then he would set the email
+address as such::
+
+   py["blog_email"] = "joe@joesmith.net"
+
+blog_rights
+-----------
+
+**REQUIRED**: no
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: ""
+
+These are the rights you give to others in regards to the content on
+your blog. Generally this is the copyright information, for example::
+
+    py["blog_rights"] = "Copyright 2005 Joe Bobb"
+
+This is used in the Atom and RSS 2.0 feeds. Leaving this blank or not
+filling it in correctly could result in a feed that doesn't validate.
+
+blog_language
+-------------
+
+**REQUIRED**: yes
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: no default value--you must set this
+
+This is the primary language code for your blog.
+
+For example, English users should use ``en``::
+
+   py["blog_language"] = "en"
+
+This gets used in the RSS flavours.
+
+Refer to `ISO 639-2`_ for language codes.  Many systems use two-letter
+ISO 639-1 codes supplemented by three-letter ISO 639-2 codes when no
+two-letter code is applicable.  Often ISO 639-2 is sufficient.  If you use
+very special languages, you may want to refer to `ISO 639-3`_, which is a
+super set of ISO 639-2 and contains languages used thousands of years ago.
+
+.. _ISO 639-2: http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
+.. _ISO 639-3: http://www.sil.org/iso639-3/
+
+blog_encoding
+-------------
+
+**REQUIRED**: YES
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: no default value--you must set this
+
+This is the character encoding of your blog.
+
+For example, if your blog was encoded in utf-8, then you would set the
+``blog_encoding`` to::
+
+   py["blog_encoding"] = "utf-8"
+
+
+.. Note::
+
+   This value must be a valid character encoding value.  In general,
+   if you don't know what to set your encoding to then set it to
+   ``utf-8``.
+
+This value should be in the meta section of any HTML- or XHTML-based flavours
+and it's also in the header for any feed-based flavours.  An improper
+encoding will gummy up some/most feed readers and web-browsers.
+
+W3C has a nice `tutorial on encoding`_.  You may refer to
+`IANA charset registry`_ for a complete list of encoding names.
+
+
+.. _tutorial on encoding: http://www.w3.org/International/tutorials/tutorial-char-enc/
+.. _IANA charset registry: http://www.iana.org/assignments/character-sets
+
+locale
+------
+
+**REQUIRED**: no
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: "C"
+
+PyBlosxom uses the locale config variable to adjust the values for
+month names and dates.
+
+In general, you don't need to set this unless you know you're not
+using en_US or en_UK.
+
+A listing of language codes is at
+http://ftp.ics.uci.edu/pub/ietf/http/related/iso639.txt
+
+A listing of country codes is at:
+http://userpage.chemie.fu-berlin.de/diverse/doc/ISO_3166.html
+
+For example, if you wanted to set the locale to the Dutch language in
+the Netherlands you'd set locale to::
+
+   py["locale"] = "nl_NL.UTF-8"
 
 datadir
 -------
@@ -153,6 +320,37 @@ The depth setting determines how many levels deep in the directory
 * ...
 * *n* - *n* levels deep
 
+ignore_directories
+------------------
+
+**REQUIRED**: no
+
+**DATATYPE**: list of strings
+
+**DEFAULT VALUE**: [ ]
+
+The ``ignore_directories`` variable allows you to specify which
+directories in your datadir should be ignored by PyBlosxom.
+
+This defaults to an empty list (i.e. PyBlosxom will not ignore any
+directories).
+
+For example, if you use CVS to manage the entries in your datadir, then
+you would want to ignore all CVS-related directories like this::
+
+   py["ignore_directories"] = [ "CVS" ]
+
+
+If you were using CVS and you also wanted to store drafts of entries
+you need to think about some more in a drafts directory in your
+datadir, then you could set your ``ignore_directories`` like this::
+
+   py["ignore_directories"] = [ "drafts", "CVS" ]
+
+
+This would ignore all directories named "CVS" and "drafts" in your
+datadir tree.
+
 flavourdir
 ----------
 
@@ -193,8 +391,6 @@ For example, if you want to put your entries in
 
       py["flavourdir"] = "e:/blog/flavours/"
 
-
-
 default_flavour
 ---------------
 
@@ -223,229 +419,82 @@ For example, the following will all use the "joy" flavour::
    http://joesmith.net/blog/movies/
    http://joesmith.net/blog/movies/supermanreturns
 
-
-ignore_directories
-------------------
-
-**REQUIRED**: no
-
-**DATATYPE**: list of strings
-
-**DEFAULT VALUE**: [ ]
-
-The ``ignore_directories`` variable allows you to specify which
-directories in your datadir should be ignored by PyBlosxom.
-
-This defaults to an empty list (i.e. PyBlosxom will not ignore any
-directories).
-
-For example, if you use CVS to manage the entries in your datadir, then
-you would want to ignore all CVS-related directories like this::
-
-   py["ignore_directories"] = [ "CVS" ]
-
-
-If you were using CVS and you also wanted to store drafts of entries
-you need to think about some more in a drafts directory in your
-datadir, then you could set your ``ignore_directories`` like this::
-
-   py["ignore_directories"] = [ "drafts", "CVS" ]
-
-
-This would ignore all directories named "CVS" and "drafts" in your
-datadir tree.
-
-
-Blog metadata variables
-=======================
-
-blog_author
+num_entries
 -----------
 
 **REQUIRED**: no
 
-**DATATYPE**: string
+**DATATYPE**: int
 
-**DEFAULT VALUE**: ""
+**DEFAULT VALUE**: 5
 
-This is the name of the author that you want to appear on your blog.
-Very often this is your name or your pseudonym.
+The ``num_entries`` variable specifies the number of entries that show
+up on your home page and other category index pages.  It doesn't
+affect the number of entries that show up on date-based archive pages.
 
-If Joe Smith had a blog, he might set his blog_author to "Joe Smith"::
+It defaults to 5 which means "show at most 5 entries".
 
-   py["blog_author"] = "Joe Smith"
+If you set it to 0, then it will show all entries that it can.
 
+For example, if you wanted to set ``num_entries`` to 10 so that 10
+entries show on your category index pages, you sould set it like
+this::
 
-If Joe Smith had a blog, but went by the pseudonym "Magic Rocks", he
-might set his blog_author to "Magic Rocks"::
+   py["num_entries"] = 10
 
-   py["blog_author"] = "Magic Rocks"
-
-
-blog_description
-----------------
-
-**REQUIRED**: no
-
-**DATATYPE**: string
-
-**DEFAULT VALUE**: ""
-
-This is the description or byline of your blog.  Typically this is a
-phrase or a sentence that summarizes what your blog covers.
-
-If you were writing a blog about restaurants in the Boston area, you
-might have a ``blog_description`` of::
-
-   py["blog_description"] = "Critiques of restaurants in the Boston area"
-
-
-Or if your blog covered development on PyBlosxom, your
-``blog_description`` might go like this::
-
-   py["blog_description"] = "Ruminations on the development of " + \
-                            "PyBlosxom and related things"
-
-
-.. Note::
-
-   Remember that the ``config.py`` file is a Python code file just
-   like any other Python code file.  Splitting long lines into shorter
-   lines can be done with string concatenation and the ``\`` character
-   which indicates that the next line is a continuation of the current
-   one.
-
-   Additionally, you can use ``""" ... """`` and ``''' ... '''`` if you like.
-
-
-blog_email
-----------
+base_url
+--------
 
 **REQUIRED**: no
 
 **DATATYPE**: string
 
-**DEFAULT VALUE**: ""
+**DEFAULT VALUE**: calculated based on HTTP server variables
 
-This is the email address you want associated with your blog.
+This is the base url for your blog.  If someone were to type this url
+into their browser, then they would see the main index page for your
+blog.
 
-For example, say Joe Smith had an email address ``joe@joesmith.net``
-and wanted that associated with his blog.  Then he would set the email
-address as such::
+For example, if Joe Smith put his ``pyblosxom.cgi`` script into a
+cgi-bin directory and he was using Apache, his base_url might look
+like this::
 
-   py["blog_email"] = "joe@joesmith.net"
+   py["base_url"] = "http://joesmith.net/~joe/cgi-bin/pyblosxom.cgi"
 
+However, it's common that this can be determined by PyBlosxom by
+looking at the HTTP environment variables--so if you're not doing any
+url re-writing, it's possible that PyBlosxom can correctly determine
+the url and you won't have to set the base_url variable at all.
 
-blog_encoding
--------------
+If Joe got tired of that long url, Joe might set up some url
+re-writing on my web-server so that the base_url looked like this::
 
-**REQUIRED**: YES
-
-**DATATYPE**: string
-
-**DEFAULT VALUE**: no default value--you must set this
-
-This is the character encoding of your blog.
-
-For example, if your blog was encoded in utf-8, then you would set the
-``blog_encoding`` to::
-
-   py["blog_encoding"] = "utf-8"
+   py["base_url"] = "http://joesmith.net/~joe/blog"
 
 
 .. Note::
 
-   This value must be a valid character encoding value.  In general,
-   if you don't know what to set your encoding to then set it to
-   ``utf-8``.
+   Your base_url property should *not* have a trailing slash.
 
-This value should be in the meta section of any HTML- or XHTML-based flavours
-and it's also in the header for any feed-based flavours.  An improper
-encoding will gummy up some/most feed readers and web-browsers.
+.. Note::
 
-W3C has a nice `tutorial on encoding`_.  You may refer to
-`IANA charset registry`_ for a complete list of encoding names.
+   If you use mod_rewrite rules or some other url rewriting system on
+   your web-server, then you'll want to set this property.
 
-
-.. _tutorial on encoding: http://www.w3.org/International/tutorials/tutorial-char-enc/
-.. _IANA charset registry: http://www.iana.org/assignments/character-sets
-
-
-blog_language
--------------
-
-**REQUIRED**: yes
-
-**DATATYPE**: string
-
-**DEFAULT VALUE**: no default value--you must set this
-
-This is the primary language code for your blog.
-
-For example, English users should use ``en``::
-
-   py["blog_language"] = "en"
-
-This gets used in the RSS flavours.
-
-
-Refer to `ISO 639-2`_ for language codes.  Many systems use two-letter
-ISO 639-1 codes supplemented by three-letter ISO 639-2 codes when no
-two-letter code is applicable.  Often ISO 639-2 is sufficient.  If you use
-very special languages, you may want to refer to `ISO 639-3`_, which is a
-super set of ISO 639-2 and contains languages used thousands of years ago.
-
-.. _ISO 639-2: http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
-.. _ISO 639-3: http://www.sil.org/iso639-3/
-
-
-blog_title
-----------
-
-**REQUIRED**: yes
-
-**DATATYPE**: string
-
-**DEFAULT VALUE**: no default value--you must set this
-
-This is the title of your blog.  Typically this should be short and is
-accompanied by a longer summary of your blog which is set in
-``blog_description``.
-
-For example, if Joe were writing a blog about cooking, he might title
-his blog::
-
-   py["blog_title"] = "Joe's blog about cooking"
-
-
-locale
+parser
 ------
 
 **REQUIRED**: no
 
 **DATATYPE**: string
 
-**DEFAULT VALUE**: "C"
+**DEFAULT VALUE**: "plain"
 
-FIXME - this needs to be verified
+The default entry parser that PyBlosxom will use to parse this blog's
+entry files. See :ref:`Entry parsers`.
 
-PyBlosxom uses the locale config variable to adjust the values for
-month names and dates.
-
-In general, you don't need to set this unless you know you're not
-using en_US or en_UK.
-
-A listing of language codes is at
-http://ftp.ics.uci.edu/pub/ietf/http/related/iso639.txt
-
-A listing of country codes is at:
-http://userpage.chemie.fu-berlin.de/diverse/doc/ISO_3166.html
-
-For example, if you wanted to set the locale to the Dutch language in
-the Netherlands you'd set locale to::
-
-   py["locale"] = "nl_NL.UTF-8"
-
+Logging configuration
+=====================
 
 log_file
 --------
@@ -468,7 +517,6 @@ For example, if you wanted PyBlosxom to log messages to
 to::
 
    py["log_file"] = "/home/joe/blog/logs/pyblosxom.log"
-
 
 If you were on Windows, then you might set it to::
 
@@ -499,7 +547,7 @@ log_level
 
 This sets the log level for logging messages.
 
-If you set the ``log_level`` to ``critical``, then ONLY critical
+If you set the ``log_level`` to ``critical``, then *only* critical
 messages are logged.
 
 If you set the ``log_level`` to ``error``, then error and critical
@@ -520,7 +568,6 @@ being processed::
 
    py['log_level'] = "info"
 
-
 log_filter
 ----------
 
@@ -540,7 +587,6 @@ name == plugin name.
 
 PyBlosxom logs its messages to a channel named "root".
 
-
 .. Warning::
 
    A warning about omitting root:
@@ -548,45 +594,14 @@ PyBlosxom logs its messages to a channel named "root".
    If you use ``log_filter`` and don't include "root", then PyBlosxom
    messages will be silently ignored!
 
-
 For example, if you wanted to filter log messages to "root" and
 messages from the "comments" plugin, then you would set ``log_filter``
 like this::
 
    py["log_filter"] = ["root", "comments"]
 
-
-FIXME - is the channel name == plugin name done automatically by
-PyBlosxom or is the channel name specified when logging?
-
-
-
-num_entries
------------
-
-**REQUIRED**: no
-
-**DATATYPE**: int
-
-**DEFAULT VALUE**: 5
-
-The ``num_entries`` variable specifies the number of entries that show
-up on your home page and other category index pages.  It doesn't
-affect the number of entries that show up on date-based archive pages.
-
-It defaults to 5 which means "show at most 5 entries".
-
-If you set it to 0, then it will show all entries that it can.
-
-For example, if you wanted to set ``num_entries`` to 10 so that 10
-entries show on your category index pages, you sould set it like
-this::
-
-   py["num_entries"] = 10
-
-
-Plugin variables
-================
+Plugin Configuration
+====================
 
 plugin_dirs
 -----------
@@ -595,14 +610,11 @@ plugin_dirs
 
 **DATATYPE**: list of strings
 
-**DEFAULT VALUE**: []
+**DEFAULT VALUE**: [] (an empty list, do not load any plugins)
 
-The ``plugin_dirs`` variable allows you to specify which directories 
-have plugins that you want to load.  You can list as many plugin 
-directories as you want.
-
-This defaults to ``[]`` which is an empty list which means that you don't
-plan on loading any plugins.
+The ``plugin_dirs`` variable tells PyBlosxom which directories to look
+in for plugin files to load. You can list as many plugin directories as
+you want.
 
 For example, if you stored your PyBlosxom plugins in
 ``/home/joe/blog/plugins/``, then you would set ``plugin_dirs`` like
@@ -616,7 +628,6 @@ this::
    have a tree of plugin directories that have plugins in them, you'll
    need to specify each directory in the tree.
 
-
 load_plugins
 ------------
 
@@ -626,21 +637,17 @@ load_plugins
 
 **DEFAULT VALUE**: no default value set
 
-There are two ways for PyBlosxom to load plugins:
+If there is no ``load_plugins`` setting in ``config.py`` PyBlosxom loads
+all plugins it finds in the directories specified by ``plugins_dir`` in
+alphanumeric order by filename. Specifying ``load_plugins`` causes
+PyBlosxom to load only the plugins you name and in in the order you name
+them.
 
-The first is the default way where PyBlosxom loads all plugins it
-finds in the directories specified by ``plugins_dir`` in alphanumeric
-order by filename.
+The value of ``load_plugins`` should be a list of strings where each
+string is the name of a plugin module (i.e. the filename without the .py
+at the end).
 
-The second is by specifying a ``load_plugins`` key here.  Specifying
-``load_plugins`` will cause PyBlosxom to load only the plugins you name 
-and in in the order you name them.
-
-The ``load_plugins`` key is a list of strings where each string is
-the name of a plugin module (i.e. the filename without the .py at
-the end).
-
-If you specify an empty list, then this will load no plugins.
+If you specify an empty list no plugins will be loaded.
 
 For example, if you had::
 
@@ -658,21 +665,13 @@ in your ``config.py`` file and there were three plugins in
             +- plugin_b.py
             +- plugin_c.py
 
-then PyBlosxom will load all three plugins in alphabetical order by 
+then PyBlosxom would load all three plugins in alphabetical order by 
 filename: ``plugin_a``, then ``plugin_b``, then ``plugin_c``.
 
 If you wanted PyBlosxom to only load ``plugin_a`` and ``plugin_c``, then you
 would set ``load_plugins`` to::
 
    py["load_plugins"] = ["plugin_a", "plugin_c"]
-
-
-.. Note::
-
-   ``load_plugins`` should contain a list of strings where each string
-   is a Python module--not a filename.  So don't add the ``.py`` to
-   the end of the module name!
-
 
 .. Note::
 
@@ -681,7 +680,6 @@ would set ``load_plugins`` to::
    plugins did what when you have problems.  It also reduces the
    potential for accidentally loading plugins you didn't intend to
    load.
-
 
 .. Note::
 
@@ -697,3 +695,51 @@ would set ``load_plugins`` to::
    plugins.  This should be specified in the documentation that comes
    with those plugins.
 
+Caching Configuration
+---------------------
+
+Enabling caching by setting the ``cacheDriver`` and ``cacheConfig``
+variables in ``config.py`` speeds up rendering of your PyBlosxom pages.
+
+cacheDriver
+-----------
+
+**REQUIRED**: no
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: ""
+
+PyBlosxom has multiple cache mechanisms. Look at the source files in
+``Pyblosxom/cache`` to see what mechanisms are available, then set
+``cacheDriver`` to the cache mechanism that you want. For example::
+
+    py["cacheDriver"] = "entrypickle"
+
+cacheConfig
+-----------
+
+**REQUIRED**: no
+
+**DATATYPE**: string
+
+**DEFAULT VALUE**: ""
+
+Read the top of the source code file in ``Pyblosxom/cache`` for your
+selected cache driver (e.g. ``entrypickle.py``) to see how to set the
+``cacheConfig`` variable for it. For example:
+
+    py["cacheConfig"] = "/path/to/a/cache/directory"
+.. Note::
+
+   ``load_plugins`` should contain a list of strings where each string
+   is a Python module--not a filename.  So don't add the ``.py`` to
+   the end of the module name!
+
+
+Static Rendering Configuration
+------------------------------
+
+If you are using static rendering to deploy your PyBlosxom blog you need
+to set some additional configuration variables in your ``config.py``
+file, see :ref:`static-rendering`.

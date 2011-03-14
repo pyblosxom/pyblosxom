@@ -198,6 +198,7 @@ You can see this in the following example of output::
    it'll reset the mtime of the file back to what it was.
 
 
+.. _Entry parsers:
 
 Entry parsers
 =============
