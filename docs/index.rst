@@ -12,6 +12,7 @@ Contents:
 
    introduction
    about_pyblosxom
+   license
    whatsnew
    whatsnewolder
    install

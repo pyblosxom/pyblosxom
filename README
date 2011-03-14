@@ -1,28 +1,147 @@
-==================
- PyBlosxom Readme
-==================
+=================
+ About PyBlosxom
+=================
 
-Summary
-=======
+What is PyBlosxom
+=================
 
-PyBlosxom is a file-based blogging system in the spirit of Blosxom.
-PyBlosxom uses directory tree to represent the category hierarchy.
-All entries in a PyBlosxom blog are text files where the first line is
-the title of the blog entry and the rest is the body of the entry.
+PyBlosxom is a lightweight weblog system.  It was originally a Python
+clone of `Blosxom`_ but has since evolved into a weblog system of its
+own reminiscent of `Blosxom`_.
 
-PyBlosxom isn't for everyone.
+.. _Blosxom: http://www.blosxom.com/
 
-PyBlosxom runs as a CGI script and WSGI application.
+PyBlosxom focuses on three things:
 
-PyBlosxom can run as a "static renderer" and compile your blog into
-HTML pages for any web server.  This is a good solution for blogs with
-millions of entries or servers that are really slow or don't have a
-way to run applications.
+**simplicity**
 
-PyBlosxom supports templates (called flavours) to change the look and
-feel of your blog.
+  PyBlosxom stores all data on the file system in plain text files.
+  This allows you to use any text editor to create, update and
+  manipulate entries.  You can also use existing text-manipulation
+  tools, version control, scripts, grep, ...  for managing your blog.
 
-PyBlosxom supports plugins to modify the existing default behavior.
+  PyBlosxom can run as a CGI script, WSGI component or you can use it
+  to statically compile your website into HTML/XML files.
+
+  Your workflow is your workflow.
+
+**extensibility**
+
+  PyBlosxom has a plugin framework enabling you to augment and enhance
+  PyBlosxom's default behavior.  Plugins are written in Python.  We
+  maintain a list of plugins in the plugin registry on the website.
+
+  Plugins aren't hard to write.  We're happy to help you write
+  plugins.
+
+**community**
+
+  There are several hundred PyBlosxom users out there all of whom have
+  different needs.  PyBlosxom is used on a variety of operating
+  systems in a variety of environments.  We have the standard open
+  source project fare: mailing lists, IRC channel, wiki, ...
+
+PyBlosxom is built to let you use existing text-manipulation tools
+without having to build the whole ecology from scratch.
+
+PyBlosxom can be run as:
+
+* a "static renderer" and compile your blog
+* a CGI script
+* a WSGI application
+
+
+Why you might not want to use PyBlosxom
+=======================================
+
+PyBlosxom is a small open source project and while there is a
+community, it's pretty small.  PyBlosxom's features are great
+but make it a niche weblog engine.
+
+PyBlosxom is a *file-based* weblog system.  Each blog entry is a separate
+file stored in a directory hierarchy on your file system.
+By default, the hierarchy is a category tree meaning each blog entry belongs
+in a single category.  By default, mtimes are used as the blog entry
+timestamp.  There are plugins that change this behavior, but require
+extra configuration to use.
+
+There are a lot of other weblog systems out there.  If it's apparent
+that PyBlosxom won't work for you, don't force it---use something else.
+Possibilities include:
+
+**WordPress**
+
+    http://wordpress.org/
+
+    PHP/database based weblog system that a lot of people use.
+
+**Zine**
+
+    http://zine.pocoo.org/
+
+    Python-based weblog system that's a lot like WordPress, but it's
+    written in Python and supports Python plugins.
+
+**ikiwiki**
+
+    http://ikiwiki.info/
+
+    ikiwiki is written in Perl and melds blogging with wiki with
+    version control storage.
+
+**jekyll**
+
+    http://github.com/mojombo/jekyll
+
+    A blog-aware, static site generator in Ruby.
+
+
+Overview of PyBlosxom
+=====================
+
+Entries, categories, storage:
+
+* PyBlosxom stores everything as files on the file system---there is
+  no database.
+* Each blog entry is a file.
+* Blog entry files are stored in a directory hierarchy in your *datadir*.
+* Each subdirectory in your *datadir* corresponds to a category of
+  your blog.
+
+Themes:
+
+* Themes in PyBlosxom are called *flavours*.
+* A flavour consists of a set of templates.
+* Flavours are stored in a directory called the *flavourdir*.
+* PyBlosxom comes with several flavours: html, rss20, and atom.
+* The `PyBlosxom website`_ maintains a flavour registry for flavours
+  contributed by people like you.
+* There's more information in the chapter on
+  :ref:`Flavours and Templates <flavours-and-templates>`.
+
+Plugins:
+
+* PyBlosxom has a plugin system.
+* Plugins are written in Python.
+* Plugins are loaded using the ``plugin_dirs`` and ``load_plugins``
+  configuration variables.
+* For more information on using plugins see
+  :ref:`Plugins <using-plugins>`.
+* For more information on writing plugins see
+  :ref:`Writing Plugins <writing-plugins>`.
+* The `PyBlosxom website`_ maintains a plugin registry for plugins 
+  submitted by people like you.
+
+.. _PyBlosxom website: http://pyblosxom.bluesock.org/
+
+
+.. _project-details-and-contact:
+
+Project details, contact information, and where to go for help
+==============================================================
+
+See http://pyblosxom.bluesock.org/contact for details on the mailing lists, 
+IRC, source code, issue tracker, and everything else.
 
 
 Requirements
@@ -55,16 +174,6 @@ The most current version of the manual can be found on the `PyBlosxom
 website <http://pyblosxom.bluesock.org/>`_ .
 
 
-How to get help
-===============
-
-On our website we have information about our mailing lists.  Send an
-email to our pyblosxom-users mailing list if you have questions that
-you are unable to find answers to.
-
-Some of us hang out on IRC on Freenode in ``#pyblosxom``.
-
-
 How to report bugs, send in patches, fix problems
 =================================================
 
@@ -75,7 +184,7 @@ If you discover a problem with PyBlosxom, please let us know on IRC
 
 If you can additionally fix it, attach a patch file to the bug or send
 the patch as an attachment to the pyblosxom-devel mailing list.
-When sending a patch, **please** make sure to describe the details of
+When sending a patch, please make sure to describe the details of
 the problem you are fixing.
 
 
