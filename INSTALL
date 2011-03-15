@@ -77,32 +77,30 @@ the installation section for you!
 This requires:
 
 * Python 2.4 or higher
-* The Python package management tool `setuptools`_ and either one of the
+* the Python package management tool `setuptools`_ and either one of the
   Python package installers `pip`_ (newer, better) or easy_install
   (ships with setuptools)
-* Administrative access to the machine you're installing on
+* administrative access to the machine you're installing on
 
 
 To install:
 
-1. pip is an improved replacement for easy_install. If you have pip then do::
+1. `pip`_ is an improved replacement for `easy_install`_.  If you have pip 
+   then do::
 
       sudo pip install pyblosxom
 
-   If you don't have pip but do have easy_install then do::
+   If you don't have `pip`_ but do have `easy_install`_ then do::
 
       sudo easy_install pyblosxom
 
 
-If you have neither pip nor easy_install, then you should probably
-install one or the other to make your life with Python easier. If you
-are on Debian or Ubuntu you can install setuptools, easy_install and pip
-with ``sudo apt-get install python-setuptools python-pip``, or you can
-install just setuptools and easy_install with just ``sudo apt-get
-install python-setuptools``.
+If you have neither `pip`_ nor `easy_install`_, then you should probably
+install one or the other to make your life with Python easier.
 
 That's it!  You can move on to :ref:`Creating a blog` now.
 
+.. _easy_install: http://pypi.python.org/pypi/setuptools
 .. _setuptools: http://pypi.python.org/pypi/setuptools
 .. _pip: http://pypi.python.org/pypi/pip
 
