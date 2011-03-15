@@ -193,10 +193,12 @@ This requires:
 
 * Python 2.4 or higher
 * `virtualenv`_
-* `paster`_
+* `PasteScript`_, the command-line frontend for the Python Paste web
+  development utilities
+
 
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
-.. _paster: http://pypi.python.org/pypi/PasteScript
+.. _PasteScript: http://pypi.python.org/pypi/PasteScript
 
 
 To install:
@@ -236,7 +238,7 @@ environment, you will:
 1. Make sure the virtual environment is activated and if it isn't
    do::
 
-      source VEDIR/bin/activate
+      source <VIRTUAL-ENV-DIR>/bin/activate
 
 2. Change directories into where you have your blog and do::
 
