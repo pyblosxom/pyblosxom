@@ -203,8 +203,8 @@ This requires:
 
 To install:
 
-1. Create a virtual environment for PyBlosxom into a directory of
-   your choosing as denoted by ``<VIRTUAL-ENV-DIR>``::
+1. Create a virtual environment for PyBlosxom into a directory of your
+   choosing as denoted by ``<VIRTUAL-ENV-DIR>``::
 
       virtualenv <VIRTUAL-ENV-DIR>
 
@@ -216,7 +216,7 @@ To install:
 
       source <VIRTUAL-ENV-DIR>/bin/activate
 
-   Rememver to activate the virtual environment EVERY time you do
+   Remember to activate the virtual environment **every** time you do
    something with PyBlosxom.
 
    Additionally, if you're running PyBlosxom from CGI or a cron job,
@@ -235,8 +235,7 @@ To install:
 When you want to run PyBlosxom from your git clone in your virtual
 environment, you will:
 
-1. Make sure the virtual environment is activated and if it isn't
-   do::
+1. Make sure the virtual environment is activated and if it isn't do::
 
       source <VIRTUAL-ENV-DIR>/bin/activate
 
