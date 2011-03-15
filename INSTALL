@@ -118,7 +118,7 @@ installation section for you!
 This requires:
 
 * Python 2.4 or higher
-* A Python package installer: `pip`_ or `easy_install`_
+* a Python package installer: `pip`_ or `easy_install`_
 * `virtualenv`_, the virtual Python environment builder
 
 .. _pip: http://pypi.python.org/pypi/pip
@@ -128,20 +128,19 @@ This requires:
 
 To install:
 
-1. Create a *virtual environment* (an isolated Python environment
-   that has its own installation directories) for PyBlosxom in a
-   directory of your choosing (as denoted by
-   ``<VIRTUAL-ENV-DIR>``)::
+1. Create a *virtual environment* (an isolated Python environment that
+   has its own installation directories) for PyBlosxom in a directory
+   of your choosing (as denoted by ``<VIRTUAL-ENV-DIR>``)::
 
       virtualenv <VIRTUAL-ENV-DIR>
 
    This command creates a new directory called ``<VIRTUAL-ENV-DIR>``
    (you can use any directory name you want) that contains its own
    Python package installation directories and a Python interpreter
-   that uses those directories.  This is the virtual environment
-   that PyBlosxom will be installed into and will run in.  If you
-   decide to delete PyBlosxom at some point, you can just remove
-   this virtual environment directory.
+   that uses those directories.  This is the virtual environment that
+   PyBlosxom will be installed into and will run in.  If you decide to
+   delete PyBlosxom at some point, you can just remove this virtual
+   environment directory.
 
 2. *Activate* the virtual environment in your current shell session::
 
@@ -149,22 +148,22 @@ To install:
 
    This command changes your current shell's ``$PATH`` environment
    variable to point to the ``<VIRTUAL-ENV-DIR>/bin`` directory, so
-   that commands such as ``python``, ``pip`` and ``easy_install``
-   will use the virtual environment instead of your default Python
-   environment. It will also change your shell prompt to indicate
+   that commands such as ``python``, ``pip`` and ``easy_install`` will
+   use the virtual environment instead of your default Python
+   environment.  It will also change your shell prompt to indicate
    that the virtual environment is active.
 
    If you exit your current shell session and start a new one the
-   virtual environment will no longer be active. You have to
-   activate the virtual environment for each new shell session
-   before doing anything with PyBlosxom.
+   virtual environment will no longer be active.  You have to activate
+   the virtual environment for each new shell session before doing
+   anything with PyBlosxom.
 
    Additionally, if you're running PyBlosxom from CGI or a cron job,
    you want to use the ``python`` interpreter located in the ``bin``
    directory of your virtual environment--not the system one.
 
 3. Finally, install PyBlosxom into the activated virtual
-   environment. If you have `pip`_ installed, then do::
+   environment.  If you have `pip`_ installed, then do::
 
       pip install pyblosxom
 
