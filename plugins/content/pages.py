@@ -63,6 +63,24 @@ by ``request``.  Example::
    config = request.get_configuration()
    print "your datadir is: %s" % config["datadir"]
    %>
+
+
+Configuration
+=============
+
+``pagesdir``
+
+    Optional.  Defaults to the datadir.
+
+    Example::
+
+        py["pagesdir"] = os.path.join(datadir, "pages")
+
+``pages_trigger``
+
+    Optional.  Defaults to ``pages``.
+
+    This is the url trigger that causes the pages plugin to look for pages.
 """
 
 import os
@@ -141,7 +159,8 @@ def cb_filelist(args):
     data = req.get_data()
     config = req.get_configuration()
 
-    if not pyhttp["PATH_INFO"].startswith("/" + TRIGGER):
+    trigger = config.get("pages_trigger", TRIGGER)
+    if not pyhttp["PATH_INFO"].startswith("/" + trigger):
         return
 
     data[INIT_KEY] = 1
