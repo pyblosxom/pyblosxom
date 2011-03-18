@@ -7,6 +7,7 @@
 # LICENSE for distribution details.
 #######################################################################
 
+from os import environ
 import time
 from StringIO import StringIO
 
@@ -46,9 +47,11 @@ class TestEntryBase(UnitTestBase):
         self.eq_(e.get_metadata("foo"), "bar")
 
     def test_time(self):
-        # FIXME - these tests are locale dependent
         e = EntryBase(req_())
+        # set_time takes local time, and results depend on time zone.
+        self.__force_tz()
         e.set_time(TIME1)
+        self.__restore_tz()
         for mem in (("timetuple", TIME1),
                     ("mtime", 1216659107.0),
                     ("ti", "12:51"),
@@ -62,7 +65,7 @@ class TestEntryBase(UnitTestBase):
                     ("w3cdate", "2008-07-21T16:51:47Z"),
                     ("rfc822date", "Mon, 21 Jul 2008 16:51 GMT")):
             self.eq_(e[mem[0]], mem[1], \
-                  "%s != %s (note: this is a locale dependent test)" % (mem[0], mem[1]))
+                  "%s != %s (note: this is a time zone dependent test)" % (mem[0], mem[1]))
 
     def test_dictlike(self):
         e = EntryBase(req_())
@@ -123,7 +126,11 @@ class TestEntryBase(UnitTestBase):
     #     del e["body"]
 
     def test_generate_entry(self):
+        # generate_entry takes local time, and we test the resulting
+        # rfc822date which is UTC.  Result depends on time zone.
+        self.__force_tz()
         e = generate_entry(req_(), {"foo": "bar"}, "entry body", TIME1)
+        self.__restore_tz()
 
         self.eq_(e["foo"], "bar")
         self.eq_(e["body"], "entry body")
@@ -137,3 +144,24 @@ class TestEntryBase(UnitTestBase):
         # make sure it doesn't error out.
         e = EntryBase(req_())
         repr(e)
+
+    def __force_tz(self):
+        """
+        Force time zone to 'US/Eastern'.
+
+        Some of the above tests are time zone dependent.
+        """
+        self.__tz = environ.get('TZ')
+        environ['TZ'] = 'US/Eastern'
+        time.tzset()
+    
+    def __restore_tz(self):
+        """
+        Restore time zone to what it was before __force_tz() call.
+        """
+        if self.__tz:
+            environ['TZ'] = self.__tz
+            self.__tz = None
+        else:
+            del environ['TZ']
+        time.tzset()
