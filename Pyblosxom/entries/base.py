@@ -200,7 +200,8 @@ class EntryBase:
 
         :param timetuple: the timetuple to use to set the data
                           with--this is the same thing as the
-                          mtime/atime portions of an os.stat.
+                          mtime/atime portions of an os.stat.  This
+                          time is expected to be local time, not UTC.
         """
         self['timetuple'] = timetuple
         self._mtime = time.mktime(timetuple)
