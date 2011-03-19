@@ -216,13 +216,16 @@ class EntryBase:
         self['fulltime'] = time.strftime('%Y%m%d%H%M%S', timetuple)
         self['date'] = time.strftime('%a, %d %b %Y', timetuple)
 
-        # Temporarily disable the set locale, so RFC-compliant dates are
-        # really RFC-compliant
+        # YYYY-MM-DDThh:mm:ssZ
+        self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', gmtimetuple)
+
+        # Temporarily disable the set locale, so RFC-compliant date is
+        # really RFC-compliant: directives %a and %b are locale
+        # dependent.  Technically, we're after english locale, but
+        # only 'C' locale is guaranteed to exist.
         loc = locale.getlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'C')
 
-        # YYYY-MM-DDThh:mm:ssZ
-        self['w3cdate'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', gmtimetuple)
         self['rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', \
                                            gmtimetuple)
 
