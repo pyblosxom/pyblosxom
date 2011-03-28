@@ -92,7 +92,7 @@ following three config properties:
     * ``count`` - the number of items that are tagged with this tag
     * ``tagurl`` - url composed of baseurl, trigger, and tag
 
-    Defaults to ``<a href="%(tagurl)s">%(tag)s</a> ``.
+    Defaults to ``<a href="%(tagurl)s">%(tag)s</a>``.
 
 ``tags_list_finish``
 
@@ -115,7 +115,7 @@ configuration property:
 
     Defaults to ``<a href="%(tagurl)s">%(tag)s</a>``.
 
-    Tags are joined together with ``, ``.
+    Tags are joined together with ``,``.
 
 
 Creating the tags index file

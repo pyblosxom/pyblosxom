@@ -13,18 +13,19 @@ This is my fancy module to add a token which tells us whether we're
 the first day being displayed or not.
 
 To install:
- 1. Copy this file into your pyblosxom/Pyblosxom/plugins directory.
 
- 2. Create a file named date_head.html in your datadir containing::
+1. Copy this file into your pyblosxom/Pyblosxom/plugins directory.
 
-    <div class="$dayDivClass">
-    <span class="blosxomDate">$date</span>
+2. Create a file named date_head.html in your datadir containing::
 
- 3. Edit your config.py and add the line::
+      <div class="$dayDivClass">
+      <span class="blosxomDate">$date</span>
 
-    py['firstDayDiv'] = 'blosxomFirstDayDiv'
+3. Edit your config.py and add the line::
 
- 4. That's it.  You're done.
+      py['firstDayDiv'] = 'blosxomFirstDayDiv'
+
+4. That's it.  You're done.
 
 Questions, comments, concerns?  Email bwinton at latte dot ca for help.
 """
