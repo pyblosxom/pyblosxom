@@ -20,6 +20,10 @@ will only see the first 20 entries rendered.
 
 The paginate overrides this functionality and allows for paging.
 
+
+Setup
+=====
+
 To install paginate, do the following:
 
 1. add ``paginate`` to your ``load_plugins`` list variable in your

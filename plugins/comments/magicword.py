@@ -9,16 +9,20 @@
 
 
 """
-Magic Word Plugin
-=================
-
-Requires: The "comments" plugin.
+Summary
+=======
 
 This is about the simplest anti-comment-spam measure you can imagine, but it's
 probably effective enough for all but the most popular blogs.  Here's how it 
 works.  You pick a question and put a field on your comment for for the answer 
 to the question.  If the user answers it correctly, his comment is accepted.  
 Otherwise it's rejected.  Here's how it works:
+
+
+Setup
+=====
+
+First off, this requires the comments plugin to be installed.
 
 Here's an example of what to put in config.py::
 
@@ -37,21 +41,24 @@ Here's what you put in your comment-form.html file::
 
 It's important that the name of the input field is exactly "magicword".
 
-SECURITY NOTE:
 
-In order for this to be secure(ish) you need to protect your config.py file.
-This is a good idea anyway!
+Security note
+=============
 
-If your config.py file is in your web directory, protect it from being
-seen by creating or modifying a .htaccess file in the directory where 
-config.py lives with the following contents::
+In order for this to be secure(ish) you need to protect your
+``config.py`` file.  This is a good idea anyway!
+
+If your ``config.py`` file is in your web directory, protect it from
+being seen by creating or modifying a ``.htaccess`` file in the
+directory where ``config.py`` lives with the following contents::
 
     <Files config.py>
     Order allow,deny
     deny from all
     </Files>
 
-This will prevent people from being able to view config.py by browsing to it.
+This will prevent people from being able to view ``config.py`` by
+browsing to it.
 """
 
 __author__ = "Nathaniel Gray"

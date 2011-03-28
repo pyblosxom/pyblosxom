@@ -9,25 +9,22 @@
 #######################################################################
 
 """
-Adds a 'w3cdate' variable to every entry which has the mtime of the
-entry in ISO8601 format.
-
-Adds a 'w3cdate' variable to the head and foot templates which has the
-mtime of the first entry in the entrylist being displayed (this is
+Adds a ``w3cdate`` variable to the head and foot templates which has
+the mtime of the first entry in the entrylist being displayed (this is
 often the youngest/most-recent entry).
 
 
 .. Note::
 
-    When adding this plugin to the ``load_plugins`` list, it helps to
-    put the plugin early in the list so that the data will be
-    available to subsequent plugins.
+   When adding this plugin to the ``load_plugins`` list, it helps to
+   put the plugin early in the list so that the data will be
+   available to subsequent plugins.
 
 .. Note::
 
-    You might get better results if you have PyXMl installed as part
-    of your Python installation.  If you don't, then we fudge the date
-    using a home-brew function.
+   You might get better results if you have PyXML installed as part
+   of your Python installation.  If you don't, then we fudge the date
+   using a home-brew function.
 
 
 Thanks to Matej Cepl for the hacked iso8601 code that doesn't require
