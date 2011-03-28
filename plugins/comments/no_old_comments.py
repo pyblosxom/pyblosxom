@@ -1,3 +1,9 @@
+#######################################################################
+# Copyright (c) 2006 Blake Winton
+#
+# Released into the Public Domain.
+#######################################################################
+
 """
 This plugin implements the comment_reject callback of the comments
 plugin.
@@ -14,20 +20,23 @@ Install:
    PyBlosxom
 
 
-This plugin is released in the public domain.
-
-
 Revisions:
 1.0 - August 5th 2006: First released.
 """
-__author__      = "Blake Winton <bwinton+blog@latte.ca>"
+
+__author__      = "Blake Winton"
+__email__       = "bwinton+blog@latte.ca"
 __version__     = "1.0 - August 5th, 2006."
 __url__         = "http://example.com/"
 __description__ = "Prevent comments on entries older than a month."
+__category__    = "comments"
+__license__     = "Public Domain"
+
 
 import sys
 import time
 from Pyblosxom import tools
+
 
 def verify_installation(request):
     return 1

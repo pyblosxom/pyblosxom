@@ -1,3 +1,7 @@
+#######################################################################
+# This is placed in the Public Domain.
+#######################################################################
+
 """
 Generates a calendar along the lines of this one (with month and day names in
 the configured locale)::
@@ -46,14 +50,16 @@ It uses the following CSS classes:
 
 
 To use, place $calendar in your head/foot template.
-
-
-This plugin is hereby placed in the public domain.
 """
-__author__ = "Will Guaraldi - willg at bluesock dot org"
+
+__author__ = "Will Kahn-Greene"
+__email__ = "willg at bluesock dot org"
 __version__ = "$Id$"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Displays a calendar on your blog."
+__category__ = "date"
+__license__ = "MIT"
+
 
 from Pyblosxom import tools
 import time, calendar, string, os

@@ -1,3 +1,4 @@
+#######################################################################
 # Copyright (C) 2006 Benjamin Mako Hill <mako@atdot.cc>
 #                    Blake Winton <bwinton+blog@latte.ca>
 #
@@ -15,6 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
 # USA
+#######################################################################
 
 """
 Run comments and trackbacks through Akismet (http://akismet.com/ ) to see
@@ -44,10 +46,15 @@ variable. You can place this into your template using the standard
 This plugin merges the work done on the akismetComments.py Plugin by
 Blake Winton with the the akismet.py plugin by Benjamin Mako Hill.
 """
+
 __author__      = "Benjamin Mako Hill"
 __version__     = "0.2"
+__email__       = ""
 __url__         = "http://mako.cc/projects/pyblosxom"
 __description__ = "Run comments through Akismet."
+__category__    = "comments"
+__license__     = "GPLv2"
+
 
 import sys
 import time

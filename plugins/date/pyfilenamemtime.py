@@ -1,4 +1,12 @@
-# vim: tabstop=4 shiftwidth=4
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2004, 2005 Tim Roberts
+#
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
+#######################################################################
+
 """
 If a filename contains a timestamp in the form of YYYY-MM-DD-hh-mm,
 change the mtime to be the timestamp instead of the one kept by the
@@ -6,32 +14,19 @@ filesystem.  For example, a valid filename would be
 foo-2002-04-01-00-00.txt for April fools day on the year 2002.
 It is also possible to use timestamps in the form of YYYY-MM-DD
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify,
-merge, publish, distribute, sublicense, and/or sell copies of the
-Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-Copyright 2004, 2005 Tim Roberts
+http://www.probo.com/timr/blog/'
 """
-import os, re, time
 
-__author__ = 'Tim Roberts http://www.probo.com/timr/blog/'
-__version__ = '$Id$'
+__author__ = "Tim Roberts"
+__email__ = ""
+__version__ = "$Id$"
+__url__ = "http://pyblosxom.bluesock.org/"
+__description__ = "Allows you to codify the mtime in the filename."
+__category__ = "date"
+__license__ = "MIT"
+
+
+import os, re, time
 
 DAYMATCH = re.compile('([0-9]{4})-([0-1][0-9])-([0-3][0-9])(-([0-2][0-9])-([0-5][0-9]))?.[\w]+$')
 

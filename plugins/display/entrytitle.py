@@ -38,10 +38,15 @@ with the ``entry_title_template`` variable.
 The ``%(title)s`` is a Python string formatter that gets filled in with
 the entry title.
 """
-__author__ = "Will Kahn-Greene - willg at bluesock dot org"
+
+__author__ = "Will Kahn-Greene"
+__email__ = "willg at bluesock dot org"
 __version__ = "2010-04-14"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Populates $(entry_title) for head template."
+__category__ = "date"
+__license__ = "MIT"
+
 
 def verify_installation(request):
     return 1

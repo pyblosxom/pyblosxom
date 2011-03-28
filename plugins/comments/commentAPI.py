@@ -1,25 +1,13 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003-2005 Ted Leung
+#
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
+#######################################################################
+
 """
-Copyright (c) 2003-2005 Ted Leung
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 CommentAPI provides support for Joe Gregario's CommentAPI 
 <http://wellformedweb.org/story/9>.   To use it, place it your plugins
 directory and make sure that you define py['commentAPI_urltrigger'], which
@@ -39,8 +27,17 @@ Then inside your RSS items you need to add a wfw:comment element:
 %<---------------------------------------------------------
 py['commentAPI_urltrigger'] = "/commentAPI"
 %<---------------------------------------------------------
-
 """
+
+__author__ = "Ted Leung"
+__email__ = ""
+__version__ = ""
+__url__ = "http://pyblosxom.bluesock.org/"
+__description__ = "CommentAPI provides support for Joe Gregario's CommentAPI."
+__category__ = "category"
+__license__ = "MIT"
+
+
 import os, os.path
 from Pyblosxom import tools
 

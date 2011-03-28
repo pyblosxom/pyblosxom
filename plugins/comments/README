@@ -12,7 +12,7 @@ the pyXML module.  It can be found at http://pyxml.sourceforge.net/ .
 INSTRUCTIONS
 ------------
 
-1. Copy contrib/plugins/comments/plugins/comments.py to your plugins
+1. Copy plugins/comments/comments.py to your plugins
    directory.  Then add "comments" to the "load_plugins" property
    in your config.py file.
 
@@ -23,12 +23,12 @@ INSTRUCTIONS
    template details.
 
 3. If you want trackbacks (this is optional), copy 
-   contrib/plugins/comments/plugins/trackback.py to your plugins 
+   plugins/plugins/trackback.py to your plugins 
    directory.  Then add "trackback" to the "load_plugins" property
    in your config.py file.
 
 4. If you want pingbacks (this is optional), copy
-   contrib/plugins/comments/plugins/xmlrpc_pingback.py to your
+   plugins/plugins/xmlrpc_pingback.py to your
    plugins directory.  You must also define py["base_url"].
    xmlrpc_pingback.py also uses Mark Pilgrin's rssfinder and
    rssparser (available from http://diveintomark.org/projects) and 
@@ -36,7 +36,7 @@ INSTRUCTIONS
    "load_plugins" property in your config.py file.
 
 5. If you want support for the CommentAPI, copy
-   contrib/plugins/comments/plugins/commentAPI.py to your plugins 
+   plugins/plugins/commentAPI.py to your plugins 
    directory.  If you enable CommentAPI in your RSS feed (see below), 
    some RSS aggregator programs will provide an interface that can 
    post a comment to a blog entry.

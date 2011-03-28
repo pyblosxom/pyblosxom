@@ -81,7 +81,23 @@ Configuration
     Optional.  Defaults to ``pages``.
 
     This is the url trigger that causes the pages plugin to look for pages.
+
+``pages_frontpage``
+
+    Optional.  Defaults to False.
+
+    If set to True, then pages will show the ``frontpage`` entry for the 
+    front page.
 """
+
+__author__ = "Will Kahn-Greene"
+__email__ = "willg at bluesock dot org"
+__version__ = "2011-01-13"
+__url__ = "http://pyblosxom.bluesock.org/"
+__description__ = "Allows you to include non-blog-entry files in your site."
+__category__ = "content"
+__license__ = "MIT"
+
 
 import os
 import StringIO
@@ -90,10 +106,6 @@ import os.path
 from Pyblosxom.entries.fileentry import FileEntry
 from Pyblosxom import tools
 
-__author__ = "Will Kahn-Greene - willg at bluesock dot org"
-__version__ = "2011-01-13"
-__url__ = "http://pyblosxom.bluesock.org/"
-__description__ = "Allows you to include non-blog-entry files in your site."
 
 TRIGGER = "pages"
 INIT_KEY = "pages_pages_file_initiated"
@@ -152,15 +164,21 @@ def eval_python_blocks(req, body):
 
     return body
  
+def is_frontpage(pyhttp, config):
+    return pyhttp["PATH_INFO"].startswith("/index") and config.get("pages_frontpage", False)
+
+def is_trigger(pyhttp, config):
+    return pyhttp["PATH_INFO"].startswith("/" + config.get("pages_trigger", TRIGGER))
+
 def cb_filelist(args):
     req = args["request"]
 
     pyhttp = req.get_http()
     data = req.get_data()
     config = req.get_configuration()
+    page_name = None
 
-    trigger = config.get("pages_trigger", TRIGGER)
-    if not pyhttp["PATH_INFO"].startswith("/" + trigger):
+    if not (is_trigger(pyhttp, config) or is_frontpage(pyhttp, config)):
         return
 
     data[INIT_KEY] = 1
@@ -172,7 +190,10 @@ def cb_filelist(args):
     if not pagesdir[-1] == os.sep:
         pagesdir = pagesdir + os.sep
 
-    page_name = pyhttp["PATH_INFO"][len("/" + TRIGGER)+1:]
+    if pyhttp["PATH_INFO"].startswith("/index"):
+        page_name = "frontpage"
+    else:
+        page_name = pyhttp["PATH_INFO"][len("/" + TRIGGER)+1:]
 
     if not page_name:
         return

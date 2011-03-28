@@ -1,3 +1,4 @@
+#######################################################################
 # Version 0.1.3
 # 2006/07/18
 
@@ -16,6 +17,8 @@
 # Comments, suggestions and bug reports welcome.
 # Scripts maintained at http://www.voidspace.org.uk/python/index.shtml
 # E-mail fuzzyman@voidspace.org.uk
+#######################################################################
+
 
 """
 A python interface to the `Akismet <http://akismet.com>`_ 
@@ -34,8 +37,8 @@ The default is : ::
 
 Whatever you pass in, will replace the *Python Interface by Fuzzyman* part.
 **0.1.2** will change with the version of this interface.
-
 """
+
 import os, sys
 import urllib2
 from urllib import urlencode

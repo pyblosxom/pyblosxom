@@ -1,21 +1,17 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
+# Ted Leung, Will Guaraldi, Wari Wahab, Robert Wall, Bill Mill,
+# Roberto De Almeida, David Geller, David Pashley, Ryan Barrett
+#
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
+#######################################################################
+
 """
 This module contains an extension to Blosxom file entries to support
 comments.
-
-Copyright 2003-2010 by contributors:
-  Ted Leung
-  Will Guaraldi
-  Wari Wahab
-  Robert Wall
-  Bill Mill
-  Roberto De Almeida
-  David Geller
-  David Pashley
-  Ryan Barrett
-
-If you make any changes to this plugin, please a send a patch with your
-changes to pyblosxom-devel@sourceforge.net so that we can incorporate your
-changes. Thanks!
 
 This module supports the following config parameters (they are not
 required):
@@ -200,31 +196,16 @@ the comments plugin.
 Additionally, there is a chapter in the PyBlosxom manual that
 covers installing and configuring the comments plugin.  The manual
 is on the PyBlosxom website: http://pyblosxom.bluesock.org/
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 """
-__author__ = "Ted Leung"
+
+__author__ = "Ted Leung, et al"
+__email__ = "pyblosxom-devel at sourceforge dot net"
 __version__ = "$Id$"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Allows for comments on each blog entry."
+__category__ = "comments"
+__license__ = "MIT"
+
 
 import cgi
 import glob

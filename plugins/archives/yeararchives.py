@@ -50,10 +50,15 @@ The vars available with typical example values are::
     f      the flavour    ex: 'html'
 
 """
-__author__ = "Will Kahn-Greene - willg at bluesock dot org"
+
+__author__ = "Will Kahn-Greene"
+__email__ = "willg at bluesock dot org"
 __version__ = "2010-05-08"
 __url__ = "http://pyblosxom.bluesock.org/"
-__description__ = "Year-based archives handler."
+__description__ = "Builds year-based archives listing."
+__category__ = "archives"
+__license__ = "MIT"
+
 
 from Pyblosxom import tools, entries
 import time, os

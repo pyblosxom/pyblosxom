@@ -1,7 +1,7 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2009, 2010 Will Kahn-Greene
+# Copyright (c) 2009, 2010, 2011 Will Kahn-Greene
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
@@ -171,10 +171,14 @@ from the directory your ``config.py`` is in or::
 from anywhere.
 """
 
-__author__ = "Will Kahn-Greene - willg at bluesock dot org"
+__author__ = "Will Kahn-Greene"
+__email__ = "willg at bluesock dot org"
 __version__ = "2010-05-07"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Tags plugin"
+__category__ = "tags"
+__license__ = "MIT"
+
 
 import os
 import cPickle as pickle

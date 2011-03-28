@@ -1,4 +1,13 @@
-# vim: tabstop=4 shiftwidth=4
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (c) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 
+# Will Kahn-Greene
+#
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
+#######################################################################
+
 """
 Walks through your blog root figuring out all the categories you have
 and how many entries are in each category.  It generates html with
@@ -50,37 +59,21 @@ Available variables in the category_item template:
   flavour                  'html'                       string
   count                    70                           int
   indent                   '&nbsp;&nbsp;&nbsp;&nbsp;'   string
-
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify,
-merge, publish, distribute, sublicense, and/or sell copies of the
-Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-Copyright 2004, 2005, 2006 Will Guaraldi
 """
-__author__ = "Will Guaraldi - willg at bluesock dot org"
+
+__author__ = "Will Kahn-Greene"
+__email__ = "willg at bluesock dot org"
 __version__ = "$Id$"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Builds a list of categories."
+__category__ = "category"
+__license__ = "MIT"
+
 
 from Pyblosxom import tools
-import re, os
+import re
+import os
+
 
 DEFAULT_START = r'<ul class="categorygroup">'
 DEFAULT_BEGIN = r'<li><ul class="categorygroup">'

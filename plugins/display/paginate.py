@@ -67,11 +67,16 @@ first page is rendered.  This will require a lot of thought to fix.
 If you are someone who is passionate about fixing this issue, let me
 know.
 """
-__author__ = "Will Guaraldi - willg at bluesock dot org"
+
+__author__ = "Will Kahn-Greene"
+__email__ = "willg at bluesock dot org"
 __version__ = "2010-05-07"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = ("Allows navigation by page for indexes that have too "
                    "many entries.")
+__category__ = "display"
+__license__ = "MIT"
+
 
 def verify_installation(request):
     config = request.getConfiguration()

@@ -129,10 +129,15 @@ Origins
 Based on the Blosxom acronyms plugin by Axel Beckert at
 http://noone.org/blosxom/acronyms .
 """
-__author__ = "Will Kahn-Greene - willg at bluesock dot org"
+
+__author__ = "Will Kahn-Greene"
+__email__ = "willg at bluesock dot org"
 __version__ = "2010-05-07"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Marks acronyms and abbreviations in blog entries."
+__category__ = "text"
+__license__ = "MIT"
+
 
 import os
 import re

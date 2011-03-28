@@ -1,3 +1,17 @@
+#######################################################################
+# Copyright 2006 Ryan Barrett
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#######################################################################
+
 """
 check_javascript.py
 A PyBlosxom comment spam plugin
@@ -20,22 +34,14 @@ make that tradeoff worthwhile.
 This is distributed as part of the PyBlosxom contributed plugins pack:
 http://sourceforge.net/project/showfiles.php?group_id=67445
 
-Copyright 2006 Ryan Barrett
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
 """
-__author__      = "Ryan Barrett <pyblosxom@ryanb.org>"
+__author__      = "Ryan Barrett"
+__email__       = "pyblosxom at ryanb dot org"
 __version__     = "0.1"
 __url__         = "http://pyblosxom.bluesock.org/"
 __description__ = "Use JavaScript to filter out spam comments"
+__category__    = "comments"
+__license__     = "GPLv2"
 
 from Pyblosxom import tools
 
