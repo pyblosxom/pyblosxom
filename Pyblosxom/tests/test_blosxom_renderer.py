@@ -1,3 +1,12 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (C) 2011 Will Kahn-Greene
+#
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
+#######################################################################
+
 from StringIO import StringIO
 
 from Pyblosxom.tests.helpers import UnitTestBase

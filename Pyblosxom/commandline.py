@@ -1,12 +1,13 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2003-2008 Wari Wahab
-# Copyright (c) 2003-2010 Will Kahn-Greene
+# Copyright (C) 2010 Dieter Plaetinck
+# Copyright (C) 2008, 2009, 2010, 2011 Will Kahn-Greene
 #
-# PyBlosxom is distributed under the MIT license.  See the file LICENSE
-# for distribution details.
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
 #######################################################################
+
 """
 This module holds commandline related stuff.  Installation
 verification, blog creation, commandline argument parsing, ...

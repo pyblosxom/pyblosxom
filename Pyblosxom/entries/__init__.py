@@ -1,11 +1,13 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2003, 2004, 2005, 2006 Wari Wahab
+# Copyright (C) 2003 Wari Wahab
+# Copyright (C) 2004, 2006, 2009 Will Kahn-Greene
 #
-# PyBlosxom is distributed under the MIT license.  See the file LICENSE
-# for distribution details.
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
 #######################################################################
+
 """
 PyBlosxom does most of its work on "entries".  Each entry is a single
 unit of content which has a series of metadata properties (mtime, filename,

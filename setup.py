@@ -1,5 +1,17 @@
 #!/usr/bin/env python
 
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (C) 2005 Steven Armstrong
+# Copyright (C) 2003 Wari Wahab
+# Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Will Kahn-Greene
+#
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
+#######################################################################
+
+
 import os.path, sys, os
 from distutils.sysconfig import get_python_lib
 try:
