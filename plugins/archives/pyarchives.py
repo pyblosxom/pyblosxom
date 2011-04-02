@@ -1,7 +1,7 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2004, 2005, 2006, 2007, 2008, 2009, 2010 Will Kahn-Greene
+# Copyright (C) 2004, 2005, 2006 Wari Wahab
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
@@ -66,6 +66,7 @@ def verify_installation(request):
         print "refer to pyarchive plugin documentation for more details."
     return 1
 
+
 class PyblArchives:
     def __init__(self, request):
         self._request = request
@@ -105,6 +106,7 @@ class PyblArchives:
         for key in arc_keys:
             result.append(archives[key])
         self._archives = '\n'.join(result)
+
 
 def cb_prepare(args):
     request = args["request"]
