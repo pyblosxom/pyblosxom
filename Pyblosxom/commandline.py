@@ -167,8 +167,7 @@ def test_installation(command, argv):
         pwrap("----")
         for mem in plugin_utils.bad_plugins:
             pwrap("plugin:  %s" % mem[0])
-            pwrap("problem: %s" % mem[1])
-            print "%s" % mem[2]
+            print "%s" % mem[1]
             pwrap("----")
 
     if len(plugin_utils.plugins) == 0:

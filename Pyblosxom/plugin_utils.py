@@ -20,6 +20,7 @@ import sys
 import os.path
 import traceback
 
+
 # this holds the list of plugins that have been loaded.  if you're running
 # PyBlosxom as a long-running process, this only gets cleared when the
 # process is restarted.
@@ -73,8 +74,10 @@ def initialize_plugins(plugin_dirs, plugin_list):
     load_plugins key does not exist, then we load all the plugins in the
     plugins directory using an alphanumeric sorting order.
 
-    NOTE: If PyBlosxom is part of a long-running process, you must
-    restart PyBlosxom in order to pick up any changes to your plugins.
+    .. Note::
+
+       If PyBlosxom is part of a long-running process, you must
+       restart PyBlosxom in order to pick up any changes to your plugins.
 
     :param plugin_dirs: the list of directories to add to the sys.path
                         because that's where our plugins are located.
@@ -101,8 +104,11 @@ def initialize_plugins(plugin_dirs, plugin_list):
     for mem in plugin_list:
         try:
             _module = __import__(mem)
-        except Exception, e:
-            bad_plugins.append((mem, e, "".join(traceback.format_exc())))
+        except (SystemExit, KeyboardInterrupt):
+            raise
+        except:
+            # this needs to be a catch-all
+            bad_plugins.append((mem, "".join(traceback.format_exc())))
             continue
 
         for comp in mem.split(".")[1:]:
