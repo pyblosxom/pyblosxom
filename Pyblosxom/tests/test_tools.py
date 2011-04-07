@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #######################################################################
 # This file is part of PyBlosxom.
 #
@@ -7,7 +8,6 @@
 # LICENSE for distribution details.
 #######################################################################
 
-# -*- coding: utf-8 -*-
 import string
 import os
 import os.path
