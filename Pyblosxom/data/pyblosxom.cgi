@@ -4,9 +4,6 @@
 # of gzip compressed content on Windows and OS/2
 #!/path/to/python -u
 
-# Comment this cgitb line out when your blog is production-ready.
-import cgitb; cgitb.enable()
-
 import os, sys
 
 # Uncomment this line to add the directory your config.py file is in to the

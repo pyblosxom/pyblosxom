@@ -25,14 +25,16 @@ The top of the file looks something like this::
     # of gzip compressed content on Windows and OS/2
     #!/path/to/python -u
 
-    # Uncomment this if something goes wrong (for debugging)
-    #import cgitb; cgitb.enable()
-
     import os, sys
 
     # Uncomment this line to add the directory your config.py file is in to the
     # python path:
     #sys.path.append("/path/to/directory/")
+
+
+Make sure the first line points to a valid python interpreter.  If
+you're using virtualenv, then make sure it points to the python
+interpreter in the virtual environment.
 
 Uncomment the ``sys.path.append("/path/to/directory/")`` line and
 make sure the path being appended is the directory that your ``config.py``
@@ -57,10 +59,6 @@ help on IRC or the users mailing list.  More details in
 If that works, then try to run the CGI script from your web-browser.
 The url is dependent on where you put the ``pyblosxom.cgi`` script and
 how CGI works on your web-server.
-
-If that works, then make sure to turn off errors and debugging
-information by commenting out the ``import cgitb; cgitb.enable()`` line 
-near the top of the ``pyblosxom.cgi`` file.
 
 
 Trouble-shooting

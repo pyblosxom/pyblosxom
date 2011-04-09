@@ -32,6 +32,7 @@ except ImportError:
     from StringIO import StringIO
 
 # Pyblosxom imports
+from Pyblosxom import crashhandling
 from Pyblosxom import tools
 from Pyblosxom import plugin_utils
 from Pyblosxom.entries.fileentry import FileEntry
@@ -444,20 +445,27 @@ class PyBlosxomWSGIApp:
 
     def run_pyblosxom(self, env, start_response):
         """
-        Runs the WSGI app.
+        Executes a single run of PyBlosxom wrapped in the crash handler.
         """
-        # ensure that PATH_INFO exists. a few plugins break if this is
-        # missing.
-        if "PATH_INFO" not in env:
-            env["PATH_INFO"] = ""
+        response = None
+        try:
+            # ensure that PATH_INFO exists. a few plugins break if this is
+            # missing.
+            if "PATH_INFO" not in env:
+                env["PATH_INFO"] = ""
 
-        p = PyBlosxom(dict(self.config), env)
-        p.run()
+            p = PyBlosxom(dict(self.config), env)
+            p.run()
 
-        pyresponse = p.get_response()
-        start_response(pyresponse.status, list(pyresponse.headers.items()))
-        pyresponse.seek(0)
-        return pyresponse.read()
+            response = p.get_response()
+
+        except Exception:
+            ch = crashhandling.CrashHandler(True, env)
+            response = ch.handle_by_response(*sys.exc_info())
+
+        start_response(response.status, list(response.headers.items()))
+        response.seek(0)
+        return response.read()
 
     def __call__(self, env, start_response):
         return [self.run_pyblosxom(env, start_response)]
@@ -468,10 +476,8 @@ class PyBlosxomWSGIApp:
 def pyblosxom_app_factory(global_config, **local_config):
     """App factory for paste.
 
-    :returns: CgitbMiddleware
+    :returns: WSGI application
     """
-    from paste import cgitb_catcher
-
     conf = global_config.copy()
     conf.update(local_config)
     conf.update(dict(local_config=local_config, global_config=global_config))
@@ -479,8 +485,7 @@ def pyblosxom_app_factory(global_config, **local_config):
     if "configpydir" in conf:
         sys.path.insert(0, conf["configpydir"])
 
-    return cgitb_catcher.make_cgitb_middleware(PyBlosxomWSGIApp(configini=conf),
-                                               global_config)
+    return PyBlosxomWSGIApp(configini=conf)
 
 class EnvDict(dict):
     """Wrapper arround a dict to provide a backwards compatible way to
