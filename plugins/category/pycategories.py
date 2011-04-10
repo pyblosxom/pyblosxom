@@ -77,6 +77,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Builds a list of categories."
 __category__ = "category"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 from Pyblosxom import tools

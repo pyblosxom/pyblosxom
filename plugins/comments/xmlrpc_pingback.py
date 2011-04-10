@@ -47,6 +47,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "XMLRPC pingback support."
 __category__ = "comments"
 __license__ = "MIT"
+__registrytags__ = "1.4, core"
 
 
 from config import py

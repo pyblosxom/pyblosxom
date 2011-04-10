@@ -51,6 +51,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Builds month/year-based archives listing."
 __category__ = "archives"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 from Pyblosxom import tools

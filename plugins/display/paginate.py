@@ -64,12 +64,15 @@ behavior::
 That should be it!
 
 
-Note: This plugin doesn't work particularly well with static
-rendering.  The problem is that it relies on the querystring to figure
-out which page to show and when you're static rendering, only the
-first page is rendered.  This will require a lot of thought to fix.
-If you are someone who is passionate about fixing this issue, let me
-know.
+.. Note::
+   
+   This plugin doesn't work with static rendering.  The problem is that 
+   it relies on the querystring to figure out which page to show and when 
+   you're static rendering, only the first page is rendered.  This will 
+   require a lot of thought to fix.
+
+   If you are someone who is passionate about fixing this issue, let me
+   know.
 """
 
 __author__ = "Will Kahn-Greene"
@@ -80,6 +83,7 @@ __description__ = ("Allows navigation by page for indexes that have too "
                    "many entries.")
 __category__ = "display"
 __license__ = "MIT"
+__registrytags__ = "1.5, core"
 
 
 def verify_installation(request):

@@ -26,6 +26,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Allows you to codify the mtime in the filename."
 __category__ = "date"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 import os, re, time

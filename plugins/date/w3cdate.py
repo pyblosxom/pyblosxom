@@ -38,6 +38,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Adds a 'w3cdate' variable which is the mtime in ISO8601 format."
 __category__ = "date"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 import rfc822

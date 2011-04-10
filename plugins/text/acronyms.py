@@ -137,6 +137,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Marks acronyms and abbreviations in blog entries."
 __category__ = "text"
 __license__ = "MIT"
+__registrytags__ = "1.5, core"
 
 
 import os

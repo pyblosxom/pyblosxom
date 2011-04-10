@@ -62,6 +62,7 @@ __url__         = "http://mako.cc/projects/pyblosxom"
 __description__ = "Run comments through Akismet."
 __category__    = "comments"
 __license__     = "GPLv2"
+__registrytags__ = "1.4, 1.5, core"
 
 
 import sys

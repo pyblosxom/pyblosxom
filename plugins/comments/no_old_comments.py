@@ -38,6 +38,7 @@ __url__         = "http://example.com/"
 __description__ = "Prevent comments on entries older than a month."
 __category__    = "comments"
 __license__     = "Public Domain"
+__registrytags__ = "1.4, 1.5, core"
 
 
 import sys

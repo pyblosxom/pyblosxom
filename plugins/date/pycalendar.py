@@ -51,6 +51,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Displays a calendar on your blog."
 __category__ = "date"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 from Pyblosxom import tools

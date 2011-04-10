@@ -36,6 +36,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Adds a token which tells us whether we're the first day being displayed or not."
 __category__ = "date"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 class PyFirstDate:

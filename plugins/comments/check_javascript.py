@@ -57,6 +57,7 @@ __url__         = "http://pyblosxom.bluesock.org/"
 __description__ = "Use JavaScript to filter out spam comments"
 __category__    = "comments"
 __license__     = "GPLv2"
+__registrytags__ = "1.4, 1.5, core"
 
 from Pyblosxom import tools
 

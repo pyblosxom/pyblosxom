@@ -24,6 +24,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Allows for caching if-not-modified-since...."
 __category__ = "headers"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 def cb_prepare(args):

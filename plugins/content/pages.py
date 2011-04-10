@@ -97,6 +97,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Allows you to include non-blog-entry files in your site."
 __category__ = "content"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 import os

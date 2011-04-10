@@ -178,6 +178,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Tags plugin"
 __category__ = "tags"
 __license__ = "MIT"
+__registrytags__ = "1.5, core"
 
 
 import os

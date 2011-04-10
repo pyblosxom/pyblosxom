@@ -49,6 +49,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "CommentAPI provides support for Joe Gregario's CommentAPI."
 __category__ = "category"
 __license__ = "MIT"
+__registrytags__ = "1.4, core"
 
 
 import os, os.path

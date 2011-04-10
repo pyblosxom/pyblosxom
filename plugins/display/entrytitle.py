@@ -46,6 +46,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Populates $(entry_title) for head template."
 __category__ = "date"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 def verify_installation(request):

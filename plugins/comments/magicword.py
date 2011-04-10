@@ -68,6 +68,7 @@ __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Magic word method for reducing comment spam"
 __category__ = "comments"
 __license__ = "MIT"
+__registrytags__ = "1.4, 1.5, core"
 
 
 def verify_installation(request):
