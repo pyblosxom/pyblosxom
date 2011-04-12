@@ -39,6 +39,7 @@ If there are any variables listed below that aren't in your
 ``config.py`` file, you can simply add them to the file yourself using
 the ``py["key"] = value`` format.
 
+
 Codebase configuration
 ======================
 
@@ -70,6 +71,7 @@ you would set your codebase variable like this::
 
    py["codebase"] = "/home/joe/pyblosxom-1.5/"
 
+
 Blog configuration
 ==================
 
@@ -90,6 +92,7 @@ For example, if Joe were writing a blog about cooking, he might title
 his blog::
 
    py["blog_title"] = "Joe's blog about cooking"
+
 
 blog_description
 ----------------
@@ -127,6 +130,7 @@ Or if your blog covered development on PyBlosxom, your
    Alternatively, you could wrap a multi-line string in triple quotes:
    ``""" ... """`` or ``''' ... '''``.
 
+
 blog_author
 -----------
 
@@ -149,6 +153,7 @@ might set his blog_author to "Magic Rocks"::
 
    py["blog_author"] = "Magic Rocks"
 
+
 blog_email
 ----------
 
@@ -166,6 +171,7 @@ address as such::
 
    py["blog_email"] = "joe@joesmith.net"
 
+
 blog_rights
 -----------
 
@@ -182,6 +188,7 @@ your blog. Generally this is the copyright information, for example::
 
 This is used in the Atom and RSS 2.0 feeds. Leaving this blank or not
 filling it in correctly could result in a feed that doesn't validate.
+
 
 blog_language
 -------------
@@ -208,6 +215,7 @@ super set of ISO 639-2 and contains languages used thousands of years ago.
 
 .. _ISO 639-2: http://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
 .. _ISO 639-3: http://www.sil.org/iso639-3/
+
 
 blog_encoding
 -------------
@@ -243,6 +251,7 @@ W3C has a nice `tutorial on encoding`_.  You may refer to
 .. _tutorial on encoding: http://www.w3.org/International/tutorials/tutorial-char-enc/
 .. _IANA charset registry: http://www.iana.org/assignments/character-sets
 
+
 locale
 ------
 
@@ -268,6 +277,7 @@ For example, if you wanted to set the locale to the Dutch language in
 the Netherlands you'd set locale to::
 
    py["locale"] = "nl_NL.UTF-8"
+
 
 datadir
 -------
@@ -301,6 +311,7 @@ this::
 
       py["datadir"] = "e:/blog/entries/"
 
+
 depth
 -----
 
@@ -319,6 +330,7 @@ The depth setting determines how many levels deep in the directory
 * 3 - three levels
 * ...
 * *n* - *n* levels deep
+
 
 ignore_directories
 ------------------
@@ -350,6 +362,7 @@ datadir, then you could set your ``ignore_directories`` like this::
 
 This would ignore all directories named "CVS" and "drafts" in your
 datadir tree.
+
 
 flavourdir
 ----------
@@ -391,6 +404,7 @@ For example, if you want to put your entries in
 
       py["flavourdir"] = "e:/blog/flavours/"
 
+
 default_flavour
 ---------------
 
@@ -419,6 +433,7 @@ For example, the following will all use the "joy" flavour::
    http://joesmith.net/blog/movies/
    http://joesmith.net/blog/movies/supermanreturns
 
+
 num_entries
 -----------
 
@@ -441,6 +456,7 @@ entries show on your category index pages, you sould set it like
 this::
 
    py["num_entries"] = 10
+
 
 base_url
 --------
@@ -481,6 +497,7 @@ re-writing on my web-server so that the base_url looked like this::
    If you use mod_rewrite rules or some other url rewriting system on
    your web-server, then you'll want to set this property.
 
+
 parser
 ------
 
@@ -492,6 +509,7 @@ parser
 
 The default entry parser that PyBlosxom will use to parse this blog's
 entry files. See :ref:`Entry parsers`.
+
 
 Logging configuration
 =====================
@@ -568,6 +586,7 @@ being processed::
 
    py['log_level'] = "info"
 
+
 log_filter
 ----------
 
@@ -600,6 +619,7 @@ like this::
 
    py["log_filter"] = ["root", "comments"]
 
+
 Plugin Configuration
 ====================
 
@@ -627,6 +647,7 @@ this::
    Plugin directories are not searched recursively for plugins.  If you
    have a tree of plugin directories that have plugins in them, you'll
    need to specify each directory in the tree.
+
 
 load_plugins
 ------------
@@ -695,8 +716,9 @@ would set ``load_plugins`` to::
    plugins.  This should be specified in the documentation that comes
    with those plugins.
 
+
 Caching Configuration
----------------------
+=====================
 
 Enabling caching by setting the ``cacheDriver`` and ``cacheConfig``
 variables in ``config.py`` speeds up rendering of your PyBlosxom pages.
@@ -715,6 +737,7 @@ PyBlosxom has multiple cache mechanisms. Look at the source files in
 ``cacheDriver`` to the cache mechanism that you want. For example::
 
     py["cacheDriver"] = "entrypickle"
+
 
 cacheConfig
 -----------
@@ -738,7 +761,7 @@ selected cache driver (e.g. ``entrypickle.py``) to see how to set the
 
 
 Static Rendering Configuration
-------------------------------
+==============================
 
 If you are using static rendering to deploy your PyBlosxom blog you need
 to set some additional configuration variables in your ``config.py``
