@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
-# =============================================================
+# =================================================================
 # This is the config file for PyBlosxom.  You should go through 
-# the file and fill in values for the various properties.  This 
+# this file and fill in values for the various properties.  This 
 # affects the behavior of your blog.
 #
-# The PyBlosxom documentation has additional information on 
-# configuration variables.
-# =============================================================
+# This is a Python code file and as such must be written in
+# Python.
+#
+# There are configuration properties that are not detailed in
+# this file.  These are the properties that are most often used.
+# To see a full list of configuration properties as well as
+# additional documentation, see the PyBlosxom documentation.
+# =================================================================
 
 # Don't touch this next line.
 py = {}
@@ -18,8 +23,9 @@ py = {}
 # If you did not install PyBlosxom as a library (i.e. python setup.py install)
 # then uncomment this next line and point it to your PyBlosxom installation
 # directory.
-# Note, this should be the directory that holds the "Pyblosxom" 
-# directory (note the case--uppercase P lowercase b!).
+# 
+# Note, this should be the parent directory of the "Pyblosxom" directory
+# (note the case--uppercase P lowercase b!).
 #py["codebase"] = "%(codedir)s"
 
 import os
@@ -150,20 +156,6 @@ py["load_plugins"] = []
 
 # Default parser/preformatter. Defaults to plain (does nothing)
 #py["parser"] = "plain"
-
-
-
-# Caching configuration
-# =====================
-
-# Using Caching? Caching speeds up rendering the page that is going to be
-# shown. Even if you are not using pyblosxom special features, caching can
-# improve rendering speed of certain flavours that can show a large number of
-# files at one time. Choose a cache mechanism you'd like, see the
-# Pyblosxom/cache/ directory, and read the source on how to enable caching with
-# the particular cache driver, you need to set two variables:
-#py["cacheDriver"] = "xxxx"
-#py["cacheConfig"] = ""
 
 
 
