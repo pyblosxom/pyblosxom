@@ -458,6 +458,55 @@ this::
    py["num_entries"] = 10
 
 
+truncate_frontpage
+------------------
+
+**REQUIRED**: no
+
+**DATATYPE**: boolean
+
+**DEFAULT VALUE**: True
+
+Whether or not to truncate the number of entries displayed on the
+front page to ``num_entries`` number of entries.
+
+For example, this causes all entries to be displayed on your
+front page (which is probably a terrible idea)::
+
+    py["truncate_frontpage"] = False
+
+
+truncate_category
+-----------------
+
+**REQUIRED**: no
+
+**DATATYPE**: boolean
+
+**DEFAULT VALUE**: True
+
+Whether or not to truncate the number of entries displayed on a
+category-based index page to ``num_entries`` number of entries.
+
+For example, this causes all entries in a category to show up in all
+category-based index pages::
+
+    py["truncate_category"] = False
+
+
+truncate_date
+-------------
+
+**REQUIRED**: no
+
+**DATATYPE**: boolean
+
+**DEFAULT VALUE**: False
+
+Whether or not to truncate the number of entries displayed on a
+date-based index page to ``num_entries`` number of entries.
+
+
 base_url
 --------
 
@@ -753,6 +802,7 @@ selected cache driver (e.g. ``entrypickle.py``) to see how to set the
 ``cacheConfig`` variable for it. For example:
 
     py["cacheConfig"] = "/path/to/a/cache/directory"
+
 .. Note::
 
    ``load_plugins`` should contain a list of strings where each string
