@@ -9,27 +9,44 @@
 #######################################################################
 
 """
+Summary
+=======
+
 A reStructuredText entry formatter for pyblosxom.  reStructuredText is
 part of the docutils project (http://docutils.sourceforge.net/).  To
 use, you need a *recent* version of docutils.  A development snapshot
 (http://docutils.sourceforge.net/#development-snapshots) will work
 fine.
 
-Install docutils, copy this file to your pyblosxom Pyblosxom/plugins
-directory, and you're ready to go.  Files with a .rst extension will
-be marked up as reStructuredText.
 
-You can configure this as your default preformatter for .txt files by
-configuring it in your config file as follows::
+Install
+=======
+
+1. copy this file (``rst.py``) to your plugins directory
+2. install docutils
+3. add ``rst`` to your ``load_plugins`` config variable
+
+
+Usage
+=====
+
+Blog entries with a ``.rst`` extension will be parsed as restructuredText
+
+You can also configure this as your default preformatter for ``.txt``
+files by configuring it in your config file as follows::
 
    py['parser'] = 'reST'
 
-or in your blosxom .txt file entries, place a '#parser reST' line
-after the title of your blog::
+Additionally, you can do this on an entry-by-entry basis by adding
+a ``#parser reST`` line in the metadata section.  For example::
 
    My Little Blog Entry
    #parser reST
    My main story...
+
+
+Configuration
+=============
 
 There's two optional configuration parameter you can for additional
 control over the rendered HTML::
