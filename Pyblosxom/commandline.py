@@ -141,10 +141,20 @@ def test_installation(command, argv):
     elif not os.path.isdir(config["datadir"]):
         pwrap_error("- ERROR: datadir '%s' does not exist."
                     "  You need to create your datadir and give it "
-                    " appropriate permissions.")
-
+                    " appropriate permissions." % config["datadir"])
     else:
         pwrap("- datadir '%s' exists." % config["datadir"])
+
+    if "flavourdir" not in config_keys:
+        pwrap("- WARNING: You should consider setting flavourdir and putting "
+              "your flavour templates there.  See the documentation for "
+              "more details.")
+    elif not os.path.isdir(config["flavourdir"]):
+        pwrap_error("- ERROR: flavourdir '%s' does not exist."
+                    "  You need to create your flavourdir and give it "
+                    " appropriate permissions." % config["flavourdir"])
+    else:
+        pwrap("- flavourdir '%s' exists." % config["flavourdir"])
 
     if (("blog_encoding" in config_keys
          and config["blog_encoding"].lower() != "utf-8")):
