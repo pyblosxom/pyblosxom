@@ -27,6 +27,8 @@ If you have `pip`_, then do::
 
     pip install --upgrade pyblosxom
 
+**OR**
+
 If you don't have `pip`_, but do have `easy_install`_, then do::
 
     easy_install -U pyblosxom
@@ -44,6 +46,8 @@ First, activate your virtual environment.
 If you have `pip`_, then do::
 
     pip install --upgrade pyblosxom
+
+**OR**
 
 If you don't have `pip`_, but do have `easy_install`_, then do::
 
