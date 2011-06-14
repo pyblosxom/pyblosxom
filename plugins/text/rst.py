@@ -110,7 +110,7 @@ def readfile(filename, request):
     if len(lines) == 0:
         return {"title": "", "body": ""}
 
-    title = lines.pop(0)
+    title = lines.pop(0).strip()
 
     # absorb meta data
     while lines and lines[0].startswith("#"):
