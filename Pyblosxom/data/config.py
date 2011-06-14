@@ -10,7 +10,8 @@
 # There are configuration properties that are not detailed in
 # this file.  These are the properties that are most often used.
 # To see a full list of configuration properties as well as
-# additional documentation, see the PyBlosxom documentation.
+# additional documentation, see the PyBlosxom documentation on
+# the web-site for your version of PyBlosxom.
 # =================================================================
 
 # Don't touch this next line.
@@ -62,7 +63,8 @@ py["blog_encoding"] = "utf-8"
 
 # What is the locale for this blog?  This is used when formatting dates
 # and other locale-sensitive things.  Make sure the locale is valid for
-# your system.  See the PyBlosxom documentation for details.
+# your system.  See the configuration chapter in the PyBlosxom documentation
+# for details.
 #py["locale"] = "en_US.iso-8859-1"
 
 # Where are this blog's entries kept?
