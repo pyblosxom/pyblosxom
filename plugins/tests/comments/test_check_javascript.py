@@ -6,7 +6,7 @@ __author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
 __url__ = 'http://pyblosxom.bluesock.org/wiki/index.php/Framework_for_testing_plugins'
 
 from plugins.tests.test_base import PluginTest
-from plugins.comments.plugins import check_javascript
+from plugins.comments import check_javascript
 
 class TestCheckJavascript(PluginTest):
     """Test class for the check_javascript plugin.

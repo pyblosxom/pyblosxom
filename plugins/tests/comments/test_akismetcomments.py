@@ -6,7 +6,7 @@ __author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
 __url__ = 'http://pyblosxom.bluesock.org/wiki/index.php/Framework_for_testing_plugins'
 
 from plugins.tests.test_base import PluginTest
-from plugins.comments.plugins import akismet, akismetcomments
+from plugins.comments import akismet, akismetcomments
 import sys
 
 class MockAkismet:
@@ -66,11 +66,11 @@ class TestAkismetComments(PluginTest):
             False, akismetcomments.verify_installation(self.request))
 
         # try with an import error
-        akismet = sys.modules['plugins.comments.plugins.akismet']
-        del sys.modules['plugins.comments.plugins.akismet']
+        akismet = sys.modules['plugins.comments.akismet']
+        del sys.modules['plugins.comments.akismet']
         self.assertEquals(
             False, akismetcomments.verify_installation(self.request))
-        sys.modules['plugins.comments.plugins.akismet'] = akismet
+        sys.modules['plugins.comments.akismet'] = akismet
 
         # try with a key that doesn't verify
         self.config['akismet_api_key'] = 'bad_key'
