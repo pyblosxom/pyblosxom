@@ -55,45 +55,19 @@ Why you might not want to use PyBlosxom
 =======================================
 
 PyBlosxom is a small open source project and while there is a
-community, it's pretty small.  PyBlosxom's features are great
-but make it a niche weblog engine.
+community, it's pretty small.  PyBlosxom's features are great but make
+it a niche weblog engine.
 
-PyBlosxom is a *file-based* weblog system.  Each blog entry is a separate
-file stored in a directory hierarchy on your file system.
-By default, the hierarchy is a category tree meaning each blog entry belongs
-in a single category.  By default, mtimes are used as the blog entry
-timestamp.  There are plugins that change this behavior, but require
-extra configuration to use.
+PyBlosxom is a *file-based* weblog system.  Each blog entry is a
+separate file stored in a directory hierarchy on your file system.  By
+default, the hierarchy is a category tree meaning each blog entry
+belongs in a single category.  By default, mtimes are used as the blog
+entry timestamp.  There are plugins that change this behavior, but
+require extra configuration to use.
 
 There are a lot of other weblog systems out there.  If it's apparent
-that PyBlosxom won't work for you, don't force it---use something else.
-Possibilities include:
-
-**WordPress**
-
-    http://wordpress.org/
-
-    PHP/database based weblog system that a lot of people use.
-
-**Zine**
-
-    http://zine.pocoo.org/
-
-    Python-based weblog system that's a lot like WordPress, but it's
-    written in Python and supports Python plugins.
-
-**ikiwiki**
-
-    http://ikiwiki.info/
-
-    ikiwiki is written in Perl and melds blogging with wiki with
-    version control storage.
-
-**jekyll**
-
-    http://github.com/mojombo/jekyll
-
-    A blog-aware, static site generator in Ruby.
+that PyBlosxom won't work for you, don't force it---use something
+else.
 
 
 Overview of PyBlosxom
@@ -116,8 +90,8 @@ Themes:
 * PyBlosxom comes with several flavours: html, rss20, and atom.
 * The `PyBlosxom website`_ maintains a flavour registry for flavours
   contributed by people like you.
-* There's more information in the chapter on
-  :ref:`Flavours and Templates <flavours-and-templates>`.
+* There's more information in the chapter on Flavours and Templates in
+  the docs.
 
 Plugins:
 
@@ -125,10 +99,9 @@ Plugins:
 * Plugins are written in Python.
 * Plugins are loaded using the ``plugin_dirs`` and ``load_plugins``
   configuration variables.
-* For more information on using plugins see
-  :ref:`Plugins <using-plugins>`.
-* For more information on writing plugins see
-  :ref:`Writing Plugins <writing-plugins>`.
+* For more information on using plugins see the Plugins chapter in the docs.
+* For more information on writing plugins see the Writing Plugins chapter
+  in the docs.
 * The `PyBlosxom website`_ maintains a plugin registry for plugins 
   submitted by people like you.
 
