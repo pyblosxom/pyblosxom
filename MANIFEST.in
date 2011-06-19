@@ -1,11 +1,9 @@
 include setup.py
-include CHANGELOG
+include WHATSNEW
 include README
 include INSTALL
 include LICENSE
-include TODO
 include THANKS
-include AUTHORS
 include UPGRADE
 recursive-include bin *
 recursive-include Pyblosxom *
