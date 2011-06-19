@@ -46,10 +46,10 @@ from Pyblosxom.entries.fileentry import FileEntry
 
 # see http://www.python.org/dev/peps/pep-0386/
 
-VERSION = "1.5-dev"
-VERSION_DATE = VERSION + " git-master"
-# VERSION = "1.5rc2"
-# VERSION_DATE = VERSION + " 20100803"
+# VERSION = "1.5-dev"
+# VERSION_DATE = VERSION + " git-master"
+VERSION = "1.5rc3"
+VERSION_DATE = VERSION + " 20110618"
 VERSION_SPLIT = tuple(VERSION.split(" ")[0].split('.'))
 
 class PyBlosxom:

@@ -11,6 +11,7 @@
 # LICENSE for distribution details.
 #######################################################################
 
+VERSION = "1.5rc3"
 
 import os.path, sys, os
 from distutils.sysconfig import get_python_lib
@@ -21,11 +22,9 @@ except ImportError:
     from setuptools import setup, find_packages
     print "Using setuptools...."
 
-version = "1.5rc2"
-
 setup(
     name="pyblosxom",
-    version=version,
+    version=VERSION,
     description="PyBlosxom is a file-based weblog engine.",
     long_description=open('README').read(),
     license='MIT',
