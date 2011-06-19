@@ -21,7 +21,7 @@ which lists all the tags.
 It creates a ``$(tags)`` variable for story templates which lists tags
 for the story.
 
-It creates a ''$(tagcloud)'' variable for the tag cloud.
+It creates a ``$(tagcloud)`` variable for the tag cloud.
 
 
 Configuration
