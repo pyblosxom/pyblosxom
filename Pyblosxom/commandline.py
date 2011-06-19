@@ -1,8 +1,7 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (C) 2010 Dieter Plaetinck
-# Copyright (C) 2008, 2009, 2010, 2011 Will Kahn-Greene
+# Copyright (C) 2008-2011 by the PyBlosxom team.  See AUTHORS.
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.

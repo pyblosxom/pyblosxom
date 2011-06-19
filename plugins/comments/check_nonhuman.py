@@ -1,7 +1,7 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2006, 2007, 2008, 2009, 2010, 2011 Will Kahn-Greene
+# Copyright (c) 2006-2011 Will Kahn-Greene
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.

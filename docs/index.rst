@@ -33,7 +33,7 @@ Contents:
    dev_writing_plugins
    dev_codedocs
    dev_testing
-   thanks
+   authors
    glossary
 
 

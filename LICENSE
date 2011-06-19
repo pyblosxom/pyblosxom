@@ -2,10 +2,12 @@
  License
 =========
 
+PyBlosxom codebase
+==================
+
 The MIT License (http://www.opensource.org/licenses/mit-license.php)
 
-* Copyright (c) 2003-2006 Wari Wahab
-* Copyright (c) 2003-2010 Will Kahn-Greene
+* Copyright (c) 2003-2011 by the PyBlosxom team (see AUTHORS file).
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -25,3 +27,9 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+Core plugins
+============
+
+See headers in plugin code files for license/copyright information.
