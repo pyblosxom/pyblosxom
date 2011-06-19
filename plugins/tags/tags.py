@@ -21,6 +21,8 @@ which lists all the tags.
 It creates a ``$(tags)`` variable for story templates which lists tags
 for the story.
 
+It creates a ''$(tagcloud)'' variable for the tag cloud.
+
 
 Configuration
 =============
@@ -97,6 +99,41 @@ following three config properties:
 ``tags_list_finish``
 
     Printed after the list.  Defaults to ``</p>``.
+
+
+In the head and foot templates, you can also add a tag cloud with the
+``$(tagcloud)`` variable.  The templates for the cloud use the
+following three config properties:
+
+``tags_cloud_start``
+
+    Printed before the cloud.  Defaults to ``<p>``.
+
+``tags_cloud_item``
+
+    Used for each tag in the cloud list.  There are a bunch of
+    variables you can use:
+
+    * ``base_url`` - the baseurl for your blog
+    * ``flavour`` - the default flavour or flavour currently showing
+    * ``tag`` - the tag name
+    * ``count`` - the number of items that are tagged with this tag
+    * ``class`` - bigTag, mediumTag or smallTag--the css class for
+      this tag representing the frequency the tag is used
+    * ``tagurl`` - url composed of baseurl, trigger, and tag
+
+    Defaults to ``<a href="%(tagurl)s">%(tag)s</a>``.
+
+``tags_cloud_finish``
+
+    Printed after the cloud.  Defaults to ``</p>``.
+
+You'll also want to add CSS classes for ``bigTag``, ``mediumTag``,
+and ``smallTag`` to your CSS.  For example, something like this::
+
+   .bigTag { font-size: 12pt }
+   .mediumTag { font-size: 10pt }
+   .smallTag { font-size: 8pt ]
 
 
 You can list the tags for a given entry in the story template with the
@@ -397,6 +434,8 @@ def cb_head(args):
     config = request.get_configuration()
     tagsdata = data.get("tagsdata", {})
 
+
+    # first, build the tags list
     tags = tagsdata.keys()
     tags.sort()
 
@@ -425,36 +464,49 @@ def cb_head(args):
     output.append(finish_t)
 
     entry["tagslist"] = "\n".join(output)
+
+
+    # second, build the tags cloud
+    tags_by_file = tagsdata.items()
+
+    start_t = config.get("tags_cloud_start", "<p>")
+    item_t = config.get("tags_cloud_item", '<a class="%(class)s" href="%(tagurl)s">%(tag)s</a>')
+    finish_t = config.get("tags_cloud_finish", "</p>")
+
+    tagcloud = [start_t]
+
+    if len(tags_by_file) > 0:
+        tags_by_file.sort(key=lambda x: len(x[1]))
+        # the most popular tag is at the end--grab the number of files
+        # that have that tag
+        max_count = len(tags_by_file[-1][1])
+        min_count = len(tags_by_file[0])
+
+        b = (max_count - min_count) / 3
+
+        # sorts it alphabetically
+        tags_by_file.sort()
+
+        for tag, files in tags_by_file:
+            if len(files) > (min_count + (b * 2)):
+                tag_class = "bigTag"
+            elif len(files) > (min_count + b):
+                tag_class = "mediumTag"
+            else:
+                tag_class = "smallTag"
+
+            d = {"base_url": baseurl,
+                 "flavour": flavour,
+                 "class": tag_class,
+                 "tag": tag,
+                 "count": len(tagsdata[tag]),
+                 "tagurl": "/".join([baseurl, trigger, tag])}
+                
+            tagcloud.append(item_t % d)
+
+    tagcloud.append(finish_t)
+    entry["tagcloud"] = "\n".join(tagcloud)
+
     return args
 
 cb_foot = cb_head
-
-class TagsTest(unittest.TestCase):
-    def setUp(self):
-        self.tmpdir = tempfile.mkdtemp() 
-
-    def get_datadir(self):
-        return os.path.join(self.tmpdir, "datadir")
-
-    def tearDown(self):
-        try:
-            shutil.rmtree(self.tmpdir)
-        except OSError:
-            pass
-                
-    def test_get_tagsfile(self):
-        from Pyblosxom.pyblosxom import Request
-        req = Request({"datadir": self.get_datadir()}, {}, {})
-
-        cfg = {"datadir": self.get_datadir()}
-        self.assertEquals(get_tagsfile(cfg),
-                          os.path.join(self.get_datadir(), os.pardir,
-                                       "tags.index"))
-        
-        tags_filename = os.path.join(self.get_datadir(), "tags.db")
-        cfg = {"datadir": self.get_datadir(), "tags_filename": tags_filename}
-        self.assertEquals(get_tagsfile(cfg), tags_filename)
-
-def get_test_suite():
-    ret = unittest.TestLoader().loadTestsFromTestCase(TagsTest)
-    return ret
