@@ -8,21 +8,52 @@
 What's new in 1.5 rc3
 =====================
 
-Summary
--------
+Pertinent to users:
+-------------------
 
-It's been a long time since the last release and we've done a lot of
-work on fixing bugs in the plugins, making the documentation better,
-fixing project infrastructure, and fixing bugs in the core code.
+1. PyBlosxom shows an error page if it crashes rather than forcing
+   you to go figure out what happened by finding the web server logs.
+   This should make configuring and debugging much easier.
 
-FIXME - go through 1.5 notes and split it up into the separate
-relase candidates.
+2. Bunch of new plugins.
+
+3. Bunch of fixes to the comments plugin, tags and pycalendar plugins.
+
+   Tags plugin gains tags cloud functionality.
+
+   Comments plugin gains comment_disable_after_x_days feature.
+
+   If you're using them, update to the latest versions.
+
+4. Bunch of fixes to the documentation.  If you see errors or things
+   that are unclear, let us know.
+
+   The documentation for the comments plugin still needs to be overhauled.
+
+5. Bunch of other bug fixes.
+
+6. Bunch of new plugins: magicword, pages, rst, check_nonhuman, and 
+   check_blacklist.
 
 
 What's new in 1.5 rc2
 =====================
 
+Pertinent to users:
+-------------------
 
+1. The static renderer has a new command line.
+
+2. New entrytitle, acronym and paginate plugins.
+
+3. Fixed problems in yearmonths plugin.  Please update to the latest
+   version.
+
+
+Pertinent to developers:
+------------------------
+
+1. New sortlist callback
 
 
 What's new in 1.5 rc1
