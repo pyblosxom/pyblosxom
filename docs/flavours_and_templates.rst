@@ -48,9 +48,9 @@ A flavour consists of at least the following templates:
 
 .. Note::
 
-    Refer to :ref:`lifecycle-of-the-blosxom-renderer <Pyblosxom Architecture>`
-    for detailed information on how Pyblosxom's default renderer blosxom
-    uses these templates.
+    Refer to :ref:`lifecycle-of-the-blosxom-renderer` for detailed 
+    information on how Pyblosxom's default renderer blosxom uses these
+    templates.
 
 More on flavours, how they're stored, and such later.
 

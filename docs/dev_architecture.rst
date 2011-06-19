@@ -64,6 +64,7 @@ PyBlosxom's behavior and output is then augmented by:
    or write yourself.
 
 
+.. _lifecycle-of-the-blosxom-renderer:
 
 Lifecycle of a PyBlosxom request
 ================================
