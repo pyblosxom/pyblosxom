@@ -55,7 +55,7 @@ class TagsTest(PluginTest):
             str(self.args["entry"]["tagcloud"]),
             "\n".join(
                 ["<p>",
-                 '<a class="bigTag" href="http://bl.og//tag/tag2">tag2</a>',
+                 '<a class="biggestTag" href="http://bl.og//tag/tag2">tag2</a>',
                  "</p>"]))
 
     def test_tag_cloud_many_tags(self):
@@ -71,7 +71,7 @@ class TagsTest(PluginTest):
             str(self.args["entry"]["tagcloud"]),
             "\n".join(
                 ["<p>",
-                 '<a class="bigTag" href="http://bl.og//tag/tag1">tag1</a>',
-                 '<a class="mediumTag" href="http://bl.og//tag/tag2">tag2</a>',
-                 '<a class="smallTag" href="http://bl.og//tag/tag3">tag3</a>',
+                 '<a class="biggestTag" href="http://bl.og//tag/tag1">tag1</a>',
+                 '<a class="biggestTag" href="http://bl.og//tag/tag2">tag2</a>',
+                 '<a class="smallestTag" href="http://bl.og//tag/tag3">tag3</a>',
                  "</p>"]))

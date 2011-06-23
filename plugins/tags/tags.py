@@ -118,8 +118,8 @@ following three config properties:
     * ``flavour`` - the default flavour or flavour currently showing
     * ``tag`` - the tag name
     * ``count`` - the number of items that are tagged with this tag
-    * ``class`` - bigTag, mediumTag or smallTag--the css class for
-      this tag representing the frequency the tag is used
+    * ``class`` - biggestTag, bigTag, mediumTag, smallTag or smallestTag--the
+      css class for this tag representing the frequency the tag is used
     * ``tagurl`` - url composed of baseurl, trigger, and tag
 
     Defaults to ``<a href="%(tagurl)s">%(tag)s</a>``.
@@ -128,12 +128,14 @@ following three config properties:
 
     Printed after the cloud.  Defaults to ``</p>``.
 
-You'll also want to add CSS classes for ``bigTag``, ``mediumTag``,
-and ``smallTag`` to your CSS.  For example, something like this::
+You'll also want to add CSS classes for the size classes to your CSS.
+For example, you could add this::
 
-   .bigTag { font-size: 12pt }
-   .mediumTag { font-size: 10pt }
-   .smallTag { font-size: 8pt ]
+   .biggestTag { font-size: 16pt; }
+   .bigTag { font-size: 14pt }
+   .mediumTag { font-size: 12pt }
+   .smallTag { font-size: 10pt ]
+   .smallestTag { font-size: 8pt ]
 
 
 You can list the tags for a given entry in the story template with the
@@ -482,18 +484,26 @@ def cb_head(args):
         max_count = len(tags_by_file[-1][1])
         min_count = len(tags_by_file[0])
 
-        b = (max_count - min_count) / 3
+        # figure out the bin size for the tag size classes
+        b = (max_count - min_count) / 5
+
+        range_and_class = (
+            (min_count + (b * 4), "biggestTag"),
+            (min_count + (b * 3), "bigTag"),
+            (min_count + (b * 2), "mediumTag"),
+            (min_count + b, "smallTag"),
+            (0, "smallestTag")
+            )
 
         # sorts it alphabetically
         tags_by_file.sort()
 
         for tag, files in tags_by_file:
-            if len(files) > (min_count + (b * 2)):
-                tag_class = "bigTag"
-            elif len(files) > (min_count + b):
-                tag_class = "mediumTag"
-            else:
-                tag_class = "smallTag"
+            len_files = len(files)
+            for tag_range, tag_size_class in range_and_class:
+                if len_files > tag_range:
+                    tag_class = tag_size_class
+                    break
 
             d = {"base_url": baseurl,
                  "flavour": flavour,
