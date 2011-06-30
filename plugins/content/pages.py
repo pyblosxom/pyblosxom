@@ -220,7 +220,9 @@ def cb_filelist(args):
     if not pagesdir[-1] == os.sep:
         pagesdir = pagesdir + os.sep
 
-    if pyhttp["PATH_INFO"].startswith("/index"):
+    pathinfo = pyhttp.get("PATH_INFO", "")
+    path, ext = os.path.splitext(pathinfo)
+    if pathinfo == "/" or path == "/index":
         page_name = "frontpage"
     else:
         page_name = pyhttp["PATH_INFO"][len("/" + TRIGGER)+1:]
