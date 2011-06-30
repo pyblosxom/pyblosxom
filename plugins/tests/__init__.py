@@ -24,3 +24,5 @@ from plugins.tests.text.test_acronyms import *
 from plugins.tests.archives.test_yeararchives import *
 
 from plugins.tests.tags.test_tags import *
+
+from plugins.tests.content.test_pages import *

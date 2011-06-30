@@ -181,7 +181,14 @@ def eval_python_blocks(req, body):
     return body
  
 def is_frontpage(pyhttp, config):
-    return pyhttp["PATH_INFO"].startswith("/index") and config.get("pages_frontpage", False)
+    if not config.get("pages_frontpage"):
+        return False
+    if pyhttp["PATH_INFO"] in ("/", ""):
+        return True
+    path, ext = os.path.splitext(pyhttp.get("PATH_INFO", ""))
+    if path in ("/index", "index"):
+        return True
+    return False
 
 def is_trigger(pyhttp, config):
     return pyhttp["PATH_INFO"].startswith("/" + config.get("pages_trigger", TRIGGER))
