@@ -15,10 +15,8 @@ class PagesTest(PluginTest):
                           False)
 
         # test path-related possibilities
-        for path, expected in (("", True),
-                               ("/", True),
+        for path, expected in (("/", True),
                                ("/index", True),
-                               ("index", True),
                                ("/index.html", True),
                                ("/index.xml", True),
                                ("/foo", False)):

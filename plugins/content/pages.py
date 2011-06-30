@@ -183,10 +183,11 @@ def eval_python_blocks(req, body):
 def is_frontpage(pyhttp, config):
     if not config.get("pages_frontpage"):
         return False
-    if pyhttp["PATH_INFO"] in ("/", ""):
+    pathinfo = pyhttp.get("PATH_INFO", "")
+    if pathinfo == "/":
         return True
-    path, ext = os.path.splitext(pyhttp.get("PATH_INFO", ""))
-    if path in ("/index", "index"):
+    path, ext = os.path.splitext(pathinfo)
+    if path == "/index":
         return True
     return False
 
