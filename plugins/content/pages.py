@@ -89,6 +89,8 @@ Configuration
 
     This is the url trigger that causes the pages plugin to look for pages.
 
+        py["pages_trigger"] = "pages"
+
 ``pages_frontpage``
 
     Optional.  Defaults to False.
@@ -100,6 +102,10 @@ Configuration
     The extension for this file works the same way as blog entries.  So if
     your blog entries end in ``.txt``, then you would need a ``frontpage.txt``
     file.
+
+    Example::
+
+        py["pages_frontpage"] = True
 """
 
 __author__ = "Will Kahn-Greene"
