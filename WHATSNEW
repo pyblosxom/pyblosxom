@@ -15,25 +15,23 @@ Pertinent to users:
    you to go figure out what happened by finding the web server logs.
    This should make configuring and debugging much easier.
 
-2. Bunch of new plugins.
+2. Bunch of fixes to the documentation.  If you see errors or things
+   that are unclear, let us know.
 
-3. Bunch of fixes to the comments plugin, tags and pycalendar plugins.
+   The documentation for the comments plugin still needs to be overhauled.
+
+3. Bunch of other bug fixes.
+
+4. Bunch of new plugins: magicword, pages, rst, check_nonhuman, and 
+   check_blacklist.
+
+5. Bunch of fixes to the comments plugin, tags and pycalendar plugins.
 
    Tags plugin gains tags cloud functionality.
 
    Comments plugin gains comment_disable_after_x_days feature.
 
    If you're using them, update to the latest versions.
-
-4. Bunch of fixes to the documentation.  If you see errors or things
-   that are unclear, let us know.
-
-   The documentation for the comments plugin still needs to be overhauled.
-
-5. Bunch of other bug fixes.
-
-6. Bunch of new plugins: magicword, pages, rst, check_nonhuman, and 
-   check_blacklist.
 
 
 What's new in 1.5 rc2
