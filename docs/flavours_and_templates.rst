@@ -347,6 +347,21 @@ are evaluated::
    <h2>$(escape(title))</h2>
 
 
+Escaping the $
+--------------
+
+If you want a $ in your template that shouldn't signify variable expansion,
+then you need to escape it with a ``\``::
+
+    <p>
+       This blog is all about \$!
+    </p>
+
+renders as::
+
+    This blog is all about $!
+
+
 Getting a complete list of variables
 ------------------------------------
 
