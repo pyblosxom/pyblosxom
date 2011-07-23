@@ -16,6 +16,8 @@ import os
 import os.path
 import sys
 import textwrap
+import random
+import time
 from optparse import OptionParser
 
 from Pyblosxom.pyblosxom import VERSION_DATE, PyBlosxom
@@ -83,6 +85,82 @@ def build_parser(usage):
 
     return parser
 
+def generate_entries(command, argv):
+    """
+    This function is primarily for testing purposes.  It creates
+    a bunch of blog entries with random text in them.
+    """
+    parser = build_parser("%prog entries [options] <num_entries>")
+    (options, args) = parser.parse_args()
+
+    if args:
+        try:
+            num_entries = int(args[0])
+            assert num_entries > 0
+        except ValueError:
+            pwrap_error("ERROR: num_entries must be a positive integer.")
+            return 0
+    else:
+        num_entries = 5
+
+    verbose = options.verbose
+
+    p = build_pyblosxom()
+    if not p:
+        return 0
+
+    datadir = p.get_request().config["datadir"]
+
+    sm_para = "<p>Lorem ipsum dolor sit amet.</p>"
+    med_para = """<p>
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
+  in mi lacus, sed interdum nisi. Vestibulum commodo urna et libero
+  vestibulum gravida. Vivamus hendrerit justo quis lorem auctor
+  consectetur. Aenean ornare, tortor in sollicitudin imperdiet, neque
+  diam pellentesque risus, vitae.
+</p>"""
+    lg_para = """<p>
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
+  dictum tortor orci. Lorem ipsum dolor sit amet, consectetur
+  adipiscing elit. Etiam quis lectus vel odio convallis tincidunt sed
+  et magna. Suspendisse at dolor suscipit eros ullamcorper iaculis. In
+  aliquet ornare libero eget rhoncus. Sed ac ipsum eget eros fringilla
+  aliquet ut eget velit. Curabitur dui nibh, eleifend non suscipit at,
+  laoreet ac purus. Morbi id sem diam. Cras sit amet ante lacus, nec
+  euismod urna. Curabitur iaculis, lorem at fringilla malesuada, nunc
+  ligula eleifend nisi, at bibendum libero est quis
+  tellus. Pellentesque habitant morbi tristique senectus et netus et
+  malesuada.
+</p>"""
+    paras = [sm_para, med_para, lg_para]
+
+    if verbose:
+        print "Creating %d entries" % num_entries
+
+    now = time.time()
+
+    for i in range(num_entries):
+        title = "post number %d\n" % (i + 1)
+        body = []
+        for _ in range(random.randrange(1, 6)):
+            body.append(random.choice(paras))
+
+        fn = os.path.join(datadir, "post%d.txt" % (i + 1))
+        f = open(fn, "w")
+        f.write(title)
+        f.write("\n".join(body))
+        f.close()
+
+        mtime = now - ((num_entries - i) * 3600)
+        os.utime(fn, (mtime, mtime))
+        
+        if verbose:
+            print "Creating '%s'..." % fn
+
+    if verbose:
+        print "Done!"
+    return 0
+
 def test_installation(command, argv):
     """
     This function gets called when someone starts up pyblosxom.cgi
@@ -101,10 +179,6 @@ def test_installation(command, argv):
     This is designed to make it easier for a user to verify their
     PyBlosxom installation is working and also to install new plugins
     and verify that their configuration is correct.
-
-    :Parameters:
-       request : Request object
-          the request object
     """
     parser = build_parser("%prog test [options]")
     parser.parse_args()
@@ -366,7 +440,9 @@ DEFAULT_HANDLERS = (
      "Tests installation and configuration for a blog."),
     ("staticrender", run_static_renderer,
      "Statically renders your blog into an HTML site."),
-    ("renderurl", render_url, "Renders a single url of your blog.")
+    ("renderurl", render_url, "Renders a single url of your blog."),
+    ("generate", generate_entries, "Generates random entries--helps "
+     "with blog setup.")
     )
 
 def get_handlers():
