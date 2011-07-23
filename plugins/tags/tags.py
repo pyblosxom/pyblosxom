@@ -74,6 +74,21 @@ how tag metadata is formatted, and how tag lists triggered.
     This is the url trigger to indicate that the tags plugin should
     handle the file list based on the tag.  Defaults to ``tag``.
 
+``truncate_tags``
+
+    If this is True, then tags index listings will get passed through
+    the truncate callback.  If this is False, then the tags index
+    listing will not be truncated.
+
+    If you're using a paging plugin, then setting this to True will
+    allow your tags index to be paged.
+
+    Example::
+
+        py["truncate_tags"] = True
+
+    Defaults to True.
+
 
 In the head and foot templates, you can list all the tags with the
 ``$(tagslist)`` variable.  The templates for this listing use the
@@ -212,7 +227,7 @@ from anywhere.
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "2010-05-07"
+__version__ = "2011-07-23"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Tags plugin"
 __category__ = "tags"
@@ -304,11 +319,9 @@ def category_to_tags(command, argv):
         raise ValueError("config.py has no datadir property.")
 
     sep = config.py.get("tags_separator", ",")
-    tagsfile = get_tagsfile(config.py)
     
     from Pyblosxom.pyblosxom import blosxom_entry_parser, Request
     from Pyblosxom import tools
-    from Pyblosxom.entries import fileentry
 
     data = {}
 
@@ -365,6 +378,9 @@ def cb_start(args):
     data["tagsdata"] = tagsdata
     
 def cb_filelist(args):
+    from Pyblosxom.pyblosxom import blosxom_truncate_list_handler
+    from Pyblosxom import tools
+
     # handles /trigger/tag to show all the entries tagged that
     # way
     req = args["request"]
@@ -397,6 +413,14 @@ def cb_filelist(args):
     entrylist.sort()
     entrylist.reverse()
     entrylist = [e[1] for e in entrylist]
+
+    data["truncate"] = config.get("truncate_tags", True)
+
+    args = {"request": req, "entry_list": entrylist}
+    entrylist = tools.run_callback("truncatelist",
+                                   args,
+                                   donefunc=lambda x: x != None,
+                                   defaultfunc=blosxom_truncate_list_handler)
 
     return entrylist
 
