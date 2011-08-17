@@ -98,7 +98,7 @@ class Renderer(RendererBase):
         printout("Plugins that loaded:\n")
         if plugin_utils.plugins:
             for plugin in plugin_utils.plugins:
-                printout(" * " + escv(plugin))
+                printout(" * " + escv(plugin) + "\n")
         else:
             printout("None\n")
 
