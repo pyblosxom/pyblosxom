@@ -244,50 +244,52 @@ def test_installation(command, argv):
 
     no_verification_support = []
 
-    if len(plugin_utils.bad_plugins) > 0:
-        pwrap("- Some plugins failed to load.")
-        pwrap("")
-        pwrap("----")
-        for mem in plugin_utils.bad_plugins:
-            pwrap("plugin:  %s" % mem[0])
-            print "%s" % mem[1]
-            pwrap("----")
+    if len(plugin_utils.plugins) + len(plugin_utils.bad_plugins) == 0:
+        pwrap(" - There are no plugins installed.")
 
-    if len(plugin_utils.plugins) == 0:
-        pwrap("- There are no plugins installed.")
     else:
-        pwrap("- This goes through your plugins and asks each of them to "
-              "verify configuration and installation.")
-        pwrap("")
-        pwrap("----")
-        for mem in plugin_utils.plugins:
-            if hasattr(mem, "verify_installation"):
-                pwrap("plugin:  %s" % mem.__name__)
-                print "file:    %s" % mem.__file__
-                print "version: %s" % (str(getattr(mem, "__version__")))
-
-                try:
-                    if mem.verify_installation(request) == 1:
-                        pwrap("PASS")
-                    else:
-                        pwrap_error("FAIL")
-                except StandardError:
-                    pwrap_error("FAIL: Exception thrown:")
-                    traceback.print_exc(file=sys.stdout)
-
-                pwrap("----")
-            else:
-                mn = mem.__name__
-                mf = mem.__file__
-                no_verification_support.append( "'%s' (%s)" % (mn, mf))
-
-        if len(no_verification_support) > 0:
+        if len(plugin_utils.bad_plugins) > 0:
+            pwrap("- Some plugins failed to load.")
             pwrap("")
-            pwrap("The following plugins do not support installation "
-                  "verification:")
-            no_verification_support.sort()
-            for mem in no_verification_support:
-                print "- %s" % mem
+            pwrap("----")
+            for mem in plugin_utils.bad_plugins:
+                pwrap("plugin:  %s" % mem[0])
+                print "%s" % mem[1]
+                pwrap("----")
+
+        if len(plugin_utils.plugins) > 0:
+            pwrap("- This goes through your plugins and asks each of them "
+                  "to verify configuration and installation.")
+            pwrap("")
+            pwrap("----")
+            for mem in plugin_utils.plugins:
+                if hasattr(mem, "verify_installation"):
+                    pwrap("plugin:  %s" % mem.__name__)
+                    print "file:    %s" % mem.__file__
+                    print "version: %s" % (str(getattr(mem, "__version__")))
+
+                    try:
+                        if mem.verify_installation(request) == 1:
+                            pwrap("PASS")
+                        else:
+                            pwrap_error("FAIL")
+                    except StandardError:
+                        pwrap_error("FAIL: Exception thrown:")
+                        traceback.print_exc(file=sys.stdout)
+
+                    pwrap("----")
+                else:
+                    mn = mem.__name__
+                    mf = mem.__file__
+                    no_verification_support.append( "'%s' (%s)" % (mn, mf))
+
+            if len(no_verification_support) > 0:
+                pwrap("")
+                pwrap("The following plugins do not support installation "
+                      "verification:")
+                no_verification_support.sort()
+                for mem in no_verification_support:
+                    print "- %s" % mem
 
     pwrap("")
     pwrap("Verification complete.  Correct any errors and warnings above.")

@@ -13,7 +13,8 @@ and templates.
 """
 
 from Pyblosxom.renderers.base import RendererBase
-from Pyblosxom import tools
+from Pyblosxom import tools, plugin_utils
+
 
 def escv(s):
     """
@@ -46,7 +47,7 @@ def print_map(printfunc, keymap):
     for key in keys:
         printfunc("<font color=\"#0000ff\">%s</font> -&gt; %s\n" % \
                   (escv(key), escv(keymap[key])))
-        
+
 class Renderer(RendererBase):
     """
     This is the debug renderer.  This is very useful for debugging
@@ -79,7 +80,7 @@ class Renderer(RendererBase):
         printout("You requested the %(flavour)s flavour.\n" % data)
 
         printout(hbar)
-        printout("The HTTP Return codes are:\n")
+        printout("HTTP return headers:\n")
         printout(hbar)
         for k, v in self._header:
             printout("<font color=\"#0000ff\">%s</font> -&gt; %s\n" % \
@@ -90,6 +91,27 @@ class Renderer(RendererBase):
         printout(hbar)
         import os
         print_map(printout, os.environ)
+
+        printout(hbar)
+        printout("Plugins:\n")
+        printout(hbar)
+        printout("Plugins that loaded:\n")
+        if plugin_utils.plugins:
+            for plugin in plugin_utils.plugins:
+                printout(" * " + escv(plugin))
+        else:
+            printout("None\n")
+
+        printout("\n")
+
+        printout("Plugins that didn't load:\n")
+        if plugin_utils.bad_plugins:
+            for plugin, exc in plugin_utils.bad_plugins:
+                exc = "    " + "\n    ".join(exc.splitlines()) + "\n"
+                printout(" * " + escv(plugin) + "\n")
+                printout(escv(exc))
+        else:
+            printout("None\n")
 
         printout(hbar)
         printout("Request.get_http() dict contains:\n")
