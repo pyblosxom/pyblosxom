@@ -113,7 +113,8 @@ def enable_excepthook(httpresponse=False):
     handled anywhere else.
 
     If you're running PyBlosxom as a WSGI application or as a CGI
-    script, you should create a CrashHandler instance and call
-    handle_by_response.
+    script, you should create a ``CrashHandler`` instance and call
+    ``handle_by_response`` directly.  See
+    :ref:`pyblosxom.PyBlosxomWSGIApp`.
     """
     sys.excepthook = CrashHandler(httpresponse=httpresponse)
