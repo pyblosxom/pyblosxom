@@ -274,19 +274,17 @@ def buildtags(command, argv):
     sep = config.py.get("tags_separator", ",")
     tagsfile = get_tagsfile(config.py)
     
-    from Pyblosxom.pyblosxom import blosxom_entry_parser, Request
+    from Pyblosxom.pyblosxom import blosxom_entry_parser, PyBlosxom
     from Pyblosxom import tools
     from Pyblosxom.entries import fileentry
 
-    data = {}
-
-    # register entryparsers so that we parse all possible file types.
-    data["extensions"] = tools.run_callback("entryparser",
-                                            {"txt": blosxom_entry_parser},
-                                            mappingfunc=lambda x, y:y,
-                                            defaultfunc=lambda x: x)
-
-    req = Request(config.py, {}, data)
+    # build a PyBlosxom object, initialize it, and run the start
+    # callback.  this gives entry parsing related plugins a chance to
+    # get their stuff together so that they work correctly.
+    p = PyBlosxom(config.py, {})
+    p.initialize()
+    req = p.get_request()
+    tools.run_callback("start", {"request": req})
 
     # grab all the entries in the datadir
     filelist = tools.walk(req, datadir)
