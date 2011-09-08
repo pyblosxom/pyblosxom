@@ -91,16 +91,18 @@ class PyBlosxom:
         data["pyblosxom_version"] = VERSION_DATE
         data['pi_bl'] = ''
 
-        # get our URL and configure the base_url param
-        if pyhttp.has_key('SCRIPT_NAME'):
-            if not config.has_key('base_url'):
+        # if the user specifies base_url in config, we use that.
+        # otherwise we compose it from SCRIPT_NAME in the environment
+        # or we leave it blank.
+        if not "base_url" in config:
+            if pyhttp.has_key('SCRIPT_NAME'):
                 # allow http and https
                 config['base_url'] = '%s://%s%s' % \
                                      (pyhttp['wsgi.url_scheme'],
                                       pyhttp['HTTP_HOST'],
                                       pyhttp['SCRIPT_NAME'])
-        else:
-            config['base_url'] = config.get('base_url', '')
+            else:
+                config["base_url"] = ""
 
         # take off the trailing slash for base_url
         if config['base_url'].endswith("/"):
