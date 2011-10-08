@@ -9,7 +9,7 @@
 #######################################################################
 
 """
-Usage
+Summary
 =====
 
 A blog consists of blog entries, plus a bunch of pages that exist outside
@@ -23,7 +23,8 @@ pages can also have plugins.
 
 It looks for urls like::
 
-   /pages/blah
+    /pages/blah
+    /pages/blah.html
 
 and pulls up the file ``blah.txt`` [1]_ which is located in the path specified
 in the config file as ``pagesdir``.  If no pagesdir is specified, then we
@@ -35,10 +36,23 @@ If the file is not there, it kicks up a 404.
    valid for entries on your blog.  For example, if you have the textile
    entryparser installed, then ``.txtl`` is also a valid file ending.
 
+
+Template
+========
+
 pages formats the page using the ``pages`` template.
-So you need to add a ``pages.html`` file to your datadir (assuming
-you're using the ``html`` flavour).  I tend to copy my story flavour
-templates over and remove the date/time-related bits.
+So you need a ``pages`` template in the flavours that you want these
+pages to be rendered in.  I tend to copy my story flavour template
+and remove the date/time-related bits.
+
+For example, if you're using the html flavour and that is stored in
+``/home/foo/blog/flavours/html.flav/``, then you could copy the ``story``
+file in that directory to ``pages`` and that would become your 
+``pages`` template.
+
+
+Python code blocks
+==================
 
 pages handles evaluating python code blocks.  Enclose python
 code in ``<%`` and ``%>``.  The assumption is that only you can edit your 
@@ -110,9 +124,11 @@ Configuration
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "2011-01-13"
+__version__ = "2011-07-03"
 __url__ = "http://pyblosxom.bluesock.org/"
-__description__ = "Allows you to include non-blog-entry files in your site."
+__description__ = (
+    "Allows you to include non-blog-entry files in your site and have a "
+    "non-blog-entry front page.")
 __category__ = "content"
 __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"
@@ -242,16 +258,10 @@ def cb_filelist(args):
         page_name = page_name[page_name.rfind("/"):]
 
     # if the page has a flavour, we use that.  otherwise
-    # we default to the static flavour
+    # we default to the default flavour.
     page_name, flavour = os.path.splitext(page_name)
     if flavour:
         data["flavour"] = flavour[1:]
-
-    # we build our own config dict for the fileentry to kind of
-    # fake it into loading this file correctly rather than
-    # one of the entries.
-    # newdatadir = pagesdir
-    # config["datadir"] = newdatadir
 
     ext = tools.what_ext(data["extensions"].keys(), pagesdir + page_name)
 
@@ -275,7 +285,7 @@ def cb_filelist(args):
     fe["absolute_path"] = TRIGGER
     fe["fn"] = page_name
     fe["file_path"] = TRIGGER + "/" + page_name
-    fe["template_name"] = "static"
+    fe["template_name"] = "pages"
 
     data['blog_title_with_path'] = (config.get("blog_title", "") + 
                                     " : " + fe.get("title", ""))
