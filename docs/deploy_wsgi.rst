@@ -77,6 +77,24 @@ do the following:
       application = Pyblosxom.pyblosxom.PyBlosxomWSGIApp()
 
 
+Note: On Mac OS X Lion, type ``brew install mod_wsgi``, then add the following
+blocks to your ``/etc/apache2/httpd.conf``:
+::
+
+  // Up near the other LoadModule lines
+  LoadModule wsgi_module /usr/local/Cellar/mod_wsgi/3.3/libexec/mod_wsgi.so
+
+and
+::
+
+  WSGIDaemonProcess pyblosxom processes=2 threads=5 display-name=PyBlosxom
+  <Directory /path/to/pyblosxom>
+      WSGIProcessGroup pyblosxom
+      Order deny,allow
+      Allow from all
+  </Directory>
+  WSGIScriptAlias /myapp /path/to/pyblosxom.wsgi
+
 
 mod_python
 ----------
