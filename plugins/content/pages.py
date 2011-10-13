@@ -10,7 +10,7 @@
 
 """
 Summary
-=====
+=======
 
 A blog consists of blog entries, plus a bunch of pages that exist outside
 of the blog structure.  For example, an "About me" page or a "Guestbook"
