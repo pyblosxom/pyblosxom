@@ -5,6 +5,69 @@
 .. _whatsnew:
 
 
+What's new in 1.5 rc4
+=====================
+
+Pertinent to users:
+-------------------
+
+1. I moved all the plugins again.  This time, instead of being in
+   ``plugins/``, they're now in ``Pyblosxom/plugins/``.
+
+   You no longer have to copy core plugins into your plugins
+   directory.  Instead of copying core plugin files, refer to the
+   plugins in your ``config.py`` file using their full Python path in
+   the Pyblosxom package.
+
+   For example, the pycalendar plugin is now in
+   ``Pyblosxom/plugins/date/pycalendar.py`` and thus its Pyblosxom
+   package path is ``Pyblosxom.plugins.date.pycalendar``.  Your
+   ``config.py`` file would look have this::
+
+       py["load_plugins"] = [
+           ...
+           "Pyblosxom.plugins.date.pycalendar",
+           ...
+           ]
+
+
+   If you do this, then the next time you upgrade PyBlosxom, the
+   plugins will be upgraded automatically.
+
+2. Fixes for the following plugins:
+
+   pages
+
+      * Fixed documentation and error messages for ``pagesdir``.
+      * Fixed frontpage checking.  Should catch / as well as /index
+        now.
+      * Adds more examples to documentation.
+
+   tags
+
+      * Increased tag cloud range from 3 sizes to 5.
+      * Adds truncate support.
+      * Fixes problems with initialization when building tags so that
+        it initializes plugins allowing them to do startup things.
+        This fixes problems with plugins that augment entry parsers.
+
+3. Fixes error handling for loading plugins.  When doing
+   ``pyblosxom-cmd test`` and a plugin fails to load, it'll now tell
+   you.  When using the debug renderer and a plugin fails to load,
+   it'll now tell you.
+
+
+Pertinent to developers
+-----------------------
+
+1. I removed all the extra infrastructure for testing plugins.
+   Plugins that come with the core are now in the Pyblosxom package
+   and their tests are in ``Pyblosxom/tests/``.
+
+2. Adds generate subcommand to pyblosxom-cmd.  This makes it easier to
+   test blogs and plugins that do things with entries.
+
+
 What's new in 1.5 rc3
 =====================
 
