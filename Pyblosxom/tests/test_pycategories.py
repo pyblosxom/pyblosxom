@@ -1,3 +1,12 @@
+#######################################################################
+# This file is part of PyBlosxom.
+#
+# Copyright (C) 2010-2011 by the PyBlosxom team.  See AUTHORS.
+#
+# PyBlosxom is distributed under the MIT license.  See the file
+# LICENSE for distribution details.
+#######################################################################
+
 import time
 import os
 
