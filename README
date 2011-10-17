@@ -172,11 +172,5 @@ To run core tests, do this::
 
 This will build PyBlosxom, then run the tests.
 
-To run plugin unit tests do this::
-
-    PYTHONPATH=. python plugins/testrunner.py
-
-That will run all the plugins tests.
-
 If you would like to add tests to the test suite, please do and send
 us patches!
