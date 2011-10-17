@@ -2,8 +2,8 @@ import tempfile
 import shutil
 import os
 
-from plugins.tests.test_base import PluginTest
-from plugins.tags import tags
+from Pyblosxom.tests import PluginTest
+from Pyblosxom.plugins.tags import tags
 from Pyblosxom.pyblosxom import Request
 
 class TagsTest(PluginTest):

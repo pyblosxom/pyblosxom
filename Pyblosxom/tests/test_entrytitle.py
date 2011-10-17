@@ -2,8 +2,8 @@ import time
 import os
 
 from Pyblosxom import pyblosxom
-from plugins.tests.test_base import PluginTest, TIMESTAMP
-from plugins.display import entrytitle
+from Pyblosxom.tests import PluginTest, TIMESTAMP
+from Pyblosxom.plugins.display import entrytitle
 
 class Test_entrytitle(PluginTest):
     def setUp(self):

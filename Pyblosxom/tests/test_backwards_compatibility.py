@@ -7,7 +7,7 @@
 # LICENSE for distribution details.
 #######################################################################
 
-from Pyblosxom.tests.helpers import UnitTestBase
+from Pyblosxom.tests import UnitTestBase
 from Pyblosxom.pyblosxom import Request
 
 class TestRequest(UnitTestBase):

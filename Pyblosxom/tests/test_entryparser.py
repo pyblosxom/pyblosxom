@@ -9,7 +9,7 @@
 
 import os
 
-from Pyblosxom.tests.helpers import UnitTestBase
+from Pyblosxom.tests import UnitTestBase
 from Pyblosxom.pyblosxom import blosxom_entry_parser
 
 class Testentryparser(UnitTestBase):

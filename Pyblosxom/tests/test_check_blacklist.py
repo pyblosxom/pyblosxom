@@ -1,7 +1,7 @@
 import unittest
 
-from plugins.tests.test_base import PluginTest
-from plugins.comments import check_blacklist
+from Pyblosxom.tests import PluginTest
+from Pyblosxom.plugins.comments import check_blacklist
 
 class TestCheckBlacklist(PluginTest):
     def setUp(self):

@@ -7,12 +7,11 @@
 # LICENSE for distribution details.
 #######################################################################
 
-import sys
 import os
 import time
 import shutil
 
-from Pyblosxom.tests.helpers import UnitTestBase
+from Pyblosxom.tests import UnitTestBase
 from Pyblosxom import tools
 
 def gen_time(s):

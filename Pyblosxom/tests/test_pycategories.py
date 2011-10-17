@@ -3,8 +3,8 @@ import os
 
 from Pyblosxom.entries.base import generate_entry
 
-from plugins.tests.test_base import PluginTest, TIMESTAMP
-from plugins.category import pycategories
+from Pyblosxom.tests import PluginTest, TIMESTAMP
+from Pyblosxom.plugins.category import pycategories
 
 def parse_text():
     return

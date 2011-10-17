@@ -9,12 +9,10 @@
 
 from os import environ
 import time
-from StringIO import StringIO
 
-from Pyblosxom.tests.helpers import req_, UnitTestBase
+from Pyblosxom.tests import req_, UnitTestBase
 
 from Pyblosxom.tools import STANDARD_FILTERS
-from Pyblosxom.pyblosxom import Request
 from Pyblosxom.entries.base import EntryBase, generate_entry
 
 TIME1 = (2008, 7, 21, 12, 51, 47, 0, 203, 1)

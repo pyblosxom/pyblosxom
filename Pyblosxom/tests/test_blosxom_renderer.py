@@ -9,7 +9,7 @@
 
 from StringIO import StringIO
 
-from Pyblosxom.tests.helpers import UnitTestBase
+from Pyblosxom.tests import UnitTestBase
 from Pyblosxom.pyblosxom import Request
 from Pyblosxom.renderers import blosxom
 

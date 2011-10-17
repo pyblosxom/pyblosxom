@@ -3,8 +3,8 @@ import os
 import re
 
 from Pyblosxom import pyblosxom
-from plugins.tests.test_base import PluginTest, TIMESTAMP
-from plugins.text import acronyms
+from Pyblosxom.tests import PluginTest, TIMESTAMP
+from Pyblosxom.plugins.text import acronyms
 
 class Test_acronyms(PluginTest):
     def setUp(self):

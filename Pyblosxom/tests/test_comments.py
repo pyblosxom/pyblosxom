@@ -6,15 +6,13 @@ contrib/plugins/comments/plugins/comments.py.
 __author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
 __url__ = 'http://pyblosxom.bluesock.org/wiki/index.php/Framework_for_testing_plugins'
 
-from plugins.tests.test_base import PluginTest, FrozenTime, TIMESTAMP
-from plugins.comments import comments
+from Pyblosxom.tests import PluginTest, FrozenTime, TIMESTAMP
+from Pyblosxom.plugins.comments import comments
 
 import cgi
 import cPickle
 import os
 import cStringIO
-import sys
-import time
 
 class TestComments(PluginTest):
     """Test class for the comments plugin.
