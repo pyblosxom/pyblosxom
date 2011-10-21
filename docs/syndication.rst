@@ -15,7 +15,7 @@ version of your blog.
 Most newsreaders read most of the syndication formats.  So you
 shouldn't feel that you have to implement each one of them in your
 blog---you can most assuredly get away with implementing RSS 2.0 or
-Atom 1.0 and be just fine.
+Atom and be just fine.
 
 The syndication flavours that come with PyBlosxom should be fine for
 most blogs.  When pointing people to your syndication feed, just use
@@ -78,7 +78,7 @@ your ``config.py`` file.
    entry was created on was.
  
    Unless you have some reason to use RSS 0.9.1 as your syndication
-   format, you should look at using RSS 2.0 or Atom 1.0 both of which
+   format, you should look at using RSS 2.0 or Atom both of which
    also come with PyBlosxom.
 
 
@@ -102,23 +102,23 @@ For more information on RSS 2.0, see the `RSS 2.0 spec`_.
 
 
 
-Atom 1.0
---------
+Atom
+----
 
-PyBlosxom 1.3 comes with an Atom 1.0 flavour called "atom".  If it's
-missing features that you want, then override the individual templates
-you need to adjust.
+Starting with 1.3, PyBlosxom comes with an Atom flavour called "atom".
+If it's missing features that you want, then override the individual
+templates you need to adjust.
 
-For more information on Atom 1.0, see the `Atom 1.0 spec`_.
+For more information on Atom, see the `Atom spec`_.
 
-.. _Atom 1.0 spec: http://atomenabled.org/
+.. _Atom spec: http://atomenabled.org/
 
 
 
 Debugging your feeds
 ====================
 
-`FeedValidator`_ is a hugely useful tool for figuring out whether your
+`FeedValidator`_ is a useful tool for figuring out whether your
 feed is valid and fixing bugs in your feed content.
 
 .. _FeedValidator: http://feedvalidator.org/
