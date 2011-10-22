@@ -13,7 +13,7 @@ import re
 
 from Pyblosxom import pyblosxom
 from Pyblosxom.tests import PluginTest, TIMESTAMP
-from Pyblosxom.plugins.text import acronyms
+from Pyblosxom.plugins import acronyms
 
 class Test_acronyms(PluginTest):
     def setUp(self):

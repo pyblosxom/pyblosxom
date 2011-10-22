@@ -13,7 +13,7 @@ import os
 from Pyblosxom.entries.base import generate_entry
 
 from Pyblosxom.tests import PluginTest, TIMESTAMP
-from Pyblosxom.plugins.category import pycategories
+from Pyblosxom.plugins import pycategories
 
 def parse_text():
     return

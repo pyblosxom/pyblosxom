@@ -11,7 +11,7 @@ import time
 import os
 
 from Pyblosxom.tests import PluginTest, TIMESTAMP
-from Pyblosxom.plugins.archives import yeararchives
+from Pyblosxom.plugins import yeararchives
 
 class Test_yeararchives(PluginTest):
     def setUp(self):

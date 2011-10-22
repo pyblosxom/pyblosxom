@@ -7,7 +7,7 @@
 # LICENSE for distribution details.
 #######################################################################
 
-from Pyblosxom.plugins.date import pycalendar
+from Pyblosxom.plugins import pycalendar
 
 import os
 import unittest

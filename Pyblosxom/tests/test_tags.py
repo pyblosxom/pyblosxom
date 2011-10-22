@@ -12,7 +12,7 @@ import shutil
 import os
 
 from Pyblosxom.tests import PluginTest
-from Pyblosxom.plugins.tags import tags
+from Pyblosxom.plugins import tags
 from Pyblosxom.pyblosxom import Request
 
 class TagsTest(PluginTest):

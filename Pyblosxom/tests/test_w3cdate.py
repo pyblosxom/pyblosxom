@@ -7,7 +7,7 @@
 # LICENSE for distribution details.
 #######################################################################
 
-from Pyblosxom.plugins.date import w3cdate
+from Pyblosxom.plugins import w3cdate
 
 import os
 import unittest

@@ -8,7 +8,7 @@
 #######################################################################
 
 from Pyblosxom.tests import PluginTest
-from Pyblosxom.plugins.content import pages
+from Pyblosxom.plugins import pages
 
 class PagesTest(PluginTest):
     def setUp(self):
