@@ -1,7 +1,7 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2004, 2005, 2006, 2007, 2008, 2009, 2010 Will Kahn-Greene
+# Copyright (c) 2004-2011 Will Kahn-Greene
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
@@ -11,7 +11,7 @@
 Summary
 =======
 
-Plugin for paging long index pages.  
+Plugin for paging long index pages.
 
 PyBlosxom uses the num_entries configuration variable to prevent more
 than ``num_entries`` being rendered by cutting the list down to
@@ -21,73 +21,94 @@ will only see the first 20 entries rendered.
 The paginate overrides this functionality and allows for paging.
 
 
-Setup
-=====
+Install
+=======
 
 To install paginate, do the following:
 
-1. add ``paginate`` to your ``load_plugins`` list variable in your
-   config.py file--make sure it's the first thing listed so that it
-   has a chance to operate on the entry list before other plugins.
+1. Add ``Pyblosxom.plugins.paginate`` to your ``load_plugins`` list
+   variable in your ``config.py`` file.
+
+   Make sure it's the first plugin in the ``load_plugins`` list so
+   that it has a chance to operate on the entry list before other
+   plugins.
+
 2. add the ``$(page_navigation)`` variable to your head or foot (or
    both) templates.  this is where the page navigation HTML will
    appear.
 
 
-Here are some additional configuration variables to adjust the 
+Here are some additional configuration variables to adjust the
 behavior::
 
-  paginate_count_from
-    datatype:       int
-    default value:  0
-    description:    Some folks like their paging to start at 1--this
-                    enables you to do that.
+``paginate_count_from``
 
-  paginate_previous_text
-    datatype:       string
-    default value:  &lt;&lt;
-    description:    Allows you to change the text for the prev link.
+   Defaults to 0.
 
-  paginate_next_text
-    datatype:       string
-    default value:  &gt;&gt;
-    description:    Allows you to change the text for the next link.
+   This is the number to start counting from.  Some folks like their
+   pages to start at 0 and others like it to start at 1.  This enables
+   you to set it as you like.
 
-  paginate_linkstyle
-    datatype:       integer
-    default value:  1
-    description:    This allows you to change the link style of the paging.
-                    style 0:  [1] 2 3 4 5 6 7 8 9 ... >>
-                    style 1:  Page 1 of 4 >>
+   Example::
+
+      py["paginate_count_from"] = 1
 
 
-That should be it!
+``paginate_previous_text``
+
+   Defaults to "&lt;&lt;".
+
+   This is the text for the "previous page" link.
 
 
-.. Note::
-   
-   This plugin doesn't work with static rendering.  The problem is that 
-   it relies on the querystring to figure out which page to show and when 
-   you're static rendering, only the first page is rendered.  This will 
-   require a lot of thought to fix.
+``paginate_next_text``
 
-   If you are someone who is passionate about fixing this issue, let me
-   know.
+   Defaults to "&gt;&gt;".
+
+   This is the text for the "next page" link.
+
+
+``paginate_linkstyle``
+
+   Defaults to 1.
+
+   This allows you to change the link style of the paging.
+
+   Style 0::
+
+       [1] 2 3 4 5 6 7 8 9 ... >>
+
+   Style 1::
+
+      Page 1 of 4 >>
+
+   If you want a style different than that, you'll have to copy the
+   plugin and implement your own style.
+
+
+Note about static rendering
+===========================
+
+This plugin doesn't work with static rendering.  The problem is that
+it relies on the querystring to figure out which page to show and when
+you're static rendering, only the first page is rendered.  At some
+point, someone will fix this.
+
 """
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "2010-05-07"
+__version__ = "2011-10-22"
 __url__ = "http://pyblosxom.bluesock.org/"
-__description__ = ("Allows navigation by page for indexes that have too "
-                   "many entries.")
+__description__ = (
+    "Allows navigation by page for indexes that have too many entries.")
 __category__ = "display"
 __license__ = "MIT"
 __registrytags__ = "1.5, core"
 
 
 def verify_installation(request):
-    config = request.getConfiguration()
+    config = request.get_configuration()
     if config.get("num_entries", 0) == 0:
         print "Missing config property 'num_entries'.  paginate won't do "
         print "anything without num_entries set.  Either set num_entries "
@@ -97,9 +118,10 @@ def verify_installation(request):
         return 0
     return 1
 
+
 class PageDisplay:
-    def __init__(self, url, current_page, max_pages, count_from, previous_text,
-                 next_text, linkstyle):
+    def __init__(self, url, current_page, max_pages, count_from,
+                 previous_text, next_text, linkstyle):
         self._url = url
         self._current_page = current_page
         self._max_pages = max_pages
@@ -112,7 +134,7 @@ class PageDisplay:
         output = []
         # prev
         if self._current_page != self._count_from:
-            output.append('<a href="%s%d">%s</a>&nbsp;' % 
+            output.append('<a href="%s%d">%s</a>&nbsp;' %
                           (self._url, self._current_page - 1, self._previous))
 
         # pages
@@ -125,15 +147,16 @@ class PageDisplay:
                                   (self._url, i, i))
         elif self._linkstyle == 1:
             output.append(' Page %s of %s ' %
-                          (self._current_page, self._max_pages-1))
+                          (self._current_page, self._max_pages - 1))
 
         # next
         if self._current_page < self._max_pages - 1:
-            output.append('&nbsp;<a href="%s%d">%s</a>' % 
+            output.append('&nbsp;<a href="%s%d">%s</a>' %
                           (self._url, self._current_page + 1, self._next))
 
         return " ".join(output)
-    
+
+
 def page(request, num_entries, entry_list):
     http = request.get_http()
     config = request.get_configuration()
@@ -168,7 +191,7 @@ def page(request, num_entries, entry_list):
 
         url = http.get("REQUEST_URI", http.get("HTTP_REQUEST_URI", ""))
         if url.find("?") != -1:
-            query = url[url.find("?")+1:]
+            query = url[url.find("?") + 1:]
             url = url[:url.find("?")]
 
             query = query.split("&")
@@ -189,8 +212,6 @@ def page(request, num_entries, entry_list):
     else:
         data["page_navigation"] = ""
 
-
-from Pyblosxom import pyblosxom
 
 def cb_truncatelist(args):
     request = args["request"]
