@@ -1,7 +1,7 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (c) 2010 Will Kahn-Greene
+# Copyright (c) 2010, 2011 Will Kahn-Greene
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
@@ -15,15 +15,23 @@ This plugin allows flavour templates to use file urls that will
 resolve to files in the flavour directory.  Those files will then get
 served by PyBlosxom.
 
-This solves the huge problem that flavour packs are currently
-difficult to package, install, and maintain because static files
-(images, css, js, ...) have to get put somewhere else and served by
-the web-server and this is difficult to walk a user through.
+This solves the problem that flavour packs are currently difficult to
+package, install, and maintain because static files (images, css, js,
+...) have to get put somewhere else and served by the web-server and
+this is difficult to walk a user through.
 
-It handles urls that start with ``/flavourfiles/``, then the flavour
+It handles urls that start with ``flavourfiles/``, then the flavour
 name, then the path to the file.
 
-In the flavour template, use::
+For example::
+
+    http://example.com/blog/flavourfiles/html/style.css
+
+
+Install
+=======
+
+In templates you want to use flavourfiles, use urls like this::
 
     $(base_url)/flavourfiles/$(flavour)/path-to-file
 
@@ -40,13 +48,13 @@ the templates.
 .. Note::
 
     This plugin is essentially a draft and it's missing important
-    functionality.  I hope to flesh it out and mature it here, then
-    fold the functionality into PyBlosxom core.
+    functionality and probably has bugs!
+
 """
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "2010-11-15"
+__version__ = "2011-10-22"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Serves static files related to flavours (css, js, ...)"
 __license__ = "MIT License"
@@ -60,10 +68,11 @@ from Pyblosxom.renderers import base
 
 TRIGGER = "/flavourfiles/"
 
+
 class FileRenderer(base.RendererBase):
     def set_filepath(self, filepath):
         self.filepath = filepath
-        
+
     def render(self, header=True):
         if not os.path.exists(self.filepath):
             self.render_404()
@@ -75,9 +84,9 @@ class FileRenderer(base.RendererBase):
         try:
             fp = open(self.filepath, "r")
         except OSError:
-            # FIXME - this could be a variety of issues, but is probably
-            # a permission denied error.  should catch the error message
-            # and send it to the 403 page.
+            # FIXME - this could be a variety of issues, but is
+            # probably a permission denied error.  should catch the
+            # error message and send it to the 403 page.
             self.render_403()
             self.rendered = 1
             return
@@ -109,6 +118,7 @@ class FileRenderer(base.RendererBase):
         resp = self._request.getResponse()
         resp.set_status("404 Not Found")
 
+
 def cb_handle(args):
     """This is the flavour file handler.
 
@@ -128,7 +138,7 @@ def cb_handle(args):
     print path_info, TRIGGER
     if not path_info.startswith(TRIGGER):
         return
-    
+
     config = request.get_configuration()
     data = request.get_data()
 
@@ -161,6 +171,3 @@ def cb_handle(args):
     rend.set_filepath(filepath)
     rend.render()
     return 1
-
-
-# FIXME - add tests
