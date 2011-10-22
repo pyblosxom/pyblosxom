@@ -2,38 +2,60 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2004, 2005 Blake Winton
-# Copyright (c) 2010 Will Kahn-Greene
+# Copyright (c) 2010, 2011 Will Kahn-Greene
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 """
-This is my fancy module to add a token which tells us whether we're
-the first day being displayed or not.
+Summary
+=======
 
-To install:
+Adds a token which allows you to differentiate between the first day
+of entries in a series of entries to be displayed from the other days.
 
-1. Copy this file into your pyblosxom/Pyblosxom/plugins directory.
 
-2. Create a file named date_head.html in your datadir containing::
+Install
+=======
 
-      <div class="$dayDivClass">
-      <span class="blosxomDate">$date</span>
+1. In your ``config.py`` file, add ``Pyblosxom.plugins.firstdaydiv``
+   to the ``load_plugins`` list.
 
-3. Edit your config.py and add the line::
+2. (optional) Set the ``firstDayDiv`` config variable.  This defaults
+   to ``blosxomFirstDayDiv``.
+
+   Example::
 
       py['firstDayDiv'] = 'blosxomFirstDayDiv'
 
-4. That's it.  You're done.
 
-Questions, comments, concerns?  Email bwinton at latte dot ca for help.
+Usage
+=====
+
+This denotes the first day with the css class set in the
+``firstDayDiv`` config variable.  This is available in the
+``$(dayDivClass)`` template variable.  You probably want to put this
+in your ``date_head`` template in a ``<div...>`` tag.
+
+For example, in your ``date_head``, you could have::
+
+   <div class="$dayDivClass">
+   <span class="blosxomDate">$date</span>
+
+and in your ``date_foot``, you'd want to close that ``<div>`` off::
+
+   </div>
+
+Feel free to use this in other ways.
 """
+
 __author__ = "Blake Winton"
 __email__ = "bwinton@latte.ca"
-__version__ = "$Id$"
+__version__ = "2011-10-22"
 __url__ = "http://pyblosxom.bluesock.org/"
-__description__ = "Adds a token which tells us whether we're the first day being displayed or not."
+__description__ = ("Adds a token which tells us whether "
+                   "we're the first day being displayed or not.")
 __category__ = "date"
 __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"
@@ -45,14 +67,10 @@ class PyFirstDate:
     supposed to return the first-day-div class or the
     not-the-first-day-div class.
 
-    @type _day_div: string
-    @ivar _day_div: The davDiv class to return.
-    @type _count: int
-    @ivar _count: The number of times we've been called (currently 0 or 1)
     """
     def __init__(self, request):
         config = request.get_configuration()
-        self._day_div = config.get("firstDayDiv", "blosxomDayDiv")
+        self._day_div = config.get("firstDayDiv", "blosxomFirstDayDiv")
         self._count = 0
 
     def __str__(self):
@@ -62,10 +80,12 @@ class PyFirstDate:
             self._day_div = "blosxomDayDiv"
         return self._day_div
 
+
 def cb_prepare(args):
     """
-    Populate the L{Pyblosxom.pyblosxom.Request} with an instance of the
-    L{PyFirstDate} class in the "dayDivClass" key.
+    Populate the ``Pyblosxom.pyblosxom.Request`` with an instance of
+    the ``PyFirstDate`` class in the ``dayDivClass`` key.
+
     """
     request = args["request"]
 
