@@ -2,29 +2,47 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2004, 2005 Wari Wahab
-# Copyright (c) 2010 Will Kahn-Greene
+# Copyright (c) 2010, 2011 Will Kahn-Greene
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 """
-This plugin can help save bandwidth for low bandwidth quota sites (how
-unfortunate).
+Summary
+=======
+
+This plugin can help save bandwidth for low bandwidth quota sites.
 
 This is done by outputing cache friendly HTTP header tags like Last-Modified
 and ETag. These values are calculated from the first entry returned by
-entry_list.
+``entry_list``.
+
+
+Install
+=======
+
+This plugin comes with Pyblosxom.  To install, do the following:
+
+1. In your ``config.py`` file, add ``Pyblosxom.plugins.conditionalhttp`` to
+   the ``load_plugins`` variable.
 """
 
 __author__ = "Wari Wahab"
 __email__ = "pyblosxom at wari dot per dot sg"
-__version__ = "$Id$"
+__version__ = "2011-10-22"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Allows for caching if-not-modified-since...."
 __category__ = "headers"
 __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"
+
+
+import time
+import os
+import cPickle
+
+from Pyblosxom import tools
 
 
 def cb_prepare(args):
@@ -36,34 +54,30 @@ def cb_prepare(args):
     entry_list = data["entry_list"]
     renderer = data["renderer"]
 
-    if entry_list and entry_list[0].has_key('mtime'):
+    if entry_list and 'mtime' in entry_list[0]:
         # FIXME - this should be generalized to a callback for updated
         # things.
         mtime = entry_list[0]['mtime']
         latest_cmtime = - 1
-        if config.has_key('comment_dir'):
-            import os
+        if 'comment_dir' in config:
             latest_filename = os.path.join(config['comment_dir'], 'LATEST.cmt')
 
             if os.path.exists(latest_filename):
                 latest = open(latest_filename)
-                import cPickle
                 latest_cmtime = cPickle.load(latest)
                 latest.close()
 
         if latest_cmtime > mtime:
             mtime = latest_cmtime
 
-        import time
-
         # Get our first file timestamp for ETag and Last Modified
         # Last-Modified: Wed, 20 Nov 2002 10:08:12 GMT
         # ETag: "2bdc4-7b5-3ddb5f0c"
-        last_modified = time.strftime('%a, %d %b %Y %H:%M:%S GMT',
-                                      time.gmtime(mtime))
-        if (((http.get('HTTP_IF_NONE_MATCH','') == '"%s"' % mtime) or
-             (http.get('HTTP_IF_NONE_MATCH','') == '%s' % mtime) or
-             (http.get('HTTP_IF_MODIFIED_SINCE','') == last_modified))):
+        last_modified = time.strftime(
+            '%a, %d %b %Y %H:%M:%S GMT', time.gmtime(mtime))
+        if (((http.get('HTTP_IF_NONE_MATCH', '') == '"%s"' % mtime) or
+             (http.get('HTTP_IF_NONE_MATCH', '') == '%s' % mtime) or
+             (http.get('HTTP_IF_MODIFIED_SINCE', '') == last_modified))):
 
             renderer.add_header('Status', '304 Not Modified')
             renderer.add_header('ETag', '"%s"' % mtime)
@@ -74,11 +88,9 @@ def cb_prepare(args):
 
             renderer.render()
 
-            from Pyblosxom import tools
-
             # Log request as "We have it!"
             tools.run_callback("logrequest",
-                               {'filename': config.get('logfile',''),
+                               {'filename': config.get('logfile', ''),
                                 'return_code': '304',
                                 'request': request})
 
