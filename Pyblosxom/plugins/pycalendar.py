@@ -3,6 +3,9 @@
 #######################################################################
 
 """
+Summary
+=======
+
 Generates a calendar along the lines of this one (with month and day names in
 the configured locale)::
 
@@ -17,6 +20,21 @@ the configured locale)::
 It walks through all your entries and marks the dates that have entries
 so you can click on the date and see entries for that date.
 
+
+Install
+=======
+
+1. Add ``Pyblosxom.plugins.pycalendar`` to your ``load_plugins`` list in your
+   ``config.py`` file.
+
+2. Configure it as documented below.
+
+3. Add the ``$(calendar)`` variable to your head and/or foot template.
+
+
+Configuration
+=============
+
 You can set the start of the week using the ``calendar_firstweekday``
 configuration setting, for example::
 
@@ -24,7 +42,7 @@ configuration setting, for example::
 
 will make the week start on Monday (day '0'), instead of Sunday (day '6').
 
-Pycalendar is locale-aware.  If you set the "locale" config property,
+Pycalendar is locale-aware.  If you set the ``locale`` config property,
 then month and day names will be displayed according to your locale.
 
 It uses the following CSS classes:
@@ -40,26 +58,30 @@ It uses the following CSS classes:
   (if we're looking at a specific day)
 * blosxomCalendarToday: for today's calendar day
 
-
-To use, place ``$calendar`` in your head/foot template.
 """
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "$Id$"
+__version__ = "2011-10-23"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Displays a calendar on your blog."
 __category__ = "date"
-__license__ = "MIT"
+__license__ = "Public domain"
 __registrytags__ = "1.4, 1.5, core"
 
 
+import time
+import calendar
+import string
+import os
+
 from Pyblosxom import tools
-import time, calendar, string, os
+
 
 def verify_installation(request):
     # there's no configuration needed for this plugin.
     return 1
+
 
 class PyblCalendar:
     def __init__(self, request):
@@ -118,7 +140,7 @@ class PyblCalendar:
         temp = data.get("pi_mo")
         if temp and temp.isdigit():
             view[1] = int(temp)
-        elif temp and tools.month2num.has_key(temp):
+        elif temp and temp in tools.month2num:
             view[1] = int(tools.month2num[temp])
         else:
             view[1] = int(self._today[1])
@@ -146,7 +168,7 @@ class PyblCalendar:
             # if we already have an entry for this date, we skip to the
             # next one because we've already done this processing
             day = str(timetuple[2]).rjust(2)
-            if self._entries.has_key(day):
+            if day in self._entries:
                 continue
 
             # add an entry for yyyymm so we can figure out next/previous
@@ -195,16 +217,16 @@ class PyblCalendar:
         if index == 0 or len(keys) == 0:
             prev = None
         else:
-            prev = ("%s/%s/%s" % (baseurl, keys[index-1][:4],
-                                  yearmonth[keys[index-1]]),
+            prev = ("%s/%s/%s" % (baseurl, keys[index - 1][:4],
+                                  yearmonth[keys[index - 1]]),
                     "&lt;")
 
         # build the next link
-        if index == len(yearmonth)-1 or len(keys) == 0:
+        if index == len(yearmonth) - 1 or len(keys) == 0:
             next = None
         else:
-            next = ("%s/%s/%s" % (baseurl, keys[index+1][:4],
-                                  yearmonth[keys[index+1]]),
+            next = ("%s/%s/%s" % (baseurl, keys[index + 1][:4],
+                                  yearmonth[keys[index + 1]]),
                     "&gt;")
 
         # insert the month name and next/previous links
@@ -223,7 +245,7 @@ class PyblCalendar:
             return "<td class=\"blosxomCalendarEmpty\">&nbsp;</td>"
 
         strday = str(day).rjust(2)
-        if self._entries.has_key(strday):
+        if strday in self._entries:
             entry = self._entries[strday]
             link = "<a href=\"%s\">%s</a>" % (entry[0], entry[1])
         else:
@@ -241,7 +263,7 @@ class PyblCalendar:
                 td_class_str += "blosxomCalendarSpecificDay "
 
         # if it's a day that's been blogged
-        if self._entries.has_key(strday):
+        if strday in self._entries:
             td_class_str += "blosxomCalendarBlogged"
 
         if td_class_str != "":
@@ -254,7 +276,6 @@ class PyblCalendar:
     def _fixweek(self, item):
         return "<td class=\"blosxomCalendarWeekHeader\">%s</td>" % item
 
-
     def format_with_css(self, cal):
         """
         This formats the calendar using HTML table and CSS.  The output
@@ -262,12 +283,17 @@ class PyblCalendar:
         """
         cal2 = ["<table class=\"blosxomCalendar\">"]
         cal2.append("<tr>")
-        cal2.append("<td align=\"left\">" + self._fixlink(cal[0][0]) + "</td>")
-        cal2.append("<td colspan=\"5\" align=\"center\" class=\"blosxomCalendarHead\">" + cal[0][1] + "</td>")
-        cal2.append("<td align=\"right\">" + self._fixlink(cal[0][2]) + "</td>")
+        cal2.append("<td align=\"left\">" + self._fixlink(cal[0][0]) +
+                    "</td>")
+        cal2.append(
+            '<td colspan="5" align="center" class="blosxomCalendarHead">' +
+            cal[0][1] + '</td>')
+        cal2.append("<td align=\"right\">" + self._fixlink(cal[0][2]) +
+                    "</td>")
         cal2.append("</tr>")
 
-        cal2.append("<tr>%s</tr>" % "".join([self._fixweek(m) for m in cal[1]]))
+        cal2.append("<tr>%s</tr>" %
+                    "".join([self._fixweek(m) for m in cal[1]]))
 
         for mem in cal[2:]:
             mem = [self._fixday(m) for m in mem]
@@ -277,8 +303,9 @@ class PyblCalendar:
 
         return "\n".join(cal2)
 
+
 def cb_prepare(args):
     request = args["request"]
     data = request.get_data()
-    if data.has_key("entry_list") and data["entry_list"]:
+    if data.get('entry_list', None):
         data["calendar"] = PyblCalendar(request)
