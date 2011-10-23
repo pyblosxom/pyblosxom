@@ -1,7 +1,7 @@
 #######################################################################
 # This file is part of PyBlosxom.
 #
-# Copyright (C) 2004-2010 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2004-2011 by the PyBlosxom team.  See AUTHORS.
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
@@ -13,45 +13,60 @@ Summary
 
 Walks through your blog root figuring out all the available monthly
 archives in your blogs.  It generates html with this information and
-stores it in the ``$archivelinks`` variable which you can use in your
-head and foot templates.
-
-You can change the format of the output in ``config.py`` with the 
-``archive_template`` key.
-
-A config.py example::
-
-    py['archive_template'] = '<li><a href="%(base_url)s/%(Y)s/%(b)s">%(m)s/%(y)s</a></li>'
-
-This displays the archives as list items, with a month number slash
-year number, like 06/78.
-
-.. Note::
-
-   If you use " (double-quote) characters in the value, then make sure
-   to use ' (single-quote) characters to delimit the value string.
+stores it in the ``$(archivelinks)`` variable which you can use in
+your head and foot templates.
 
 
-The formatting variables available in the ``archive_template`` are::
+Install
+=======
 
-    b         'Jun'
-    m         '6'
-    Y         '1978'
-    y         '78'
+To install this plugin:
 
-These work the same as ``time.strftime`` in python.
+1. Add ``Pyblosxom.plugins.pyarchives`` to the ``load_plugins`` list
+   in your ``config.py`` file.
 
-Additionally, you can use variables from config and data.
+2. Configure using the following configuration variables.
 
-.. Note::
+``archive_template``
 
-   The syntax used here is the Python string formatting syntax---not
-   the PyBlosxom template rendering syntax!
+    Let's you change the format of the output for an archive link.
+
+    For example::
+
+        py['archive_template'] = ('<li><a href="%(base_url)s/%(Y)s/%(b)s">'
+                                  '%(m)s/%(y)s</a></li>')
+
+    This displays the archives as list items, with a month number,
+    then a slash, then the year number.
+
+    The formatting variables available in the ``archive_template``
+    are::
+
+        b         'Jun'
+        m         '6'
+        Y         '1978'
+        y         '78'
+
+    These work the same as ``time.strftime`` in python.
+
+    Additionally, you can use variables from config and data.
+
+    .. Note::
+
+       The syntax used here is the Python string formatting
+       syntax---not the PyBlosxom template rendering syntax!
+
+
+Usage
+=====
+
+Add ``$(archivelinks)`` to your head and/or foot templates.
+
 """
 
 __author__ = "Wari Wahab"
 __email__ = "wari at wari dot per dot sg"
-__version__ = "$Id$"
+__version__ = "2011-10-22"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Builds month/year-based archives listing."
 __category__ = "archives"
@@ -61,12 +76,11 @@ __registrytags__ = "1.4, 1.5, core"
 
 from Pyblosxom import tools
 import time
-import os
 
 
 def verify_installation(request):
     config = request.get_configuration()
-    if not config.has_key("archive_template"):
+    if not "archive_template" in config:
         print "missing optional config property 'archive_template' which "
         print "allows you to specify how the archive links are created.  "
         print "refer to pyarchive plugin documentation for more details."
@@ -92,8 +106,8 @@ class PyblArchives:
         fulldict = {}
         fulldict.update(config)
         fulldict.update(data)
-        
-        template = config.get('archive_template', 
+
+        template = config.get('archive_template',
                     '<a href="%(base_url)s/%(Y)s/%(b)s">%(Y)s-%(b)s</a><br />')
         for mem in archive_list:
             timetuple = tools.filestat(self._request, mem)
@@ -102,7 +116,7 @@ class PyblArchives:
                 timedict[x] = time.strftime("%" + x, timetuple)
 
             fulldict.update(timedict)
-            if not archives.has_key(timedict['Y'] + timedict['m']):
+            if not (timedict['Y'] + timedict['m']) in archives:
                 archives[timedict['Y'] + timedict['m']] = (template % fulldict)
 
         arc_keys = archives.keys()
