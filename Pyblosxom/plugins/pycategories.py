@@ -13,8 +13,19 @@ Summary
 
 Walks through your blog root figuring out all the categories you have
 and how many entries are in each category.  It generates html with
-this information and stores it in the $categorylinks variable which
-you can use in your head or foot templates.
+this information and stores it in the ``$(categorylinks)`` variable
+which you can use in your head or foot templates.
+
+
+Install
+=======
+
+To install this plugin:
+
+1. Add ``Pyblosxom.plugins.pycategories`` to the ``load_plugins`` list
+   in your ``config.py`` file.
+
+2. Add ``$(categorylinks)`` to your head and/or foot templates.
 
 
 Configuration
@@ -23,19 +34,22 @@ Configuration
 You can format the output by setting ``category_begin``,
 ``category_item``, and ``category_end`` properties.
 
-Categories exist in a hierarchy.  ``category_start`` starts the category
-listing and is only used at the very beginning.  The ``category_begin``
-property begins a new category group and the ``category_end`` property
-ends that category group.  The ``category_item`` property is the
-template for each category item.  Then after all the categories are
-printed, ``category_finish`` ends the category listing.
+Categories exist in a hierarchy.  ``category_start`` starts the
+category listing and is only used at the very beginning.  The
+``category_begin`` property begins a new category group and the
+``category_end`` property ends that category group.  The
+``category_item`` property is the template for each category item.
+Then after all the categories are printed, ``category_finish`` ends
+the category listing.
 
 For example, the following properties will use ``<ul>`` to open a
 category, ``</ul>`` to close a category and ``<li>`` for each item::
 
     py["category_start"] = "<ul>"
     py["category_begin"] = "<li><ul>"
-    py["category_item"] = r'<li><a href="%(base_url)s/%(category_urlencoded)sindex">%(category)s</a></li>'
+    py["category_item"] = (
+        r'<li><a href="%(base_url)s/%(category_urlencoded)sindex">'
+        r'%(category)s</a></li>')
     py["category_end"] = "</li></ul>"
     py["category_finish"] = "</ul>"
 
@@ -46,12 +60,14 @@ entries in that category::
 
     py["category_start"] = ""
     py["category_begin"] = ""
-    py["category_item"] = r'%(indent)s<a href="%(base_url)s/%(category_urlencoded)sindex">%(category)s</a> (%(count)d)<br />'
+    py["category_item"] = (
+        r'%(indent)s<a href="%(base_url)s/%(category_urlencoded)sindex">'
+        r'%(category)s</a> (%(count)d)<br />')
     py["category_end"] = ""
     py["category_finish"] = ""
 
-There are no variables available in the ``category_begin`` or ``category_end``
-templates.
+There are no variables available in the ``category_begin`` or
+``category_end`` templates.
 
 Available variables in the category_item template:
 
@@ -86,18 +102,22 @@ import os
 
 DEFAULT_START = r'<ul class="categorygroup">'
 DEFAULT_BEGIN = r'<li><ul class="categorygroup">'
-DEFAULT_ITEM = r'<li><a href="%(base_url)s/%(fullcategory_urlencoded)sindex.%(flavour)s">%(category)s</a> (%(count)d)</li>'
+DEFAULT_ITEM = (
+    r'<li><a href="%(base_url)s/%(fullcategory_urlencoded)sindex.%(flavour)s">'
+    r'%(category)s</a> (%(count)d)</li>')
 DEFAULT_END = "</ul></li>"
 DEFAULT_FINISH = "</ul>"
 
+
 def verify_installation(request):
     config = request.get_configuration()
-    if not config.has_key("category_item"):
+    if not "category_item" in config:
         print "missing optional config property 'category_item' which allows "
         print "you to specify how the category hierarchy is rendered.  see"
         print "the documentation at the top of the pycategories plugin code "
         print "file for more details."
     return True
+
 
 class PyblCategories:
     def __init__(self, request):
@@ -123,8 +143,9 @@ class PyblCategories:
         self._baseurl = config.get("base_url", "")
 
         form = self._request.get_form()
-        flavour = (form.has_key('flav') and [form['flav'].value] or 
-                   [config.get('default_flavour', 'html')])[0]
+        flavour = (form['flav'].value
+                   if 'flav' in form
+                   else config.get('default_flavour', 'html'))
 
         # build the list of all entries in the datadir
         elist = tools.walk(self._request, root)
@@ -133,8 +154,7 @@ class PyblCategories:
         elist = [mem[len(root) + 1:] for mem in elist]
 
         # go through the list of entries and build a map that
-        # maintains a count of how many entries are in each 
-        # category
+        # maintains a count of how many entries are in each category
         elistmap = {}
         for mem in elist:
             mem = os.path.dirname(mem)
@@ -143,19 +163,19 @@ class PyblCategories:
 
         # go through the elistmap keys (which is the list of
         # categories) and for each piece in the key (i.e. the key
-        # could be "dev/pyblosxom/releases" and the pieces would
-        # be "dev", "pyblosxom", and "releases") we build keys
-        # for the category list map (i.e. "dev", "dev/pyblosxom",
+        # could be "dev/pyblosxom/releases" and the pieces would be
+        # "dev", "pyblosxom", and "releases") we build keys for the
+        # category list map (i.e. "dev", "dev/pyblosxom",
         # "dev/pyblosxom/releases")
         clistmap = {}
         for mem in elistmap.keys():
             mem = mem.split(os.sep)
-            for index in range(len(mem)+1):
+            for index in range(len(mem) + 1):
                 p = os.sep.join(mem[0:index])
                 clistmap[p] = 0
 
-        # then we take the category list from the clistmap and
-        # sort it alphabetically
+        # then we take the category list from the clistmap and sort it
+        # alphabetically
         clist = clistmap.keys()
         clist.sort()
 
@@ -186,9 +206,9 @@ class PyblCategories:
                     output.append(begin_t)
 
             # now we build the dict with the values for substitution
-            d = {"base_url": self._baseurl, 
-                 "fullcategory": item + "/", 
-                 "category": itemlist[-1] + "/", 
+            d = {"base_url": self._baseurl,
+                 "fullcategory": item + "/",
+                 "category": itemlist[-1] + "/",
                  "flavour": flavour,
                  "count": num,
                  "indent": tab}
@@ -198,9 +218,10 @@ class PyblCategories:
                 d["fullcategory"] = item
 
             # this adds urlencoded versions
-            d["fullcategory_urlencoded"] = tools.urlencode_text(d["fullcategory"])
+            d["fullcategory_urlencoded"] = (
+                tools.urlencode_text(d["fullcategory"]))
             d["category_urlencoded"] = tools.urlencode_text(d["category"])
-            
+
             # and we toss it in the thing
             output.append(item_t % d)
 
@@ -211,6 +232,7 @@ class PyblCategories:
 
         # then we join the list and that's the final string
         self._categories = "\n".join(output)
+
 
 def cb_prepare(args):
     request = args["request"]
