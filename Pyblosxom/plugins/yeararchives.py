@@ -13,17 +13,30 @@ Summary
 
 Walks through your blog root figuring out all the available years for
 the archives list.  It stores the years with links to year summaries
-in the variable ``$archivelinks``.  You should put this variable in either
-your head or foot template.
+in the variable ``$(archivelinks)``.  You should put this variable in
+either your head or foot template.
+
+
+Install
+=======
+
+1. Add ``Pyblosxom.plugins.yeararchives`` to the ``load_plugins`` list
+   in your ``config.py`` file.
+
+2. Add ``$(archivelinks)`` to your head and/or foot templates.
+
+3. Configure as documented below.
 
 
 Usage
 =====
 
-When the user clicks on one of the year links (i.e. http://base_url/2004/),
-then yeararchives will display a summary page for that year.  The summary is
-generated using the ``yearsummarystory.html`` template for each month in the
-year.  Mine is::
+When the user clicks on one of the year links
+(e.g. ``http://base_url/2004/``), then yeararchives will display a
+summary page for that year.  The summary is generated using the
+``yearsummarystory`` template for each month in the year.
+
+My ``yearsummarystory`` template looks like this::
 
    <div class="blosxomEntry">
    <span class="blosxomTitle">$title</span>
@@ -41,13 +54,20 @@ formatting syntax.
 
 Example::
 
-    py['archive_template'] = '<a href="%(base_url)s/%(Y)s/index.%(f)s">%(Y)s</a><br />'
+    py['archive_template'] = (
+        '<a href="%(base_url)s/%(Y)s/index.%(f)s">'
+        '%(Y)s</a><br />')
 
 The vars available with typical example values are::
 
     Y      4-digit year   ex: '1978'
     y      2-digit year   ex: '78'
     f      the flavour    ex: 'html'
+
+.. Note::
+
+   The ``archive_template`` variable value is formatted using Python
+   string formatting rules--not Pyblosxom template rules!
 
 """
 
@@ -62,15 +82,18 @@ __registrytags__ = "1.4, 1.5, core"
 
 
 from Pyblosxom import tools, entries
-import time, os
+import time
+import os
+
 
 def verify_installation(request):
     config = request.get_configuration()
-    if not config.has_key("archive_template"):
+    if not 'archive_template' in config:
         print "missing optional config property 'archive_template' which "
         print "allows you to specify how the archive links are created.  "
         print "refer to yeararchives plugin documentation for more details."
     return 1
+
 
 class YearArchives:
     def __init__(self, request):
@@ -115,7 +138,7 @@ class YearArchives:
             fulldict["f"] = flavour
             year = fulldict["Y"]
 
-            if not archives.has_key(year):
+            if not year in archives:
                 archives[year] = template % fulldict
             items.append(
                 ["%(Y)s-%(m)s" % fulldict,
@@ -132,6 +155,7 @@ class YearArchives:
             result.append(archives[key])
         self._archives = '\n'.join(result)
         self._items = items
+
 
 def new_entry(request, yearmonth, body):
     """
@@ -157,20 +181,24 @@ def new_entry(request, yearmonth, body):
 
     return entry
 
+
 INIT_KEY = "yeararchives_initiated"
+
 
 def cb_prepare(args):
     request = args["request"]
     data = request.get_data()
     data["archivelinks"] = YearArchives(request)
 
+
 def cb_date_head(args):
     request = args["request"]
     data = request.get_data()
 
-    if data.has_key(INIT_KEY):
+    if INIT_KEY in data:
         args["template"] = ""
     return args
+
 
 def parse_path_info(path):
     """Returns None or (year, flav) tuple.
@@ -201,6 +229,7 @@ def parse_path_info(path):
         return (year, flav)
 
     return
+
 
 def cb_filelist(args):
     request = args["request"]
