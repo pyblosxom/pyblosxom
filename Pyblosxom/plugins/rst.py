@@ -22,9 +22,11 @@ fine.
 Install
 =======
 
-1. copy this file (``rst.py``) to your plugins directory
-2. install docutils
-3. add ``rst`` to your ``load_plugins`` config variable
+
+1. Add ``Pyblosxom.plugins.rst`` to the ``load_plugins`` list in your
+   ``config.py`` file.
+
+2. Install docutils.  Instructions are at http://docutils.sourceforge.net/
 
 
 Usage
@@ -54,12 +56,12 @@ control over the rendered HTML::
    # To set the starting level for the rendered heading elements.
    # 1 is the default.
    py['reST_initial_header_level'] = 1
-  
+
    # Enable or disable the promotion of a lone top-level section title to
    # document title (and subsequent section title to document subtitle
    # promotion); enabled by default.
    py['reST_transform_doctitle'] = 1
-    
+
 
 .. Note::
 
@@ -69,7 +71,7 @@ control over the rendered HTML::
 
 __author__ = "Sean Bowman"
 __email__ = "sean dot bowman at acm dot org"
-__version__ = "2011-05-12"
+__version__ = "2011-10-23"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "restructured text support for blog entries"
 __category__ = "text"
@@ -80,28 +82,33 @@ __registrytags__ = "1.5, core"
 from docutils.core import publish_parts
 from Pyblosxom import tools
 
+
 PREFORMATTER_ID = 'reST'
 FILE_EXT = 'rst'
+
 
 def cb_entryparser(args):
     args[FILE_EXT] = readfile
     return args
 
+
 def cb_preformat(args):
     if args.get("parser", None) == PREFORMATTER_ID:
         return parse(''.join(args['story']), args['request'])
-    
+
+
 def parse(story, request):
     config = request.getConfiguration()
     initial_header_level = config.get('reST_initial_header_level', 1)
     transform_doctitle = config.get('reST_transform_doctitle', 1)
     settings = {
-        'initial_header_level': initial_header_level, 
+        'initial_header_level': initial_header_level,
         'doctitle_xform': transform_doctitle
         }
     parts = publish_parts(
         story, writer_name='html', settings_overrides=settings)
     return parts['body']
+
 
 def readfile(filename, request):
     entry_data = {}
@@ -128,6 +135,6 @@ def readfile(filename, request):
     entry_data["body"] = body
 
     # Call the postformat callbacks
-    tools.run_callback('postformat', {'request': request, 
+    tools.run_callback('postformat', {'request': request,
                                       'entry_data': entry_data})
     return entry_data
