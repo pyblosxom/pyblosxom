@@ -2,30 +2,39 @@
 # This file is part of PyBlosxom.
 #
 # Copyright (c) 2003-2005 Ted Leung
-# Copyright (c) 2010 Will Kahn-Greene
+# Copyright (c) 2010, 2011 Will Kahn-Greene
 #
 # PyBlosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 """
-Adds a ``w3cdate`` variable to the head and foot templates which has
+Summary
+=======
+
+Adds a ``$(w3cdate)`` variable to the head and foot templates which has
 the mtime of the first entry in the entrylist being displayed (this is
 often the youngest/most-recent entry).
 
 
-.. Note::
-
-   When adding this plugin to the ``load_plugins`` list, it helps to
-   put the plugin early in the list so that the data will be
-   available to subsequent plugins.
+Install
+=======
 
 .. Note::
 
-   You might get better results if you have PyXML installed as part
-   of your Python installation.  If you don't, then we fudge the date
-   using a home-brew function.
+   If you have pyxml installed, then this will work better than if you don't.
+   If you don't have it installed, it uses home-brew code to compute the
+   w3cdate.
 
+1. Add ``Pyblosxom.plugins.w3cdate`` to the beginning of the
+   ``load_plugins`` list of your ``config.py`` file.
+
+2. Add the ``$(w3cdate)`` variable to the place you need it in your head
+   and/or foot templates.
+
+
+Thanks
+======
 
 Thanks to Matej Cepl for the hacked iso8601 code that doesn't require
 PyXML.
@@ -33,9 +42,10 @@ PyXML.
 
 __author__ = "Ted Leung"
 __email__ = "twl at sauria dot com"
-__version__ = "$Id$"
+__version__ = "2011-10-23"
 __url__ = "http://pyblosxom.bluesock.org/"
-__description__ = "Adds a 'w3cdate' variable which is the mtime in ISO8601 format."
+__description__ = (
+    "Adds a 'w3cdate' variable which is the mtime in ISO8601 format.")
 __category__ = "date"
 __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"
@@ -45,6 +55,7 @@ import rfc822
 import time
 import os
 from Pyblosxom import tools
+
 
 def iso8601_hack_tostring(t, timezone):
     timezone = int(timezone)
@@ -72,6 +83,7 @@ def iso8601_hack_tostring(t, timezone):
         v = (year, month, day, hours, minutes, tzspecifier)
     return f % v
 
+
 try:
     from xml.utils import iso8601
     format_date = iso8601.tostring
@@ -92,9 +104,11 @@ def get_formatted_date(entry):
         tzoffset = time.altzone
     return format_date(time.mktime(time_tuple), tzoffset)
 
+
 def cb_story(args):
     entry = args['entry']
     entry["w3cdate"] = get_formatted_date(entry)
+
 
 def cb_head(args):
     entry = args["entry"]
@@ -108,5 +122,6 @@ def cb_head(args):
 
     entry["w3cdate"] = get_formatted_date(entrylist[0])
     return args
+
 
 cb_foot = cb_head
