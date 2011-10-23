@@ -11,9 +11,8 @@
 Summary
 =======
 
-This is a tags plugin.  It uses PyBlosxom 1.5's command line abilities
-to split generation of tags index data from display of tags index
-data.
+This is a tags plugin.  It uses PyBlosxom's command line abilities to
+split generation of tags index data from display of tags index data.
 
 It creates a ``$(tagslist)`` variable for head and foot templates
 which lists all the tags.
@@ -22,6 +21,15 @@ It creates a ``$(tags)`` variable for story templates which lists tags
 for the story.
 
 It creates a ``$(tagcloud)`` variable for the tag cloud.
+
+
+Install
+=======
+
+1. Add ``Pyblosxom.plugins.tags`` to the ``load_plugins`` list in your
+   ``config.py`` file.
+
+2. Configure as documented below.
 
 
 Configuration
@@ -181,7 +189,7 @@ Run::
 
 from the directory your ``config.py`` is in or::
 
-    pyblosxom-cmd buildtags --config=/path/to/config/file 
+    pyblosxom-cmd buildtags --config=/path/to/config/file
 
 from anywhere.
 
@@ -227,7 +235,7 @@ from anywhere.
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "2011-07-23"
+__version__ = "2011-10-23"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Tags plugin"
 __category__ = "tags"
@@ -241,6 +249,7 @@ import shutil
 import unittest
 import tempfile
 
+
 def savefile(path, tagdata):
     """Saves tagdata to file at path."""
     fp = open(path + ".new", "w")
@@ -249,6 +258,7 @@ def savefile(path, tagdata):
 
     shutil.move(path + ".new", path)
 
+
 def loadfile(path):
     """Loads tagdata from file at path."""
     fp = open(path, "r")
@@ -256,12 +266,14 @@ def loadfile(path):
     fp.close()
     return tagdata
 
+
 def get_tagsfile(cfg):
     """Generates tagdata filename."""
     datadir = cfg["datadir"]
     tagsfile = cfg.get("tags_filename",
                        os.path.join(datadir, os.pardir, "tags.index"))
     return tagsfile
+
 
 def buildtags(command, argv):
     """Command for building the tags index."""
@@ -273,7 +285,7 @@ def buildtags(command, argv):
 
     sep = config.py.get("tags_separator", ",")
     tagsfile = get_tagsfile(config.py)
-    
+
     from Pyblosxom.pyblosxom import blosxom_entry_parser, PyBlosxom
     from Pyblosxom import tools
     from Pyblosxom.entries import fileentry
@@ -302,6 +314,7 @@ def buildtags(command, argv):
     savefile(tagsfile, tags_to_files)
     return 0
 
+
 def category_to_tags(command, argv):
     """Goes through all entries and converts the category to tags
     metadata.
@@ -317,7 +330,7 @@ def category_to_tags(command, argv):
         raise ValueError("config.py has no datadir property.")
 
     sep = config.py.get("tags_separator", ",")
-    
+
     from Pyblosxom.pyblosxom import blosxom_entry_parser, Request
     from Pyblosxom import tools
 
@@ -326,9 +339,8 @@ def category_to_tags(command, argv):
     # register entryparsers so that we parse all possible file types.
     data["extensions"] = tools.run_callback("entryparser",
                                             {"txt": blosxom_entry_parser},
-                                            mappingfunc=lambda x, y:y,
+                                            mappingfunc=lambda x, y: y,
                                             defaultfunc=lambda x: x)
-
 
     req = Request(config.py, {}, data)
 
@@ -362,11 +374,14 @@ def category_to_tags(command, argv):
 
     return 0
 
+
 def cb_commandline(args):
     args["buildtags"] = (buildtags, "builds the tags index")
-    args["categorytotags"] = (category_to_tags,
-                              "builds tag metadata from categories for entries")
+    args["categorytotags"] = (
+        category_to_tags,
+        "builds tag metadata from categories for entries")
     return args
+
 
 def cb_start(args):
     request = args["request"]
@@ -374,7 +389,8 @@ def cb_start(args):
     tagsfile = get_tagsfile(request.get_configuration())
     tagsdata = loadfile(tagsfile)
     data["tagsdata"] = tagsdata
-    
+
+
 def cb_filelist(args):
     from Pyblosxom.pyblosxom import blosxom_truncate_list_handler
     from Pyblosxom import tools
@@ -422,6 +438,7 @@ def cb_filelist(args):
 
     return entrylist
 
+
 def cb_story(args):
     # adds tags to the entry properties
     request = args["request"]
@@ -450,6 +467,7 @@ def cb_story(args):
     entry["tags"] = ", ".join(tags)
     return args
 
+
 def cb_head(args):
     # adds a taglist to header/footer
     request = args["request"]
@@ -457,7 +475,6 @@ def cb_head(args):
     data = request.get_data()
     config = request.get_configuration()
     tagsdata = data.get("tagsdata", {})
-
 
     # first, build the tags list
     tags = tagsdata.keys()
@@ -476,7 +493,7 @@ def cb_head(args):
         flavour = config.get("default_flavour", "html")
     baseurl = config.get("base_url", "")
     trigger = config.get("tags_trigger", "tag")
-    
+
     output.append(start_t)
     for item in tags:
         d = {"base_url": baseurl,
@@ -489,12 +506,12 @@ def cb_head(args):
 
     entry["tagslist"] = "\n".join(output)
 
-
     # second, build the tags cloud
     tags_by_file = tagsdata.items()
 
     start_t = config.get("tags_cloud_start", "<p>")
-    item_t = config.get("tags_cloud_item", '<a class="%(class)s" href="%(tagurl)s">%(tag)s</a>')
+    item_t = config.get("tags_cloud_item",
+                        '<a class="%(class)s" href="%(tagurl)s">%(tag)s</a>')
     finish_t = config.get("tags_cloud_finish", "</p>")
 
     tagcloud = [start_t]
@@ -533,12 +550,13 @@ def cb_head(args):
                  "tag": tag,
                  "count": len(tagsdata[tag]),
                  "tagurl": "/".join([baseurl, trigger, tag])}
-                
+
             tagcloud.append(item_t % d)
 
     tagcloud.append(finish_t)
     entry["tagcloud"] = "\n".join(tagcloud)
 
     return args
+
 
 cb_foot = cb_head
