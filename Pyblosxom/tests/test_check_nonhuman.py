@@ -10,7 +10,7 @@
 import unittest
 
 from Pyblosxom.tests import PluginTest, TIMESTAMP
-from Pyblosxom.plugins.comments import check_nonhuman
+from Pyblosxom.plugins import check_nonhuman
 
 class TestCheckNonhuman(PluginTest):
     def setUp(self):

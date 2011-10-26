@@ -1,11 +1,12 @@
 #######################################################################
-# Copyright 2006 Ryan Barrett
-# 
+# Copyright (c) 2006 Ryan Barrett
+# Copyright (c) 2011 Will Kahn-Greene
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -33,6 +34,15 @@ That's a very small minority of cases, though.  Its effectiveness as
 an anti-spam technique usually make that tradeoff worthwhile.
 
 
+Install
+=======
+
+1. Add ``Pyblosxom.plugins.check_javascript`` to the ``load_plugins``
+   list in your ``config.py`` file.
+
+2. Configure as documented below.
+
+
 Setup
 =====
 
@@ -49,35 +59,38 @@ Setup
       // compatible, back to 4.x browsers.
       document.getElementById("secretTokenInput").value = "$(blog_title)";
       </script>
+
 """
-__author__      = "Ryan Barrett"
-__email__       = "pyblosxom at ryanb dot org"
-__version__     = "0.1"
-__url__         = "http://pyblosxom.bluesock.org/"
+__author__ = "Ryan Barrett"
+__email__ = "pyblosxom at ryanb dot org"
+__version__ = "2011-10-25"
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Use JavaScript to filter out spam comments"
-__category__    = "comments"
-__license__     = "GPLv2"
+__category__ = "comments"
+__license__ = "GPLv2"
 __registrytags__ = "1.4, 1.5, core"
+
 
 from Pyblosxom import tools
 
 
 def verify_installation(request):
-  return 1
+    return 1
 
 
 def cb_comment_reject(args):
-  request = args["request"]
-  config = request.get_configuration()
-  http = request.get_http()
-  form = http['form']
+    request = args["request"]
+    config = request.get_configuration()
+    http = request.get_http()
+    form = http['form']
 
-  if ('secretToken' in form and
-      form['secretToken'].value == config['blog_title']):
-    return 0
-  else:
-    dump = '\n'.join(['%s: %s' % (arg.name, arg.value)
-                      for arg in dict(form).values()])
-    logger = tools.get_logger()
-    logger.info('Comment rejected from %s:\n%s' % (http['REMOTE_ADDR'], dump))
-    return 1
+    if (('secretToken' in form and
+         form['secretToken'].value == config['blog_title'])):
+        return 0
+    else:
+        dump = '\n'.join(['%s: %s' % (arg.name, arg.value)
+                          for arg in dict(form).values()])
+        logger = tools.get_logger()
+        logger.info('Comment rejected from %s:\n%s' % (
+                http['REMOTE_ADDR'], dump))
+        return 1
