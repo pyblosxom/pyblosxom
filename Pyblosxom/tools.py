@@ -20,6 +20,7 @@ import sys
 import locale
 import urllib
 import inspect
+import textwrap
 
 # Pyblosxom imports
 from Pyblosxom import plugin_utils
@@ -117,6 +118,30 @@ def initialize(config):
     # all the valid month possibilities
     global MONTHS
     MONTHS = num2month.keys() + month2num.keys()
+
+def pwrap(s):
+    """Wraps the text and prints it.
+    """
+    starter = ""
+    linesep = os.linesep
+    if s.startswith("- "):
+        starter = "- "
+        s = s[2:]
+        linesep = os.linesep + "  "
+
+    print starter + linesep.join(textwrap.wrap(s, 72))
+
+def pwrap_error(s):
+    """Wraps an error message and prints it to stderr.
+    """
+    starter = ""
+    linesep = os.linesep
+    if s.startswith("- "):
+        starter = "- "
+        s = s[2:]
+        linesep = os.linesep + "  "
+
+    sys.stderr.write(starter + linesep.join(textwrap.wrap(s, 72)) + "\n")
 
 def deprecated_function(func):
     def _deprecated_function(*args, **kwargs):

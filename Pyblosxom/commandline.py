@@ -21,35 +21,11 @@ import time
 from optparse import OptionParser
 
 from Pyblosxom.pyblosxom import VERSION_DATE, PyBlosxom
-from Pyblosxom.tools import run_callback
+from Pyblosxom.tools import run_callback, pwrap, pwrap_error
 from Pyblosxom import plugin_utils
 
 USAGE = "%prog [options] [command] [command-options]"
 VERSION = "%prog " + VERSION_DATE
-
-def pwrap(s):
-    """Wraps the text and prints it.
-    """
-    starter = ""
-    linesep = os.linesep
-    if s.startswith("- "):
-        starter = "- "
-        s = s[2:]
-        linesep = os.linesep + "  "
-
-    print starter + linesep.join(textwrap.wrap(s, 72))
-
-def pwrap_error(s):
-    """Wraps an error message and prints it to stderr.
-    """
-    starter = ""
-    linesep = os.linesep
-    if s.startswith("- "):
-        starter = "- "
-        s = s[2:]
-        linesep = os.linesep + "  "
-
-    sys.stderr.write(starter + linesep.join(textwrap.wrap(s, 72)) + "\n")
 
 def build_pyblosxom():
     """Imports config.py and builds an empty PyBlosxom object.
