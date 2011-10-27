@@ -2,10 +2,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PyBlosxom's documentation!
-=====================================
+=======================================
+ Welcome to PyBlosxom's documentation!
+=======================================
 
-Contents:
+Part 1: Pyblosxom user manual
+=============================
 
 .. toctree::
    :maxdepth: 2
@@ -29,12 +31,30 @@ Contents:
    renderers
    comments
    plugins
+   authors
+   glossary
+
+
+Part 2: Core plugin documentation
+=================================
+
+.. toctree::
+   :titlesonly:
+   :glob:
+
+   plugins/*
+
+
+Part 3: Developer documentation
+===============================
+
+.. toctree::
+   :maxdepth: 2
+
    dev_architecture
    dev_writing_plugins
    dev_codedocs
    dev_testing
-   authors
-   glossary
 
 
 Indices and tables

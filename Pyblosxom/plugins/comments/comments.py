@@ -92,6 +92,89 @@ true:
    be shown
 
 
+Flavour templates
+=================
+
+The comments plugin requires at least the ``comment-story``,
+``comment``, and ``comment-form`` templates.  The ``comment-preview``
+template is optional.
+
+The way the comments plugin assembles flavour files is like this::
+
+    comment-story
+    comment-preview (optional)
+    comment (zero or more)
+    comment-form
+
+Thus if you want to have your entire comment section in a div
+container, you'd start the div container at the top of comment-story
+and end it at the bottom of comment-form.
+
+
+comment-story
+-------------
+
+.. only:: text
+
+   You can find the comment-story file in the docs at
+   http://pyblosxom.bluesock.org/ or in the tarball under
+   docs/_static/plugins/comments/.
+
+
+Link to file: `comment-story <../_static/plugins/comments/comment-story>`_
+
+.. literalinclude:: ../_static/plugins/comments/comment-story
+   :language: html
+
+
+comment
+-------
+
+.. only:: text
+
+   You can find the comment-story file in the docs at
+   http://pyblosxom.bluesock.org/ or in the tarball under
+   docs/_static/plugins/comments/.
+
+
+Link to file: `comment <../_static/plugins/comments/comment>`_
+
+.. literalinclude:: ../_static/plugins/comments/comment
+   :language: html
+
+
+comment-preview
+---------------
+
+.. only:: text
+
+   You can find the comment-story file in the docs at
+   http://pyblosxom.bluesock.org/ or in the tarball under
+   docs/_static/plugins/comments/.
+
+
+Link to file: `comment-preview <../_static/plugins/comments/comment-preview>`_
+
+.. literalinclude:: ../_static/plugins/comments/comment-preview
+   :language: html
+
+
+comment-form
+------------
+
+.. only:: text
+
+   You can find the comment-story file in the docs at
+   http://pyblosxom.bluesock.org/ or in the tarball under
+   docs/_static/plugins/comments/.
+
+
+Link to file: `comment-form <../_static/plugins/comments/comment-form>`_
+
+.. literalinclude:: ../_static/plugins/comments/comment-form
+   :language: html
+
+
 Implementing comment preview
 ============================
 
