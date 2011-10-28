@@ -22,29 +22,34 @@
 Summary
 =======
 
-Run comments and trackbacks through Akismet (http://akismet.com/) to
-see whether to reject them or not.
+Run comments and trackbacks through `Akismet <http://akismet.com/>`_
+to see whether to reject them or not.
+
+Requires the ``comments`` plugin.
 
 
-Setup
-=====
+Install
+=======
 
-To use this plugin, you must also install ``akismet.py`` in your
-python path (in the PyBlosxom plugin directory is fine).  You can get
-it at http://www.voidspace.org.uk/python/modules.shtml#akismet .
+1. Add ``Pyblosxom.plugins.akismetcomments`` to the ``load_plugins``
+   list in your ``config.py`` file.
 
-Additionally, you will need to get a Wordpress.com API key.  You can
-find more information from
-http://faq.wordpress.com/2005/10/19/api-key/ .
+2. Install the ``akismet`` library.  You can get it at
+   http://www.voidspace.org.uk/python/modules.shtml#akismet
 
-Then, use this key to put put the following line into your config.py
-file::
+3. Set up a Wordpress.com API key.  You can find more information from
+   http://faq.wordpress.com/2005/10/19/api-key/ .
 
-   py['akismet_api_key'] = 'MYKEYID'
+4. Use this key to put put the following line into your config.py
+   file::
 
-If a comment is rejected, a message explaining this will saved in a
-variable. You can place this into your template using the standard
-``$(comment_message)`` variable.
+       py['akismet_api_key'] = 'MYKEYID'
+
+5. Add ``$(comment_message)`` to the comment-form template if it isn't
+   there already.
+
+   When akismetcomments rejects a comment, it'll populate that
+   variable with a message explaining what happened.
 
 
 History
@@ -55,45 +60,42 @@ by Blake Winton with the the ``akismet.py`` plugin by Benjamin Mako
 Hill.
 """
 
-__author__      = "Benjamin Mako Hill"
-__version__     = "0.2"
-__email__       = ""
-__url__         = "http://mako.cc/projects/pyblosxom"
+__author__ = "Benjamin Mako Hill"
+__version__ = "0.2"
+__email__ = ""
+__url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Run comments through Akismet."
-__category__    = "comments"
-__license__     = "GPLv2"
+__category__ = "comments"
+__license__ = "GPLv2"
 __registrytags__ = "1.4, 1.5, core"
 
 
-import sys
-import time
+from Pyblosxom.tools import pwrap_error
+
 
 def verify_installation(request):
     try:
         from akismet import Akismet
     except ImportError:
-        print >>sys.stderr, "Missing module 'akismet'.",
-      	return False
-
-    config = request.get_configuration()
- 
-    # try to check to se make sure that the config file has a key
-    if not config.has_key("akismet_api_key"):
-        print >>sys.stderr, "Missing required configuration value 'akismet_key'",
+        pwrap_error(
+            "Missing module 'akismet'.  See documentation for getting it.")
         return False
 
-    try:
-        from akismet import Akismet
-        a = Akismet(config['akismet_api_key'], config['base_url'],
-                    agent='PyBlosxom/1.3')
-        if not a.verify_key():
-            print >>sys.stderr, "Could not verify akismet API key.",
-            return False
-    except ImportError:
-        print "Unknown error loading Akismet module!",
+    config = request.get_configuration()
+
+    # try to check to se make sure that the config file has a key
+    if not "akismet_api_key" in config:
+        pwrap_error("Missing required configuration value 'akismet_key'")
+        return False
+
+    a = Akismet(config['akismet_api_key'], config['base_url'],
+                agent='PyBlosxom/1.3')
+    if not a.verify_key():
+        pwrap_error("Could not verify akismet API key.")
         return False
 
     return True
+
 
 def cb_comment_reject(args):
     from akismet import Akismet, AkismetError
@@ -102,7 +104,6 @@ def cb_comment_reject(args):
     comment = args['comment']
     config = request.get_configuration()
 
-    reqdata = request.get_data()
     http = request.get_http()
 
     fields = {'comment': 'description',
@@ -113,7 +114,7 @@ def cb_comment_reject(args):
               }
     data = {}
     for field in fields:
-        if comment.has_key(fields[field]):
+        if fields[field] in comment:
             data[field] = ""
             for char in list(comment[fields[field]]):
                 try:
@@ -125,14 +126,14 @@ def cb_comment_reject(args):
                     data[field] = data[field] + char
 
     if not data.get('comment'):
-        print >>sys.stderr, "Comment info not enough.",
+        pwrap_error("Comment info not enough.")
         return False
     body = data['comment']
 
     if 'ipaddress' in comment:
         data['user_ip'] = comment['ipaddress']
-    data['user_agent'] = http.get('HTTP_USER_AGENT','')
-    data['referrer'] = http.get('HTTP_REFERER','')
+    data['user_agent'] = http.get('HTTP_USER_AGENT', '')
+    data['referrer'] = http.get('HTTP_REFERER', '')
 
     api_key = config.get('akismet_api_key')
     base_url = config.get('base_url')
@@ -141,20 +142,23 @@ def cb_comment_reject(args):
     api = Akismet(api_key, base_url, agent='PyBlosxom/1.3')
 
     if not api.verify_key():
-        print >>sys.stderr, "Could not verify akismet API key. Comments accepted.",
+        pwrap_error("Could not verify akismet API key. Comments accepted.")
         return False
 
     # false is ham, true is spam
     try:
         if api.comment_check(body, data):
-            print >>sys.stderr, "Rejecting comment",
-            return (True, 'I\'m sorry, but your comment was rejected by the <a href="http://akismet.com/">Akismet</a> spam filtering system.')
-
+            pwrap_error("Rejecting comment")
+            return (True,
+                    'I\'m sorry, but your comment was rejected by '
+                    'the <a href="http://akismet.com/">Akismet</a> '
+                    'spam filtering system.')
         else:
             return False
     except AkismetError:
-        print >>sys.stderr, "Rejecting comment (AkismetError)",
+        pwrap_error("Rejecting comment (AkismetError)")
         return (True, "Missing essential data (e.g., a UserAgent string).")
+
 
 # akismet can handle trackback spam too
 cb_trackback_reject = cb_comment_reject
