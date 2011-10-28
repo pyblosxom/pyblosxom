@@ -216,41 +216,50 @@ support XmlHttpRequest, comment posting and preview will use normal
 HTTP POST.  This will also happen if comment plugins that use
 alternative protocols are detected, like ``comments_openid.py``.
 
-AJAX comment support requires a few elements in the ``comment-form``
-flavour template. These elements are included in default
-``comment-form.html`` template that comes with this plugin.
+To add AJAX support, you need to make the following modifications to your
+``comment-form`` template::
 
-Specifically, the comment-anchor tag must be the first thing in the
-template::
+1. The comment-anchor tag must be the first thing in the
+   ``comment-form`` template::
 
-   <p id="comment-anchor" />
+      <p id="comment-anchor" />
 
-Also, the form needs some JavaScript.  Add an onsubmit handler to the
-form tag::
+2. Change the ``<form...>`` tag to something like this::
 
-   <form method="post" action="$(base_url)/$(file_path)#comment-anchor"
-      name="comments_form" id="comments_form" onsubmit="return false;">
+      <form method="post" action="$(base_url)/$(file_path)#comment-anchor"
+         name="comments_form" id="comments_form" onsubmit="return false;">
 
-If you run pyblosxom inside cgiwrap, you'll probably need to remove
-``#comment-anchor`` from the URL in the action attribute.  They're
-incompatible.
+   .. Note::
 
-(Your host may even be using cgiwrap without your knowledge. If AJAX comment
-previewing and posting don't work, try removing ``#comment-anchor``.)
+      If you run pyblosxom inside cgiwrap, you'll probably need to
+      remove ``#comment-anchor`` from the URL in the action attribute.
+      They're incompatible.
 
-Next, add onclick handlers to the button input tags::
+      Your host may even be using cgiwrap without your knowledge. If
+      AJAX comment previewing and posting don't work, try removing
+      ``#comment-anchor``.
 
-  <input value="Preview" name="preview" type="button" id="preview"
-       onclick="send_comment('preview');" />
-  <input value="Submit" name="submit" type="button" id="post"
-       onclick="send_comment('post');" />
+3. Add ``onclick`` handlers to the button input tags::
 
-Finally, include this script tag somewhere after the ``</form>`` closing tag::
+      <input value="Preview" name="preview" type="button" id="preview"
+          onclick="send_comment('preview');" />
+      <input value="Submit" name="submit" type="button" id="post"
+          onclick="send_comment('post');" />
 
-   <script type="text/javascript" src="/comments.js"></script>
+4. Copy ``comments.js`` file to a location on your server that's
+   servable by your web-server.
 
-(Note the separate closing ``</script>`` tag!  It's for IE; without
-it, IE won't actually run the code in ``comments.js``.)
+5. Include this script tag somewhere after the ``</form>`` closing tag::
+
+      <script type="text/javascript" src="/comments.js"></script>
+
+   Set the url for ``comments.js`` to the url for where
+   ``comments.js`` is located on your server from step 4.
+
+   .. Note::
+
+      Note the separate closing ``</script>`` tag!  It's for IE;
+      without it, IE won't actually run the code in ``comments.js``.
 
 
 nofollow support
