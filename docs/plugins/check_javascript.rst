@@ -31,8 +31,8 @@ Install
 2. Configure as documented below.
 
 
-Setup
-=====
+Configure
+=========
 
 1. Make sure you have ``blog_title`` set in your ``config.py``.
 

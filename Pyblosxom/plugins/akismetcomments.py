@@ -25,11 +25,11 @@ Summary
 Run comments and trackbacks through `Akismet <http://akismet.com/>`_
 to see whether to reject them or not.
 
-Requires the ``comments`` plugin.
-
 
 Install
 =======
+
+Requires the ``comments`` plugin.
 
 1. Add ``Pyblosxom.plugins.akismetcomments`` to the ``load_plugins``
    list in your ``config.py`` file.

@@ -8,12 +8,8 @@
 #######################################################################
 
 """
-Tests for the comments plugin,
-contrib/plugins/comments/plugins/comments.py.
+Tests for the comments plugin.
 """
-
-__author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
-__url__ = 'http://pyblosxom.bluesock.org/wiki/index.php/Framework_for_testing_plugins'
 
 from Pyblosxom.tests import PluginTest, FrozenTime, TIMESTAMP
 from Pyblosxom.plugins import comments
@@ -21,7 +17,7 @@ from Pyblosxom.plugins import comments
 import cgi
 import cPickle
 import os
-import cStringIO
+
 
 class TestComments(PluginTest):
     """Test class for the comments plugin.
@@ -238,24 +234,24 @@ class TestComments(PluginTest):
         entry['mtime'] = time.time() - (15 * day)
         self.eq_(comments.check_comments_disabled(config, entry), True)
 
-    def test_cb_handle(self):
-        """cb_handle() should intercept requests for /comments.js."""
-        self.assertEquals(None, comments.cb_handle(self.args))
+    # def test_cb_handle(self):
+    #     """cb_handle() should intercept requests for /comments.js."""
+    #     self.assertEquals(None, comments.cb_handle(self.args))
 
-        self.request.add_http({'PATH_INFO': '/not_comments.js'})
-        self.assertEquals(None, comments.cb_handle(self.args))
+    #     self.request.add_http({'PATH_INFO': '/not_comments.js'})
+    #     self.assertEquals(None, comments.cb_handle(self.args))
 
-        self.request.add_http({'PATH_INFO': '/comments.js'})
-        self.assertEquals(True, comments.cb_handle(self.args))
+    #     self.request.add_http({'PATH_INFO': '/comments.js'})
+    #     self.assertEquals(True, comments.cb_handle(self.args))
 
-        response = self.request.get_response()
-        self.assertEquals('text/javascript',
-                          response.get_headers()['Content-Type'])
+    #     response = self.request.get_response()
+    #     self.assertEquals('text/javascript',
+    #                       response.get_headers()['Content-Type'])
 
-        out = cStringIO.StringIO()
-        response.send_body(out)
-        self.assert_(out.getvalue().startswith(
-            '/* AJAX comment support for pyblosxom'))
+    #     out = cStringIO.StringIO()
+    #     response.send_body(out)
+    #     self.assert_(out.getvalue().startswith(
+    #         '/* AJAX comment support for pyblosxom'))
 
     def test_cb_prepare_showcomments(self):
         """cb_prepare() should set display_comment_default to show

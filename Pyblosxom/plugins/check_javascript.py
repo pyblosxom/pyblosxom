@@ -37,6 +37,8 @@ an anti-spam technique usually make that tradeoff worthwhile.
 Install
 =======
 
+Requires the ``comments`` plugin.
+
 1. Add ``Pyblosxom.plugins.check_javascript`` to the ``load_plugins``
    list in your ``config.py`` file.
 

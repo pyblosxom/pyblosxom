@@ -8,18 +8,17 @@ Summary
 This plugin implements the ``comment_reject`` callback of the comments
 plugin.
 
-If someone tries to comment on an entry that's older than 28 days,
-the comment is rejected.
+If someone tries to comment on an entry that's older than 28 days, the
+comment is rejected.
 
 
-Setup
-=====
+Install
+=======
 
-1. copy this file into your plugins directory
-2. add "no_old_comments" to the load_plugins list in your config.py
-   file
-3. if PyBlosxom is not running as a cgi, then you need to restart
-   PyBlosxom
+Requires the ``comments`` plugin.
+
+1. Add ``Pyblosxom.plugins.no_old_comments`` to the ``load_plugins``
+   list in your ``config.py`` file.
 
 
 Revisions

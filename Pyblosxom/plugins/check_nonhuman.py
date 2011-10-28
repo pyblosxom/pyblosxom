@@ -28,6 +28,8 @@ and I stop getting comment spam.
 Install
 =======
 
+Requires the ``comments`` plugin.
+
 1. Add ``Pyblosxom.plugins.check_nonhuman`` to the ``load_plugins`` list
    in your ``config.py`` file.
 

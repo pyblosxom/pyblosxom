@@ -5,29 +5,34 @@
 Summary
 =======
 
-Run comments and trackbacks through Akismet (http://akismet.com/) to
-see whether to reject them or not.
+Run comments and trackbacks through `Akismet <http://akismet.com/>`_
+to see whether to reject them or not.
+
+Requires the ``comments`` plugin.
 
 
-Setup
-=====
+Install
+=======
 
-To use this plugin, you must also install ``akismet.py`` in your
-python path (in the PyBlosxom plugin directory is fine).  You can get
-it at http://www.voidspace.org.uk/python/modules.shtml#akismet .
+1. Add ``Pyblosxom.plugins.akismetcomments`` to the ``load_plugins``
+   list in your ``config.py`` file.
 
-Additionally, you will need to get a Wordpress.com API key.  You can
-find more information from
-http://faq.wordpress.com/2005/10/19/api-key/ .
+2. Install the ``akismet`` library.  You can get it at
+   http://www.voidspace.org.uk/python/modules.shtml#akismet
 
-Then, use this key to put put the following line into your config.py
-file::
+3. Set up a Wordpress.com API key.  You can find more information from
+   http://faq.wordpress.com/2005/10/19/api-key/ .
 
-   py['akismet_api_key'] = 'MYKEYID'
+4. Use this key to put put the following line into your config.py
+   file::
 
-If a comment is rejected, a message explaining this will saved in a
-variable. You can place this into your template using the standard
-``$(comment_message)`` variable.
+       py['akismet_api_key'] = 'MYKEYID'
+
+5. Add ``$(comment_message)`` to the comment-form template if it isn't
+   there already.
+
+   When akismetcomments rejects a comment, it'll populate that
+   variable with a message explaining what happened.
 
 
 History
