@@ -16,7 +16,7 @@ __author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
 __url__ = 'http://pyblosxom.bluesock.org/wiki/index.php/Framework_for_testing_plugins'
 
 from Pyblosxom.tests import PluginTest, FrozenTime, TIMESTAMP
-from Pyblosxom.plugins.comments import comments
+from Pyblosxom.plugins import comments
 
 import cgi
 import cPickle

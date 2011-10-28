@@ -15,8 +15,11 @@ __author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
 __url__ = 'http://pyblosxom.bluesock.org/wiki/index.php/Framework_for_testing_plugins'
 
 from Pyblosxom.tests import PluginTest
-from Pyblosxom.plugins.comments import akismet, akismetcomments
+from Pyblosxom.plugins import akismetcomments
 import sys
+
+# FIXME: we do some icky things here to mock Akismet.  It'd be better
+# to have a real mocking module like Mock or Fudge.
 
 class MockAkismet:
     """A mock Akismet class."""
@@ -51,6 +54,16 @@ class MockAkismet:
     def inject_comment_check_error(cls):
         cls.comment_check_error = True
 
+class Mockakismet:
+    class AkismetError(Exception):
+        pass
+
+    Akismet = MockAkismet
+
+sys.modules['akismet'] = Mockakismet
+import akismet
+
+
 class TestAkismetComments(PluginTest):
     """Test class for the akismetcomments plugin.
     """
@@ -75,11 +88,11 @@ class TestAkismetComments(PluginTest):
             False, akismetcomments.verify_installation(self.request))
 
         # try with an import error
-        akismet = sys.modules['Pyblosxom.plugins.comments.akismet']
-        del sys.modules['Pyblosxom.plugins.comments.akismet']
+        akismet = sys.modules['akismet']
+        del sys.modules['akismet']
         self.assertEquals(
             False, akismetcomments.verify_installation(self.request))
-        sys.modules['Pyblosxom.plugins.comments.akismet'] = akismet
+        sys.modules['akismet'] = akismet
 
         # try with a key that doesn't verify
         self.config['akismet_api_key'] = 'bad_key'
