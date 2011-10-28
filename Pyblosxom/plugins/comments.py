@@ -92,6 +92,21 @@ true:
    be shown
 
 
+Related files
+=============
+
+.. only:: text
+
+   You can find the comment-story file in the docs at
+   http://pyblosxom.bluesock.org/ or in the tarball under
+   docs/_static/plugins/comments/.
+
+
+This plugin has related files like flavour templates, javascript file,
+shell scripts and such.  All of these files can be gotten from `here
+<../_static/plugins/comments/>`_
+
+
 Flavour templates
 =================
 
@@ -249,6 +264,12 @@ To add AJAX support, you need to make the following modifications to your
 4. Copy ``comments.js`` file to a location on your server that's
    servable by your web-server.
 
+   You can find this file `here <../_static/plugins/comments/>`_.
+
+   .. only:: text
+   
+      You can find comments.js in docs/_static/plugins/comments/.
+
 5. Include this script tag somewhere after the ``</form>`` closing tag::
 
       <script type="text/javascript" src="/comments.js"></script>
@@ -297,17 +318,6 @@ Also, if you don't want comments for an entry, add::
 to the entry or set ``nocomments`` to ``1`` in the properties of the
 entry.
 
-
-Where to find additional material
-=================================
-
-There is a ``README`` file that comes with the contributed plugins
-pack in ``plugins/comments/`` which has more information on installing
-the comments plugin.
-
-Additionally, there is a chapter in the PyBlosxom manual that covers
-installing and configuring the comments plugin.  The manual is on the
-PyBlosxom website: http://pyblosxom.bluesock.org/
 """
 
 __author__ = "Ted Leung, et al"

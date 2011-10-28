@@ -23,7 +23,7 @@ way of catching some of the comment spam they're getting.
 Install
 =======
 
-Note: This requires the :ref:`comments` plugin.
+This requires the ``comments`` plugin.
 
 1. Add ``Pyblosxom.plugins.check_blacklist`` to the ``load_plugins``
    list in your ``config.py`` file.
