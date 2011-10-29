@@ -71,7 +71,7 @@ __registrytags__ = "1.4, core"
 
 
 from Pyblosxom import tools
-from Pyblosxom.tools import pwrap_error
+from Pyblosxom.tools import pwrap
 
 
 tb_good_response = """<?xml version="1.0" encoding="iso-8859-1"?>
@@ -89,13 +89,12 @@ tb_bad_response = """<?xml version="1.0" encoding="iso-8859-1"?>
 
 def verify_installation(request):
     config = request.get_configuration()
-    retval = 1
 
     # all config properties are optional
     if not 'trackback_urltrigger' in config:
-        pwrap_error("missing optional property: 'trackback_urltrigger'")
+        pwrap("missing optional property: 'trackback_urltrigger'")
 
-    return retval
+    return True
 
 
 def cb_handle(args):

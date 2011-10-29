@@ -91,20 +91,20 @@ from Pyblosxom.tools import pwrap_error
 def verify_installation(request):
     config = request.get_configuration()
 
-    status = 1
+    status = True
     if not 'mw_question' in config:
         pwrap_error("Missing required property: mw_question")
-        status = 0
+        status = False
 
     if not 'mw_answer' in config:
         pwrap_error("Missing required property: mw_answer")
-        return 0
+        return False
 
     a = config["mw_answer"]
     if a != a.strip().lower():
         pwrap_error("mw_answer must be lowercase, without leading "
                     "or trailing whitespace")
-        return 0
+        return False
 
     return status
 

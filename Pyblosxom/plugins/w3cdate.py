@@ -53,10 +53,7 @@ __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"
 
 
-import rfc822
 import time
-import os
-from Pyblosxom import tools
 
 
 def iso8601_hack_tostring(t, timezone):

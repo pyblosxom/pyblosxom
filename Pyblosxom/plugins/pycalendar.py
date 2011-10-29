@@ -75,14 +75,13 @@ __registrytags__ = "1.4, 1.5, core"
 import time
 import calendar
 import string
-import os
 
 from Pyblosxom import tools
 
 
 def verify_installation(request):
     # there's no configuration needed for this plugin.
-    return 1
+    return True
 
 
 class PyblCalendar:

@@ -45,6 +45,11 @@ import cPickle
 from Pyblosxom import tools
 
 
+def verify_installation(request):
+    # This should just work--no configuration needed.
+    return True
+
+
 def cb_prepare(args):
     request = args["request"]
 

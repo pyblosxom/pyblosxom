@@ -96,7 +96,7 @@ __registrytags__ = "1.4, 1.5, core"
 
 
 from Pyblosxom import tools
-import re
+from Pyblosxom.tools import pwrap
 import os
 
 
@@ -112,10 +112,11 @@ DEFAULT_FINISH = "</ul>"
 def verify_installation(request):
     config = request.get_configuration()
     if not "category_item" in config:
-        print "missing optional config property 'category_item' which allows "
-        print "you to specify how the category hierarchy is rendered.  see"
-        print "the documentation at the top of the pycategories plugin code "
-        print "file for more details."
+        pwrap(
+            "missing optional config property 'category_item' which allows "
+            "you to specify how the category hierarchy is rendered.  see"
+            "the documentation at the top of the pycategories plugin code "
+            "file for more details.")
     return True
 
 

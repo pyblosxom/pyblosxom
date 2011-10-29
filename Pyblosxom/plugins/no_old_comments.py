@@ -47,7 +47,7 @@ from Pyblosxom import tools
 
 
 def verify_installation(request):
-    return 1
+    return True
 
 
 def cb_comment_reject(args):

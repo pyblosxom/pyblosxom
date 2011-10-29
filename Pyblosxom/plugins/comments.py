@@ -452,12 +452,12 @@ import codecs
 import sys
 import subprocess
 import traceback
-import types
 
 from email.MIMEText import MIMEText
 from xml.sax.saxutils import escape
 from Pyblosxom import tools
 from Pyblosxom.renderers import blosxom
+from Pyblosxom.tools import pwrap, pwrap_error
 
 LATEST_PICKLE_FILE = 'LATEST.cmt'
 
@@ -477,12 +477,13 @@ def cb_start(args):
 def verify_installation(request):
     config = request.get_configuration()
 
-    retval = 1
+    retval = True
 
     if 'comment_dir' in config and not os.path.isdir(config['comment_dir']):
-        print ('The "comment_dir" property in the config file must refer '
-               'to a directory')
-        retval = 0
+        pwrap_error(
+           'The "comment_dir" property in the config file must refer '
+           'to a directory')
+        retval = False
 
     smtp_keys_defined = []
     smtp_keys=[
@@ -496,8 +497,8 @@ def verify_installation(request):
     if smtp_keys_defined:
         for i in smtp_keys:
             if i not in smtp_keys_defined:
-                print "Missing comment SMTP property: '%s'" % i
-                retval = 0
+                pwrap_error("Missing comment SMTP property: '%s'" % i)
+                retval = False
 
     optional_keys = [
         'comment_dir',
@@ -507,12 +508,13 @@ def verify_installation(request):
         'comment_disable_after_x_days']
     for i in optional_keys:
         if not i in config:
-            print "missing optional property: '%s'" % i
+            pwrap("missing optional property: '%s'" % i)
 
     if 'comment_disable_after_x_days' in config:
         if ((not isinstance(config['comment_disable_after_x_days'], int) or
              config['comment_disable_after_x_days'] <= 0)):
-            print "comment_disable_after_x_days has a non-positive integer value."
+            pwrap("comment_disable_after_x_days has a non-positive "
+                  "integer value.")
 
     return retval
 
@@ -603,7 +605,7 @@ def read_file(filename, config):
 
     @returns: a list of comment dicts
     """
-    from xml.sax import make_parser, SAXException
+    from xml.sax import make_parser
     from xml.sax.handler import feature_namespaces, ContentHandler
 
     class cmt_handler(ContentHandler):
@@ -734,7 +736,7 @@ def write_comment(request, config, data, comment, encoding):
 
     # figure out if the comment was submitted as a draft
     if config["comment_ext"] != config["comment_draft_ext"]:
-       return "Comment was submitted for approval.  Thanks!"
+        return "Comment was submitted for approval.  Thanks!"
 
     return "Comment submitted.  Thanks!"
 
@@ -1232,7 +1234,8 @@ def cb_story(args):
     request = args["request"]
     data = request.get_data()
     config = request.get_configuration()
-    if entry.has_key('absolute_path') and not entry.has_key("nocomments"):
+    # FIXME - entry is currently broken and doesn't support "in"
+    if entry.has_key('absolute_path') and not entry.has_key('nocomments'):
         entry['comments'] = read_comments(entry, config)
         entry['num_comments'] = len(entry['comments'])
         if ((len(renderer.get_content()) == 1
@@ -1302,6 +1305,7 @@ def cb_story_end(args):
     data = request.get_data()
     form = request.get_http()['form']
     config = request.get_configuration()
+    # FIXME - entry is currently broken and doesn't support "in"
     if ((entry.has_key('absolute_path')
          and len(renderer.get_content()) == 1
          and 'comment-story' in renderer.flavour

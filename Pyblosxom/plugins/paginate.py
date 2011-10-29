@@ -107,16 +107,20 @@ __license__ = "MIT"
 __registrytags__ = "1.5, core"
 
 
+from Pyblosxom.tools import pwrap_error
+
+
 def verify_installation(request):
     config = request.get_configuration()
     if config.get("num_entries", 0) == 0:
-        print "Missing config property 'num_entries'.  paginate won't do "
-        print "anything without num_entries set.  Either set num_entries "
-        print "to a positive integer, or disable the paginate plugin."
-        print "See the documentation at the top of the paginate plugin "
-        print "code file for more details."
-        return 0
-    return 1
+        pwrap_error(
+            "Missing config property 'num_entries'.  paginate won't do "
+            "anything without num_entries set.  Either set num_entries "
+            "to a positive integer, or disable the paginate plugin."
+            "See the documentation at the top of the paginate plugin "
+            "code file for more details.")
+        return False
+    return True
 
 
 class PageDisplay:

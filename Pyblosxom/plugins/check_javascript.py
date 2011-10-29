@@ -79,7 +79,7 @@ from Pyblosxom import tools
 
 
 def verify_installation(request):
-    return 1
+    return True
 
 
 def cb_comment_reject(args):
@@ -90,11 +90,11 @@ def cb_comment_reject(args):
 
     if (('secretToken' in form and
          form['secretToken'].value == config['blog_title'])):
-        return 0
-    else:
-        dump = '\n'.join(['%s: %s' % (arg.name, arg.value)
-                          for arg in dict(form).values()])
-        logger = tools.get_logger()
-        logger.info('Comment rejected from %s:\n%s' % (
-                http['REMOTE_ADDR'], dump))
-        return 1
+        return False
+
+    dump = '\n'.join(['%s: %s' % (arg.name, arg.value)
+                      for arg in dict(form).values()])
+    logger = tools.get_logger()
+    logger.info('Comment rejected from %s:\n%s' % (
+            http['REMOTE_ADDR'], dump))
+    return True

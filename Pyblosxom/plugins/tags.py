@@ -248,8 +248,6 @@ __registrytags__ = "1.5, core"
 import os
 import cPickle as pickle
 import shutil
-import unittest
-import tempfile
 
 
 def savefile(path, tagdata):

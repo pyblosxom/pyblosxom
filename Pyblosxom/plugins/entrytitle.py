@@ -64,7 +64,7 @@ __registrytags__ = "1.4, 1.5, core"
 
 def verify_installation(request):
     # This needs no verification.
-    return 1
+    return True
 
 
 def cb_head(args):

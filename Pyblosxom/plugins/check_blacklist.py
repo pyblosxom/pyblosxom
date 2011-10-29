@@ -96,17 +96,17 @@ def verify_installation(request):
             "The \"comment_rejected_words\" property must be set in your "
             "config.py file.  It takes a list of strings as a value.  "
             "Refer to the documentation for more details.")
-        return 0
+        return False
 
     crw = config["comment_rejected_words"]
-    if not (isinstance(crw, list) or isinstance(crw, tuple)):
+    if not isinstance(crw, (list, tuple)):
         pwrap_error(
             "The \"comment_rejected_words\" property is incorrectly set in "
             "your config.py file.  It takes a list of strings as a value.  "
             "Refer to the documentation at the top of the comment_blacklist "
             "plugin for more details.")
-        return 0
-    return 1
+        return False
+    return True
 
 
 def cb_comment_reject(args):

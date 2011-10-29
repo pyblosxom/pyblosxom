@@ -91,12 +91,13 @@ __registrytags__ = "1.4, 1.5, core"
 
 import os
 import time
+from Pyblosxom.tools import pwrap
 
 
 def verify_installation(request):
     config = request.get_configuration()
     if not "nonhuman_name" in config:
-        print "missing optional property: 'nonhuman_name'"
+        pwrap("missing optional property: 'nonhuman_name'")
 
     return True
 

@@ -150,6 +150,7 @@ import os
 import re
 
 from Pyblosxom import tools
+from Pyblosxom.tools import pwrap_error
 
 
 def get_acronym_file(cfg):
@@ -163,16 +164,18 @@ def verify_installation(request):
     config = request.get_configuration()
     filename = get_acronym_file(config)
     if not os.path.exists(filename):
-        print "There is no acronym file at %s." % filename
-        print "You should create one.  Refer to documentation for examples."
-        return 0
+        pwrap_error("There is no acronym file at %s." % filename)
+        pwrap_error(
+            "You should create one.  Refer to documentation for examples.")
+        return False
 
     try:
         fp = open(filename, "r")
     except IOError:
-        print "Your acronyms file %s cannot be opened for reading." % filename
-        print "Please adjust the permissions."
-        return 0
+        pwrap_error(
+            "Your acronyms file %s cannot be opened for reading.  Please "
+            "adjust the permissions." % filename)
+        return False
 
     malformed = False
 
@@ -182,14 +185,15 @@ def verify_installation(request):
         firstpart = line.split("=", 1)[0]
         firstpart = "(\\b" + firstpart.strip() + "\\b)"
         try:
-            firstpartre = re.compile(firstpart)
+            re.compile(firstpart)
         except re.error, s:
-            print "- '%s' is not a properly formed regexp.  (%s)" % (line, s)
+            pwrap_error("- '%s' is not a properly formed regexp.  (%s)" %
+                        (line, s))
             malformed = True
     fp.close()
     if malformed:
-        return 0
-    return 1
+        return False
+    return True
 
 
 def build_acronyms(lines):

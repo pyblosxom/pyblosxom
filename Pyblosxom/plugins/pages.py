@@ -160,6 +160,7 @@ import sys
 import os.path
 from Pyblosxom.entries.fileentry import FileEntry
 from Pyblosxom import tools
+from Pyblosxom.tools import pwrap_error
 
 
 TRIGGER = "pages"
@@ -169,14 +170,15 @@ INIT_KEY = "pages_pages_file_initiated"
 def verify_installation(req):
     config = req.get_configuration()
 
-    retval = 1
+    retval = True
 
     if not 'pagesdir' in config:
-        print "'pagesdir' property is not set in the config file."
-        retval = 0
+        pwrap_error("'pagesdir' property is not set in the config file.")
+        retval = False
     elif not os.path.isdir(config["pagesdir"]):
-        print "'pagesdir' directory does not exist. %s" % config["pagesdir"]
-        retval = 0
+        pwrap_error(
+            "'pagesdir' directory does not exist. %s" % config["pagesdir"])
+        retval = False
 
     return retval
 

@@ -66,7 +66,7 @@ import urlparse
 
 def verify_installation(request):
     # no config parameters
-    return 1
+    return True
 
 
 class parser(sgmllib.SGMLParser):

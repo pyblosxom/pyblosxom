@@ -84,17 +84,19 @@ __registrytags__ = "1.4, 1.5, core"
 
 
 from Pyblosxom import tools, entries
+from Pyblosxom.tools import pwrap
 import time
-import os
 
 
 def verify_installation(request):
     config = request.get_configuration()
     if not 'archive_template' in config:
-        print "missing optional config property 'archive_template' which "
-        print "allows you to specify how the archive links are created.  "
-        print "refer to yeararchives plugin documentation for more details."
-    return 1
+        pwrap(
+            "missing optional config property 'archive_template' which "
+            "allows you to specify how the archive links are created.  "
+            "refer to yeararchives plugin documentation for more details.")
+
+    return True
 
 
 class YearArchives:
