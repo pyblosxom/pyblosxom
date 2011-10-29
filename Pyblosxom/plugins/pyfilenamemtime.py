@@ -28,6 +28,8 @@ http://www.probo.com/timr/blog/
 Install
 =======
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. Add ``Pyblosxom.plugins.pyfilenamemtime`` to the ``load_plugins``
    list of your ``config.py`` file.
 

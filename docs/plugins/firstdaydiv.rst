@@ -1,6 +1,14 @@
-=====================
- Plugin: firstdaydiv 
-=====================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+=====================================================
+ firstdaydiv - Adds a token which tells us whether...
+=====================================================
 
 Summary
 =======
@@ -11,6 +19,8 @@ of entries in a series of entries to be displayed from the other days.
 
 Install
 =======
+
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. In your ``config.py`` file, add ``Pyblosxom.plugins.firstdaydiv``
    to the ``load_plugins`` list.

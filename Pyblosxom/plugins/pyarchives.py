@@ -20,7 +20,7 @@ your head and foot templates.
 Install
 =======
 
-To install this plugin:
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.pyarchives`` to the ``load_plugins`` list
    in your ``config.py`` file.

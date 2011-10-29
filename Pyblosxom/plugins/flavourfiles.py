@@ -28,27 +28,33 @@ For example::
     http://example.com/blog/flavourfiles/html/style.css
 
 
+.. Note::
+
+   This plugin is very beta!  It's missing important functionality,
+   probably has bugs, and hasn't been well tested!
+
+
 Install
 =======
 
-In templates you want to use flavourfiles, use urls like this::
+This plugin comes with Pyblosxom.  To install, do the following:
 
-    $(base_url)/flavourfiles/$(flavour)/path-to-file
+1. Add ``Pyblosxom.plugins.flavourfiles`` to the ``load_plugins`` list
+   of your ``config.py`` file.
 
-For example::
+2. In templates you want to use flavourfiles, use urls like this::
 
-    <img src="$(base_url)/flavourfiles/$(flavour)/header_image.jpg">
+       $(base_url)/flavourfiles/$(flavour)/path-to-file
+
+   For example::
+
+       <img src="$(base_url)/flavourfiles/$(flavour)/header_image.jpg">
 
 The ``$(base_url)`` will get filled in with the correct url root.
 
 The ``$(flavour)`` will get filled in with the name of the url.  This
 allows users to change the flavour name without having to update all
 the templates.
-
-.. Note::
-
-    This plugin is essentially a draft and it's missing important
-    functionality and probably has bugs!
 
 """
 

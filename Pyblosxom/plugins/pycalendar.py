@@ -24,6 +24,8 @@ so you can click on the date and see entries for that date.
 Install
 =======
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. Add ``Pyblosxom.plugins.pycalendar`` to your ``load_plugins`` list in your
    ``config.py`` file.
 

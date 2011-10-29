@@ -1,6 +1,14 @@
-====================
- Plugin: pycalendar 
-====================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+==================================================
+ pycalendar - Displays a calendar on your blog....
+==================================================
 
 Summary
 =======
@@ -22,6 +30,8 @@ so you can click on the date and see entries for that date.
 
 Install
 =======
+
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.pycalendar`` to your ``load_plugins`` list in your
    ``config.py`` file.

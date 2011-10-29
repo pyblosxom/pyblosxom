@@ -31,6 +31,8 @@ Install
 
 Requires the ``comments`` plugin.
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. Add ``Pyblosxom.plugins.akismetcomments`` to the ``load_plugins``
    list in your ``config.py`` file.
 
@@ -64,7 +66,7 @@ __author__ = "Benjamin Mako Hill"
 __version__ = "0.2"
 __email__ = ""
 __url__ = "http://pyblosxom.bluesock.org/"
-__description__ = "Run comments through Akismet."
+__description__ = "Rejects comments using akismet"
 __category__ = "comments"
 __license__ = "GPLv2"
 __registrytags__ = "1.4, 1.5, core"

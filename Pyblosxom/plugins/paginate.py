@@ -24,7 +24,7 @@ The paginate overrides this functionality and allows for paging.
 Install
 =======
 
-To install paginate, do the following:
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.paginate`` to your ``load_plugins`` list
    variable in your ``config.py`` file.

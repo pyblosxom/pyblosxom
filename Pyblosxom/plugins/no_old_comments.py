@@ -20,6 +20,8 @@ Install
 
 Requires the ``comments`` plugin.
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. Add ``Pyblosxom.plugins.no_old_comments`` to the ``load_plugins``
    list in your ``config.py`` file.
 

@@ -1,6 +1,14 @@
-========================
- Plugin: check_nonhuman 
-========================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+================================================
+ check_nonhuman - Rejects non-human comments....
+================================================
 
 Summary
 =======
@@ -21,6 +29,10 @@ and I stop getting comment spam.
 
 Install
 =======
+
+Requires the ``comments`` plugin.
+
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.check_nonhuman`` to the ``load_plugins`` list
    in your ``config.py`` file.

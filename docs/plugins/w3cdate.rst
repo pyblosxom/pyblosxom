@@ -1,6 +1,14 @@
-=================
- Plugin: w3cdate 
-=================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+=================================================
+ w3cdate - Adds a 'w3cdate' variable which is ...
+=================================================
 
 Summary
 =======
@@ -18,6 +26,8 @@ Install
    If you have pyxml installed, then this will work better than if you don't.
    If you don't have it installed, it uses home-brew code to compute the
    w3cdate.
+
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.w3cdate`` to the beginning of the
    ``load_plugins`` list of your ``config.py`` file.

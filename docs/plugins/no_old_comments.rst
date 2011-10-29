@@ -1,6 +1,14 @@
-=========================
- Plugin: no_old_comments 
-=========================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+=========================================================
+ no_old_comments - Prevent comments on entries older t...
+=========================================================
 
 Summary
 =======
@@ -16,6 +24,8 @@ Install
 =======
 
 Requires the ``comments`` plugin.
+
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.no_old_comments`` to the ``load_plugins``
    list in your ``config.py`` file.

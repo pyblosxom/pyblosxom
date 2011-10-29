@@ -1,6 +1,14 @@
-======================
- Plugin: yeararchives 
-======================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+======================================================
+ yeararchives - Builds year-based archives listing....
+======================================================
 
 Summary
 =======
@@ -13,6 +21,8 @@ either your head or foot template.
 
 Install
 =======
+
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.yeararchives`` to the ``load_plugins`` list
    in your ``config.py`` file.

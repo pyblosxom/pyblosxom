@@ -31,6 +31,14 @@ a plugins/ directory here.
 Docstrings for plugins should be formatted in restructured text.
 """
 
+TOPNOTE = """
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+"""
 
 def get_info(node, info_name):
     # FIXME - this is inefficient since it'll traverse the entire ast
@@ -58,11 +66,13 @@ def build_docs_file(filepath):
 
     node = ast.parse(fp.read(), filepath, 'exec')
 
-    title = " Plugin: %s " % os.path.splitext(os.path.basename(filepath))[0]
+    title = (" %s - %s..." % (
+            os.path.splitext(os.path.basename(filepath))[0],
+            get_info(node, "__description__")[:35]))
     body = ast.get_docstring(node, True)
     line = "=" * len(title)
 
-    return "\n".join([line, title, line, "", body])
+    return "\n".join([TOPNOTE, line, title, line, "", body])
 
 
 def save_entry(filepath, entry):

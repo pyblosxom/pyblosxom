@@ -1,6 +1,14 @@
-==================
- Plugin: acronyms 
-==================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+==================================================
+ acronyms - Marks acronyms and abbreviations in...
+==================================================
 
 Summary
 =======

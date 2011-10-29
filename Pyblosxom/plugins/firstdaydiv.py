@@ -19,6 +19,8 @@ of entries in a series of entries to be displayed from the other days.
 Install
 =======
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. In your ``config.py`` file, add ``Pyblosxom.plugins.firstdaydiv``
    to the ``load_plugins`` list.
 

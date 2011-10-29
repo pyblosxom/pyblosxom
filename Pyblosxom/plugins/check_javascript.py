@@ -39,6 +39,8 @@ Install
 
 Requires the ``comments`` plugin.
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. Add ``Pyblosxom.plugins.check_javascript`` to the ``load_plugins``
    list in your ``config.py`` file.
 
@@ -67,7 +69,7 @@ __author__ = "Ryan Barrett"
 __email__ = "pyblosxom at ryanb dot org"
 __version__ = "2011-10-25"
 __url__ = "http://pyblosxom.bluesock.org/"
-__description__ = "Use JavaScript to filter out spam comments"
+__description__ = "Rejects comments using JavaScript"
 __category__ = "comments"
 __license__ = "GPLv2"
 __registrytags__ = "1.4, 1.5, core"

@@ -26,6 +26,8 @@ Install
    If you don't have it installed, it uses home-brew code to compute the
    w3cdate.
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. Add ``Pyblosxom.plugins.w3cdate`` to the beginning of the
    ``load_plugins`` list of your ``config.py`` file.
 

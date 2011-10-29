@@ -11,11 +11,15 @@
 Summary
 =======
 
-Comments support plugin.
+Adds comments to your blog.  Supports preview, AJAX posting, SMTP
+notifications, plugins for rejecting comments (and thus reducing
+spam), ...
 
 
 Install
 =======
+
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.comments`` to the ``load_plugins`` list of
    your ``config.py`` file.
@@ -44,7 +48,7 @@ Configuration
    extension.  The default file extension is 'cmt'.
 
 4. (optional) The comment system can notify you via e-mail when new
-   comments/trackbacks/pingbacks are posted.  If you want to enable this 
+   comments/trackbacks/pingbacks are posted.  If you want to enable this
    feature, create the following config.py entries::
 
       py['comment_smtp_from']   - the address sending the notification
@@ -207,10 +211,10 @@ comment
 The ``comment`` template is used to format a single entry that has
 comments.
 
-Variables available:
+Variables available::
 
    $cmt_title - the title of the comment
-   $cmt_description - the content of the comment or excerpt of the 
+   $cmt_description - the content of the comment or excerpt of the
                       trackback/pingback
    $cmt_link - the pingback link referring to this entry
    $cmt_author - the author of the comment or trackback
@@ -293,6 +297,7 @@ per entry.
 
    compact_comments.sh is located in docs/_static/plugins/comments/
 
+
 You can find ``compact_comments.sh`` `here
 <../_static/plugins/comments/>`_.
 
@@ -339,7 +344,7 @@ HTTP POST.  This will also happen if comment plugins that use
 alternative protocols are detected, like ``comments_openid.py``.
 
 To add AJAX support, you need to make the following modifications to your
-``comment-form`` template::
+``comment-form`` template:
 
 1. The comment-anchor tag must be the first thing in the
    ``comment-form`` template::
@@ -374,7 +379,7 @@ To add AJAX support, you need to make the following modifications to your
    You can find this file `here <../_static/plugins/comments/>`_.
 
    .. only:: text
-   
+
       You can find comments.js in docs/_static/plugins/comments/.
 
 5. Include this script tag somewhere after the ``</form>`` closing tag::
@@ -431,7 +436,7 @@ __author__ = "Ted Leung, et al"
 __email__ = "pyblosxom-devel at sourceforge dot net"
 __version__ = "$Id$"
 __url__ = "http://pyblosxom.bluesock.org/"
-__description__ = "Allows for comments on each blog entry."
+__description__ = "Adds comments to a blog entry."
 __category__ = "comments"
 __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"
@@ -481,8 +486,8 @@ def verify_installation(request):
 
     smtp_keys_defined = []
     smtp_keys=[
-        'comment_smtp_server', 
-        'comment_smtp_from', 
+        'comment_smtp_server',
+        'comment_smtp_from',
         'comment_smtp_to']
     for k in smtp_keys:
         if k in config:
@@ -495,8 +500,8 @@ def verify_installation(request):
                 retval = 0
 
     optional_keys = [
-        'comment_dir', 
-        'comment_ext', 
+        'comment_dir',
+        'comment_ext',
         'comment_draft_ext',
         'comment_nofollow',
         'comment_disable_after_x_days']

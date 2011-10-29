@@ -25,6 +25,8 @@ Install
 
 This requires the ``comments`` plugin.
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. Add ``Pyblosxom.plugins.check_blacklist`` to the ``load_plugins``
    list in your ``config.py`` file.
 
@@ -76,7 +78,7 @@ __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
 __version__ = "2011-10-25"
 __url__ = "http://pyblosxom.bluesock.org/"
-__description__ = "Rejects comments that contain specified blacklisted words."
+__description__ = "Rejects comments using a word blacklist."
 __category__ = "comments"
 __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"

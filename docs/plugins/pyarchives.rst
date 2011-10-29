@@ -1,6 +1,14 @@
-====================
- Plugin: pyarchives 
-====================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+====================================================
+ pyarchives - Builds month/year-based archives li...
+====================================================
 
 Summary
 =======
@@ -14,7 +22,7 @@ your head and foot templates.
 Install
 =======
 
-To install this plugin:
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.pyarchives`` to the ``load_plugins`` list
    in your ``config.py`` file.

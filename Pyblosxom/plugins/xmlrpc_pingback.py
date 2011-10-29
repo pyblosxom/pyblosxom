@@ -21,6 +21,8 @@ Install
 Requires the ``comments`` plugin, but you don't have to enable
 comments on your blog for pingbacks to work.
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. Add ``Pyblosxom.plugins.xmlrpc_pingback`` to the ``load_plugins``
    list of your ``config.py`` file
 

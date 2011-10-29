@@ -1,15 +1,81 @@
-==================
- Plugin: comments 
-==================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+=============================================
+ comments - Adds comments to a blog entry....
+=============================================
 
 Summary
 =======
 
-Comments support plugin.
+Adds comments to your blog.  Supports preview, AJAX posting, SMTP
+notifications, plugins for rejecting comments (and thus reducing
+spam), ...
 
 
-Setup
-=====
+Install
+=======
+
+This plugin comes with Pyblosxom.  To install, do the following:
+
+1. Add ``Pyblosxom.plugins.comments`` to the ``load_plugins`` list of
+   your ``config.py`` file.
+
+2. Configure as documented below.
+
+
+Configuration
+=============
+
+1. Comments are stored in a directory which will parallel the data
+   directory.  The comments themselves are stored as XML files named
+   entryname-datetime.suffix.  The comment system allows you to
+   specify the directory where the comment directory tree will stored,
+   and the suffix used for comment files.  You need to make sure that
+   this directory is writable by the pyblosxom CGI scripts.
+
+   Set py['comment_dir'] to the directory (in your data directory)
+   where you want the comments to be stored.  The default value is a
+   directory named 'comments' in your datadir.
+
+2. Copy the templates required.  See the Flavour templates section
+   below for examples.
+
+3. (optional) Set py['comment_ext'] to the change comment file
+   extension.  The default file extension is 'cmt'.
+
+4. (optional) The comment system can notify you via e-mail when new
+   comments/trackbacks/pingbacks are posted.  If you want to enable this
+   feature, create the following config.py entries::
+
+      py['comment_smtp_from']   - the address sending the notification
+      py['comment_smtp_to']     - the address receiving the notification
+
+   If you want to use an SMTP server, then set::
+
+      py['comment_smtp_server'] - your SMTP server
+
+   **OR** if you want to use a mail command, set::
+
+      py['comment_mta_cmd']     - the path to your MTA, e.g. /usr/bin/mail
+
+   Example 1::
+
+      py['comment_smtp_from']   = "joe@joe.com"
+      py['comment_smtp_to']     = "joe@joe.com"
+      py['comment_smtp_server'] = "localhost"
+
+   Example 2::
+
+      py['comment_smtp_from']   = "joe@joe.com"
+      py['comment_smtp_to']     = "joe@joe.com"
+      py['comment_mta_cmd']     = "/usr/bin/mail"
+
 
 This module supports the following config parameters (they are not
 required):
@@ -66,11 +132,6 @@ the datadir hierarchy.  The filename of the comment is the filename of
 the blog entry, plus the creation time of the comment as a float, plus
 the comment extension.
 
-This plugin always writes each comment to its own file, but as an
-optimization, it supports files that contain multiple comments.  You
-can use ``compact_comments.sh`` in this directory to compact comments
-into a single file per entry.
-
 Comments now follow the ``blog_encoding`` variable specified in
 ``config.py``.  If you don't include a ``blog_encoding`` variable,
 this will default to iso-8859-1.
@@ -111,8 +172,8 @@ template is optional.
 The way the comments plugin assembles flavour files is like this::
 
     comment-story
-    comment-preview (optional)
     comment (zero or more)
+    comment-preview (optional)
     comment-form
 
 Thus if you want to have your entire comment section in a div
@@ -122,6 +183,16 @@ and end it at the bottom of comment-form.
 
 comment-story
 -------------
+
+The ``comment-story`` template comes at the beginning of the comment
+section before the comments and the comment form.
+
+
+Variables available:
+
+   $num_comments - Contains an integer count of the number of comments
+                   associated with this entry
+
 
 .. only:: text
 
@@ -139,6 +210,22 @@ Link to file: `comment-story <../_static/plugins/comments/comment-story>`_
 comment
 -------
 
+The ``comment`` template is used to format a single entry that has
+comments.
+
+Variables available::
+
+   $cmt_title - the title of the comment
+   $cmt_description - the content of the comment or excerpt of the
+                      trackback/pingback
+   $cmt_link - the pingback link referring to this entry
+   $cmt_author - the author of the comment or trackback
+   $cmt_optionally_linked_author - the author, wrapped in an <a href> tag
+                                   to their link if one was provided
+   $cmt_pubDate - the date and time of the comment/trackback/pingback
+   $cmt_source - the source of the trackback
+
+
 .. only:: text
 
    You can find the comment-story file in the docs at
@@ -154,6 +241,9 @@ Link to file: `comment <../_static/plugins/comments/comment>`_
 
 comment-preview
 ---------------
+
+The ``comment-preview`` template shows a comment that is being
+previewed, but hasn't been posted to the blog, yet.
 
 .. only:: text
 
@@ -171,6 +261,9 @@ Link to file: `comment-preview <../_static/plugins/comments/comment-preview>`_
 comment-form
 ------------
 
+The ``comment-form`` comes at the end of all the comments.  It has the
+comment form used to enter new comments.
+
 .. only:: text
 
    You can find the comment-story file in the docs at
@@ -182,6 +275,33 @@ Link to file: `comment-form <../_static/plugins/comments/comment-form>`_
 
 .. literalinclude:: ../_static/plugins/comments/comment-form
    :language: html
+
+
+Dealing with comment spam
+=========================
+
+You'll probably have comment spam.  There are a bunch of core plugins
+that will help you reduce the comment spam that come with Pyblosxom as
+well as ones that don't.
+
+Best to check the core plugins first.
+
+
+Compacting comments
+===================
+
+This plugin always writes each comment to its own file, but as an
+optimization, it supports files that contain multiple comments.  You
+can use ``compact_comments.sh`` to compact comments into a single file
+per entry.
+
+.. only:: text
+
+   compact_comments.sh is located in docs/_static/plugins/comments/
+
+
+You can find ``compact_comments.sh`` `here
+<../_static/plugins/comments/>`_.
 
 
 Implementing comment preview
@@ -226,7 +346,7 @@ HTTP POST.  This will also happen if comment plugins that use
 alternative protocols are detected, like ``comments_openid.py``.
 
 To add AJAX support, you need to make the following modifications to your
-``comment-form`` template::
+``comment-form`` template:
 
 1. The comment-anchor tag must be the first thing in the
    ``comment-form`` template::
@@ -261,7 +381,7 @@ To add AJAX support, you need to make the following modifications to your
    You can find this file `here <../_static/plugins/comments/>`_.
 
    .. only:: text
-   
+
       You can find comments.js in docs/_static/plugins/comments/.
 
 5. Include this script tag somewhere after the ``</form>`` closing tag::
@@ -311,15 +431,3 @@ Also, if you don't want comments for an entry, add::
 
 to the entry or set ``nocomments`` to ``1`` in the properties of the
 entry.
-
-
-Where to find additional material
-=================================
-
-There is a ``README`` file that comes with the contributed plugins
-pack in ``plugins/comments/`` which has more information on installing
-the comments plugin.
-
-Additionally, there is a chapter in the PyBlosxom manual that covers
-installing and configuring the comments plugin.  The manual is on the
-PyBlosxom website: http://pyblosxom.bluesock.org/

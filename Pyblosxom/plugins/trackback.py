@@ -21,6 +21,8 @@ Install
 Requires the ``comments`` plugin.  Though you don't need to have
 comments enabled on your blog in order for trackbacks to work.
 
+This plugin comes with Pyblosxom.  To install, do the following:
+
 1. Add ``Pyblosxom.plugins.trackback`` to the ``load_plugins`` list
    in your ``config.py`` file.
 

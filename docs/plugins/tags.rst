@@ -1,6 +1,14 @@
-==============
- Plugin: tags 
-==============
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+======================
+ tags - Tags plugin...
+======================
 
 Summary
 =======
@@ -19,6 +27,8 @@ It creates a ``$(tagcloud)`` variable for the tag cloud.
 
 Install
 =======
+
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.tags`` to the ``load_plugins`` list in your
    ``config.py`` file.

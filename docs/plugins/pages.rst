@@ -1,6 +1,14 @@
-===============
- Plugin: pages 
-===============
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+===============================================
+ pages - Allows you to include non-blog-entr...
+===============================================
 
 Summary
 =======
@@ -21,7 +29,7 @@ website.
 Install
 =======
 
-To install this plugin::
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. add ``Pyblosxom.plugins.pages`` to the ``load_plugins`` list in
    your ``config.py`` file.

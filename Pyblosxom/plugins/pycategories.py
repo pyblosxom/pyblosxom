@@ -20,7 +20,7 @@ which you can use in your head or foot templates.
 Install
 =======
 
-To install this plugin:
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.pycategories`` to the ``load_plugins`` list
    in your ``config.py`` file.

@@ -1,6 +1,14 @@
-===================
- Plugin: magicword 
-===================
+
+.. only:: text
+
+   This document file was automatically generated.  If you want to edit
+   the documentation, DON'T do it here--do it in the docstring of the
+   appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
+
+
+===================================================
+ magicword - Magic word method for reducing comm...
+===================================================
 
 Summary
 =======
@@ -17,6 +25,8 @@ Install
 =======
 
 Requires the ``comments`` plugin.
+
+This plugin comes with Pyblosxom.  To install, do the following:
 
 1. Add ``Pyblosxom.plugins.magicword`` to the ``load_plugins`` list in
    your ``config.py`` file.
