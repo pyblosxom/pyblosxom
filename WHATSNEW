@@ -34,6 +34,9 @@ Pertinent to users:
    If you do this, then the next time you upgrade PyBlosxom, the
    plugins will be upgraded automatically.
 
+   Further, documentation for plugins is at the top of the individual
+   plugin files, but also in the documentation.
+
 2. Fixes for the following plugins:
 
    pages
@@ -51,7 +54,16 @@ Pertinent to users:
         it initializes plugins allowing them to do startup things.
         This fixes problems with plugins that augment entry parsers.
 
-3. Fixes error handling for loading plugins.  When doing
+   the rest of the plugins
+
+      * pep8 fixes
+      * documentation updates
+
+3. Plugins removed from Pyblosxom:
+
+   * commentAPI
+
+4. Fixes error handling for loading plugins.  When doing
    ``pyblosxom-cmd test`` and a plugin fails to load, it'll now tell
    you.  When using the debug renderer and a plugin fails to load,
    it'll now tell you.

@@ -9,6 +9,9 @@
 Part 1: Pyblosxom user manual
 =============================
 
+Documentation for installing, configuring and tweaking Pyblosxom for your
+purposes.
+
 .. toctree::
    :maxdepth: 2
 
@@ -38,6 +41,8 @@ Part 1: Pyblosxom user manual
 Part 2: Core plugin documentation
 =================================
 
+Documentation for plugins that come with Pyblosxom.
+
 .. toctree::
    :titlesonly:
    :glob:
@@ -47,6 +52,9 @@ Part 2: Core plugin documentation
 
 Part 3: Developer documentation
 ===============================
+
+Documentation anyone interested in hacking on Pyblosxom, writing
+plugins, or things of that ilk.
 
 .. toctree::
    :maxdepth: 2
