@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 =========================================================
  check_blacklist - Rejects comments using a word black...
 =========================================================
@@ -74,3 +73,8 @@ Sometimes this information is interesting.  True, "yes, I want to log"
 and False (default) if "no, i don't want to log".  Example::
 
    py["comment_rejected_words_log"] = False
+
+License
+=======
+
+Plugin is distributed under license: MIT

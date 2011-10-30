@@ -31,13 +31,23 @@ a plugins/ directory here.
 Docstrings for plugins should be formatted in restructured text.
 """
 
-TOPNOTE = """
+TEMPLATE = """
 .. only:: text
 
    This document file was automatically generated.  If you want to edit
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
+%(line)s
+%(title)s
+%(line)s
+
+%(body)s
+
+License
+=======
+
+Plugin is distributed under license: %(license)s
 """
 
 def get_info(node, info_name):
@@ -69,10 +79,15 @@ def build_docs_file(filepath):
     title = (" %s - %s..." % (
             os.path.splitext(os.path.basename(filepath))[0],
             get_info(node, "__description__")[:35]))
-    body = ast.get_docstring(node, True)
     line = "=" * len(title)
+    body = ast.get_docstring(node, True)
+    license_ = get_info(node, "__license__")
 
-    return "\n".join([TOPNOTE, line, title, line, "", body])
+    return (TEMPLATE % {
+            "line": line,
+            "title": title,
+            "body": body,
+            "license": license_})
 
 
 def save_entry(filepath, entry):
@@ -104,8 +119,6 @@ def get_plugins(plugindir, outputdir):
             entry = build_docs_file(filename)
 
             output_filename = os.path.basename(filename)
-            # output_filename = filename[len(plugindir):]
-            # output_filename = output_filename.lstrip(os.sep)
             output_filename = os.path.splitext(output_filename)[0] + ".rst"
             output_filename = os.path.join(outputdir, output_filename)
 

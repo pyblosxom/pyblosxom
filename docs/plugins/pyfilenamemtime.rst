@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 =========================================================
  pyfilenamemtime - Allows you to codify the mtime in t...
 =========================================================
@@ -35,3 +34,8 @@ This plugin comes with Pyblosxom.  To install, do the following:
    list of your ``config.py`` file.
 
 2. Use date stamps in your entry filenames.
+
+License
+=======
+
+Plugin is distributed under license: MIT

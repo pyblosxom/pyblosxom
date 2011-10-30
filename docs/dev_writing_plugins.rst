@@ -1,11 +1,11 @@
 .. highlight:: python
    :linenothreshold: 5
 
+.. _writing-plugins:
+
 ===============
 Writing Plugins
 ===============
-
-.. _writing-plugins:
 
 Summary
 =======

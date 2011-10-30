@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ======================
  tags - Tags plugin...
 ======================
@@ -235,3 +234,8 @@ from the directory your ``config.py`` is in or::
     pyblosxom-cmd categorytotags --config=/path/to/config/file
 
 from anywhere.
+
+License
+=======
+
+Plugin is distributed under license: MIT

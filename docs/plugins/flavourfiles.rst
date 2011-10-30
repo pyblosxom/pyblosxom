@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ======================================================
  flavourfiles - Serves static files related to flav...
 ======================================================
@@ -57,3 +56,8 @@ The ``$(base_url)`` will get filled in with the correct url root.
 The ``$(flavour)`` will get filled in with the name of the url.  This
 allows users to change the flavour name without having to update all
 the templates.
+
+License
+=======
+
+Plugin is distributed under license: MIT License

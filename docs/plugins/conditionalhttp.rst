@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 =========================================================
  conditionalhttp - Allows browser-side caching with if...
 =========================================================
@@ -27,3 +26,8 @@ This plugin comes with Pyblosxom.  To install, do the following:
 
 1. In your ``config.py`` file, add ``Pyblosxom.plugins.conditionalhttp`` to
    the ``load_plugins`` variable.
+
+License
+=======
+
+Plugin is distributed under license: MIT

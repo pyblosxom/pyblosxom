@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ====================================================
  akismetcomments - Rejects comments using akismet...
 ====================================================
@@ -51,3 +50,8 @@ History
 This plugin merges the work done on the ``akismetComments.py`` plugin
 by Blake Winton with the the ``akismet.py`` plugin by Benjamin Mako
 Hill.
+
+License
+=======
+
+Plugin is distributed under license: GPLv2

@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ================================================
  entrytitle - Puts entry title in page title....
 ================================================
@@ -52,3 +51,8 @@ with the ``entry_title_template`` variable::
 
    ``%(title)s`` is a Python string formatter that gets filled in with
    the entry title.
+
+License
+=======
+
+Plugin is distributed under license: MIT

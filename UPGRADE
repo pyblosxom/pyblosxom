@@ -1,3 +1,5 @@
+.. _upgrading:
+
 =====================
  Upgrading PyBlosxom
 =====================
@@ -12,24 +14,27 @@ First, read through the What's New documentation which includes
 pointers to users and plugin developers regarding changes between
 older versions and newer versions.
 
-This is in the ``WHATSNEW`` file.
+.. only:: text
 
-If you're reading this online, the changelog is :ref:`here <whatsnew>`.
+   This is in the ``WHATSNEW`` file.
 
-To be safe, install PyBlosxom locally and test your blog configuration
-and plugins to make sure everything works with the new version.
+.. only:: html
+
+   This is at :ref:`whatsnew`.
+
+To be safe, install PyBlosxom locally (as opposed to on the server or
+over your existing blog) and test your blog configuration and plugins
+to make sure everything works with the new version.
 
 
 Upgrading site-wide
 ===================
 
-If you have `pip`_, then do::
+Using `pip`_::
 
     pip install --upgrade pyblosxom
 
-**OR**
-
-If you don't have `pip`_, but do have `easy_install`_, then do::
+**OR** Using `easy_install`_::
 
     easy_install -U pyblosxom
 
@@ -38,21 +43,8 @@ If you don't have `pip`_, but do have `easy_install`_, then do::
 .. _easy_install: http://pypi.python.org/pypi/setuptools
 
 
-Upgrading locally
-=================
+Upgrading in a virtual environment
+==================================
 
-First, activate your virtual environment.
-
-If you have `pip`_, then do::
-
-    pip install --upgrade pyblosxom
-
-**OR**
-
-If you don't have `pip`_, but do have `easy_install`_, then do::
-
-    easy_install -U pyblosxom
-
-
-.. _pip: http://pypi.python.org/pypi/pip
-.. _easy_install: http://pypi.python.org/pypi/setuptools
+First, activate your virtual environment, then use either pip or
+easy_install as above.

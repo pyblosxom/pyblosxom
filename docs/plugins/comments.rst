@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 =============================================
  comments - Adds comments to a blog entry....
 =============================================
@@ -431,3 +430,8 @@ Also, if you don't want comments for an entry, add::
 
 to the entry or set ``nocomments`` to ``1`` in the properties of the
 entry.
+
+License
+=======
+
+Plugin is distributed under license: MIT

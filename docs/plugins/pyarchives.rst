@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ====================================================
  pyarchives - Builds month/year-based archives li...
 ====================================================
@@ -63,3 +62,8 @@ Usage
 =====
 
 Add ``$(archivelinks)`` to your head and/or foot templates.
+
+License
+=======
+
+Plugin is distributed under license: MIT

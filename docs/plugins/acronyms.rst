@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ==================================================
  acronyms - Marks acronyms and abbreviations in...
 ==================================================
@@ -136,3 +135,8 @@ Origins
 
 Based on the Blosxom acronyms plugin by Axel Beckert at
 http://noone.org/blosxom/acronyms .
+
+License
+=======
+
+Plugin is distributed under license: MIT

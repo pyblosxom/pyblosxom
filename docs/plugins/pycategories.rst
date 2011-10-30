@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ===============================================
  pycategories - Builds a list of categories....
 ===============================================
@@ -85,3 +84,8 @@ flavour                  'html'                      string
 count                    70                          int
 indent                   '&nbsp;&nbsp;&nbsp;&nbsp;'  string
 =======================  ==========================  ====================
+
+License
+=======
+
+Plugin is distributed under license: MIT

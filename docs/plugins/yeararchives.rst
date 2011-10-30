@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ======================================================
  yeararchives - Builds year-based archives listing....
 ======================================================
@@ -72,3 +71,8 @@ The vars available with typical example values are::
 
    The ``archive_template`` variable value is formatted using Python
    string formatting rules--not Pyblosxom template rules!
+
+License
+=======
+
+Plugin is distributed under license: MIT

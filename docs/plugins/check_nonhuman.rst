@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ================================================
  check_nonhuman - Rejects non-human comments....
 ================================================
@@ -79,3 +78,8 @@ And that's it!
 The idea came from::
 
    http://www.davidpashley.com/cgi/pyblosxom.cgi/2006/04/28#blog-spam
+
+License
+=======
+
+Plugin is distributed under license: MIT

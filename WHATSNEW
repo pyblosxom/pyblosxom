@@ -41,27 +41,22 @@ Pertinent to users:
 
    pages
 
-      * Fixed documentation and error messages for ``pagesdir``.
-      * Fixed frontpage checking.  Should catch / as well as /index
-        now.
-      * Adds more examples to documentation.
+   * Fixed documentation and error messages for ``pagesdir``.
+   * Fixed frontpage checking.  Should catch / as well as /index
+     now.
+   * Adds more examples to documentation.
 
    tags
 
-      * Increased tag cloud range from 3 sizes to 5.
-      * Adds truncate support.
-      * Fixes problems with initialization when building tags so that
-        it initializes plugins allowing them to do startup things.
-        This fixes problems with plugins that augment entry parsers.
+   * Increased tag cloud range from 3 sizes to 5.
+   * Adds truncate support.
+   * Fixes problems with initialization when building tags so that
+     it initializes plugins allowing them to do startup things.
+     This fixes problems with plugins that augment entry parsers.
 
-   the rest of the plugins
+   the rest of the plugins: pep8 fixes and documentation updates
 
-      * pep8 fixes
-      * documentation updates
-
-3. Plugins removed from Pyblosxom:
-
-   * commentAPI
+3. Plugins removed from Pyblosxom: commentAPI
 
 4. Fixes error handling for loading plugins.  When doing
    ``pyblosxom-cmd test`` and a plugin fails to load, it'll now tell

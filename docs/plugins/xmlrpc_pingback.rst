@@ -5,7 +5,6 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-
 ==============================================
  xmlrpc_pingback - XMLRPC pingback support....
 ==============================================
@@ -43,3 +42,8 @@ can post to it, linking to a post on your site, and it will send a
 pingback.
 
 * http://www.dummy-blog.org/
+
+License
+=======
+
+Plugin is distributed under license: MIT

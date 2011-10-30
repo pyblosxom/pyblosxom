@@ -1,9 +1,8 @@
+.. _flavours-and-templates:
+
 ======================
 Flavours and Templates
 ======================
-
-.. _flavours-and-templates:
-
 
 Summary
 =======
