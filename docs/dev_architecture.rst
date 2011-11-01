@@ -28,7 +28,7 @@ Parts
 PyBlosxom is composed of several parts:
 
 1. ``pyblosxom.cgi`` - This is the CGI script that is executed by your
-   web-server, pulls in configuration variables from ``config.py`` and
+   web server, pulls in configuration variables from ``config.py`` and
    then instantiates PyBlosxom objects to handle the request.
 
 2. ``PyBlosxomWSGIApp`` - This is the WSGI application for PyBlosxom.
@@ -93,7 +93,7 @@ the following "entities":
   and the methods that handle the the actual request.
 
 
-The PyBlosxom request lifecycle starts with the web-server executing
+The PyBlosxom request lifecycle starts with the web server executing
 ``pyblosxom.cgi``.
 
 1. ``pyblosxom.cgi`` loads ``config.py``

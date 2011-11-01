@@ -9,18 +9,16 @@ Summary
 
 Static rendering made its first appearance in PyBlosxom 1.0.  It fills
 the functionality gap for people who want to use PyBlosxom, but don't
-have a web-server with CGI installed, don't have CGI access, or can't
+have a web server with CGI installed, don't have CGI access, or can't
 run PyBlosxom for one of a myriad of other reasons.  Static rendering
 allows these people to run PyBlosxom on their local machine, write
 blog entries, render their entire site into HTML, and then use ftp or
 some other file copy method to move the pages up to their static
 website.
 
-PyBlosxom's static rendering allows for incremental building.  It can
-scan your entries, figure out what's changed, and render only the
+PyBlosxom's static rendering also allows for incremental building.  It
+can scan your entries, figure out what's changed, and render only the
 pages that need re-rendering.
-
-Beyond that, it's not particularly sophisticated.
 
 
 Configuring static rendering
@@ -28,44 +26,68 @@ Configuring static rendering
 
 These are the instructions for configuring static rendering in PyBlosxom.
 
-1. **Uncomment ``static_dir`` in your ``config.py`` file.**
+1. Uncomment ``static_dir`` in your ``config.py`` file.
 
    This is the directory we will save all the static output.  The value of 
    ``static_dir`` should be a string representing the **absolute path** of the 
    output directory for static rendering.
 
-2. **Uncomment ``static_flavours`` in your ``config.py`` file.**
+   For example, Joe puts the output in his ``public_html`` directory of his
+   account::
+
+      py["static_dir"] = "/home/joe/public_html"
+
+
+2. (optional) Uncomment ``static_flavours`` in your ``config.py`` file.
 
    The value of ``static_flavours`` should be a list of strings representing 
-   all the flavours that should be rendered.  This defaults to 
-   ``[ "html" ]``.
+   all the flavours that should be rendered.
 
-3. **Uncomment ``static_monthnames`` in your ``config.py`` file.**
+   Defaults to ``["html"]`` which only renders the html flavour.
 
-   The value (either ``1`` or ``0``) will determine if you want month 
-   names (such as ``April``) in the static pages.
+   For example::
 
-4. **Uncomment ``static_monthnumbers`` in your ``config.py`` file.**
+      py["static_flavours"] = ["html"]
 
-   The value (either ``1`` or ``0``) will determine if you want month 
-   numbers (such as ``04`` for ``April``) in the static pages.
+3. (optional) Uncomment ``static_monthnames`` in your ``config.py`` file.
 
-5. **Set ``base_url`` in your ``config.py`` file to the base url your 
-   blog will have.**
+   The value (either ``True`` or ``False``) will determine if you want
+   month names (such as ``April``) in the static pages.
 
-   For example, if your ``static_dir`` were set to ``/home/joe/public_html`` 
-   and the url for that directory were ``http://www.joe.com/~joe/``, then 
-   you probably want to set your base_url like this::
+   Defaults to True.
 
-      py["base_url"] = "http://www.joe.com/~joe/"
+   For example::
+
+      py["static_monthnames"] = False
+
+4. Uncomment ``static_monthnumbers`` in your ``config.py`` file.
+
+   The value (either ``True`` or ``False``) will determine if you want
+   month numbers (such as ``04`` for ``April``) in the static pages.
+
+   Defaults to False.
+
+   For example::
+
+      py["static_monthnumbers"] = False
+
+5. Set ``base_url`` in your ``config.py`` file to the base url your 
+   blog will have.
+
+   For example, if your ``static_dir`` were set to
+   ``/home/joe/public_html`` and the url for that directory were
+   ``http://example.com/~joe/``, then you probably want to set your
+   base_url like this::
+
+      py["base_url"] = "http://example.com/~joe/"
 
 
 Here's an example of static rendering configuration::
 
    py["static_dir"] = "/home/joe/public_html/static/"
    py["static_flavours"] = ["html"]
-   py["static_monthnames"] = 0     # i do not want month names
-   py["static_monthnumbers"] = 1   # i do want month numbers
+   py["static_monthnames"] = False    # I do not want month names
+   py["static_monthnumbers"] = True   # I do want month numbers
 
 
 
@@ -73,10 +95,13 @@ Running static rendering
 ========================
 
 There are two ways to run static rendering.  The first is to render
-your entire blog from scratch (see "render everything") and the second
-is to render only the parts of the blog that will be different because
-of new blog entries or updated blog entries (see "incremental rendering").
+your entire blog from scratch (see :ref:`render-everything`) and the
+second is to render only the parts of the blog that will be different
+because of new blog entries or updated blog entries (see
+:ref:`incremental-rendering`).
 
+
+.. _render-everything:
 
 Render everything
 -----------------
@@ -95,93 +120,115 @@ that contains your ``config.py`` file.  For example::
 
    % pyblosxom-cmd staticrender --config /home/joe/blog/
 
-Or, if the location of your ``config.py`` file is on your
-``$PYTHONPATH`` then you can run ``pyblosxom-cmd staticrender`` from
-any directory without giving the ``--config`` option.
+Or, if the location of your ``config.py`` file is in your
+``PYTHONPATH`` (an environment variable) then you can run
+``pyblosxom-cmd staticrender`` from any directory without giving the
+``--config`` option.
 
-Lots of output will appear as PyBlosxom figures out all the urls that need 
-to be rendered and then renders them.
+Lots of output will appear as PyBlosxom figures out all the urls that
+need to be rendered and then renders them.
 
+
+.. _incremental-rendering:
 
 Incremental rendering
 ---------------------
 
-To find all the entries that have changed since you last rendered
-them and then re-render just those entries, do::
+To find all the entries that have changed since you last rendered them
+and then re-render just those entries, do what you did in
+:ref:`render-everything`, but tack on ``--incremental`` to the end.
 
-   % pyblosxom-cmd staticrender --config </path/to/blog_dir> --incremental
-
-Again the ``</path/to/blog_dir>`` must be the path of the directory
-that contains your ``config.py`` file.
-
-Incremental static rendering works by comparing the mtime of the
-entry file with the mtime of the rendered file.
+Incremental static rendering works by comparing the mtime of the entry
+file with the mtime of the rendered file.
 
 
-
-Rendering other URIs
+Rendering other URLs
 ====================
 
-Some plugins provide other URIs that are part of your site, but not 
-really part of your blog since they're not related to entries.  Examples 
-of this include the plugininfo plugin which provides information about 
-the plugins that you're running.  You can set the static_urls property 
-in config.py to a list of all the urls that need to be rendered every time. 
-This list could include:
+Some plugins provide other URLs that are part of your site, but not
+really part of your blog since they're not related to entries.
+Examples of this include the plugininfo plugin which provides
+information about the plugins that you're running.  You can set the
+static_urls property in config.py to a list of all the urls that need
+to be rendered every time.  This list could include:
 
 * RSS, FOAF, OPML, Atom or any other kind of feeds
-* urls for plugins that aren't related to entries (plugininfo, 
+* urls for plugins that aren't related to entries (plugininfo,
   pystaticfile, booklist, ...)
-* urls for plugins that provide other kinds of indexes (index by tag, 
+* urls for plugins that provide other kinds of indexes (index by tag,
   index by popularity, ...)
 
 
-``static_urls`` takes a list of strings where each string is a url to be 
-rendered. 
+``static_urls`` takes a list of strings where each string is a url to
+be rendered.
 
-For example if I wanted to render the booklist page and the RSS feed 
+For example if I wanted to render the booklist page and the RSS feed
 for my main page, I would set it like this::
 
-   py["static_urls"] = ["/booklist/index.html", "/index.xml"]
-
-Pitfalls
-============
-
-- Both rendering everything and incremental rendering *won't* remove outdated
-  files.
+   py["static_urls"] = [
+       "/index.xml",            # blog feed
+       "/pages/about.html",     # about this blog page
+       "/booklist/index.html",  # list of books I've read
+       ]
 
 
-Additional thoughts
-===================
+Things to note
+==============
 
-Static rendering is pretty simplistic. We use the ``tools.render_url`` 
-function to render each url.  Plugins that need to re-render the entry 
-pages because something has changed (e.g. comments, pingbacks, ...), 
-should call this function.
+* Both rendering everything and incremental rendering *won't* remove
+  outdated files.
 
-If you want to statically render your blog every night, you could write 
-a shell script like this::
+* You probably don't want to render an rss or Atom version of every
+  page, so don't include those flavours in ``static_flavours`` and
+  instead specify the urls by hand in ``static_urls``.
+
+* If your website requires more files than just the ones that are
+  rendered by PyBlosxom (images, CSS, ...), then you need to copy
+  those files over separately---Pyblosxom won't do it for you.
+
+
+Example setup
+=============
+
+I have all my blog files located in ``/home/joe/blog/``.
+
+My blog consists of blog entries and also a CSS file, a JavaScript
+file, and a bunch of images.
+
+My directory layout looks like::
+
+   blog/
+     |- www/
+     |  |- images/
+     |  |- css/
+     |  \- js/
+     |
+     |- entries/       # all my blog entries
+     |- flavourdir/    # flavours and templates
+     |- plugins/       # a couple of plugins I use
+     |
+     |- config.py      # my config.py file
+     \- compile.sh     # shell script below
+
+
+I render my blog to ``/home/joe/public_html``.
+
+I like having my blog updated nightly---that gives me time to write
+entries during the day at my leisure and they all appear the next day.
+I do this by having a ``compile.sh`` that gets run by cron every
+night.
+
+The script looks like this:
+
+.. code-block:: bash
 
    #!/bin/bash 
 
-   CONFIG=<path to directory containing config.py here>
-   STATIC_DIR=<your static dir here>
+   BLOGDIR=/home/joe/blog
+   OUTPUTDIR=/home/joe/public_html
  
-   pyblosxom-cmd staticrender --config ${CONFIG}
-   find ${STATIC_DIR} -mmin +30 -exec 'rm' '{}' ';' 
+   # incrementally render entire blog
+   pyblosxom-cmd staticrender --config ${BLOGDIR} --incremental
 
-
-That'll re-render everything, then delete any files in your static 
-dir that are older than 30 minutes in case you moved entries from 
-one category to another or deleted an entry or something along those
-lines.  Be careful.  If you have copied other files (CSS, images, etc)
-to the ``static_dir`` manually before, you will lose them!
-
-
-.. Note::
-
-   A note about other files:
-
-   If your website requires more files than just the ones that are rendered 
-   by PyBlosxom (images, CSS, ...), then you should copy those over with 
-   your shell script as well.
+   # copy static files (images, css, ...)
+   cp -ar ${BLOGDIR}/www/* ${OUTPUTDIR}

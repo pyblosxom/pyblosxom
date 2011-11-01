@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-===================================================
- magicword - Magic word method for reducing comm...
-===================================================
+====================================================
+ magicword - Magic word method for reducing comm... 
+====================================================
 
 Summary
 =======
@@ -72,6 +72,7 @@ directory where ``config.py`` lives with the following contents::
 
 This will prevent people from being able to view ``config.py`` by
 browsing to it.
+
 
 License
 =======

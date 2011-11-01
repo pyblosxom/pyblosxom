@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-=================================================
- w3cdate - Adds a 'w3cdate' variable which is ...
-=================================================
+==================================================
+ w3cdate - Adds a 'w3cdate' variable which is ... 
+==================================================
 
 Summary
 =======
@@ -40,6 +40,7 @@ Thanks
 
 Thanks to Matej Cepl for the hacked iso8601 code that doesn't require
 PyXML.
+
 
 License
 =======

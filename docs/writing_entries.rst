@@ -41,7 +41,7 @@ The format of an entry
 ======================
 
 PyBlosxom entries consist of three parts: the title, the metadata, and
-then the body of the entry.  The first line is title of the entry.
+then the body of the entry.  The first line is the title of the entry.
 Then comes zero or more lines of metadata.  After the metadata comes
 the body of the entry.
 
@@ -51,17 +51,16 @@ Title
 
 The title consists of a single line of plain text.  You can have
 whatever characters you like in the title of your entry.  The title
-doesn't have to be the same as the entry file name.  The title is
-plain-text.
+doesn't have to be the same as the entry file name.
 
 
 Metadata
 --------
 
-The metadata section is between the title line and the body of the
-entry.  It consists of a series of lines that start with the hash mark
-``#``, then a metadata variable name, then a space, then the value of
-the metadata item.
+The metadata section is between the title and the body of the entry.
+It consists of a series of lines that start with the hash mark ``#``,
+then a metadata variable name, then a space, then the value of the
+metadata item.
 
 Example of metadata lines::
 
@@ -71,8 +70,8 @@ Example of metadata lines::
 
 The metadata variables set in the metadata section of the entry are
 available in your story template.  So for the above example, the
-template variable ``$mood`` would be filled in with ``bored`` and
-``$music`` would be filled in with ``The Doors - Greatest Hits Vol
+template variable ``$(mood)`` would be filled in with ``bored`` and
+``$*music)`` would be filled in with ``The Doors - Greatest Hits Vol
 1``.
 
 .. Note::
@@ -152,15 +151,15 @@ known as mtime) of the file itself as stored by your file system.
 Every time you go to edit an entry, it changes the modification time.
 You can see this in the following example of output::
 
-   willg ~/blogdata/blosxom/site: vi testpost.txt                         [1]
-   willg ~/blogdata/blosxom/site: ls -l
+   willg ~/blog/entries/blosxom/site: vi testpost.txt                     [1]
+   willg ~/blog/entries/blosxom/site: ls -l
    total 16
    -rw-r--r--  1 willg willg 764 Jul 20  2003 minoradjustments.txt
    -rw-r--r--  1 willg willg 524 Jul 24  2003 moreminoradjustments.txt
    -rw-r--r--  1 willg willg 284 Aug 15  2004 nomorecalendar.txt
    -rw-r--r--  1 willg willg  59 Mar 21 16:30 testpost.txt                [2]
-   willg ~/blogdata/blosxom/site: vi testpost.txt                         [3]
-   willg ~/blogdata/blosxom/site: ls -l
+   willg ~/blog/entries/blosxom/site: vi testpost.txt                     [3]
+   willg ~/blog/entries/blosxom/site: ls -l
    total 16
    -rw-r--r--  1 willg willg 764 Jul 20  2003 minoradjustments.txt
    -rw-r--r--  1 willg willg 524 Jul 24  2003 moreminoradjustments.txt
@@ -188,14 +187,15 @@ You can see this in the following example of output::
    A warning about mtimes:
 
    There are some issues with this method for storing the posting
-   date.  First, if you ever change the blog entry, the mtime will
-   change as well.  That makes updating blog entries very difficult
-   down the line.
+   date.
 
-   There's a utility that comes with the contributed plugins pack
-   called ``editfile.py``.  This will note the mtime of the file, open
-   up your favorite editor to edit the file, and when you're done,
-   it'll reset the mtime of the file back to what it was.
+   First, if you ever change the blog entry, the mtime will change as
+   well.  That makes updating blog entries very difficult down the
+   line.
+
+   Second, if you move files around (backup/restore, changing the
+   category structure, ...), you need to make sure you do so in a way
+   that maintains the file's mtime.
 
 
 .. _Entry parsers:
@@ -215,31 +215,28 @@ A sample blog entry could look like this::
    </p>
 
 
-Some people really detest writing in HTML which is valid.  Other
-people use their entries in other places, so they need a markup format
-that's less web-oriented.  Some folks write a lot of material in a
-non-HTML markup format and would like to use that same format for blog
-entries.  These are all very valid reasons to want to use other markup
-formats.
+Some people don't like writing in HTML.  Other people use their
+entries in other places, so they need a different markup format.  Some
+folks write a lot of material in a non-HTML markup format and would
+like to use that same format for blog entries.  These are all very
+valid reasons to want to use other markup formats.
 
 PyBlosxom allows you to install entry parser plugins which are
 PyBlosxom plugins that implement an entry parser.  These entry parser
 plugins allow you to use other markup formats.  Check the Plugin
-Registry on the `PyBlosxom website`_ for other available entry
-parsers.
-
-.. _PyBlosxom website: http://pyblosxom.bluesock.org/
-
-Entry parsers can be written by anyone.  The entry parsers that
-currently exist were written by people who needed that functionality.
+Registry on the `website`_ for other available entry parsers.
+Pyblosxom comes with a restructured text entry parser.
 
 If you don't see your favorite markup format represented, try looking
 at the code for other entry parsers and implement it yourself.  If you
-need help, talk to us on the pyblosxom-users or pyblosxom-devel
-mailing lists.
+need help, please ask on the pyblosxom-devel mailing list or on IRC.
+Details for both of these are on the `website`_.
 
-Details on the various entry parsers should be at the top of the entry
-parser plugin itself in the Python doc-string.
+.. _website: http://pyblosxom.bluesock.org/
+
+Additionally, you're not locked into using a single markup across your
+blog.  You can use any markup for an entry that you have an entry
+parser for.
 
 
 Beyond editors

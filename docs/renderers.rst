@@ -1,18 +1,15 @@
+.. _renderers:
+
 =========
 Renderers
 =========
-
-.. _renderers:
-
-Summary
-=======
 
 PyBlosxom supports multiple renderers and comes with two by default:
 debug and blosxom.
 
 
-blosxom
-=======
+blosxom renderer
+================
 
 You can set which renderer to use in your ``config.py`` file like
 this::
@@ -29,8 +26,8 @@ blosxom.  Read the chapter on :ref:`flavours and templates
 <flavours-and-templates>`.
 
 
-debug
-=====
+debug renderer
+==============
 
 The debug renderer outputs your blog in a form that makes it easy to 
 see the data generated when handling a PyBlosxom request.  This is 

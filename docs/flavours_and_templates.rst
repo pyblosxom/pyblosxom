@@ -417,7 +417,7 @@ available in your templates.  If you wanted to create a
 ``blog_images`` variable holding the base url of the directory with
 all your images in it::
 
-   py["blog_images"] = "http://www.joe.com/~joe/images/"
+   py["blog_images"] = "http://example.com/~joe/images/"
 
 
 to your ``config.py`` file and it would be available in all your
@@ -652,29 +652,29 @@ Invoking a flavour
 The flavour for a given page is specified in the extension of the file
 being requested.  For example:
 
-* ``http://some.blog.org/`` - 
+* ``http://example.com/`` - 
   brings up the index in the default flavour which is "html"
 
-* ``http://some.blog.org/index.html`` - 
+* ``http://example.com/index.html`` - 
   brings up the index in the "html" flavour
 
-* ``http://some.blog.org/index.rss`` -
+* ``http://example.com/index.rss`` -
   brings up the index in the "rss" flavour (which by default is RSS 0.9.1)
 
-* ``http://some.blog.org/2004/05/index.joy`` -
+* ``http://example.com/2004/05/index.joy`` -
   brings up the index for May of 2004 in the "joy" flavour
 
 
 Additionally, you can specify the flavour by adding a ``flav``
 variable in the query-string.  Examples:
 
-* ``http://some.blog.org/`` -
+* ``http://example.com/`` -
   brings up the index in the default flavour which is "html"
 
-* ``http://some.blog.org/?flav=rss`` -
+* ``http://example.com/?flav=rss`` -
   brings up the index in the "rss" flavour
 
-* ``http://some.blog.org/2004/05/index?flav=joy`` -
+* ``http://example.com/2004/05/index?flav=joy`` -
   brings up the index for May of 2004 in the "joy" flavour
 
 
@@ -693,12 +693,12 @@ has used doesn't specify which flavour to use.
 This url doesn't specify the flavour to use, so it will be rendered
 with the default flavour::
 
-   http://www.joe.com/cgi-bin/pyblosxom.cgi/2005/03
+   http://example.com/cgi-bin/pyblosxom.cgi/2005/03
 
 This url specifies the flavour, so it will be rendered with that
 flavour::
 
-   http://www.joe.com/cgi-bin/pyblosxom.cgi/2005/03/?flav=html
+   http://example.com/cgi-bin/pyblosxom.cgi/2005/03/?flav=html
 
 
 Order of operations to figure out which flavour to use

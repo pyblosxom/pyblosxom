@@ -1,5 +1,5 @@
-What's new in 1.1
-=================
+What's new in 1.1 (January 2005)
+================================
 
 Pertinent to users
 ------------------

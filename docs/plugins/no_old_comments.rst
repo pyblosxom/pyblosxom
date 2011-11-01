@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-=========================================================
- no_old_comments - Prevent comments on entries older t...
-=========================================================
+==========================================================
+ no_old_comments - Prevent comments on entries older t... 
+==========================================================
 
 Summary
 =======
@@ -34,6 +34,7 @@ Revisions
 =========
 
 1.0 - August 5th 2006: First released.
+
 
 License
 =======

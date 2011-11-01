@@ -19,11 +19,13 @@ Atom and be just fine.
 
 The syndication flavours that come with PyBlosxom should be fine for
 most blogs.  When pointing people to your syndication feed, just use
-one of the syndication flavours:
+one of the syndication flavours.
 
-* ``http://your-server/path-to-blog/index.rss``
-* ``http://your-server/path-to-blog/index.rss20``
-* ``http://your-server/path-to-blog/index.atom``
+Examples:
+
+* ``http://example.com/blog/index.rss``
+* ``http://example.com/~willg/blog/index.rss20``
+* ``http://example.com/index.atom``
 
 
 

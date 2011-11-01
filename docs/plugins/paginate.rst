@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-==================================================
- paginate - Allows navigation by page for index...
-==================================================
+===================================================
+ paginate - Allows navigation by page for index... 
+===================================================
 
 Summary
 =======
@@ -94,6 +94,7 @@ This plugin doesn't work with static rendering.  The problem is that
 it relies on the querystring to figure out which page to show and when
 you're static rendering, only the first page is rendered.  At some
 point, someone will fix this.
+
 
 License
 =======

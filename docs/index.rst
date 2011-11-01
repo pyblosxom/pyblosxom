@@ -6,6 +6,8 @@
  Welcome to PyBlosxom's documentation!
 =======================================
 
+.. _part-one:
+
 Part 1: Pyblosxom user manual
 =============================
 
@@ -25,7 +27,7 @@ purposes.
    pyblosxom_cmd
    deploy_cgi
    deploy_paste
-   deploy_wsgi
+   deploy_apache_mod_wsgi
    deploy_staticrendering
    config_variables
    writing_entries
@@ -37,6 +39,8 @@ purposes.
    authors
    glossary
 
+
+.. _part-two:
 
 Part 2: Core plugin documentation
 =================================

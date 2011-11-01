@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-===============================================
- pages - Allows you to include non-blog-entr...
-===============================================
+================================================
+ pages - Allows you to include non-blog-entr... 
+================================================
 
 Summary
 =======
@@ -140,6 +140,7 @@ by ``request``.  Example::
    config = request.get_configuration()
    print "your datadir is: %s" % config["datadir"]
    %>
+
 
 License
 =======

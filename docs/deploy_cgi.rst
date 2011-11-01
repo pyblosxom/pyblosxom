@@ -2,6 +2,13 @@
 Deploying PyBlosxom with CGI
 ============================
 
+Summary
+=======
+
+You can run Pyblosxom as a CGI script with many web servers.  This
+document covers setting Pyblosxom up as a CGI script.
+
+
 Dependencies
 ============
 
@@ -12,50 +19,54 @@ helps to know how to run CGI scripts on that server, too.
 Deployment
 ==========
 
-Copy the ``pyblosxom.cgi`` file from the blog directory (the directory
-which you created with ``pyblosxom-cmd create ./blog/``) into your CGI
-directory.
+1. Copy the ``pyblosxom.cgi`` file from the blog directory (the
+   directory which you created with ``pyblosxom-cmd create ./blog/``)
+   into your CGI directory.
 
-Edit the ``pyblosxom.cgi`` file.
+2. Edit the ``pyblosxom.cgi`` file.
 
-The top of the file looks something like this::
+   The top of the file looks something like this
 
-    #!/usr/bin/env python
+   .. code-block:: python
+      :emphasize-lines: 1,5,11
+      :linenos:
 
-    # -u turns off character translation to allow transmission
-    # of gzip compressed content on Windows and OS/2
-    #!/path/to/python -u
+      #!/usr/bin/env python
 
-    import os, sys
+      # -u turns off character translation to allow transmission
+      # of gzip compressed content on Windows and OS/2
+      #!/path/to/python -u
 
-    # Uncomment this line to add the directory your config.py file is
-    # in to the python path:
-    #sys.path.append("/path/to/directory/")
+      import os, sys
+
+      # Uncomment this line to add the directory your config.py file is
+      # in to the python path:
+      #sys.path.append("/path/to/directory/")
 
 
-Make sure the first line points to a valid python interpreter.  If
-you're using virtualenv, then make sure it points to the python
-interpreter in the virtual environment.
+   Make sure the first line points to a valid python interpreter.  If
+   you're using virtualenv, then make sure it points to the python
+   interpreter in the virtual environment.
 
-Uncomment the ``sys.path.append("/path/to/directory/")`` line and make
-sure the path being appended is the directory that your ``config.py``
-file is in.
+   Uncomment the ``sys.path.append("/path/to/directory/")`` line and
+   make sure the path being appended is the directory that your
+   ``config.py`` file is in.
 
-Make sure the ``pyblosxom.cgi`` file has the correct permissions and
-ownership for running a CGI script in this directory for the server
-that you're using.
+4. Make sure the ``pyblosxom.cgi`` file has the correct permissions
+   and ownership for running a CGI script in this directory for the
+   server that you're using.
 
-Make sure your blog directory has the correct permissions for being
-read by the process executing your CGI script.
+5. Make sure your blog directory has the correct permissions for being
+   read by the process executing your CGI script.
 
-Run your ``pyblosxom.cgi`` script by doing::
+6. Run your ``pyblosxom.cgi`` script by doing::
 
-    % ./pyblosxom.cgi test
+       % ./pyblosxom.cgi test
 
-If that doesn't work, double-check to make sure you've completed the
-above steps, then check the trouble-shooting section below, then ask
-for help on IRC or the users mailing list.  More details in
-:ref:`project-details-and-contact`.
+   If that doesn't work, double-check to make sure you've completed
+   the above steps, then check the trouble-shooting section below,
+   then ask for help on IRC or the users mailing list.  More details
+   in :ref:`project-details-and-contact`.
 
 
 If that does work, then try to run the CGI script from your

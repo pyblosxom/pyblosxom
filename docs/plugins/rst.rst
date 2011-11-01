@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-=============================================
- rst - restructured text support for blog ...
-=============================================
+==============================================
+ rst - restructured text support for blog ... 
+==============================================
 
 Summary
 =======
@@ -68,6 +68,7 @@ control over the rendered HTML::
 
    If you're not seeing headings that you think should be there, try
    changing the ``reST_initial_header_level`` property to 0.
+
 
 License
 =======

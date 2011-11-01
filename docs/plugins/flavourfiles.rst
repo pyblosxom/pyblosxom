@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-======================================================
- flavourfiles - Serves static files related to flav...
-======================================================
+=======================================================
+ flavourfiles - Serves static files related to flav... 
+=======================================================
 
 Summary
 =======
@@ -18,7 +18,7 @@ served by PyBlosxom.
 
 This solves the problem that flavour packs are currently difficult to
 package, install, and maintain because static files (images, css, js,
-...) have to get put somewhere else and served by the web-server and
+...) have to get put somewhere else and served by the web server and
 this is difficult to walk a user through.
 
 It handles urls that start with ``flavourfiles/``, then the flavour
@@ -56,6 +56,7 @@ The ``$(base_url)`` will get filled in with the correct url root.
 The ``$(flavour)`` will get filled in with the name of the url.  This
 allows users to change the flavour name without having to update all
 the templates.
+
 
 License
 =======

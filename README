@@ -146,7 +146,7 @@ else.
 Requirements
 ============
 
-* Python 2.4 or higher, but not Python 3
+* Python 2.5 or higher, but not Python 3
 * (optional) Sphinx for building documentation
 * (optional) other things depending on what plugins you install
 

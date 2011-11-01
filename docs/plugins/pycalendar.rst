@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-==================================================
- pycalendar - Displays a calendar on your blog....
-==================================================
+===================================================
+ pycalendar - Displays a calendar on your blog.... 
+===================================================
 
 Summary
 =======
@@ -65,6 +65,7 @@ It uses the following CSS classes:
 * blosxomCalendarSpecificDay: for the specific day we're looking at
   (if we're looking at a specific day)
 * blosxomCalendarToday: for today's calendar day
+
 
 License
 =======

@@ -30,7 +30,7 @@ Pros:
 
 Cons:
 
-* it's a web-service that you have no control over
+* it's a web service that you have no control over
 * it might be difficult to move your comments over to a new system
 
 If this is interesting to you, `sign up for a Disqus account`_.
@@ -96,7 +96,7 @@ Installing the comments plugin
 
 Requirements:
 
-1. A directory the web-server has writable permissions to.
+1. A directory the web server has writable permissions to.
 2. Time and patience.
 
 

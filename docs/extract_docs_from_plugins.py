@@ -44,6 +44,7 @@ TEMPLATE = """
 
 %(body)s
 
+
 License
 =======
 
@@ -76,7 +77,7 @@ def build_docs_file(filepath):
 
     node = ast.parse(fp.read(), filepath, 'exec')
 
-    title = (" %s - %s..." % (
+    title = (" %s - %s... " % (
             os.path.splitext(os.path.basename(filepath))[0],
             get_info(node, "__description__")[:35]))
     line = "=" * len(title)
@@ -127,7 +128,6 @@ def get_plugins(plugindir, outputdir):
 
 def main(args):
     print "update_registry.py"
-    print args
 
     outputdir = "./plugins/"
 

@@ -374,7 +374,7 @@ To add AJAX support, you need to make the following modifications to your
           onclick="send_comment('post');" />
 
 4. Copy ``comments.js`` file to a location on your server that's
-   servable by your web-server.
+   servable by your web server.
 
    You can find this file `here <../_static/plugins/comments/>`_.
 

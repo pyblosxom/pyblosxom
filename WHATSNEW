@@ -5,8 +5,8 @@
 .. _whatsnew:
 
 
-What's new in 1.5 rc4
-=====================
+What's new in 1.5 rc4 (in development!)
+=======================================
 
 Pertinent to users:
 -------------------
@@ -63,6 +63,8 @@ Pertinent to users:
    you.  When using the debug renderer and a plugin fails to load,
    it'll now tell you.
 
+5. Lot of work on simplifying and improving the documentation.
+
 
 Pertinent to developers
 -----------------------
@@ -71,12 +73,12 @@ Pertinent to developers
    Plugins that come with the core are now in the Pyblosxom package
    and their tests are in ``Pyblosxom/tests/``.
 
-2. Adds generate subcommand to pyblosxom-cmd.  This makes it easier to
-   test blogs and plugins that do things with entries.
+2. Adds *generate* subcommand to pyblosxom-cmd.  This makes it easier
+   to test blogs and plugins that do things with entries.
 
 
-What's new in 1.5 rc3
-=====================
+What's new in 1.5 rc3 (June 2011)
+=================================
 
 Pertinent to users:
 -------------------
@@ -104,8 +106,8 @@ Pertinent to users:
    If you're using them, update to the latest versions.
 
 
-What's new in 1.5 rc2
-=====================
+What's new in 1.5 rc2 (August 2010)
+===================================
 
 Pertinent to users:
 -------------------
@@ -124,8 +126,8 @@ Pertinent to developers:
 1. New sortlist callback
 
 
-What's new in 1.5 rc1
-=====================
+What's new in 1.5 rc1 (January 2010)
+====================================
 
 Pertinent to users:
 -------------------

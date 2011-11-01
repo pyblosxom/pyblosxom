@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-==================================
- trackback - Trackback support....
-==================================
+===================================
+ trackback - Trackback support.... 
+===================================
 
 Summary
 =======
@@ -58,6 +58,7 @@ This plugin comes with Pyblosxom.  To install, do the following:
        />
        </rdf:RDF>
        -->
+
 
 License
 =======

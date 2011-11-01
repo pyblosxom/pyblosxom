@@ -1,5 +1,5 @@
-What's new in 1.4.3
-===================
+What's new in 1.4.3 (January 2008)
+==================================
 
 Pertinent to users
 ------------------
@@ -46,8 +46,8 @@ Pertinent to developers
    running unit tests are in the REDAME.
 
 
-What's new in 1.4.2
-===================
+What's new in 1.4.2 (August 2007)
+=================================
 
 Pertinent to users
 ------------------
@@ -66,8 +66,8 @@ Pertinent to users
    module).  (Thanks Liz!)
 
 
-What's new in 1.4.1
-===================
+What's new in 1.4.1 (July 2007)
+===============================
 
 Pertinent to users
 ------------------
@@ -85,8 +85,8 @@ Pertinent to users
 4. Updated documentation.
 
 
-What's new in 1.4
-=================
+What's new in 1.4 (July 2007)
+=============================
 
 Pertinent to users
 ------------------

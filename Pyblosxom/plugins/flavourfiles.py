@@ -17,7 +17,7 @@ served by PyBlosxom.
 
 This solves the problem that flavour packs are currently difficult to
 package, install, and maintain because static files (images, css, js,
-...) have to get put somewhere else and served by the web-server and
+...) have to get put somewhere else and served by the web server and
 this is difficult to walk a user through.
 
 It handles urls that start with ``flavourfiles/``, then the flavour

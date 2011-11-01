@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-=====================================================
- firstdaydiv - Adds a token which tells us whether...
-=====================================================
+======================================================
+ firstdaydiv - Adds a token which tells us whether... 
+======================================================
 
 Summary
 =======
@@ -50,6 +50,7 @@ and in your ``date_foot``, you'd want to close that ``<div>`` off::
    </div>
 
 Feel free to use this in other ways.
+
 
 License
 =======
