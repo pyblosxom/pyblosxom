@@ -5,9 +5,9 @@
    the documentation, DON'T do it here--do it in the docstring of the
    appropriate plugin.  Plugins are located in ``Pyblosxom/plugins/``.
 
-==============================================
- rst - restructured text support for blog ... 
-==============================================
+=====================================================
+ rst_parser - restructured text support for blog ... 
+=====================================================
 
 Summary
 =======
@@ -24,24 +24,26 @@ Install
 
 This plugin comes with Pyblosxom.  To install, do the following:
 
-1. Add ``Pyblosxom.plugins.rst`` to the ``load_plugins`` list in your
-   ``config.py`` file.
+1. Add ``Pyblosxom.plugins.rst_parser`` to the ``load_plugins`` list
+   in your ``config.py`` file.
 
-2. Install docutils.  Instructions are at http://docutils.sourceforge.net/
+2. Install docutils.  Instructions are at
+   http://docutils.sourceforge.net/
 
 
 Usage
 =====
 
-Blog entries with a ``.rst`` extension will be parsed as restructuredText
+Blog entries with a ``.rst`` extension will be parsed as
+restructuredText.
 
 You can also configure this as your default preformatter for ``.txt``
 files by configuring it in your config file as follows::
 
    py['parser'] = 'reST'
 
-Additionally, you can do this on an entry-by-entry basis by adding
-a ``#parser reST`` line in the metadata section.  For example::
+Additionally, you can do this on an entry-by-entry basis by adding a
+``#parser reST`` line in the metadata section.  For example::
 
    My Little Blog Entry
    #parser reST

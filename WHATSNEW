@@ -37,7 +37,9 @@ Pertinent to users:
    Further, documentation for plugins is at the top of the individual
    plugin files, but also in the documentation.
 
-2. Fixes for the following plugins:
+2. Plugins added: markdown_parser
+
+3. Plugins changed:
 
    pages
 
@@ -54,16 +56,20 @@ Pertinent to users:
      it initializes plugins allowing them to do startup things.
      This fixes problems with plugins that augment entry parsers.
 
+   rst
+
+   * renamed it to rst_parser so it's clearer what it is
+
    the rest of the plugins: pep8 fixes and documentation updates
 
-3. Plugins removed from Pyblosxom: commentAPI
+4. Plugins removed from Pyblosxom: commentAPI
 
-4. Fixes error handling for loading plugins.  When doing
+5. Fixes error handling for loading plugins.  When doing
    ``pyblosxom-cmd test`` and a plugin fails to load, it'll now tell
    you.  When using the debug renderer and a plugin fails to load,
    it'll now tell you.
 
-5. Lot of work on simplifying and improving the documentation.
+6. Lot of work on simplifying and improving the documentation.
 
 
 Pertinent to developers
