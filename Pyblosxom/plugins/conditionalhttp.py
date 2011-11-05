@@ -59,7 +59,7 @@ def cb_prepare(args):
     entry_list = data["entry_list"]
     renderer = data["renderer"]
 
-    if entry_list and 'mtime' in entry_list[0]:
+    if entry_list and entry_list[0].has_key('mtime'):
         # FIXME - this should be generalized to a callback for updated
         # things.
         mtime = entry_list[0]['mtime']
