@@ -16,8 +16,6 @@ This module has the code for handling crashes.
    modules or packages.
 """
 
-import os
-import pprint
 import sys
 import StringIO
 import cgi
@@ -55,7 +53,8 @@ class CrashHandler:
     def __call__(self, exc_type, exc_value, exc_tb):
         response = self.handle(exc_type, exc_value, exc_tb)
         if self.httpresponse:
-            response.headers.append("Content-Length: %d" % httpresponse.body.len)
+            response.headers.append(
+                "Content-Length: %d" % httpresponse.body.len)
         sys.output.write("HTTP/1.0 %s\n" % response.status)
         for key, val in response.headers.items():
             sys.output.write("%s: %s\n" % (key, val))
@@ -74,19 +73,38 @@ class CrashHandler:
         # FIXME - are there other userful headers?
 
         output.write("<html>")
-        output.write("<title>HTTP 500: Server Error</title>")
+        output.write("<title>HTTP 500: Oops!</title>")
         output.write("<body>")
-        output.write("<h1>HTTP 500: Server Error</h1>")
-        output.write("<p>A problem has occurred while PyBlosxom was "
-                     "rendering this page.  Here is some useful information "
-                     "to track down the root cause of the problem.</p>")
+        output.write("<h1>HTTP 500: Oops!</h1>")
+        output.write(
+            "<p>A problem has occurred while PyBlosxom was rendering "
+            "this page.</p>")
+
+        output.write(
+            "<p>If this is your blog and you've just upgraded Pyblosxom, "
+            "check the manual for changes you need to make to your "
+            "config.py, pyblosxom.cgi, blog.ini, plugins, and flavour "
+            "files.  This is usually covered in the Upgrade and What's New "
+            "chapters.</p>\n"
+            "<p>If you need help, contact us on IRC or the pyblosxom-users "
+            "mailing list.</p>\n"
+            "<p>The manual and details on IRC and the pyblosxom-users "
+            "mailing list are all on the "
+            "<a href=\"http://pyblosxom.bluesock.org/\">website</a>.</p>")
+
+        output.write("<p>Here is some useful information to track down "
+            "the root cause of the problem:</p>")
+
+        output.write("<div style=\"border: 1px solid black; padding: 10px;\">")
+
         try:
             import Pyblosxom.pyblosxom
             version = Pyblosxom.pyblosxom.VERSION
         except:
             version = "unknown"
-        output.write("<p>Python version: %s" % _e(sys.version))
+
         output.write("<p>PyBlosxom version: %s</p>" % _e(version))
+        output.write("<p>Python version: %s" % _e(sys.version))
 
         output.write("<p>Error traceback:</p>")
         output.write("<pre>")
@@ -99,6 +117,8 @@ class CrashHandler:
         for key, val in self.environ.items():
             output.write("%s: %s\n" % (_e(repr(key)), _e(repr(val))))
         output.write("</pre>")
+
+        output.write("</div>")
 
         output.write("</body>")
         output.write("</html>")
