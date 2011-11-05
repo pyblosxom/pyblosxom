@@ -20,13 +20,13 @@ Pertinent to users:
    the Pyblosxom package.
 
    For example, the pycalendar plugin is now in
-   ``Pyblosxom/plugins/date/pycalendar.py`` and thus its Pyblosxom
-   package path is ``Pyblosxom.plugins.date.pycalendar``.  Your
+   ``Pyblosxom/plugins/pycalendar.py`` and thus its Pyblosxom
+   package path is ``Pyblosxom.plugins.pycalendar``.  Your
    ``config.py`` file would look have this::
 
        py["load_plugins"] = [
            ...
-           "Pyblosxom.plugins.date.pycalendar",
+           "Pyblosxom.plugins.pycalendar",
            ...
            ]
 
@@ -35,7 +35,16 @@ Pertinent to users:
    plugins will be upgraded automatically.
 
    Further, documentation for plugins is at the top of the individual
-   plugin files, but also in the documentation.
+   plugin files, but also in the documentation.  This includes a list
+   of the plugins available in the core.
+
+   .. only:: text
+
+      You can see the plugin documentation in docs/plugins/.
+
+   .. only:: html
+
+      You can see the plugin documentation at :ref:`part-two`.
 
 2. Plugins added: markdown_parser
 
