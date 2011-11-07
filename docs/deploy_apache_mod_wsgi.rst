@@ -1,3 +1,5 @@
+.. _deploy-apache-mod-wsgi:
+
 ==============================================
  Deploying PyBlosxom with Apache and mod_wsgi
 ==============================================

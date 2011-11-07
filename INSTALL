@@ -4,7 +4,30 @@
  Installing PyBlosxom
 ======================
 
-Installing Pyblosxom is pretty easy for most situations.
+Installing Pyblosxom is pretty easy for most situations.  There are
+three basic steps to get Pyblosxom running your blog:
+
+1. Installing Pyblosxom
+
+   Installs the Pyblosxom software onto the computer you intend to use
+   it on.
+
+   This is covered here.
+
+2. Deploying Pyblosxom
+
+   Sets up your blog on the web server you're going to use.  Since
+   there are many ways to deploy Pyblosxom, this is a separate step.
+
+   This is covered in the deployment chapters.
+
+3. Configure your blog to make it your own
+
+   Adjust your ``config.py`` file, install and modify flavours,
+   install and configure plugins, ...
+
+   This is covered by the rest of the documentation.
+
 
 If the instructions here don't meet your needs, ask us on the
 pyblosxom-users mailing list or on IRC.  Information for both is on
@@ -32,58 +55,107 @@ Upgrading
 Requirements
 ============
 
-PyBlosxom requires at least Python 2.4 to install.  PyBlosxom does not
-work with Python 3 or higher.
+Hosting your blog
+-----------------
 
-PyBlosxom is well supported on GNU/Linux, works well on Mac OS X, and
-might work on Windows.  This is completely dependent on who is
-currently using Pyblosxom and whether they help fix things.
+PyBlosxom works with any web server as a CGI application, a WSGI
+application, and might work in other contexts.  If you run your blog
+in this way, then you'll install Pyblosxom on the web server you plan
+to host your blog.
 
-PyBlosxom works with any web-server as a CGI application, works as a
-WSGI application, and might work in other contexts.
+If you can't run CGI/WSGI processes on your web server, then you'll
+want to use Pyblosxom to compile your blog into HTML files which you
+can host on any web server.  If you run your blog this way, then
+you'll install Pyblosxom on a desktop or laptop computer that has your
+blog files, you'll compile your blog on that computer, and then push
+the resulting HTML files to your web server which will host them.
+
+.. only:: text
+
+   For more information on static rendering, see
+   docs/deploy_staticrendering.rst after installing Pyblosxom.
+
+.. only:: html
+
+   For more information on static rendering, see
+   :ref:`static-rendering`.
+
+
+Operating System
+----------------
+
+PyBlosxom is well supported on GNU/Linux and Mac OSX.
+
+PyBlosxom is not supported on Windows and may not work well.  If you
+decide to run your blog on a Windows server you will be pretty much on
+your own as nearly all the documentation and testing is GNU/Linux and
+Mac OSX centric.
+
+Having said that, if you run your blog using static rendering, you can
+serve the resulting HTML pages on any server you like, Windows
+included.
+
+
+Python
+------
+
+PyBlosxom requires at least Python 2.4.  PyBlosxom does not work with
+Python 3 or higher---Python 3 is a significant rework of the language.
+
+
+Installation
+============
+
+First step is to install Pyblosxom.  Like all Python programs, there
+are a few different ways to install Pyblosxom.  We'll cover two we
+think are particularly useful here.
 
 .. Note::
 
-   If you're using a server host that doesn't allow you to run
-   CGI/WSGI applications, then you will want to use static rendering.
-   This allows you to set up your blog on your local machine,
-   "compile" it into static html files, and then push those files to
-   your server host.
-
    .. only:: text
 
-      For more information on static rendering, see
-      docs/deploy_staticrendering.rst after installing Pyblosxom.
+      If you're planning to install Pyblosxom to hack on it, then
+      check out the install instructions in docs/hacking.rst.
 
    .. only:: html
 
-      For more information on static rendering, see
-      :ref:`static-rendering`.
+      If you're planning to install Pyblosxom to hack on it, then
+      check out the install instructions in :ref:`hacking-chapter`.
 
 
-Installation: site-wide, in a virtual enviroment, or to hack on Pyblosxom
-=========================================================================
+1. You can install PyBlosxom site-wide which allows all users on the
+   computer to use Pyblosxom.
 
-First you need to install Pyblosxom.
-
-1. You can install PyBlosxom site-wide.  If you do this then all users
-   on your system will be able to use PyBlosxom.  In order to do this,
-   you must have an administrative account on the machine you're
-   installing it on.
+   In order to do this, you must have an administrative account on the
+   computer you're installing it on.
 
    See :ref:`Installing site-wide` if this is what you want to do.
 
-2. You can install PyBlosxom in a virtual environment.  This is done
-   using virtualenv.
+2. You can install PyBlosxom in a virtual environment using
+   `virtualenv`_.
+
+   If you do this, then only you will be able to use Pyblosxom.
+
+   Use this method if any of the following are true:
+
+   1. you don't have administrative access to the computer you're going
+      to run Pyblosxom on
+
+   2. you plan to use static rendering to compile your blog into HTML
+      files and push those files to the web server
+
+   3. you're just trying out Pyblosxom and you want to install
+      Pyblosxom in a way that doesn't affect your computer and is
+      easily removed
 
    See :ref:`Installing in a virtual environment` if this is what you
    want to do.
 
-3. You can install PyBlosxom locally in a way that makes it easy to
-   hack on and send patches upstream to us.
 
-   See :ref:`Installing PyBlosxom to hack on it` if this is what you want to
-   do.
+.. Note::
+
+   If your circumstances change, you can always reinstall Pyblosxom in
+   a different way.
 
 
 .. _Installing site-wide:
@@ -91,9 +163,11 @@ First you need to install Pyblosxom.
 Installing site-wide
 --------------------
 
-If you have an administrative account on your computer and you want to
-install PyBlosxom site-wide so that all users can use it, then this is
-the installation section for you!
+This walks through installing Pyblosxom site-wide which means it will
+be available to all users on the computer you're installing it on.
+
+In order to do this, you must have an administrative account on the
+computer you're installing it on.
 
 This requires:
 
@@ -130,10 +204,23 @@ That's it!  You can move on to :ref:`Creating a blog` now.
 Installing in a virtual environment
 -----------------------------------
 
-If you want to install PyBlosxom in a way that doesn't affect your
-system and in a way that only you can use it (perhaps you don't have
-an administrative account on your system), then this is the
-installation section for you!
+This walks through installing Pyblosxom into a `virtualenv`_ virtual
+environment.
+
+If you install Pyblosxom this way, then only you will be able to use
+Pyblosxom.
+
+Use this method if any of the following are true:
+
+1. you don't have administrative access to the computer you're going
+   to run Pyblosxom on
+
+2. you plan to use static rendering to compile your blog into HTML
+   files and push those files to the web server
+
+3. you're just trying out Pyblosxom and you want to install
+   Pyblosxom in a way that doesn't affect your computer and is
+   easily removed
 
 This requires:
 
@@ -149,17 +236,25 @@ This requires:
 To install:
 
 1. Create a virtual environment for PyBlosxom in a directory of your
-   choosing (as denoted by ``<VIRTUAL-ENV-DIR>``)::
+   choosing as denoted by ``<VIRTUAL-ENV-DIR>``::
 
       virtualenv <VIRTUAL-ENV-DIR>
 
-   This command creates a new directory called ``<VIRTUAL-ENV-DIR>``
-   (you can use any directory name you want) that contains its own
-   Python package installation directories and a Python interpreter
-   that uses those directories.  This is the virtual environment that
-   PyBlosxom will be installed into and will run in.  If you decide to
-   delete PyBlosxom at some point, you can just delete this directory
-   and all its contents.
+   This command creates a new directory ``<VIRTUAL-ENV-DIR>`` that
+   contains its own Python package installation directories and a
+   Python interpreter that uses those directories.  This is the
+   virtual environment that PyBlosxom will be installed into and will
+   run in.  If you want to delete PyBlosxom at some point, just delete
+   this virtual environment directory and all its contents.
+
+   The virtual environment directory can be anywhere---it doesn't have
+   to be in your blog directory and your blog directory doesn't have
+   to be inside your virtual environment directory.
+
+   For example, I have a lot of virtual environments set up because I
+   fiddle with a lot of Python software.  I have all my virtual
+   environment directories under ``/home/willg/venvs``.  I have my
+   blog files in ``/home/willkg/blog``.
 
 2. Activate the virtual environment in your current shell session::
 
@@ -196,101 +291,30 @@ To install:
 That's it!  You can move on to :ref:`Creating a blog` now.
 
 
-.. _Installing PyBlosxom to hack on it:
-
-Installing PyBlosxom to hack on it
-----------------------------------
-
-Installing PyBlosxom to hack on it is a little different since you:
-
-1. want to be running PyBlosxom from a git clone
-2. want PyBlosxom installed such that you don't have to keep running
-   ``python setup.py install``
-3. want Paste installed so you can test locally
-
-This requires:
-
-* Python 2.4 or higher
-* `git`_
-* `virtualenv`_
-* `PasteScript`_, the command-line frontend for the Python Paste web
-  development utilities
-
-.. _git: http://git-scm.com/
-.. _virtualenv: http://pypi.python.org/pypi/virtualenv
-.. _PasteScript: http://pypi.python.org/pypi/PasteScript
-
-
-To install:
-
-1. Create a virtual environment for PyBlosxom into a directory of your
-   choosing as denoted by ``<VIRTUAL-ENV-DIR>``::
-
-      virtualenv <VIRTUAL-ENV-DIR>
-
-   This is the virtual environment that PyBlosxom will run in.  If you
-   decide to delete PyBlosxom at some point, you can just remove this
-   virtual environment directory.
-
-2. Activate the virtual environment::
-
-      source <VIRTUAL-ENV-DIR>/bin/activate
-
-   Remember to activate the virtual environment **every** time you do
-   something with PyBlosxom.
-
-   Additionally, if you're running PyBlosxom from CGI or a cron job,
-   you want to use the ``python`` interpreter located in the ``bin``
-   directory of your virtual environment--not the system one.
-
-3.  Using git, clone the PyBlosxom repository::
-
-      git clone git://gitorious.org/pyblosxom/pyblosxom.git pyblosxom
-
-4. Change directories into the ``pyblosxom`` directory and run::
-
-      python setup.py develop
-
-
-When you want to run PyBlosxom from your git clone in your virtual
-environment, you will:
-
-1. Make sure the virtual environment is activated and if it isn't do::
-
-      source <VIRTUAL-ENV-DIR>/bin/activate
-
-2. Change directories into where you have your blog and do::
-
-      paster serve blog.ini
-
-
-.. Note::
-
-   Because you installed PyBlosxom with ``python setup.py develop``,
-   when you make changes to the PyBlosxom code, they'll be available
-   in the environment--you don't need to re-run ``python setup.py
-   develop``.
-
-That's it!  You can move on to :ref:`Creating a blog` now.
-
 
 .. _Creating a blog:
 
 Creating a blog
 ===============
 
-To create a blog, do::
-
-   pyblosxom-cmd create ./blog/
-
-That generates the directory structure for a blog in ``./blog/``, some
-required files, and a first post.
-
 .. Note::
 
    If you're using a virtual environment, make sure you've activated
    the virtual environment and are using the ``pyblosxom-cmd`` in the
    ``bin`` directory of your virtual environment!
+
+
+To create a blog, do::
+
+   pyblosxom-cmd create <BLOG-DIR>
+
+``<BLOG_DIR>`` can be any directory.  For example::
+
+   pyblosxom-cmd create ./blog/
+
+will generate a directory called ``blog`` in the directory I'm
+currently in and put a general blog structure in that directory
+including some required files and a first post.
 
 
 Deploying
@@ -308,11 +332,33 @@ The PyBlosxom documentation covers some of these deployment options.
 
 .. only:: text
 
-   See the docs/deploy_* files.
+   See docs/deploy_cgi.rst for deploying your blog as a CGI process.
+
+   See docs/deploy_paste.rst for deploying your blog using
+   Paste---this is useful for testing out Pyblosxom on a desktop or a
+   laptop to see whether it'd be useful to you).
+
+   See docs/deploy_staticrendering.rst for compiling your blog to HTML
+   files that you would then copy to the web server.
+
+   See docs/deploy_apache_mod_wsgi.rst for deploying your blog using
+   Apache and mod_wsgi.
 
 .. only:: html
 
-   See the Deploy chapters.
+   See :ref:`deploy-cgi-chapter` for deploying your blog as a CGI
+   process.
+
+   See :ref:`deploy-paste-chapter` for deploying your blog using
+   Paste---this is useful for testing out Pyblosxom on a desktop or a
+   laptop to see whether it'd be useful to you).
+
+   See :ref:`static-rendering` for compiling your blog to HTML files
+   that you would then copy to the web server.
+
+   See :ref:`deploy-apache-mod-wsgi` for deploying your blog using
+   Apache and mod_wsgi.
+
 
 If you want to deploy your blog in a way that's not covered in the
 documentation, ask on the pyblosxom-users mailing list or on the
@@ -320,11 +366,20 @@ documentation, ask on the pyblosxom-users mailing list or on the
 details on the `website <http://pyblosxom.bluesock.org/>`_.
 
 
-Post-install
-============
+After installing
+================
 
 After you finish installing and deploying PyBlosxom, you should look
 at plugins and flavours to make your blog your own.
+
+.. only:: text
+
+   See the rest of the files in docs/ for more details.
+
+.. only:: html
+
+   See the rest of :ref:`part-one` for more details.
+
 
 You should also sign up on the pyblosxom-users mailing list.
 

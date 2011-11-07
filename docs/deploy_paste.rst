@@ -1,3 +1,5 @@
+.. _deploy-paste-chapter:
+
 ================================
  Deploying PyBlosxom with Paste
 ================================

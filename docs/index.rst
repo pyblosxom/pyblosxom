@@ -63,6 +63,7 @@ plugins, or things of that ilk.
 .. toctree::
    :maxdepth: 2
 
+   hacking
    dev_architecture
    dev_writing_plugins
    dev_codedocs

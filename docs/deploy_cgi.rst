@@ -1,3 +1,5 @@
+.. _deploy-cgi-chapter:
+
 ============================
 Deploying PyBlosxom with CGI
 ============================
