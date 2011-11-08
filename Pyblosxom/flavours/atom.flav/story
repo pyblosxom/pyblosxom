@@ -6,5 +6,7 @@
 <updated>$(w3cdate)</updated>
 <published>$(w3cdate)</published>
 <link rel="alternate" type="text/html" href="$(base_url)/$(urlencode(file_path)).$(default_flavour)" />
-<content type="html">$(escape(body))</content>
+<content type="html">
+$(escape(body))
+</content>
 </entry>
