@@ -522,6 +522,8 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
         ext = request.get_data()['extensions']
         pattern = re.compile(r'.*\.(' + '|'.join(ext.keys()) + r')$')
 
+    handle_links  = request.get_configuration().get("handle_links", False)
+
     ignore = request.get_configuration().get("ignore_directories", None)
     if isinstance(ignore, str):
         ignore = [ignore]
@@ -536,12 +538,12 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     if not os.path.isdir(root):
         return []
 
-    return _walk_internal(root, recurse, pattern, ignorere, return_folders)
+    return _walk_internal(root, recurse, pattern, ignorere, return_folders, handle_links)
 
 # We do this for backwards compatibility reasons.
 Walk = deprecated_function(walk)
 
-def _walk_internal(root, recurse, pattern, ignorere, return_folders):
+def _walk_internal(root, recurse, pattern, ignorere, return_folders, handle_links=False):
     """
     Note: This is an internal function--don't use it and don't expect
     it to stay the same between PyBlosxom releases.
@@ -573,12 +575,12 @@ def _walk_internal(root, recurse, pattern, ignorere, return_folders):
         # recursively scan other folders, appending results
         if (recurse == 0) or (recurse > 1):
             if name[0] != "." and os.path.isdir(fullname) and \
-                    not os.path.islink(fullname) and \
+                    (handle_links or not os.path.islink(fullname)) and \
                     (not ignorere or not ignorere.match(fullname)):
                 result = result + \
                          _walk_internal(fullname,
                                         (recurse > 1 and [recurse - 1] or [0])[0],
-                                        pattern, ignorere, return_folders)
+                                        pattern, ignorere, return_folders, handle_links)
 
     return result
 
