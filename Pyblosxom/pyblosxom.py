@@ -282,6 +282,7 @@ class Pyblosxom:
 
         monthnames = config.get("static_monthnames", 1)
         monthnumbers = config.get("static_monthnumbers", 0)
+        yearnumbers = config.get("static_yearnumbers", 1)
 
         dates = {}
         categories = {}
@@ -326,7 +327,8 @@ class Pyblosxom:
                 month = time.strftime("%m", mtime)
                 day = time.strftime("%d", mtime)
 
-                dates[year] = 1
+                if yearnumbers:
+                    dates[year] = 1
 
                 if monthnumbers:
                     dates[year + "/" + month] = 1

@@ -188,3 +188,8 @@ py["load_plugins"] = []
 # Whether (True) or not (False) you want to create date indexes using month
 # numbers?  (ex. /2004/04/01)  Defaults to False.
 #py["static_monthnumbers"] = False
+
+# Whether (1) or not (0) you want to create date indexes using year
+# numbers?  (ex. /2004)  Defaults to 1 (yes).
+#py["static_yearnumbers"] = 1
+
