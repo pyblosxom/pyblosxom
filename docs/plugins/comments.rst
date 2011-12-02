@@ -16,6 +16,39 @@ Adds comments to your blog.  Supports preview, AJAX posting, SMTP
 notifications, plugins for rejecting comments (and thus reducing
 spam), ...
 
+Comments are stored in a directory that parallels the data directory.
+The comments themselves are stored as XML files named
+entryname-datetime.suffix.  The comment system allows you to specify
+the directory where the comment directory tree will stored, and the
+suffix used for comment files.  You need to make sure that this
+directory is writable by whatever is running Pyblosxom.
+
+Comments are stored one or more per file in a parallel hierarchy to
+the datadir hierarchy.  The filename of the comment is the filename of
+the blog entry, plus the creation time of the comment as a float, plus
+the comment extension.
+
+Comments now follow the ``blog_encoding`` variable specified in
+``config.py``.  If you don't include a ``blog_encoding`` variable,
+this will default to utf-8.
+
+Comments will be shown for a given page if one of the following is
+true:
+
+1. the page has only one blog entry on it and the request is for a
+   specific blog entry as opposed to a category with only one entry
+   in it
+
+2. if "showcomments=yes" is in the querystring then comments will
+   be shown
+
+
+.. Note::
+
+   This comments plugin does not work with static rendering.  If you
+   are using static rendering to build your blog, you won't be able to
+   use this plugin.
+
 
 Install
 =======
@@ -25,39 +58,33 @@ This plugin comes with Pyblosxom.  To install, do the following:
 1. Add ``Pyblosxom.plugins.comments`` to the ``load_plugins`` list of
    your ``config.py`` file.
 
-2. Configure as documented below.
+   Example::
+
+       py["load_plugins"] = ["Pyblosxom.plugins.comments"]
+
+2. Configure as documented below in the Configuration section.
+
+3. Add templates to your html flavour as documented in the Flavour
+   templates section.
 
 
 Configuration
 =============
 
-1. Comments are stored in a directory which will parallel the data
-   directory.  The comments themselves are stored as XML files named
-   entryname-datetime.suffix.  The comment system allows you to
-   specify the directory where the comment directory tree will stored,
-   and the suffix used for comment files.  You need to make sure that
-   this directory is writable by the pyblosxom CGI scripts.
-
-   Set py['comment_dir'] to the directory (in your data directory)
+1. Set ``py['comment_dir']`` to the directory (in your data directory)
    where you want the comments to be stored.  The default value is a
-   directory named 'comments' in your datadir.
+   directory named "comments" in your datadir.
 
-2. Copy the templates required.  See the Flavour templates section
-   below for examples.
+2. (optional) The comment system can notify you via e-mail when new
+   comments/trackbacks/pingbacks are posted.  If you want to enable
+   this feature, create the following config.py entries:
 
-3. (optional) Set py['comment_ext'] to the change comment file
-   extension.  The default file extension is 'cmt'.
-
-4. (optional) The comment system can notify you via e-mail when new
-   comments/trackbacks/pingbacks are posted.  If you want to enable this
-   feature, create the following config.py entries::
-
-      py['comment_smtp_from']   - the address sending the notification
-      py['comment_smtp_to']     - the address receiving the notification
+      py['comment_smtp_from'] - the email address sending the notification
+      py['comment_smtp_to']   - the email address receiving the notification
 
    If you want to use an SMTP server, then set::
 
-      py['comment_smtp_server'] - your SMTP server
+      py['comment_smtp_server'] - your SMTP server hostname/ip address
 
    **OR** if you want to use a mail command, set::
 
@@ -75,75 +102,63 @@ Configuration
       py['comment_smtp_to']     = "joe@joe.com"
       py['comment_mta_cmd']     = "/usr/bin/mail"
 
+3. (optional) Set ``py['comment_ext']`` to the change comment file
+   extension.  The default file extension is "cmt".
+
 
 This module supports the following config parameters (they are not
 required):
 
 ``comment_dir``
 
-   the directory we're going to store all our comments in.  this
+   The directory we're going to store all our comments in.  This
    defaults to datadir + "comments".
+
+   Example::
+
+      py["comment_dir"] = "/home/joe/blog/comments/"
 
 ``comment_ext``
 
-   the file extension used to denote a comment file.  this defaults
+   The file extension used to denote a comment file.  This defaults
    to "cmt".
 
 ``comment_draft_ext``
 
-   the file extension used for new comments that have not been
-   manually approved by you.  this defaults to comment_ext
-   (i.e. there is no draft stage)
+   The file extension used for new comments that have not been
+   manually approved by you.  This defaults to the value in
+   ``comment_ext``---i.e. there is no draft stage.
 
 ``comment_smtp_server``
 
-   the smtp server to send comments notifications through.
+   The smtp server to send comments notifications through.
 
 ``comment_mta_cmd``
 
-   alternatively, a command line to invoke your MTA (e.g.
-   sendmail) to send comment notifications through.
+   Alternatively, a command line to invoke your MTA (e.g.  sendmail)
+   to send comment notifications through.
 
 ``comment_smtp_from``
 
-   the email address comment notifications will be from. If you're
-   using SMTP, this should be an email address accepted by your
-   SMTP server. If you omit this, the from address will be the
-   e-mail address as input in the comment form.
+   The email address comment notifications will be from.  If you're
+   using SMTP, this should be an email address accepted by your SMTP
+   server.  If you omit this, the from address will be the e-mail
+   address as input in the comment form.
 
 ``comment_smtp_to``
 
-   the email address to send comment notifications to.
+   The email address to send comment notifications to.
 
 ``comment_nofollow``
 
-   set this to 1 to add rel="nofollow" attributes to links in the
-   description -- these attributes are embedded in the stored
+   Set this to 1 to add ``rel="nofollow"`` attributes to links in the
+   description---these attributes are embedded in the stored
    representation.
 
 ``comment_disable_after_x_days``
 
-   set this to a positive integer and users won't be able to leave
+   Set this to a positive integer and users won't be able to leave
    comments on entries older than x days.
-
-Comments are stored one or more per file in a parallel hierarchy to
-the datadir hierarchy.  The filename of the comment is the filename of
-the blog entry, plus the creation time of the comment as a float, plus
-the comment extension.
-
-Comments now follow the ``blog_encoding`` variable specified in
-``config.py``.  If you don't include a ``blog_encoding`` variable,
-this will default to iso-8859-1.
-
-Comments will be shown for a given page if one of the following is
-true:
-
-1. the page has only one blog entry on it and the request is for a
-   specific blog entry as opposed to a category with only one entry
-   in it
-
-2. if "showcomments=yes" is in the querystring then comments will
-   be shown
 
 
 Related files
