@@ -387,7 +387,13 @@ def cb_start(args):
     request = args["request"]
     data = request.get_data()
     tagsfile = get_tagsfile(request.get_configuration())
-    tagsdata = loadfile(tagsfile)
+    if os.path.exists(tagsfile):
+        try:
+            tagsdata = loadfile(tagsfile)
+        except IOError:
+            tagsdata = {}
+    else:
+        tagsdata = {}
     data["tagsdata"] = tagsdata
 
 
