@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
 # Copyright (c) 2009, 2010, 2011 Will Kahn-Greene
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -11,7 +11,7 @@
 Summary
 =======
 
-This is a tags plugin.  It uses PyBlosxom's command line abilities to
+This is a tags plugin.  It uses Pyblosxom's command line abilities to
 split generation of tags index data from display of tags index data.
 
 It creates a ``$(tagslist)`` variable for head and foot templates
@@ -286,14 +286,14 @@ def buildtags(command, argv):
     sep = config.py.get("tags_separator", ",")
     tagsfile = get_tagsfile(config.py)
 
-    from Pyblosxom.pyblosxom import blosxom_entry_parser, PyBlosxom
+    from Pyblosxom.pyblosxom import blosxom_entry_parser, Pyblosxom
     from Pyblosxom import tools
     from Pyblosxom.entries import fileentry
 
-    # build a PyBlosxom object, initialize it, and run the start
+    # build a Pyblosxom object, initialize it, and run the start
     # callback.  this gives entry parsing related plugins a chance to
     # get their stuff together so that they work correctly.
-    p = PyBlosxom(config.py, {})
+    p = Pyblosxom(config.py, {})
     p.initialize()
     req = p.get_request()
     tools.run_callback("start", {"request": req})

@@ -14,7 +14,7 @@ Summary
 
 This plugin allows flavour templates to use file urls that will
 resolve to files in the flavour directory.  Those files will then get
-served by PyBlosxom.
+served by Pyblosxom.
 
 This solves the problem that flavour packs are currently difficult to
 package, install, and maintain because static files (images, css, js,

@@ -11,7 +11,9 @@ What's new in 1.5 rc4 (in development!)
 Pertinent to users:
 -------------------
 
-1. I moved all the plugins again.  This time, instead of being in
+1. Renamed the project from PyBlosxom to Pyblosxom (no more CamelCase).
+
+2. I moved all the plugins again.  This time, instead of being in
    ``plugins/``, they're now in ``Pyblosxom/plugins/``.
 
    You no longer have to copy core plugins into your plugins
@@ -46,9 +48,9 @@ Pertinent to users:
 
       You can see the plugin documentation at :ref:`part-two`.
 
-2. Plugins added: markdown_parser
+3. Plugins added: markdown_parser, readmore
 
-3. Plugins changed:
+4. Plugins changed:
 
    pages
 
@@ -71,14 +73,14 @@ Pertinent to users:
 
    the rest of the plugins: pep8 fixes and documentation updates
 
-4. Plugins removed from Pyblosxom: commentAPI
+5. Plugins removed from Pyblosxom: commentAPI
 
-5. Fixes error handling for loading plugins.  When doing
+6. Fixes error handling for loading plugins.  When doing
    ``pyblosxom-cmd test`` and a plugin fails to load, it'll now tell
    you.  When using the debug renderer and a plugin fails to load,
    it'll now tell you.
 
-6. Lot of work on simplifying and improving the documentation.
+7. Lot of work on simplifying and improving the documentation.
 
 
 Pertinent to developers
@@ -90,6 +92,10 @@ Pertinent to developers
 
 2. Adds *generate* subcommand to pyblosxom-cmd.  This makes it easier
    to test blogs and plugins that do things with entries.
+
+3. Renamed ``PyBlosxomWSGIApp`` class to ``PyblosxomWSGIApp``.
+
+4. Renamed ``PyBlosxom`` class to ``Pyblosxom``.
 
 
 What's new in 1.5 rc3 (June 2011)

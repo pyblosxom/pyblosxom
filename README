@@ -1,34 +1,34 @@
 =================
- About PyBlosxom
+ About Pyblosxom
 =================
 
-What is PyBlosxom
+What is Pyblosxom
 =================
 
-PyBlosxom is a lightweight blog system.  It was originally a Python
+Pyblosxom is a lightweight blog system.  It was originally a Python
 clone of `Blosxom`_ but has since evolved into a blog system of its
 own reminiscent of `Blosxom`_.
 
 .. _Blosxom: http://www.blosxom.com/
 
-PyBlosxom focuses on three things:
+Pyblosxom focuses on three things:
 
 **simplicity**
 
-  PyBlosxom stores all data on the file system in plain text files.
+  Pyblosxom stores all data on the file system in plain text files.
   This allows you to use any text editor to create, update and
   manipulate entries.  You can also use existing text-manipulation
   tools, version control, scripts, grep, ...  for managing your blog.
 
-  PyBlosxom can run as a CGI script, WSGI component or you can use it
+  Pyblosxom can run as a CGI script, WSGI component or you can use it
   to statically compile your website into HTML/XML files.
 
   Your workflow is your workflow.
 
 **extensibility**
 
-  PyBlosxom has a plugin framework enabling you to augment and enhance
-  PyBlosxom's default behavior.  Plugins are written in Python.  We
+  Pyblosxom has a plugin framework enabling you to augment and enhance
+  Pyblosxom's default behavior.  Plugins are written in Python.  We
   maintain a list of plugins in the plugin registry on the website.
 
   Plugins aren't hard to write.  We're happy to help you write
@@ -36,15 +36,15 @@ PyBlosxom focuses on three things:
 
 **community**
 
-  There are several hundred PyBlosxom users out there all of whom have
-  different needs.  PyBlosxom is used on a variety of operating
+  There are several hundred Pyblosxom users out there all of whom have
+  different needs.  Pyblosxom is used on a variety of operating
   systems in a variety of environments.  We have the standard open
   source project fare: mailing lists, IRC channel, wiki, ...
 
-PyBlosxom is built to let you use existing text-manipulation tools
+Pyblosxom is built to let you use existing text-manipulation tools
 without having to build the whole ecology from scratch.
 
-PyBlosxom can be run as:
+Pyblosxom can be run as:
 
 * a "static renderer" and compile your blog
 * a CGI script
@@ -55,14 +55,14 @@ You can learn more about Pyblosxom on the `website`_.
 .. _website: http://pyblosxom.bluesock.org/
 
 
-Why you might not want to use PyBlosxom
+Why you might not want to use Pyblosxom
 =======================================
 
-PyBlosxom is a small open source project and while there is a
-community, it's pretty small.  PyBlosxom's features are great but make
+Pyblosxom is a small open source project and while there is a
+community, it's pretty small.  Pyblosxom's features are great but make
 it a niche blog system.
 
-PyBlosxom is a *file-based* blog system.  Each blog entry is a
+Pyblosxom is a *file-based* blog system.  Each blog entry is a
 separate file stored in a directory hierarchy on your file system.  By
 default, the hierarchy is a category tree meaning each blog entry
 belongs in a single category.  By default, mtimes are used as the blog
@@ -70,16 +70,16 @@ entry timestamp.  There are plugins that change this behavior, but
 require extra configuration to use.
 
 There are a lot of other blog systems out there.  If it's apparent
-that PyBlosxom won't work for you, don't force it---use something
+that Pyblosxom won't work for you, don't force it---use something
 else.
 
 
-Overview of PyBlosxom
+Overview of Pyblosxom
 =====================
 
 Entries, categories, storage:
 
-* PyBlosxom stores everything as files on the file system---there is
+* Pyblosxom stores everything as files on the file system---there is
   no database.
 * Each blog entry is a file.
 * Blog entry files are stored in a directory hierarchy in your *datadir*.
@@ -88,10 +88,10 @@ Entries, categories, storage:
 
 Themes:
 
-* Themes in PyBlosxom are called *flavours*.
+* Themes in Pyblosxom are called *flavours*.
 * A flavour consists of a set of *templates*.
 * Flavours are stored in a directory called the *flavourdir*.
-* PyBlosxom comes with several flavours: html, rss20, and atom.
+* Pyblosxom comes with several flavours: html, rss20, and atom.
 * The `website <http://pyblosxom.bluesock.org/>`_ maintains a flavour
   registry for flavours contributed by people like you.
 * .. only:: text
@@ -106,7 +106,7 @@ Themes:
 
 Plugins:
 
-* PyBlosxom has a plugin system.
+* Pyblosxom has a plugin system.
 * Plugins are written in Python.
 * Plugins are loaded using the ``plugin_dirs`` and ``load_plugins``
   configuration variables.
@@ -151,7 +151,7 @@ Requirements
 * (optional) other things depending on what plugins you install
 
 
-How to install PyBlosxom
+How to install Pyblosxom
 ========================
 
 .. only:: text
@@ -159,7 +159,7 @@ How to install PyBlosxom
    Read the ``INSTALL`` document as well as other documents in the
    ``docs/`` directory.
 
-   If you're upgrading from a previous PyBlosxom version, read the
+   If you're upgrading from a previous Pyblosxom version, read the
    ``UPGRADE`` document as well as ``CHANGELOG`` which covers what's
    new in this version and what you'll need to change in your blog.
 
@@ -174,7 +174,7 @@ How to find comprehensive documentation
 =======================================
 
 There's a series of text files in the ``docs/`` directory which
-comprise the current state of the PyBlosxom manual at the time of this
+comprise the current state of the Pyblosxom manual at the time of this
 release.
 
 The most current version of the manual can be found on the `website
@@ -228,7 +228,7 @@ To run the tests, do::
 
     python setup.py test
 
-This will build PyBlosxom, then run the tests.
+This will build Pyblosxom, then run the tests.
 
 If you would like to add tests to the test suite, please do and send
 us patches!

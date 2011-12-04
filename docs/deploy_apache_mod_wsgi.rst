@@ -1,7 +1,7 @@
 .. _deploy-apache-mod-wsgi:
 
 ==============================================
- Deploying PyBlosxom with Apache and mod_wsgi
+ Deploying Pyblosxom with Apache and mod_wsgi
 ==============================================
 
 Summary
@@ -49,14 +49,14 @@ Deployment
       # call add_to_path with the directory that your config.py lives in.
       add_to_path("/home/joe/blog")
 
-      # if you have PyBlosxom installed in a directory and NOT as a
+      # if you have Pyblosxom installed in a directory and NOT as a
       # Python library, then call add_to_path with the directory that
-      # PyBlosxom lives in.  For example, if I untar'd
+      # Pyblosxom lives in.  For example, if I untar'd
       # pyblosxom-1.5.tar.gz into /home/joe/, then add like this:
       # add_to_path("/home/joe/pyblosxom-1.5/")
 
       import Pyblosxom.pyblosxom
-      application = Pyblosxom.pyblosxom.PyBlosxomWSGIApp()
+      application = Pyblosxom.pyblosxom.PyblosxomWSGIApp()
 
 4. In the Apache conf file, add:
 

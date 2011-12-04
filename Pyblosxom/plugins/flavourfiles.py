@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
 # Copyright (c) 2010, 2011 Will Kahn-Greene
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -13,7 +13,7 @@ Summary
 
 This plugin allows flavour templates to use file urls that will
 resolve to files in the flavour directory.  Those files will then get
-served by PyBlosxom.
+served by Pyblosxom.
 
 This solves the problem that flavour packs are currently difficult to
 package, install, and maintain because static files (images, css, js,

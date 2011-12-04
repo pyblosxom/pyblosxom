@@ -4,8 +4,8 @@
 Plugins
 =======
 
-PyBlosxom allows you to extend and augment its base functionality
-using PyBlosxom plugins.  Plugins allow you to create additional
+Pyblosxom allows you to extend and augment its base functionality
+using Pyblosxom plugins.  Plugins allow you to create additional
 variables; provide additional entry parsers, renderers,
 post-formatters, and pre-formatters; create new output data types;
 pull information from other non-blog sources; create images; and a
@@ -13,7 +13,7 @@ variety of other things.
 
 
 
-Setting PyBlosxom up to use plugins
+Setting Pyblosxom up to use plugins
 ===================================
 
 There are two properties in your ``config.py`` file that affect the
@@ -26,18 +26,18 @@ example::
    py["plugin_dirs"] = ["/home/will/pybloxsom/plugins"]
 
 
-This will cause PyBlosxom to look in this specific directory for
+This will cause Pyblosxom to look in this specific directory for
 plugins.
 
 The other property is the ``load_plugins`` property.  If you don't
 have this set at all (i.e. it's either not in the ``config.py`` file
-or the line is commented out), PyBlosxom will load all plugins it
+or the line is commented out), Pyblosxom will load all plugins it
 finds in the plugin directories you've specified.  It will look in
 each directory in order as you've specified.  It will load the plugins
 in each directory in alphabetical order by filename.
 
 The other way to load plugins is by specifying the plugins explicitly
-by setting the ``load_plugins`` property.  PyBlosxom will load only
+by setting the ``load_plugins`` property.  Pyblosxom will load only
 the plugins you've specified and will load them in the order you've
 specified.  The ``load_plugins`` property takes a list of strings.
 For example::
@@ -115,14 +115,14 @@ anyone knows about that performs that functionality.  It's probably
 best at this point for you to ask someone to write the plugin you need
 or write it yourself.
 
-PyBlosxom plugins are fairly easy to write and can cover a lot of
+Pyblosxom plugins are fairly easy to write and can cover a lot of
 really different functionality.  The best way to learn how to write
-PyBlosxom plugins is to read through the plugins in the plugin
+Pyblosxom plugins is to read through the plugins in the plugin
 registry.  Many of them are well written and may provide insight as to
 how to solve your specific problem.
 
 If you plan on writing your own plugin, refer to the manual file on
-writing PyBlosxom plugins.
+writing Pyblosxom plugins.
 
 Additionally, feel free to ask for help on the pyblosxom-users and
 pyblosxom-devel mailing lists or on IRC.  Details are on the `website`_

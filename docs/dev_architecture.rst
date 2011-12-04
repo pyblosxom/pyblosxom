@@ -2,20 +2,20 @@
    :linenothreshold: 5
 
 ======================
-PyBlosxom Architecture
+Pyblosxom Architecture
 ======================
 
 Summary
 =======
 
-PyBlosxom uses the file system for data storage allowing you to use
+Pyblosxom uses the file system for data storage allowing you to use
 the text-based tools that you use for other parts of your workflow for
 your blog.
 
-PyBlosxom has a plugin system allowing users to augment and extend
-PyBlosxom's behavior to meet their specific needs.
+Pyblosxom has a plugin system allowing users to augment and extend
+Pyblosxom's behavior to meet their specific needs.
 
-This chapter covers PyBlosxom's architecture.
+This chapter covers Pyblosxom's architecture.
 
 The code is fairly well documented and you should always consider the
 code to be the authority when the code and this manual are in
@@ -25,37 +25,37 @@ disagreement.
 Parts
 =====
 
-PyBlosxom is composed of several parts:
+Pyblosxom is composed of several parts:
 
 1. ``pyblosxom.cgi`` - This is the CGI script that is executed by your
    web server, pulls in configuration variables from ``config.py`` and
-   then instantiates PyBlosxom objects to handle the request.
+   then instantiates Pyblosxom objects to handle the request.
 
-2. ``PyBlosxomWSGIApp`` - This is the WSGI application for PyBlosxom.
+2. ``PyblosxomWSGIApp`` - This is the WSGI application for Pyblosxom.
 
 3. ``Pyblosxom`` package - This is the Python package that holds the
-   PyBlosxom objects and utility functions that handle the request.
+   Pyblosxom objects and utility functions that handle the request.
 
    1. the ``entries`` package - Handles the abstraction allowing
-      PyBlosxom to use entries other than those solely found on the
+      Pyblosxom to use entries other than those solely found on the
       file system.
 
-   2. the ``renderers`` package - PyBlosxom can handle different
+   2. the ``renderers`` package - Pyblosxom can handle different
       renderers.  The renderer gets a list of entries to be rendered
       and can render them using whatever means it so desires: blosxom
       templates, htmltmpl templates, Cheetah templates, hard-coded RSS
       2.0 markup, ...
 
-      PyBlosxom comes with two renderers: blosxom and debug.
+      Pyblosxom comes with two renderers: blosxom and debug.
 
-   3. the ``cache`` package - PyBlosxom allows for entry-level
+   3. the ``cache`` package - Pyblosxom allows for entry-level
       caching.  This helps in cases where your entries are stored in a
       format that requires a lot of processing to convert to HTML.
 
 
-PyBlosxom's behavior and output is then augmented by:
+Pyblosxom's behavior and output is then augmented by:
 
-1. plugins - Plugins allow you to augment PyBlosxom's default
+1. plugins - Plugins allow you to augment Pyblosxom's default
    behavior.  These you can get from the plugin registry or write
    yourself.
 
@@ -66,65 +66,65 @@ PyBlosxom's behavior and output is then augmented by:
 
 .. _lifecycle-of-the-blosxom-renderer:
 
-Lifecycle of a PyBlosxom request
+Lifecycle of a Pyblosxom request
 ================================
 
-This is the life cycle of a single PyBlosxom CGI request. It involves
+This is the life cycle of a single Pyblosxom CGI request. It involves
 the following "entities":
 
 
 * ``pyblosxom.cgi`` - A script found in the ``web/`` directory.  This
-  is the CGI script that handles PyBlosxom requests.
+  is the CGI script that handles Pyblosxom requests.
 
 * ``config.py`` - The configuration file that defines the behavior and
   properties of your blog.
 
-* ``PyBlosxom.pyblosxom`` - The pyblosxom module holds the default
-  PyBlosxom behavior functions. It also defines the Request class and
-  the PyBlosxom class.
+* ``Pyblosxom.pyblosxom`` - The pyblosxom module holds the default
+  Pyblosxom behavior functions. It also defines the Request class and
+  the Pyblosxom class.
 
 * ``Pyblosxom.pyblosxom.Request`` - The Request object holds the state
-  of the PyBlosxom request at any given time throughout the lifecycle
+  of the Pyblosxom request at any given time throughout the lifecycle
   of the request.  The Request object is passed to most callbacks in
   the args dict as ``request``.
 
-* ``Pyblosxom.pyblosxom.PyBlosxom`` - The PyBlosxom object holds a
+* ``Pyblosxom.pyblosxom.Pyblosxom`` - The Pyblosxom object holds a
   list of registered plugins, what callbacks they're registered to,
   and the methods that handle the the actual request.
 
 
-The PyBlosxom request lifecycle starts with the web server executing
+The Pyblosxom request lifecycle starts with the web server executing
 ``pyblosxom.cgi``.
 
 1. ``pyblosxom.cgi`` loads ``config.py``
 
 2. ``pyblosxom.cgi`` instantiates a Request object
 
-3. ``pyblosxom.cgi`` instantiates a ``Pyblosxom.pyblosxom.PyBlosxom``
+3. ``pyblosxom.cgi`` instantiates a ``Pyblosxom.pyblosxom.Pyblosxom``
    object passing it the Request object
 
-4. ``pyblosxom.cgi`` calls ``run()`` on the PyBlosxom object
+4. ``pyblosxom.cgi`` calls ``run()`` on the Pyblosxom object
 
-   1. PyBlosxom instance, run method: calls ``initialize``
+   1. Pyblosxom instance, run method: calls ``initialize``
 
-        1. PyBlosxom instance, ``initialize`` method: calls the entry
+        1. Pyblosxom instance, ``initialize`` method: calls the entry
            parser callback to get a map of all the entry types
-           PyBlosxom can handle
+           Pyblosxom can handle
 
-   2. PyBlosxom instance, ``run`` method: calls the start callback to
+   2. Pyblosxom instance, ``run`` method: calls the start callback to
       allow plugins to do any initialization they need to do
 
-   3. PyBlosxom instance, ``run`` method: calls the handle callback
+   3. Pyblosxom instance, ``run`` method: calls the handle callback
       allowing plugins to handle the request
 
       If a plugin handles the request, the plugin should return a
-      ``1`` signifying it has handled the request and PyBlosxom should
+      ``1`` signifying it has handled the request and Pyblosxom should
       stop.  FINISHED.
 
       If no plugin handles the request, then we continue using the
       ``blosxom_handler``.
 
-   4. PyBlosxom instance, ``run`` method: calls the end callback to
+   4. Pyblosxom instance, ``run`` method: calls the end callback to
       allow plugins to do any cleanup they need to do.
 
 FIXME - add lifecycle for long-running processes through WSGI---it's
@@ -135,18 +135,18 @@ Lifecycle of the blosxom_handler
 ================================
 
 This describes what the ``blosxom_handler`` does.  This is the default
-handler for PyBlosxom.  It's called by the PyBlosxom instance in the
+handler for Pyblosxom.  It's called by the Pyblosxom instance in the
 run method if none of the plugins have handled the request already.
 
 1. Calls the ``renderer`` callback to get a renderer instance.
 
    If none of the plugins return a ``Renderer`` instance, then
-   PyBlosxom checks to see if the ``renderer`` property is set in
+   Pyblosxom checks to see if the ``renderer`` property is set in
    ``config.py``.
 
-   If there ``renderer`` is specified, PyBlosxom instantiates that.
+   If there ``renderer`` is specified, Pyblosxom instantiates that.
 
-   If there ``renderer`` is not specified, PyBlosxom uses the
+   If there ``renderer`` is not specified, Pyblosxom uses the
    ``blosxom`` renderer in the ``renderer`` package.
 
 2. Calls the ``pathinfo`` callback which allows all plugins to help
@@ -199,7 +199,7 @@ that specific piece.
 About callbacks
 ===============
 
-Callbacks allow plugins to override behavior in PyBlosxom or provide
+Callbacks allow plugins to override behavior in Pyblosxom or provide
 additional behavior.  The callback mechanism actually encompasses a
 series of different functions.  Callbacks can act as handlers, as
 notifiers, and also as modifiers.
@@ -208,16 +208,16 @@ notifiers, and also as modifiers.
 Types of callbacks
 ------------------
 
-In the case of handler callbacks, PyBlosxom will query each plugin
+In the case of handler callbacks, Pyblosxom will query each plugin
 implementing the callback until one of the plugins returns that it has
 handled the callback.  At that point, execution of handling code
-stops.  If none of the plugins handle the callback, then PyBlosxom
+stops.  If none of the plugins handle the callback, then Pyblosxom
 will run its default behavior code.
 
-In the case of notifier callbacks, PyBlosxom will notify each plugin
+In the case of notifier callbacks, Pyblosxom will notify each plugin
 implementing the callback regardless of return values.
 
-In the case of modifier callbacks, PyBlosxom will query each plugin
+In the case of modifier callbacks, Pyblosxom will query each plugin
 implementing the callback passing in some input.  It takes the output
 from the callback function and passes that in as input to the next
 callback function.  In this way, each plugin has a chance to modify
@@ -226,20 +226,20 @@ and transform the data.
 There's no reason you can't implement a handler-type callback and use
 it for notification purposes---that's fine.  You should know that in
 the case of handler callbacks and modifier callbacks, the return value
-that your plugin gives will affect PyBlosxom's execution.
+that your plugin gives will affect Pyblosxom's execution.
 
 
 Callbacks that have blosxom equivalents
 ---------------------------------------
 
-There are a series of callbacks in PyBlosxom that have equivalents in
+There are a series of callbacks in Pyblosxom that have equivalents in
 blosxom 2.0.  The names are sometimes different and in most cases the
-arguments the PyBlosxom versions take are different than the blosxom
-2.0 versions.  Even so, the PyBlosxom versions serve the same purpose
+arguments the Pyblosxom versions take are different than the blosxom
+2.0 versions.  Even so, the Pyblosxom versions serve the same purpose
 as the blosxom 2.0 versions.
 
 This isn't very interesting unless you're trying to implement the
-functionality of a blosxom 2.0 plugin in Python for PyBlosxom.
+functionality of a blosxom 2.0 plugin in Python for Pyblosxom.
 
 The available blosxom renderer callbacks are:
 
@@ -305,7 +305,7 @@ cb_logrequest
 -------------
 
 The logrequest callback is used to notify plugins of the current
-PyBlosxom request for the purposes of logging.
+Pyblosxom request for the purposes of logging.
 
 Functions that implement this callback will get an args dict
 containing:
@@ -448,7 +448,7 @@ containing:
 Functions that implement this callback must return the input args dict
 whether or not they adjust anything in it.  The callback chain will
 stop as soon as a callback modifies mtime.  If no plugin handles the
-callback, PyBlosxom will fall back to calling ``os.stat()``.
+callback, Pyblosxom will fall back to calling ``os.stat()``.
 
 
 cb_pathinfo
@@ -633,10 +633,10 @@ like:
 
 .. Note::
 
-   ``cb_start`` is different in PyBlosxom than in blosxom.
+   ``cb_start`` is different in Pyblosxom than in blosxom.
 
    The ``cb_start`` callback is slightly different than in blosxom in
-   that ``cb_start`` is called for every PyBlosxom request regardless
+   that ``cb_start`` is called for every Pyblosxom request regardless
    of whether it's handled by the default blosxom handler.  In
    general, it's better to delay allocating resources until you
    absolutely know you are going to use them.
@@ -674,9 +674,9 @@ Functions that implement this callback don't need to return anything.
 
 .. Note::
 
-   ``cb_end`` is different in PyBlosxom than in blosxom
+   ``cb_end`` is different in Pyblosxom than in blosxom
 
-   The ``cb_end`` callback is called for every PyBlosxom request
+   The ``cb_end`` callback is called for every Pyblosxom request
    regardless of whether it's handled by the default blosxom handler
    or not.  This is slightly different than blosxom.
 

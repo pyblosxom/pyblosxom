@@ -17,7 +17,7 @@ shouldn't feel that you have to implement each one of them in your
 blog---you can most assuredly get away with implementing RSS 2.0 or
 Atom and be just fine.
 
-The syndication flavours that come with PyBlosxom should be fine for
+The syndication flavours that come with Pyblosxom should be fine for
 most blogs.  When pointing people to your syndication feed, just use
 one of the syndication flavours.
 
@@ -29,17 +29,17 @@ Examples:
 
 
 
-Feed formats that come with PyBlosxom
+Feed formats that come with Pyblosxom
 =====================================
 
-PyBlosxom comes with a few default flavours, three of which are feed
+Pyblosxom comes with a few default flavours, three of which are feed
 formats.
 
 
 RSS 0.9.1
 ---------
 
-PyBlosxom comes with an rss flavour that produces RSS 0.9.1 output.
+Pyblosxom comes with an rss flavour that produces RSS 0.9.1 output.
 Here's a sample of what it produces::
 
    <?xml version="1.0" encoding="utf-8"?>
@@ -81,7 +81,7 @@ your ``config.py`` file.
  
    Unless you have some reason to use RSS 0.9.1 as your syndication
    format, you should look at using RSS 2.0 or Atom both of which
-   also come with PyBlosxom.
+   also come with Pyblosxom.
 
 
 For more information, look at the `RSS 0.9.1 spec`_.
@@ -93,7 +93,7 @@ For more information, look at the `RSS 0.9.1 spec`_.
 RSS 2.0
 -------
 
-PyBlosxom 1.3 comes with an RSS 2.0 flavour called "rss20".  If it's
+Pyblosxom 1.3 comes with an RSS 2.0 flavour called "rss20".  If it's
 missing features that you want (for example, some folks are doing
 podcasting with their blog), then override the individual templates
 you need to adjust.
@@ -107,7 +107,7 @@ For more information on RSS 2.0, see the `RSS 2.0 spec`_.
 Atom
 ----
 
-Starting with 1.3, PyBlosxom comes with an Atom flavour called "atom".
+Starting with 1.3, Pyblosxom comes with an Atom flavour called "atom".
 If it's missing features that you want, then override the individual
 templates you need to adjust.
 

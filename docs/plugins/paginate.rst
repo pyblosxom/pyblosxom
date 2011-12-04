@@ -14,7 +14,7 @@ Summary
 
 Plugin for paging long index pages.
 
-PyBlosxom uses the num_entries configuration variable to prevent more
+Pyblosxom uses the num_entries configuration variable to prevent more
 than ``num_entries`` being rendered by cutting the list down to
 ``num_entries`` entries.  So if your ``num_entries`` is set to 20, you
 will only see the first 20 entries rendered.

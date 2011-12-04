@@ -1,9 +1,9 @@
 =====================
-Configuring PyBlosxom
+Configuring Pyblosxom
 =====================
 
-You configure a PyBlosxom blog by setting configuration variables in a
-Python file called ``config.py``.  Each PyBlosxom blog has its own
+You configure a Pyblosxom blog by setting configuration variables in a
+Python file called ``config.py``.  Each Pyblosxom blog has its own
 ``config.py`` file.
 
 This chapter documents the ``config.py`` variables.  Some of these are
@@ -69,7 +69,7 @@ uses Python code conventions.
 Plugin variables
 ================
 
-If you install any PyBlosxom plugins those plugins may ask you to set
+If you install any Pyblosxom plugins those plugins may ask you to set
 additional variables in your ``config.py`` file.  Those variables will
 be documented in the documentation that comes with the plugin or at
 the top of the plugin's source code file.  Additional plugin variables
@@ -99,19 +99,19 @@ Codebase configuration
 
    (optional) string
 
-   If you have installed PyBlosxom on your web server using your
+   If you have installed Pyblosxom on your web server using your
    distribution's package manager or Python setuptools then you don't
    need to set the codebase variable.
 
-   If you cannot install PyBlosxom on your web server then you can
-   save the PyBlosxom source code to a location on your server and use
+   If you cannot install Pyblosxom on your web server then you can
+   save the Pyblosxom source code to a location on your server and use
    the codebase setting instead. The codebase setting tells the Python
-   interpreter where to find the PyBlosxom codebase. This should be
-   the full path to where the PyBlosxom directory is on your
+   interpreter where to find the Pyblosxom codebase. This should be
+   the full path to where the Pyblosxom directory is on your
    system. It should be the path to the directory that holds the
    "Pyblosxom" directory (note the case--uppercase P lowercase b!).
 
-   For example, if you untarred PyBlosxom into
+   For example, if you untarred Pyblosxom into
    ``/home/joe/pyblosxom-1.5/``, then the Pyblosxom (uppercase P and
    lowercase b) directory should be in ``/home/joe/pyblosxom-1.5/``
    and you would set your codebase variable like this::
@@ -149,11 +149,11 @@ Blog configuration
       py["blog_description"] = "Critiques of restaurants in the Boston area"
 
 
-   Or if your blog covered development on PyBlosxom, your
+   Or if your blog covered development on Pyblosxom, your
    ``blog_description`` might go like this::
 
       py["blog_description"] = (
-          "Ruminations on the development of PyBlosxom and "
+          "Ruminations on the development of Pyblosxom and "
           "related things that I discovered while working on "
           "the project")
 
@@ -263,7 +263,7 @@ Blog configuration
 
    (optional) string; defaults to ``"C"``
 
-   PyBlosxom uses the locale config variable to adjust the values for
+   Pyblosxom uses the locale config variable to adjust the values for
    month names and dates.
 
    In general, you don't need to set this unless you know you're not
@@ -314,7 +314,7 @@ Blog configuration
    (optional) integer; defaults to 0
 
    The depth setting determines how many levels deep in the directory
-   (category) tree that PyBlosxom will display when doing indexes.
+   (category) tree that Pyblosxom will display when doing indexes.
 
    * 0 - infinite depth (aka grab everything) DEFAULT
    * 1 - datadir only
@@ -329,9 +329,9 @@ Blog configuration
    (optional) list of strings; defaults to ``[]``
 
    The ``ignore_directories`` variable allows you to specify which
-   directories in your datadir should be ignored by PyBlosxom.
+   directories in your datadir should be ignored by Pyblosxom.
 
-   This defaults to an empty list (i.e. PyBlosxom will not ignore any
+   This defaults to an empty list (i.e. Pyblosxom will not ignore any
    directories).
 
    For example, if you use CVS to manage the entries in your datadir,
@@ -357,9 +357,9 @@ Blog configuration
 
    (optional) string
 
-   This is the full path to where your PyBlosxom flavours are kept.
+   This is the full path to where your Pyblosxom flavours are kept.
 
-   If you do not set the ``flavourdir``, then PyBlosxom will look for
+   If you do not set the ``flavourdir``, then Pyblosxom will look for
    your flavours and templates in the datadir alongside your entries.
 
    .. Note::
@@ -402,7 +402,7 @@ Blog configuration
       py["default_flavour"] = "joy"
 
 
-   Doing this will cause PyBlosxom to use the "joy" flavour whenever
+   Doing this will cause Pyblosxom to use the "joy" flavour whenever
    URIs are requested that don't specify the flavour.
 
    For example, the following will all use the "joy" flavour::
@@ -482,9 +482,9 @@ Blog configuration
 
       py["base_url"] = "http://example.com/~joe/cgi-bin/pyblosxom.cgi"
 
-   However, it's common that this can be determined by PyBlosxom by
+   However, it's common that this can be determined by Pyblosxom by
    looking at the HTTP environment variables--so if you're not doing
-   any url re-writing, it's possible that PyBlosxom can correctly
+   any url re-writing, it's possible that Pyblosxom can correctly
    determine the url and you won't have to set the base_url variable
    at all.
 
@@ -508,7 +508,7 @@ Blog configuration
 
    (optional) string; defaults to "plain"
 
-   The default entry parser that PyBlosxom will use to parse this
+   The default entry parser that Pyblosxom will use to parse this
    blog's entry files.  See :ref:`Entry parsers`.
 
 
@@ -519,15 +519,15 @@ Logging configuration
 
    (optional) string
 
-   This specifies the file that PyBlosxom will log messages to.
+   This specifies the file that Pyblosxom will log messages to.
 
    If this is set to "NONE", then log messages will be silently
    ignored.
 
-   If PyBlosxom cannot open the file for writing, then log messages
+   If Pyblosxom cannot open the file for writing, then log messages
    will be sent to sys.stderr.
 
-   For example, if you wanted PyBlosxom to log messages to
+   For example, if you wanted Pyblosxom to log messages to
    ``/home/joe/blog/logs/pyblosxom.log``, then you would set
    ``log_file`` to::
 
@@ -539,7 +539,7 @@ Logging configuration
 
    .. Note::
 
-      The web server that is executing PyBlosxom must be able to write
+      The web server that is executing Pyblosxom must be able to write
       to the directory containing your ``pyblosxom.log`` file.
 
 
@@ -592,13 +592,13 @@ Logging configuration
    Each plugin can log messages on its own channel.  Therefore channel
    name == plugin name.
 
-   PyBlosxom logs its messages to a channel named "root".
+   Pyblosxom logs its messages to a channel named "root".
 
    .. Warning::
 
       A warning about omitting root:
 
-      If you use ``log_filter`` and don't include "root", then PyBlosxom
+      If you use ``log_filter`` and don't include "root", then Pyblosxom
       messages will be silently ignored!
 
    For example, if you wanted to filter log messages to "root" and
@@ -615,11 +615,11 @@ Plugin Configuration
 
    (optional) list of strings; defaults to an empty list
 
-   The ``plugin_dirs`` variable tells PyBlosxom which directories to
+   The ``plugin_dirs`` variable tells Pyblosxom which directories to
    look in for plugin files to load. You can list as many plugin
    directories as you want.
 
-   For example, if you stored your PyBlosxom plugins in
+   For example, if you stored your Pyblosxom plugins in
    ``/home/joe/blog/plugins/``, then you would set ``plugin_dirs``
    like this::
 
@@ -636,10 +636,10 @@ Plugin Configuration
 
    (optional) list of strings
 
-   If there is no ``load_plugins`` setting in ``config.py`` PyBlosxom
+   If there is no ``load_plugins`` setting in ``config.py`` Pyblosxom
    loads all plugins it finds in the directories specified by
    ``plugins_dir`` in alphanumeric order by filename.  Specifying
-   ``load_plugins`` causes PyBlosxom to load only the plugins you name
+   ``load_plugins`` causes Pyblosxom to load only the plugins you name
    and in in the order you name them.
 
    The value of ``load_plugins`` should be a list of strings where
@@ -664,10 +664,10 @@ Plugin Configuration
                +- plugin_b.py
                +- plugin_c.py
 
-   then PyBlosxom would load all three plugins in alphabetical order
+   then Pyblosxom would load all three plugins in alphabetical order
    by filename: ``plugin_a``, then ``plugin_b``, then ``plugin_c``.
 
-   If you wanted PyBlosxom to only load ``plugin_a`` and ``plugin_c``,
+   If you wanted Pyblosxom to only load ``plugin_a`` and ``plugin_c``,
    then you would set ``load_plugins`` to::
 
       py["load_plugins"] = ["plugin_a", "plugin_c"]
@@ -682,7 +682,7 @@ Plugin Configuration
 
    .. Note::
 
-      PyBlosxom loads plugins in the order specified by
+      Pyblosxom loads plugins in the order specified by
       ``load_plugins``.  This order also affects the order that
       callbacks are registered and later executed.  For example, if
       ``plugin_a`` and ``plugin_b`` both implement the ``handle``
@@ -700,14 +700,14 @@ Caching Configuration
 =====================
 
 Enabling caching by setting the ``cacheDriver`` and ``cacheConfig``
-variables in ``config.py`` speeds up rendering of your PyBlosxom
+variables in ``config.py`` speeds up rendering of your Pyblosxom
 pages.
 
 .. py:data:: cacheDriver
 
    (optional) string; defaults to ""
 
-   PyBlosxom has multiple cache mechanisms. Look at the source files
+   Pyblosxom has multiple cache mechanisms. Look at the source files
    in ``Pyblosxom/cache`` to see what mechanisms are available, then
    set ``cacheDriver`` to the cache mechanism that you want. For
    example::
@@ -735,6 +735,6 @@ pages.
 Static Rendering Configuration
 ==============================
 
-If you are using static rendering to deploy your PyBlosxom blog you
+If you are using static rendering to deploy your Pyblosxom blog you
 need to set some additional configuration variables in your
 ``config.py`` file, see :ref:`static-rendering`.

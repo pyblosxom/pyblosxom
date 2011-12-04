@@ -55,7 +55,7 @@ This plugin comes with Pyblosxom.  To install, do the following:
     .. Note::
 
        The syntax used here is the Python string formatting
-       syntax---not the PyBlosxom template rendering syntax!
+       syntax---not the Pyblosxom template rendering syntax!
 
 
 Usage

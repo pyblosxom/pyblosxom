@@ -7,17 +7,17 @@ Flavours and Templates
 Summary
 =======
 
-This chapter covers the blosxom renderer in PyBlosxom.  There are other
+This chapter covers the blosxom renderer in Pyblosxom.  There are other
 renderers (like the debug renderer) that operate differently.  See
 the chapter on :ref:`renderers <renderers>` for more details.
 
 If you want your blog rendered using a different template system---say
 Cheetah or htmltmpl---implement a renderer that renders the output.
-This new renderer can be implemented as a PyBlosxom plugin.  See the
+This new renderer can be implemented as a Pyblosxom plugin.  See the
 chapter on writing plugins for more information.
 
 The rest of this chapter talks about the various things you can do with
-the blosxom renderer which comes with PyBlosxom.
+the blosxom renderer which comes with Pyblosxom.
 
 
 
@@ -65,7 +65,7 @@ flavour would be in a file called ``head`` and might look like this::
 
 More on templates later.
 
-PyBlosxom allows you to manage the flavours and templates for your
+Pyblosxom allows you to manage the flavours and templates for your
 blog in several different ways:
 
 1. in directories in the flavourdir, OR
@@ -74,11 +74,11 @@ blog in several different ways:
 
 .. Note::
 
-   PyBlosxom is backwards compatible with previous versions of
-   PyBlosxom.  You can put your flavour files in your datadir.  You
+   Pyblosxom is backwards compatible with previous versions of
+   Pyblosxom.  You can put your flavour files in your datadir.  You
    can also put your flavour files in the categories of your datadir.
    However you cannot have a flavourdir and put flavour files in your
-   datadir---PyBlosxom will look at **EITHER** your datadir **OR**
+   datadir---Pyblosxom will look at **EITHER** your datadir **OR**
    your flavourdir for flavour files.
 
 
@@ -129,9 +129,9 @@ flavours.
    Templates in the flavour directory don't need an extension.
 
 This structure also makes it easier to use flavour packs found in the
-flavour registry on the `PyBlosxom website`_.
+flavour registry on the `Pyblosxom website`_.
 
-.. _PyBlosxom website: http://pyblosxom.bluesock.org/
+.. _Pyblosxom website: http://pyblosxom.bluesock.org/
 
 
 
@@ -173,7 +173,7 @@ alongside your entries.
 
 This is not recommended---it's a pain in the ass to maintain and
 everything gets all mixed up.  It's supported since this is how
-PyBlosxom used to work.
+Pyblosxom used to work.
 
 The template files for a given flavour all have to have the flavour
 name as the extension of the file.  For example, if you were using an
@@ -210,13 +210,13 @@ files:
 Included flavours
 =================
 
-PyBlosxom comes with the following flavours:
+Pyblosxom comes with the following flavours:
 
 * ``html`` - a basic html flavour
 * ``rss`` - an RSS 2.0 flavour for syndication
 * ``atom`` - an Atom 1.0 flavour for syndication
 
-These flavours are included with PyBlosxom and they will work out of the
+These flavours are included with Pyblosxom and they will work out of the
 box with no modifications and no configuration changes.
 
 When you run ``pyblosxom-cmd create <blog-dir>``, these get copied
@@ -228,7 +228,7 @@ Play with them!  Modify them!  Extend them!
 Overriding included flavours
 ============================
 
-PyBlosxom allows you to override templates and flavours on a
+Pyblosxom allows you to override templates and flavours on a
 category-by-category basis.
 
 For example, Joe has a category devoted to his work on plants which he
@@ -290,11 +290,11 @@ the rest of the templates will be taken from ``flavours/html.flav/``.
 Finding new flavours
 ====================
 
-There is a flavour registry on the `PyBlosxom website`_.  You can find
+There is a flavour registry on the `Pyblosxom website`_.  You can find
 flavours here that have been created by other people and submit
 flavours that you've created and want to share.
 
-.. _PyBlosxom website: http://pyblosxom.bluesock.org/
+.. _Pyblosxom website: http://pyblosxom.bluesock.org/
 
 Additionally, you can use flavours from `Blosxom`_ and themes from
 `WordPress`_ after spending some time converting them.
@@ -304,11 +304,11 @@ Additionally, you can use flavours from `Blosxom`_ and themes from
 
 The order of overiding works like this:
 
-1. PyBlosxom looks for flavour files that came with PyBlosxom
-2. PyBlosxom starts at the root of the flavourdir and looks for
+1. Pyblosxom looks for flavour files that came with Pyblosxom
+2. Pyblosxom starts at the root of the flavourdir and looks for
    flavour files there.  If there are some, then these files override
-   the files PyBlosxom has found so far.
-3. PyBlosxom iterates through category directories in the flavourdir
+   the files Pyblosxom has found so far.
+3. Pyblosxom iterates through category directories in the flavourdir
    if there are any that are parallel to the datadir and looks for
    flavour directories there.  If there are some, then those files
    override the files it has so far.
@@ -389,10 +389,10 @@ Plugins can add additional filters.
 
 .. Note::
 
-   PyBlosxom versions 1.3 and 1.4 escaped and urlencoded variables
+   Pyblosxom versions 1.3 and 1.4 escaped and urlencoded variables
    that ended with ``_escaped`` and ``_urlencoded``.
 
-   Deprecated in PyBlosxom 1.5.
+   Deprecated in Pyblosxom 1.5.
 
 
 Variables from config.py
@@ -635,7 +635,7 @@ For example, if I had a blog entry like this::
    #mood happy
    #music The Doors - Break on Through to the Other Side
    <p>
-     This is the first post to my new PyBlosxom blog.  I've
+     This is the first post to my new Pyblosxom blog.  I've
      also got two metadata items in it which will be available
      as variables!
    </p>
@@ -724,4 +724,4 @@ Examples of templates
 =====================
 
 For examples of templates and flavours, see the included flavours that
-come with your PyBlosxom installation.
+come with your Pyblosxom installation.

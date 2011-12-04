@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # =================================================================
-# This is the config file for PyBlosxom.  You should go through 
+# This is the config file for Pyblosxom.  You should go through 
 # this file and fill in values for the various properties.  This 
 # affects the behavior of your blog.
 #
@@ -10,8 +10,8 @@
 # There are configuration properties that are not detailed in
 # this file.  These are the properties that are most often used.
 # To see a full list of configuration properties as well as
-# additional documentation, see the PyBlosxom documentation on
-# the web-site for your version of PyBlosxom.
+# additional documentation, see the Pyblosxom documentation on
+# the web-site for your version of Pyblosxom.
 # =================================================================
 
 # Don't touch this next line.
@@ -21,8 +21,8 @@ py = {}
 # Codebase configuration
 # ======================
 
-# If you did not install PyBlosxom as a library (i.e. python setup.py install)
-# then uncomment this next line and point it to your PyBlosxom installation
+# If you did not install Pyblosxom as a library (i.e. python setup.py install)
+# then uncomment this next line and point it to your Pyblosxom installation
 # directory.
 # 
 # Note, this should be the parent directory of the "Pyblosxom" directory
@@ -63,7 +63,7 @@ py["blog_encoding"] = "utf-8"
 
 # What is the locale for this blog?  This is used when formatting dates
 # and other locale-sensitive things.  Make sure the locale is valid for
-# your system.  See the configuration chapter in the PyBlosxom documentation
+# your system.  See the configuration chapter in the Pyblosxom documentation
 # for details.
 #py["locale"] = "en_US.iso-8859-1"
 
@@ -98,7 +98,7 @@ py["default_flavour"] = "html"
 # Logging configuration
 # =====================
 
-# Where should PyBlosxom write logged messages to?
+# Where should Pyblosxom write logged messages to?
 # If set to "NONE" log messages are silently ignored.
 # Falls back to sys.stderr if the file can't be opened for writing.
 #py["log_file"] = os.path.join(blogdir, "logs", "pyblosxom.log")
@@ -129,14 +129,14 @@ py["default_flavour"] = "html"
 #                               "/var/lib/pyblosxom/plugins"]
 py["plugin_dirs"] = [os.path.join(blogdir, "plugins")]
 
-# There are two ways for PyBlosxom to load plugins:
+# There are two ways for Pyblosxom to load plugins:
 # 
-# The first is the default way where PyBlosxom loads all plugins it
+# The first is the default way where Pyblosxom loads all plugins it
 # finds in the directories specified by "plugins_dir" in alphanumeric
 # order by filename.
 # 
 # The second is by specifying a "load_plugins" key here.  Specifying
-# "load_plugins" will cause PyBlosxom to load only the plugins you name 
+# "load_plugins" will cause Pyblosxom to load only the plugins you name 
 # and in in the order you name them.
 # 
 # The "load_plugins" key is a list of strings where each string is

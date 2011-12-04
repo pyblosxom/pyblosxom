@@ -12,7 +12,7 @@
 Summary
 =======
 
-This is a tags plugin.  It uses PyBlosxom's command line abilities to
+This is a tags plugin.  It uses Pyblosxom's command line abilities to
 split generation of tags index data from display of tags index data.
 
 It creates a ``$(tagslist)`` variable for head and foot templates

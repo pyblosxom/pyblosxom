@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
 # Copyright (c) 2005 Nathaniel Gray
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 

@@ -1,22 +1,22 @@
 .. _static-rendering:
 
 ======================================
-Deploy PyBlosxom with Static Rendering
+Deploy Pyblosxom with Static Rendering
 ======================================
 
 Summary
 =======
 
-Static rendering made its first appearance in PyBlosxom 1.0.  It fills
-the functionality gap for people who want to use PyBlosxom, but don't
+Static rendering made its first appearance in Pyblosxom 1.0.  It fills
+the functionality gap for people who want to use Pyblosxom, but don't
 have a web server with CGI installed, don't have CGI access, or can't
-run PyBlosxom for one of a myriad of other reasons.  Static rendering
-allows these people to run PyBlosxom on their local machine, write
+run Pyblosxom for one of a myriad of other reasons.  Static rendering
+allows these people to run Pyblosxom on their local machine, write
 blog entries, render their entire site into HTML, and then use ftp or
 some other file copy method to move the pages up to their static
 website.
 
-PyBlosxom's static rendering also allows for incremental building.  It
+Pyblosxom's static rendering also allows for incremental building.  It
 can scan your entries, figure out what's changed, and render only the
 pages that need re-rendering.
 
@@ -24,7 +24,7 @@ pages that need re-rendering.
 Configuring static rendering
 ============================
 
-These are the instructions for configuring static rendering in PyBlosxom.
+These are the instructions for configuring static rendering in Pyblosxom.
 
 1. Uncomment ``static_dir`` in your ``config.py`` file.
 
@@ -125,7 +125,7 @@ Or, if the location of your ``config.py`` file is in your
 ``pyblosxom-cmd staticrender`` from any directory without giving the
 ``--config`` option.
 
-Lots of output will appear as PyBlosxom figures out all the urls that
+Lots of output will appear as Pyblosxom figures out all the urls that
 need to be rendered and then renders them.
 
 
@@ -183,7 +183,7 @@ Things to note
   instead specify the urls by hand in ``static_urls``.
 
 * If your website requires more files than just the ones that are
-  rendered by PyBlosxom (images, CSS, ...), then you need to copy
+  rendered by Pyblosxom (images, CSS, ...), then you need to copy
   those files over separately---Pyblosxom won't do it for you.
 
 

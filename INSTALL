@@ -1,7 +1,7 @@
 .. _install:
 
 ======================
- Installing PyBlosxom
+ Installing Pyblosxom
 ======================
 
 Installing Pyblosxom is pretty easy for most situations.  There are
@@ -58,7 +58,7 @@ Requirements
 Hosting your blog
 -----------------
 
-PyBlosxom works with any web server as a CGI application, a WSGI
+Pyblosxom works with any web server as a CGI application, a WSGI
 application, and might work in other contexts.  If you run your blog
 in this way, then you'll install Pyblosxom on the web server you plan
 to host your blog.
@@ -84,9 +84,9 @@ the resulting HTML files to your web server which will host them.
 Operating System
 ----------------
 
-PyBlosxom is well supported on GNU/Linux and Mac OSX.
+Pyblosxom is well supported on GNU/Linux and Mac OSX.
 
-PyBlosxom is not supported on Windows and may not work well.  If you
+Pyblosxom is not supported on Windows and may not work well.  If you
 decide to run your blog on a Windows server you will be pretty much on
 your own as nearly all the documentation and testing is GNU/Linux and
 Mac OSX centric.
@@ -99,7 +99,7 @@ included.
 Python
 ------
 
-PyBlosxom requires at least Python 2.4.  PyBlosxom does not work with
+Pyblosxom requires at least Python 2.4.  Pyblosxom does not work with
 Python 3 or higher---Python 3 is a significant rework of the language.
 
 
@@ -123,7 +123,7 @@ think are particularly useful here.
       check out the install instructions in :ref:`hacking-chapter`.
 
 
-1. You can install PyBlosxom site-wide which allows all users on the
+1. You can install Pyblosxom site-wide which allows all users on the
    computer to use Pyblosxom.
 
    In order to do this, you must have an administrative account on the
@@ -131,7 +131,7 @@ think are particularly useful here.
 
    See :ref:`Installing site-wide` if this is what you want to do.
 
-2. You can install PyBlosxom in a virtual environment using
+2. You can install Pyblosxom in a virtual environment using
    `virtualenv`_.
 
    If you do this, then only you will be able to use Pyblosxom.
@@ -235,7 +235,7 @@ This requires:
 
 To install:
 
-1. Create a virtual environment for PyBlosxom in a directory of your
+1. Create a virtual environment for Pyblosxom in a directory of your
    choosing as denoted by ``<VIRTUAL-ENV-DIR>``::
 
       virtualenv <VIRTUAL-ENV-DIR>
@@ -243,8 +243,8 @@ To install:
    This command creates a new directory ``<VIRTUAL-ENV-DIR>`` that
    contains its own Python package installation directories and a
    Python interpreter that uses those directories.  This is the
-   virtual environment that PyBlosxom will be installed into and will
-   run in.  If you want to delete PyBlosxom at some point, just delete
+   virtual environment that Pyblosxom will be installed into and will
+   run in.  If you want to delete Pyblosxom at some point, just delete
    this virtual environment directory and all its contents.
 
    The virtual environment directory can be anywhere---it doesn't have
@@ -270,13 +270,13 @@ To install:
    If you exit your current shell session and start a new one, the
    virtual environment will no longer be active.  You have to activate
    the virtual environment for each new shell session before doing
-   anything with PyBlosxom.
+   anything with Pyblosxom.
 
-   Additionally, if you're running PyBlosxom from CGI or a cron job,
+   Additionally, if you're running Pyblosxom from CGI or a cron job,
    you want to use the ``python`` interpreter located in the ``bin``
    directory of your virtual environment---not the system one.
 
-3. Finally, install PyBlosxom into the activated virtual environment.
+3. Finally, install Pyblosxom into the activated virtual environment.
 
    If you have `pip`_ installed, then do::
 
@@ -328,7 +328,7 @@ your blog into a website.  This could be any of the following:
 3. running your blog as a WSGI application
 4. some fourth thing!
 
-The PyBlosxom documentation covers some of these deployment options.
+The Pyblosxom documentation covers some of these deployment options.
 
 .. only:: text
 
@@ -369,7 +369,7 @@ details on the `website <http://pyblosxom.bluesock.org/>`_.
 After installing
 ================
 
-After you finish installing and deploying PyBlosxom, you should look
+After you finish installing and deploying Pyblosxom, you should look
 at plugins and flavours to make your blog your own.
 
 .. only:: text
@@ -385,7 +385,7 @@ You should also sign up on the pyblosxom-users mailing list.
 
 Additionally, please hop on the ``#pyblosxom`` IRC channel on
 ``irc.freenode.net`` and say hi.  It'll almost certainly help you get
-acquainted with PyBlosxom and it'll reduce the amount of time it takes
+acquainted with Pyblosxom and it'll reduce the amount of time it takes
 to get your blog up and going.
 
 Details are on the `website <http://pyblosxom.bluesock.org/>`_.

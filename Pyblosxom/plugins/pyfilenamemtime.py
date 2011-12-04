@@ -1,10 +1,10 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
 # Copyright (c) 2004, 2005 Tim Roberts
 # Copyright (c) 2011 Will Kahn-Greene
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 

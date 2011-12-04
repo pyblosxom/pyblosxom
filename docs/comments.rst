@@ -11,7 +11,7 @@ FIXME - September 27th, 2009 - This needs to be updated. Srsly.
 Summary
 =======
 
-PyBlosxom does not come with comments functionality built-in.  There are 
+Pyblosxom does not come with comments functionality built-in.  There are 
 several ways you can add comments functionality to your blog.  This chapter
 talks about those.
 
@@ -41,7 +41,7 @@ If this is interesting to you, `sign up for a Disqus account`_.
 Writing your own comments plugin
 ================================
 
-PyBlosxom allows for plugins allowing you to write a plugin to add comments
+Pyblosxom allows for plugins allowing you to write a plugin to add comments
 to your website.  This isn't for the feint of heart--there are a lot of bits
 to think about.
 
@@ -57,14 +57,14 @@ Cons:
 Comments plugin
 ===============
 
-There's a comments plugin that many PyBlosxom users use and which is sort
+There's a comments plugin that many Pyblosxom users use and which is sort
 of supported, but needs a lot of work.
 
 Pros:
 
 * it's entirely in your control
 * you can extend and modify it to meet your needs
-* a lot of PyBlosxom users use it
+* a lot of Pyblosxom users use it
 
 Cons:
 
@@ -73,8 +73,8 @@ Cons:
 * you have to implement and maintain your own anti-spam measures
 * it hasn't been well maintained in the last couple of years
 
-The comments plugin comes in the ``.tar.gz`` file alongside PyBlosxom as
-of PyBlosxom 1.5.  Prior to that, you can get the latest stable version 
+The comments plugin comes in the ``.tar.gz`` file alongside Pyblosxom as
+of Pyblosxom 1.5.  Prior to that, you can get the latest stable version 
 of the comments plugin from the `contributed plugins pack`_. Alternatively, 
 you can get the latest version `from Git`_, which is even more recent but 
 may be broken.  Caveat hacker!
@@ -114,7 +114,7 @@ After making sure you have the requirements, do the following:
 
    The comment system allows you to specify the directory where the comment 
    directory tree will stored, and the suffix used for comment files.  You 
-   need to make sure that this directory is writable by PyBlosxom however
+   need to make sure that this directory is writable by Pyblosxom however
    you have it installed.
 
    Set ``comment_dir`` to the directory (in your data directory) where

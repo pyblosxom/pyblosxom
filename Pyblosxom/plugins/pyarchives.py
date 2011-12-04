@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2004-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2004-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -54,7 +54,7 @@ This plugin comes with Pyblosxom.  To install, do the following:
     .. Note::
 
        The syntax used here is the Python string formatting
-       syntax---not the PyBlosxom template rendering syntax!
+       syntax---not the Pyblosxom template rendering syntax!
 
 
 Usage

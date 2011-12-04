@@ -1,16 +1,16 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2010 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2010 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 """
 Testing utilities.
 
-Includes up a number of mocks, environment variables, and PyBlosxom
+Includes up a number of mocks, environment variables, and Pyblosxom
 data structures for useful testing plugins.
 """
 
@@ -157,7 +157,7 @@ class PluginTest(unittest.TestCase):
     """Base class for plugin unit tests. Subclass this to test
     plugins.
 
-    Many common PyBlosxom data structures are populated as attributes
+    Many common Pyblosxom data structures are populated as attributes
     of this class, including self.environ, self.config, self.data,
     self.request, and self.args.
 
@@ -263,7 +263,7 @@ class PluginTest(unittest.TestCase):
         self.remove_dir(self.datadir)
 
     def freeze_pyblosxom_time(self, timestamp):
-        """Injects a frozen time module into PyBlosxom.
+        """Injects a frozen time module into Pyblosxom.
 
         The timestamp argument should be seconds since the epoch. Returns the
         FrozenTime instance.

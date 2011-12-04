@@ -7,7 +7,7 @@ Writing Entries
 Categories
 ==========
 
-Writing entries in PyBlosxom is fairly straightforward.  Each entry is
+Writing entries in Pyblosxom is fairly straightforward.  Each entry is
 a single text file located somewhere in the directory tree of your
 datadir.  The directory that the entry is in is the category the entry
 is "filed under".
@@ -40,7 +40,7 @@ front---you can add them as you need them.
 The format of an entry
 ======================
 
-PyBlosxom entries consist of three parts: the title, the metadata, and
+Pyblosxom entries consist of three parts: the title, the metadata, and
 then the body of the entry.  The first line is the title of the entry.
 Then comes zero or more lines of metadata.  After the metadata comes
 the body of the entry.
@@ -203,7 +203,7 @@ You can see this in the following example of output::
 Entry parsers
 =============
 
-PyBlosxom supports one format for entry files by default.  This format
+Pyblosxom supports one format for entry files by default.  This format
 is the same format that blosxom uses and is described in previous
 sections.
 
@@ -221,8 +221,8 @@ folks write a lot of material in a non-HTML markup format and would
 like to use that same format for blog entries.  These are all very
 valid reasons to want to use other markup formats.
 
-PyBlosxom allows you to install entry parser plugins which are
-PyBlosxom plugins that implement an entry parser.  These entry parser
+Pyblosxom allows you to install entry parser plugins which are
+Pyblosxom plugins that implement an entry parser.  These entry parser
 plugins allow you to use other markup formats.  Check the Plugin
 Registry on the `website`_ for other available entry parsers.
 Pyblosxom comes with a restructured text entry parser.
@@ -243,7 +243,7 @@ Beyond editors
 ==============
 
 There's no reason that all your entries have to come from editing blog
-entry text files in your datadir.  Check the PyBlosxom Registry for
+entry text files in your datadir.  Check the Pyblosxom Registry for
 scripts and other utilities that generate entries from other input
 sources.
 

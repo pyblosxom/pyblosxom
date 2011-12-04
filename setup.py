@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -23,7 +23,7 @@ except ImportError:
 setup(
     name="pyblosxom",
     version=VERSION,
-    description="PyBlosxom is a file-based weblog engine.",
+    description="Pyblosxom is a file-based weblog engine.",
     long_description=open('README').read(),
     license='MIT',
     author="Will Kahn-Greene, et al",

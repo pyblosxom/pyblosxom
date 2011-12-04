@@ -91,7 +91,7 @@ def verify_installation(request):
         return False
 
     a = Akismet(config['akismet_api_key'], config['base_url'],
-                agent='PyBlosxom/1.3')
+                agent='Pyblosxom/1.3')
     if not a.verify_key():
         pwrap_error("Could not verify akismet API key.")
         return False
@@ -141,7 +141,7 @@ def cb_comment_reject(args):
     base_url = config.get('base_url')
 
     # initialize the api
-    api = Akismet(api_key, base_url, agent='PyBlosxom/1.3')
+    api = Akismet(api_key, base_url, agent='Pyblosxom/1.5')
 
     if not api.verify_key():
         pwrap_error("Could not verify akismet API key. Comments accepted.")

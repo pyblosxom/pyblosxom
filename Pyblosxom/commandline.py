@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2008-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2008-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -15,12 +15,11 @@ verification, blog creation, commandline argument parsing, ...
 import os
 import os.path
 import sys
-import textwrap
 import random
 import time
 from optparse import OptionParser
 
-from Pyblosxom.pyblosxom import VERSION_DATE, PyBlosxom
+from Pyblosxom.pyblosxom import VERSION_DATE, Pyblosxom
 from Pyblosxom.tools import run_callback, pwrap, pwrap_error
 from Pyblosxom import plugin_utils
 
@@ -28,7 +27,7 @@ USAGE = "%prog [options] [command] [command-options]"
 VERSION = "%prog " + VERSION_DATE
 
 def build_pyblosxom():
-    """Imports config.py and builds an empty PyBlosxom object.
+    """Imports config.py and builds an empty Pyblosxom object.
     """
     pwrap("Trying to import the config module....")
     try:
@@ -44,13 +43,13 @@ def build_pyblosxom():
                                                              scriptname))
         return None
 
-    return PyBlosxom(cfg, {})
+    return Pyblosxom(cfg, {})
 
 def build_parser(usage):
     parser = OptionParser(usage=usage, version=VERSION)
     parser.add_option("-q", "--quiet",
                       action="store_false", dest="verbose", default=True,
-                      help="If the quiet flag is specified, then PyBlosxom "
+                      help="If the quiet flag is specified, then Pyblosxom "
                       "will run quietly.")
     parser.add_option("--config",
                       help="This specifies the directory that the config.py "
@@ -153,7 +152,7 @@ def test_installation(command, argv):
     be without being overly verbose and confusing.
 
     This is designed to make it easier for a user to verify their
-    PyBlosxom installation is working and also to install new plugins
+    Pyblosxom installation is working and also to install new plugins
     and verify that their configuration is correct.
     """
     parser = build_parser("%prog test [options]")
@@ -208,7 +207,7 @@ def test_installation(command, argv):
     if (("blog_encoding" in config_keys
          and config["blog_encoding"].lower() != "utf-8")):
         pwrap_error("- WARNING: 'blog_encoding' is set to something other "
-                    "than 'utf-8'.  As of PyBlosxom 2.0, "
+                    "than 'utf-8'.  As of Pyblosxom 1.5, "
                     "this isn't a good idea unless you're absolutely certain "
                     "it's going to work for your blog.")
     pwrap("")

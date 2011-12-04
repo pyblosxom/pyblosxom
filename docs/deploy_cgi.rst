@@ -1,7 +1,7 @@
 .. _deploy-cgi-chapter:
 
 ============================
-Deploying PyBlosxom with CGI
+Deploying Pyblosxom with CGI
 ============================
 
 Summary
@@ -93,7 +93,7 @@ Running ./pyblosxom.cgi doesn't work
 ------------------------------------
 
 First, you should check to see if you have the minimum requirements
-for PyBlosxom on your system.  They're listed in the
+for Pyblosxom on your system.  They're listed in the
 :ref:`Requirements section of the Install chapter <requirements>`.  If
 not, then please install them.
 
@@ -127,7 +127,7 @@ you're using the wrong URL.  Here are some questions to ask yourself:
 * Are you using an ``.htaccess`` file?
 * Does your server allow you to run CGI scripts?
 * Do other CGI scripts in this directory work?
-* Does the URL you're trying to use to access PyBlosxom look like
+* Does the URL you're trying to use to access Pyblosxom look like
   other URLs that work on your system?
 
 
@@ -138,7 +138,7 @@ At this point, running ``./pyblosxom.cgi`` at the command prompt
 should work fine.  If you haven't done that and you're busy
 trouble-shooting, go back and review the deployment instructions.
 
-If the problem is with PyBlosxom and not your web server, then you
+If the problem is with Pyblosxom and not your web server, then you
 should see a pretty traceback that will help you figure out what the
 specific problem is.
 
@@ -160,7 +160,7 @@ permissions to read and execute your ``pyblosxom.cgi`` script, then
 your blog will not work.
 
 Do you have plugins loaded?  If you do, comment out the
-``load_plugins`` setting in your ``config.py`` file so that PyBlosxom
+``load_plugins`` setting in your ``config.py`` file so that Pyblosxom
 isn't loading any plugins.
 
 For example::
@@ -186,7 +186,7 @@ file to ``debug``.  For example::
     py["renderer"] = "debug"
 
 That will show a lot more detail about your configuration, what the
-web server passes PyBlosxom in environment variables, and other data
+web server passes Pyblosxom in environment variables, and other data
 about your blog that might help you figure out what your problem is.
 
 If that doesn't help, ask a question on the pyblosxom-users mailing
@@ -210,7 +210,7 @@ UGH! My blog looks UGLY!
 I hate writing in HTML!
 -----------------------
 
-That's ok.  PyBlosxom supports formatters and entry parsers which
+That's ok.  Pyblosxom supports formatters and entry parsers which
 allow you to use a variety of markups for writing blog entries.  See
 the documentation on Writing Entries for more information.
 
@@ -234,7 +234,7 @@ that will make it nicer.  However, they're not necessary and they're
 advanced and we consider these things to be very much a "you're on
 your own" kind of issue.
 
-If you ever have problems with PyBlosxom and you ask us questions on
+If you ever have problems with Pyblosxom and you ask us questions on
 the pyblosxom-users or pyblosxom-devel mailing lists, make sure you
 explicitly state what things you've done from this chapter.  It'll go
 a long way in helping us to help you.
@@ -243,11 +243,11 @@ a long way in helping us to help you.
 Renaming the pyblosxom.cgi script
 =================================
 
-In the default installation, the PyBlosxom script is named
+In the default installation, the Pyblosxom script is named
 ``pyblosxom.cgi``.
 
 For a typical user on an Apache installation with user folders turned
-on, PyBlosxom URLs could look like this::
+on, Pyblosxom URLs could look like this::
 
     http://example.com/~joe/cgi-bin/pyblosxom.cgi
     http://example.com/~joe/cgi-bin/pyblosxom.cgi/an_entry.html
@@ -327,7 +327,7 @@ for more details.
 
 In our case, we want all incoming URLs pointing to ``blog`` to get
 rewritten to ``cgi-bin/pyblosxom.cgi`` so they can be handled by
-PyBlosxom.  Then all our URLs will look like this::
+Pyblosxom.  Then all our URLs will look like this::
 
     http://example.com/~joe/blog
     http://example.com/~joe/blog/an_entry.html

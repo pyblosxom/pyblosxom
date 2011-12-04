@@ -11,7 +11,7 @@ Summary
 =======
 
 This chapter covers a bunch of useful things to know when writing
-PyBlosxom plugins.  This chapter, moreso than the rest of this manual,
+Pyblosxom plugins.  This chapter, moreso than the rest of this manual,
 is very much a work in progress.
 
 If you need help with plugin development, sign up on the devel mailing
@@ -38,10 +38,10 @@ needs to be unique.
 
 .. Warning::
 
-   Make sure the filename for your plugin is unique!  PyBlosxom imports your
+   Make sure the filename for your plugin is unique!  Pyblosxom imports your
    plugin using Python import machinery which means that if your plugin has
    the same name as a package on your system, then depending on how sys.path
-   is set up, PyBlosxom may load the package on your system and NOT your
+   is set up, Pyblosxom may load the package on your system and NOT your
    plugin.
 
    If you think this might be happening to you, do ``pyblosxom-cmd test`` and
@@ -66,13 +66,13 @@ For example, this is at the top of Will's wbgpager plugin::
    """
    Quickly written plugin for paging long index pages.  
 
-   PyBlosxom uses the num_entries configuration variable to prevent
+   Pyblosxom uses the num_entries configuration variable to prevent
    more than num_entries being rendered by cutting the list down
    to num_entries entries.  So if your num_entries is set to 20, you
    will only see the first 20 entries rendered.
 
    The wbgpager overrides this functionality and allows for paging.
-   It does some dirty stuff so that PyBlosxom doesn't cut the list down
+   It does some dirty stuff so that Pyblosxom doesn't cut the list down
    and then wbgpager cuts it down in the prepare callback later down
    the line.
 
@@ -180,8 +180,8 @@ Configuration, installation and verification
 --------------------------------------------
 
 After that, you should have a ``verify_installation`` section that
-verifies that the plugin is configured correctly.  As of PyBlosxom 0.9, 
-PyBlosxom allows users to test their configuration and installation from
+verifies that the plugin is configured correctly.  As of Pyblosxom 0.9, 
+Pyblosxom allows users to test their configuration and installation from
 the console.
 
 You can test using either the ``pyblosxom.cgi``
@@ -329,8 +329,8 @@ implement ``cb_prepare`` like this::
 
 
 Obviously, since we have ``pass`` we're not actually doing anything
-here, but when the user sends a request and PyBlosxom handles it, this
-function in your plugin will get called when PyBlosxom runs the
+here, but when the user sends a request and Pyblosxom handles it, this
+function in your plugin will get called when Pyblosxom runs the
 prepare callback.
 
 Each callback passes in arguments through a single dictionary.  Each
@@ -384,7 +384,7 @@ after all the metadata the body of the entry::
 
 You can also specify the template to use by setting the
 ``"template_name"`` variable in the returned dict.  If the template
-specified doesn't exist, PyBlosxom will use the ``story`` template for
+specified doesn't exist, Pyblosxom will use the ``story`` template for
 the specified flavour.
 
 For example, if you were creating a tumblelog and the file parsed was
@@ -469,7 +469,7 @@ FIXME - write this section
 Writing a plugin that adds a commandline command
 ================================================
 
-*New in PyBlosxom 1.5*
+*New in Pyblosxom 1.5*
 
 The ``pyblosxom-cmd`` command allows for plugin-defined commands.
 This allows your plugin to do maintenance tasks (updating an index,

@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2010, 2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2010, 2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -11,7 +11,7 @@
 Summary
 =======
 
-If PyBlosxom is rendering a single entry (i.e. entry_list has 1 item in it),
+If Pyblosxom is rendering a single entry (i.e. entry_list has 1 item in it),
 then this populates the ``entry_title`` variable for the header template.
 
 

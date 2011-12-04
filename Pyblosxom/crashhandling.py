@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -12,7 +12,7 @@ This module has the code for handling crashes.
 
 .. Note::
 
-   This is a leaf node module!  It should never import other PyBlosxom
+   This is a leaf node module!  It should never import other Pyblosxom
    modules or packages.
 """
 
@@ -77,7 +77,7 @@ class CrashHandler:
         output.write("<body>")
         output.write("<h1>HTTP 500: Oops!</h1>")
         output.write(
-            "<p>A problem has occurred while PyBlosxom was rendering "
+            "<p>A problem has occurred while Pyblosxom was rendering "
             "this page.</p>")
 
         output.write(
@@ -103,7 +103,7 @@ class CrashHandler:
         except:
             version = "unknown"
 
-        output.write("<p>PyBlosxom version: %s</p>" % _e(version))
+        output.write("<p>Pyblosxom version: %s</p>" % _e(version))
         output.write("<p>Python version: %s" % _e(sys.version))
 
         output.write("<p>Error traceback:</p>")
@@ -132,9 +132,9 @@ def enable_excepthook(httpresponse=False):
     This will handle any exceptions thrown that don't get
     handled anywhere else.
 
-    If you're running PyBlosxom as a WSGI application or as a CGI
+    If you're running Pyblosxom as a WSGI application or as a CGI
     script, you should create a ``CrashHandler`` instance and call
     ``handle_by_response`` directly.  See
-    :ref:`pyblosxom.PyBlosxomWSGIApp`.
+    :ref:`pyblosxom.PyblosxomWSGIApp`.
     """
     sys.excepthook = CrashHandler(httpresponse=httpresponse)

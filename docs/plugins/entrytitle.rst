@@ -12,7 +12,7 @@
 Summary
 =======
 
-If PyBlosxom is rendering a single entry (i.e. entry_list has 1 item in it),
+If Pyblosxom is rendering a single entry (i.e. entry_list has 1 item in it),
 then this populates the ``entry_title`` variable for the header template.
 
 

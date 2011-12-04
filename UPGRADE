@@ -1,10 +1,10 @@
 .. _upgrading:
 
 =====================
- Upgrading PyBlosxom
+ Upgrading Pyblosxom
 =====================
 
-This walks through upgrading PyBlosxom from a previous version.
+This walks through upgrading Pyblosxom from a previous version.
 
 
 Before upgrading
@@ -22,7 +22,7 @@ older versions and newer versions.
 
    This is at :ref:`whatsnew`.
 
-To be safe, install PyBlosxom locally (as opposed to on the server or
+To be safe, install Pyblosxom locally (as opposed to on the server or
 over your existing blog) and test your blog configuration and plugins
 to make sure everything works with the new version.
 

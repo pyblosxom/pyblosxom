@@ -8,17 +8,17 @@ Testing
 In the pyblosxom git repository, there are two big things that have
 test suites:
 
-1. the PyBlosxom core code
+1. the Pyblosxom core code
 2. the plugins that are in plugins/
 
 These have two separate testing infrastructures, but both are based on
 unittest which comes with Python.
 
 
-PyBlosxom core code testing
+Pyblosxom core code testing
 ===========================
 
-These tests are located in ``Pyblosxom/tests/`` and test the PyBlosxom
+These tests are located in ``Pyblosxom/tests/`` and test the Pyblosxom
 core functionality and all core plugins.
 
 Tests are executed by::
@@ -61,7 +61,7 @@ it will help you learn the code base.  If you're at all interested,
 let us know!
 
 Adding tests for the code we're writing helps us a TON in the quality
-department.  PyBlosxom 1.5 is ten times as good as previous versions
+department.  Pyblosxom 1.5 is ten times as good as previous versions
 because we've got a better testing infrastructure and we're testing
 plugin functionality.
 

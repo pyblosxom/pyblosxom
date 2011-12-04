@@ -1,14 +1,14 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 """
-The end of the PyBlosxom request lifecycle involves rendering the
+The end of the Pyblosxom request lifecycle involves rendering the
 entries we've decided we want to render.  This is the job of the
 renderers.  They handle pulling in templates, expanding variables,
 formatting entries into stories, and then outputting it to stdout (or

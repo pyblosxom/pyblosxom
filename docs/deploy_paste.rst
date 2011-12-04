@@ -1,14 +1,14 @@
 .. _deploy-paste-chapter:
 
 ================================
- Deploying PyBlosxom with Paste
+ Deploying Pyblosxom with Paste
 ================================
 
 Summary
 =======
 
-PyBlosxom 1.4 and later support Paste.  This document covers
-installing and using PyBlosxom with Paste.
+Pyblosxom 1.4 and later support Paste.  This document covers
+installing and using Pyblosxom with Paste.
 
 This installation assumes you have some understanding of Python Paste.
 If this doesn't sound like you, then you can read up on Paste on the
@@ -67,7 +67,7 @@ section.
 .. _Paste documentation: http://pythonpaste.org/
 
 
-The ``[app:main]`` section specifies the PyBlosxom WSGI application
+The ``[app:main]`` section specifies the Pyblosxom WSGI application
 function and the directory your ``config.py`` file is in.  A
 sample is here::
 
@@ -83,7 +83,7 @@ value::
     paste.app_factory = Pyblosxom.pyblosxom:pyblosxom_app_factory
     configpydir = /home/joe/blog/
 
-    # PyBlosxom config here
+    # Pyblosxom config here
     blog_title = Joe's Blog
 
 This is really handy for testing changes to your blog infrastructure.

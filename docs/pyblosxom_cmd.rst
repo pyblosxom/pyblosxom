@@ -1,8 +1,8 @@
 =============================
-PyBlosxom on the command line
+Pyblosxom on the command line
 =============================
 
-PyBlosxom comes with a command line tool called ``pyblosxom-cmd``.  It allows
+Pyblosxom comes with a command line tool called ``pyblosxom-cmd``.  It allows
 you to create new blogs, verify your configuration, run static rendering, 
 render single urls, and run command line functions implemented in plugins.
 

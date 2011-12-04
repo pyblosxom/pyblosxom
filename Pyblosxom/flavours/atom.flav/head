@@ -17,7 +17,7 @@ $(escape(blog_description))
 </author>
 <rights>$(escape(blog_rights))</rights>
 <generator uri="http://pyblosxom.bluesock.org/" version="$(escape(pyblosxom_version))">
-PyBlosxom http://pyblosxom.bluesock.org/ $(escape(pyblosxom_version))
+Pyblosxom http://pyblosxom.bluesock.org/ $(escape(pyblosxom_version))
 </generator>
 
 <updated>$(latest_w3cdate)</updated>
