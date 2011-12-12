@@ -61,7 +61,7 @@ To install:
 
 3. Using git, clone the Pyblosxom repository::
 
-      git clone git://gitorious.org/pyblosxom/pyblosxom.git pyblosxom
+      git clone git@github.com:willkg/pyblosxom.git
 
 4. Change directories into the ``pyblosxom`` directory and run::
 
@@ -89,6 +89,3 @@ Updating Pyblosxom
 Because you installed Pyblosxom with ``python setup.py develop``, when
 you make changes to the Pyblosxom code, they'll be available in the
 environment---you don't need to re-run ``python setup.py develop``.
-
-
-
