@@ -37,11 +37,11 @@ from Pyblosxom.entries.fileentry import FileEntry
 # * x.ya1    - alpha 1
 # * x.yb1    - beta 1
 # * x.yrc1   - release candidate 1
-# * x.y-dev  - dev
+# * x.y.dev  - dev
 
 # see http://www.python.org/dev/peps/pep-0386/
 
-VERSION = "1.5-dev"
+VERSION = "1.5.dev"
 VERSION_DATE = VERSION + " git-master"
 # VERSION = "1.5rc3"
 # VERSION_DATE = VERSION + " 20110618"
