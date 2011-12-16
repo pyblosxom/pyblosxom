@@ -46,11 +46,11 @@ For example, the following properties will use ``<ul>`` to open a
 category, ``</ul>`` to close a category and ``<li>`` for each item::
 
     py["category_start"] = "<ul>"
-    py["category_begin"] = "<li><ul>"
+    py["category_begin"] = "<ul>"
     py["category_item"] = (
         r'<li><a href="%(base_url)s/%(category_urlencoded)sindex">'
         r'%(category)s</a></li>')
-    py["category_end"] = "</li></ul>"
+    py["category_end"] = "</ul>"
     py["category_finish"] = "</ul>"
 
 
@@ -198,13 +198,19 @@ class PyblCategories:
             else:
                 tab = len(itemlist) * "&nbsp;&nbsp;"
 
-            if indent > len(itemlist):
-                for i in range(indent - len(itemlist)):
-                    output.append(end_t)
+            import logging
+            logging.basicConfig()
+            logging.info("indent %s %s", indent, itemlist)
+            print "indent ", indent, itemlist
 
-            elif indent < len(itemlist):
-                for i in range(len(itemlist) - indent):
-                    output.append(begin_t)
+            if itemlist != ['']:
+                if indent > len(itemlist):
+                    for i in range(indent - len(itemlist)):
+                        output.append(end_t)
+
+                elif indent < len(itemlist):
+                    for i in range(len(itemlist) - indent):
+                        output.append(begin_t)
 
             # now we build the dict with the values for substitution
             d = {"base_url": self._baseurl,
@@ -226,7 +232,8 @@ class PyblCategories:
             # and we toss it in the thing
             output.append(item_t % d)
 
-            indent = len(itemlist)
+            if itemlist != ['']:
+                indent = len(itemlist)
 
         output.append(end_t * indent)
         output.append(finish_t)
