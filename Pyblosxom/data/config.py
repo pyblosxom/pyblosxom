@@ -181,15 +181,15 @@ py["load_plugins"] = []
 # ex: py["static_urls"] = ["/booklist.rss", "/booklist.html"]
 #py["static_urls"] = ["/path/to/url1", "/path/to/url2"]
 
-# Whether (True) or not (False) you want to create date indexes using month
+# Whether (True) or not (False) you want to generate date indexes with month
 # names?  (ex. /2004/Apr/01)  Defaults to True.
 #py["static_monthnames"] = True
 
-# Whether (True) or not (False) you want to create date indexes using month
-# numbers?  (ex. /2004/04/01)  Defaults to False.
+# Whether (True) or not (False) you want to generate date indexes
+# using month numbers?  (ex. /2004/04/01)  Defaults to False.
 #py["static_monthnumbers"] = False
 
-# Whether (1) or not (0) you want to create date indexes using year
-# numbers?  (ex. /2004)  Defaults to 1 (yes).
-#py["static_yearnumbers"] = 1
+# Whether (True) or not (False) you want to generate year indexes?
+# (ex. /2004)  Defaults to True.
+#py["static_yearindexes"] = True
 

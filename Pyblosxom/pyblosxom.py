@@ -280,9 +280,9 @@ class Pyblosxom:
 
         renderme = []
 
-        monthnames = config.get("static_monthnames", 1)
-        monthnumbers = config.get("static_monthnumbers", 0)
-        yearnumbers = config.get("static_yearnumbers", 1)
+        monthnames = config.get("static_monthnames", True)
+        monthnumbers = config.get("static_monthnumbers", False)
+        yearindexes = config.get("static_yearindexes", True)
 
         dates = {}
         categories = {}
@@ -327,7 +327,7 @@ class Pyblosxom:
                 month = time.strftime("%m", mtime)
                 day = time.strftime("%d", mtime)
 
-                if yearnumbers:
+                if yearindexes:
                     dates[year] = 1
 
                 if monthnumbers:
