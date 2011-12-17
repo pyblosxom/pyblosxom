@@ -71,6 +71,11 @@ Pertinent to users:
 
    * renamed it to rst_parser so it's clearer what it is
 
+   pycategories
+
+   * fixed category_start/category_begin behavior for root category
+   * fixed the first example of settings in the documentation
+
    the rest of the plugins: pep8 fixes and documentation updates
 
 5. Plugins removed from Pyblosxom: commentAPI
@@ -81,6 +86,9 @@ Pertinent to users:
    it'll now tell you.
 
 7. Lot of work on simplifying and improving the documentation.
+
+8. Added a ``static_yearindexes`` setting.  Set it to True to generate
+   year indexes and False to not generate year indexes.
 
 
 Pertinent to developers
