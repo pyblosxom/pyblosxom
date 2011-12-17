@@ -179,19 +179,17 @@ Flavour templates
 =================
 
 The comments plugin requires at least the ``comment-story``,
-``comment``, and ``comment-form`` templates.  The ``comment-preview``
-template is optional.
+``comment``, and ``comment-form`` templates.
 
 The way the comments plugin assembles flavour files is like this::
 
     comment-story
     comment (zero or more)
-    comment-preview (optional)
     comment-form
 
 Thus if you want to have your entire comment section in a div
-container, you'd start the div container at the top of comment-story
-and end it at the bottom of comment-form.
+container, you'd start the div container at the top of
+``comment-story`` and end it at the bottom of ``comment-form``.
 
 
 comment-story
@@ -252,25 +250,6 @@ Link to file: `comment <../_static/plugins/comments/comment>`_
    :language: html
 
 
-comment-preview
----------------
-
-The ``comment-preview`` template shows a comment that is being
-previewed, but hasn't been posted to the blog, yet.
-
-.. only:: text
-
-   You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
-   docs/_static/plugins/comments/.
-
-
-Link to file: `comment-preview <../_static/plugins/comments/comment-preview>`_
-
-.. literalinclude:: ../_static/plugins/comments/comment-preview
-   :language: html
-
-
 comment-form
 ------------
 
@@ -320,14 +299,24 @@ You can find ``compact_comments.sh`` `here
 Implementing comment preview
 ============================
 
+.. Note::
+
+   Comment preview is implemented by default---all the bits listed
+   below are in the comment-form and comment-preview templates.
+
+   This documentation is here in case you had an older version of the
+   comments plugin or you want to know what to remove to remove
+   comment preview.
+
+
 If you would like comment previews, you need to do 2 things.
 
-1. Add a preview button to comment-form.html like this::
+1. Add a preview button to the ``comment-form`` template like this::
 
       <input name="preview" type="submit" value="Preview" />
 
    You may change the contents of the value attribute, but the name of
-   the input must be "preview".
+   the input must be "preview".  I put it next to the "Submit" button.
 
 2. Still in your ``comment-form.html`` template, you need to use the
    comment values to fill in the values of your input fields like so::
@@ -340,9 +329,27 @@ If you would like comment previews, you need to do 2 things.
    If there is no preview available, these variables will be stripped
    from the text and cause no problem.
 
-3. Copy ``comment.html`` to a template called
-   ``comment-preview.html``. All of the available variables from the
-   comment template are available for this template.
+3. Create a ``comment-preview`` template.  This can be a copy of your
+   ``comment`` template if you like with some additional text along the
+   lines of **"This is a preview!"**
+
+   All of the available variables from the ``comment`` template are
+   available in the ``comment-preview`` template.
+
+.. only:: text
+
+   You can find the comment-story file in the docs at
+   http://pyblosxom.bluesock.org/ or in the tarball under
+   docs/_static/plugins/comments/.
+
+
+comment-preview
+---------------
+
+Link to file: `comment-preview <../_static/plugins/comments/comment-preview>`_
+
+.. literalinclude:: ../_static/plugins/comments/comment-preview
+   :language: html
 
 
 AJAX support
@@ -449,7 +456,7 @@ entry.
 
 __author__ = "Ted Leung, et al"
 __email__ = "pyblosxom-devel at sourceforge dot net"
-__version__ = "$Id$"
+__version__ = "2011-12-17"
 __url__ = "http://pyblosxom.bluesock.org/"
 __description__ = "Adds comments to a blog entry."
 __category__ = "comments"
