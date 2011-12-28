@@ -94,15 +94,9 @@ Themes:
 * Pyblosxom comes with several flavours: html, rss20, and atom.
 * The `website <http://pyblosxom.bluesock.org/>`_ maintains a flavour
   registry for flavours contributed by people like you.
-* .. only:: text
-
-     There's more information on flavours and templates in
-     docs/flavours_and_templates.rst.
-
-  .. only:: html or latex
-
-     There's more information on flavours and templates in
-     :ref:`flavours-and-templates`.
+* There's more information on flavours and templates in
+  :ref:`flavours-and-templates` (``docs/flavours_and_templates.rst``
+  if you're looking at the source).
 
 Plugins:
 
@@ -112,25 +106,10 @@ Plugins:
   configuration variables.
 * The `website <http://pyblosxom.bluesock.org/>`_ maintains a plugin
   registry for plugins submitted by people like you.
-* .. only:: text
-
-     For more information on using plugins, see the docs.plugins.rst.
-
-  .. only:: html or latex
-
-     For more information on using plugins, see the
-     :ref:`using-plugins`.
-
-* .. only:: text
-
-     For more information on writing plugins see the
-     docs/dev_writing_plugins.rst.
-
-  .. only:: html or latex
-
-     For more information on using plugins, see the
-     :ref:`writing-plugins`.
-
+* For more information on using plugins, see :ref:`using-plugins`
+  (``docs/plugins.rst`` if you're looking at the source).
+* For more information on writing plugins see :ref:`writing-plugins`
+  (``docs/dev_writing_plugins.rst`` if you're looking at the source).
 
 
 .. _project-details-and-contact:
@@ -146,7 +125,7 @@ else.
 Requirements
 ============
 
-* Python 2.5 or higher, but not Python 3
+* Python 2.5 or higher---does not work with Python 3 or higher
 * (optional) Sphinx for building documentation
 * (optional) other things depending on what plugins you install
 
@@ -154,31 +133,24 @@ Requirements
 How to install Pyblosxom
 ========================
 
-.. only:: text
+If you're installing for the first time, be sure to read
+:ref:`install` (``INSTALL`` if you're looking at the source).
 
-   Read the ``INSTALL`` document as well as other documents in the
-   ``docs/`` directory.
-
-   If you're upgrading from a previous Pyblosxom version, read the
-   ``UPGRADE`` document as well as ``CHANGELOG`` which covers what's
-   new in this version and what you'll need to change in your blog.
-
-.. only:: html
-
-   If you're installing for the first time, read :ref:`install`.
-
-   If you're upgrading, read :ref:`upgrading` and :ref:`whatsnew`.
+If you're upgrading from a previous Pyblosxom version, read
+:ref:`upgrading` (``UPGRADE`` if you're looking at the source) as well
+as :ref:`whatsnew` (``WHATSNEW`` if you're looking at the source)
+which covers what's new in this version and what you'll need to change
+in your blog.
 
 
 How to find comprehensive documentation
 =======================================
 
-There's a series of text files in the ``docs/`` directory which
-comprise the current state of the Pyblosxom manual at the time of this
-release.
+The source tarball comes with a ``docs/`` directory which contains the
+Pyblosxom manual for that version of Pyblosxom.
 
-The most current version of the manual can be found on the `website
-<http://pyblosxom.bluesock.org/>`_ .
+The manual for the most current version and past versions of Pyblosxom
+can be found on the `website <http://pyblosxom.bluesock.org/>`_.
 
 
 How to join the community
