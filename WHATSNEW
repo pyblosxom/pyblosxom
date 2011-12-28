@@ -105,6 +105,9 @@ Pertinent to developers
 
 4. Renamed ``PyBlosxom`` class to ``Pyblosxom``.
 
+5. Moved the project from gitorious to github.  The new git repository
+   is at `http://github.com/willkg/pyblosxom`_.
+
 
 What's new in 1.5 rc3 (June 2011)
 =================================
