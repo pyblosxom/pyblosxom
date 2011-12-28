@@ -9,18 +9,31 @@
 # LICENSE for distribution details.
 #######################################################################
 
-VERSION = "1.5"
-
-import os.path, sys, os
-from distutils.sysconfig import get_python_lib
+import os
+import re
 from setuptools import setup, find_packages
+
+
+READMEFILE = "README.rst"
+VERSIONFILE = os.path.join("Pyblosxom", "_version.py")
+VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
+
+
+def get_version():
+    verstrline = open(VERSIONFILE, "rt").read()
+    mo = re.search(VSRE, verstrline, re.M)
+    if mo:
+        return mo.group(1)
+    else:
+        raise RuntimeError(
+            "Unable to find version string in %s." % VERSIONFILE)
 
 
 setup(
     name="pyblosxom",
-    version=VERSION,
+    version=get_version(),
     description="Pyblosxom is a file-based weblog engine.",
-    long_description=open('README').read(),
+    long_description=open(READMEFILE).read(),
     license='MIT',
     author="Will Kahn-Greene, et al",
     author_email="willg@bluesock.org",

@@ -10,4 +10,5 @@
 """
 This package holds Pyblosxom modules.
 """
-pass
+
+from _version import __version__

@@ -98,8 +98,8 @@ class CrashHandler:
         output.write("<div style=\"border: 1px solid black; padding: 10px;\">")
 
         try:
-            import Pyblosxom.pyblosxom
-            version = Pyblosxom.pyblosxom.VERSION
+            import Pyblosxom
+            version = Pyblosxom.__version__
         except:
             version = "unknown"
 

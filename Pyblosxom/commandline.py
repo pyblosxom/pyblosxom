@@ -19,12 +19,13 @@ import random
 import time
 from optparse import OptionParser
 
-from Pyblosxom.pyblosxom import VERSION_DATE, Pyblosxom
+from Pyblosxom import __version__
+from Pyblosxom.pyblosxom import Pyblosxom
 from Pyblosxom.tools import run_callback, pwrap, pwrap_error
 from Pyblosxom import plugin_utils
 
 USAGE = "%prog [options] [command] [command-options]"
-VERSION = "%prog " + VERSION_DATE
+VERSION = "%prog " + __version__
 
 def build_pyblosxom():
     """Imports config.py and builds an empty Pyblosxom object.
@@ -169,7 +170,7 @@ def test_installation(command, argv):
     pwrap("==================")
     pwrap("")
 
-    pwrap("- pyblosxom:    %s" % VERSION_DATE)
+    pwrap("- pyblosxom:    %s" % __version__)
     pwrap("- sys.version:  %s" % sys.version.replace("\n", " "))
     pwrap("- os.name:      %s" % os.name)
     codebase = os.path.dirname(os.path.dirname(__file__))
@@ -451,7 +452,7 @@ def command_line_handler(scriptname, argv):
         sys.stdout = open(os.devnull, "w")
         argv.remove("--silent")
 
-    print "%s version %s" % (scriptname, VERSION_DATE)
+    print "%s version %s" % (scriptname, __version__)
 
     # slurp off the config file setting and add it to sys.path.
     # this needs to be first to pick up plugin-based command handlers.

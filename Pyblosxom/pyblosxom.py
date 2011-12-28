@@ -27,25 +27,15 @@ except ImportError:
     from StringIO import StringIO
 
 # Pyblosxom imports
+from Pyblosxom import __version__
 from Pyblosxom import crashhandling
 from Pyblosxom import tools
 from Pyblosxom import plugin_utils
 from Pyblosxom.entries.fileentry import FileEntry
 
-# valid version formats:
-# * x.y      - final release
-# * x.ya1    - alpha 1
-# * x.yb1    - beta 1
-# * x.yrc1   - release candidate 1
-# * x.y.dev  - dev
 
-# see http://www.python.org/dev/peps/pep-0386/
+VERSION = __version__
 
-VERSION = "1.5.dev"
-VERSION_DATE = VERSION + " git-master"
-# VERSION = "1.5rc3"
-# VERSION_DATE = VERSION + " 20110618"
-VERSION_SPLIT = tuple(VERSION.split(" ")[0].split('.'))
 
 class Pyblosxom:
     """Main class for Pyblosxom functionality.  It handles
@@ -61,8 +51,9 @@ class Pyblosxom:
         :param environ: dict containing the environment variables.
         :param data: dict containing data variables.
         """
+        # FIXME: These shouldn't be here.
         config['pyblosxom_name'] = "pyblosxom"
-        config['pyblosxom_version'] = VERSION_DATE
+        config['pyblosxom_version'] = __version__
 
         self._config = config
         self._request = Request(config, environ, data)
@@ -88,7 +79,7 @@ class Pyblosxom:
         # initialize the tools module
         tools.initialize(config)
 
-        data["pyblosxom_version"] = VERSION_DATE
+        data["pyblosxom_version"] = __version__
         data['pi_bl'] = ''
 
         # if the user specifies base_url in config, we use that.

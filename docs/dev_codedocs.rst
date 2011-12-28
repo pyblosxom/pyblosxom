@@ -12,21 +12,19 @@ This chapter covers important functions, methods and classes in Pyblosxom.
 When in doubt, read the code.
 
 
+Pyblosxom
+=========
+
+.. data:: __version__
+
+   Pyblosxom version as a string.  Conforms to `PEP-386
+   <http://www.python.org/dev/peps/pep-0386/>`_.
+
+   For example ``"1.5"``.
+
+
 Pyblosxom.pyblosxom
 ===================
-
-.. data:: VERSION
-
-   Pyblosxom version.  For example ``"1.5"``.
-
-.. data:: VERSION_DATA
-
-   Pyblosxom version with date.  For example ``"1.5 dev"``.
-
-.. data:: VERSION_SPLIT
-
-   Pyblosxom version as a tuple---use this for version checking.
-   For example ``("1", "5")``.
 
 .. automodule:: Pyblosxom.pyblosxom
    :members:
