@@ -9,16 +9,12 @@
 # LICENSE for distribution details.
 #######################################################################
 
-VERSION = "1.5rc3"
+VERSION = "1.5"
 
 import os.path, sys, os
 from distutils.sysconfig import get_python_lib
-try:
-    from distribute import setup, find_packages
-    print "Using distribute...."
-except ImportError:
-    from setuptools import setup, find_packages
-    print "Using setuptools...."
+from setuptools import setup, find_packages
+
 
 setup(
     name="pyblosxom",
