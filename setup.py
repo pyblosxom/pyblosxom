@@ -39,7 +39,6 @@ setup(
     author_email="willg@bluesock.org",
     keywords="blog pyblosxom cgi weblog",
     url="http://pyblosxom.bluesock.org/",
-    download_url="http://pyblosxom.bluesock.org/download/",
     packages=find_packages(exclude=["ez_setup"]),
     scripts=["bin/pyblosxom-cmd"],
     zip_safe=False,
