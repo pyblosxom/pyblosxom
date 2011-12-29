@@ -95,8 +95,8 @@ Themes:
 * The `website <http://pyblosxom.bluesock.org/>`_ maintains a flavour
   registry for flavours contributed by people like you.
 * There's more information on flavours and templates in
-  :ref:`flavours-and-templates` (``docs/flavours_and_templates.rst``
-  if you're looking at the source).
+  the Flavours and Templates chapter of the manual
+  (``docs/flavours_and_templates.rst`` if you're looking at the source).
 
 Plugins:
 
@@ -106,9 +106,9 @@ Plugins:
   configuration variables.
 * The `website <http://pyblosxom.bluesock.org/>`_ maintains a plugin
   registry for plugins submitted by people like you.
-* For more information on using plugins, see :ref:`using-plugins`
+* For more information on using plugins, see Plugins in the manual
   (``docs/plugins.rst`` if you're looking at the source).
-* For more information on writing plugins see :ref:`writing-plugins`
+* For more information on writing plugins see Writing Plugins
   (``docs/dev_writing_plugins.rst`` if you're looking at the source).
 
 
@@ -133,14 +133,14 @@ Requirements
 How to install Pyblosxom
 ========================
 
-If you're installing for the first time, be sure to read
-:ref:`install` (``INSTALL`` if you're looking at the source).
+If you're installing for the first time, be sure to read Installing
+Pyblosxom in the manual (``INSTALL`` if you're looking at the source).
 
-If you're upgrading from a previous Pyblosxom version, read
-:ref:`upgrading` (``UPGRADE`` if you're looking at the source) as well
-as :ref:`whatsnew` (``WHATSNEW`` if you're looking at the source)
-which covers what's new in this version and what you'll need to change
-in your blog.
+If you're upgrading from a previous Pyblosxom version, read Upgrading
+Pyblosxom in the manual (``UPGRADE`` if you're looking at the source)
+as well as What's New in the manual (``WHATSNEW`` if you're looking at
+the source) which covers what's new in this version and what you'll
+need to change in your blog.
 
 
 How to find comprehensive documentation
