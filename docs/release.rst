@@ -27,7 +27,7 @@
 
        ./maketarball.sh TAG
 
-8. Push everything to ``pyblosxom`` and ``pyblosxom-web`` repositories::
+8. Push everything to ``pyblosxom``.
 
        git push --tags origin master
 
@@ -40,10 +40,12 @@
 
 11. Push docs, tarball and blog entry to website.
 
-12. Update PYPI::
+12. Push website changes to pyblosxom-web repository.
+
+13. Update PYPI::
 
         python setup.py push
 
-13. Send email to pyblosxom-users and pyblosxom-devel.
+14. Send email to pyblosxom-users and pyblosxom-devel.
 
-14. Update version numbers to next version + ``.dev``.
+15. Update version numbers to next version + ``.dev``.
