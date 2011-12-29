@@ -69,6 +69,7 @@ plugins, or things of that ilk.
    dev_writing_plugins
    dev_codedocs
    dev_testing
+   release
 
 
 Indices and tables
