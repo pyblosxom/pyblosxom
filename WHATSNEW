@@ -418,7 +418,7 @@ Pertinent to developers:
    then munge through.
 
 9. Added a commandline callback for allowing plugins to add to the
-    command line.
+   command line.
 
 10. Added a truncatelist callback allowing plugins to augment the
     truncate (``num_entries``) behavior.

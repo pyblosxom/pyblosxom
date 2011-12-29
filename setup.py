@@ -37,7 +37,7 @@ setup(
     license='MIT',
     author="Will Kahn-Greene, et al",
     author_email="willg@bluesock.org",
-    keywords="blog pyblosxom cgi weblog",
+    keywords="blog pyblosxom cgi weblog wsgi",
     url="http://pyblosxom.bluesock.org/",
     packages=find_packages(exclude=["ez_setup"]),
     scripts=["bin/pyblosxom-cmd"],
