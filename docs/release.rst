@@ -44,7 +44,7 @@
 
 13. Update PYPI::
 
-        python setup.py push
+        python setup.py sdist upload
 
 14. Send email to pyblosxom-users and pyblosxom-devel.
 
