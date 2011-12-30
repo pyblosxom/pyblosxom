@@ -1,5 +1,5 @@
 include WHATSNEW
-include README
+include README.rst
 include INSTALL
 include LICENSE
 include AUTHORS
