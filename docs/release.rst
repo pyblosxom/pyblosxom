@@ -42,8 +42,10 @@
 
 12. Push website changes to pyblosxom-web repository.
 
-13. Update PYPI::
+13. Update PYPI using the release tarball::
 
+        tar -xzvf pyblosxom-x.y.tar.gz
+        cd pyblosxom-x.y
         python setup.py sdist upload
 
 14. Send email to pyblosxom-users and pyblosxom-devel.
