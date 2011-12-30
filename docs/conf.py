@@ -42,9 +42,9 @@ copyright = '2009-2011, Will Kahn-Greene'
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '1.5'
+version = '1.5.1'
 # The full version, including alpha/beta/rc tags.
-release = '1.5'
+release = '1.5.1'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

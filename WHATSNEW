@@ -5,6 +5,19 @@
 .. _whatsnew:
 
 
+What's new in 1.5.1 (December 2011)
+===================================
+
+Pertinent to users:
+-------------------
+
+1. Fixed a problem with the manifest so ``python setup.py install``
+   works again.
+
+2. Fixed the WHATSNEW so it shows correct version and date for
+   1.5 release.
+
+
 What's new in 1.5 (December 2011)
 =================================
 
