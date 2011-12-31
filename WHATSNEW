@@ -5,6 +5,16 @@
 .. _whatsnew:
 
 
+What's new in 1.5.2 (December 2011)
+===================================
+
+Pertinent to users:
+
+1. Fixed a warning that pops up when doing ``pip install pyblosxom``
+
+2. Removed debug logging from pycategories
+
+
 What's new in 1.5.1 (December 2011)
 ===================================
 
