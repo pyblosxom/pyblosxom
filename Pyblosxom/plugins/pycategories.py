@@ -198,11 +198,6 @@ class PyblCategories:
             else:
                 tab = len(itemlist) * "&nbsp;&nbsp;"
 
-            import logging
-            logging.basicConfig()
-            logging.info("indent %s %s", indent, itemlist)
-            print "indent ", indent, itemlist
-
             if itemlist != ['']:
                 if indent > len(itemlist):
                     for i in range(indent - len(itemlist)):
