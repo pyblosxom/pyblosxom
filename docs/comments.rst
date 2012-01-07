@@ -2,12 +2,6 @@
 Comments
 ========
 
-This chapter briefly walks you through installing the comments,
-trackback, pingback, and CommentAPI plugins.
-
-FIXME - September 27th, 2009 - This needs to be updated. Srsly.
-
-
 Summary
 =======
 
