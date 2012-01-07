@@ -700,6 +700,10 @@ containing:
 ``flavours``
     list of flavours to be rendered
 
+``incremental``
+    whether (true) or not (false) this is an incremental static rendering
+    run
+
 Functions that implement this callback can modify the filelist
 in-place and don't have to return anything.
 

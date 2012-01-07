@@ -387,7 +387,8 @@ class Pyblosxom:
         tools.run_callback("staticrender_filelist",
                            {'request': self._request,
                             'filelist': renderme,
-                            'flavours': flavours})
+                            'flavours': flavours,
+                            'incremental': incremental})
 
         renderme = sorted(set(renderme))
 
