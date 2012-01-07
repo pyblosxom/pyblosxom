@@ -4,52 +4,22 @@
 Plugins
 =======
 
-Pyblosxom allows you to extend and augment its base functionality
-using Pyblosxom plugins.  Plugins allow you to create additional
-variables; provide additional entry parsers, renderers,
-post-formatters, and pre-formatters; create new output data types;
-pull information from other non-blog sources; create images; and a
-variety of other things.
+Pyblosxom allows you to extend and augment its base functionality with
+plugins.  Plugins allow you to: to create additional variables; provide
+additional entry parsers, renderers, post-formatters, and
+pre-formatters; create new output data types; pull information from
+other non-blog sources; create images; and a variety of other things.
 
+Plugins hook into Pyblosxom using callbacks which allow plugins to
+handle, augment, and otherwise affect Pyblosxom's behavior.
 
 
 Setting Pyblosxom up to use plugins
 ===================================
 
 There are two properties in your ``config.py`` file that affect the
-behavior for loading plugins.
-
-The first one is the ``plugin_dirs`` property which is a list of
-strings specifying all the directories you might have plugins.  For
-example::
-
-   py["plugin_dirs"] = ["/home/will/pybloxsom/plugins"]
-
-
-This will cause Pyblosxom to look in this specific directory for
-plugins.
-
-The other property is the ``load_plugins`` property.  If you don't
-have this set at all (i.e. it's either not in the ``config.py`` file
-or the line is commented out), Pyblosxom will load all plugins it
-finds in the plugin directories you've specified.  It will look in
-each directory in order as you've specified.  It will load the plugins
-in each directory in alphabetical order by filename.
-
-The other way to load plugins is by specifying the plugins explicitly
-by setting the ``load_plugins`` property.  Pyblosxom will load only
-the plugins you've specified and will load them in the order you've
-specified.  The ``load_plugins`` property takes a list of strings.
-For example::
-
-   py["load_plugins"] = ["calendar", "category", "booklist"]
-
-
-This will load the plugins whose filenames are ``calendar.py``,
-``category.py``, and ``booklist.py``.  It will only load those plugins
-even if other plugins are in the directory and it will load them in
-that order.
-
+behavior for loading plugins: ``plugin_dirs`` and ``load_plugins``.
+There's more documentation on these in :ref:`plugin-configuration`.
 
 
 Finding plugins
@@ -68,6 +38,7 @@ needs. The best way to find these plugins is to ask on the
 pyblosxom-users mailing list for a plugin that has the functionality
 you desire.
 
+.. _website: http://pyblosxom.bluesock.org/
 
 
 Installing plugins
@@ -121,11 +92,5 @@ Pyblosxom plugins is to read through the plugins in the plugin
 registry.  Many of them are well written and may provide insight as to
 how to solve your specific problem.
 
-If you plan on writing your own plugin, refer to the manual file on
-writing Pyblosxom plugins.
-
-Additionally, feel free to ask for help on the pyblosxom-users and
-pyblosxom-devel mailing lists or on IRC.  Details are on the `website`_
-
-.. _website: http://pyblosxom.bluesock.org/
-
+If you plan on writing your own plugin, check out
+:ref:`writing-plugins`.

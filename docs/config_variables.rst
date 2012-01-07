@@ -92,6 +92,7 @@ Apache and then set the config.py variable ``py["media_url"]`` to the
 directory with media files and use ``$media_url`` to refer to this URL
 in your flavour templates.
 
+
 Codebase configuration
 ======================
 
@@ -608,8 +609,13 @@ Logging configuration
       py["log_filter"] = ["root", "comments"]
 
 
+.. _plugin-configuration:
+
 Plugin Configuration
 ====================
+
+There are two properties in your ``config.py`` file that affect the
+behavior for loading plugins: ``plugin_dirs`` and ``load_plugins``.
 
 .. py:data:: plugin_dirs
 
@@ -630,6 +636,29 @@ Plugin Configuration
       Plugin directories are not searched recursively for plugins.  If
       you have a tree of plugin directories that have plugins in them,
       you'll need to specify each directory in the tree.
+
+      For example, if you have plugins in ``~/blog/my_plugins/`` and
+      ``~/blog/phils_plugins/``, then you need to specify both
+      directories in ``plugin_dirs``::
+
+         py["plugin_dirs"] = [
+             "/home/joe/blog/my_plugins",
+             "/home/joe/blog/phils_plugins"
+             ]
+
+      You can't just specify ``~/blog/`` and expect Pyblosxom to find
+      the plugins in the directory tree::
+                              
+         # This won't work!
+         py["plugin_dirs"] = [
+             "/home/joe/blog"
+             ]
+
+
+   .. Note::
+
+      Core plugins are automatically found---you don't have to specify
+      anything in your ``plugin_dirs`` in order to use core plugins.
 
 
 .. py:data:: load_plugins
