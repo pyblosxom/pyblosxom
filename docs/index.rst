@@ -64,12 +64,13 @@ plugins, or things of that ilk.
 .. toctree::
    :maxdepth: 2
 
-   hacking
+   dev_contributing
+   dev_hacking
    dev_architecture
    dev_writing_plugins
    dev_codedocs
    dev_testing
-   release
+   dev_release
 
 
 Indices and tables
