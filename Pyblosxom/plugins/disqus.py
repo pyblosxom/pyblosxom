@@ -101,7 +101,7 @@ def cb_story(args):
 
     # This uses the same logic as comments.py for determining when
     # to show the comments.
-    if ((entry['absolute_path']
+    if ((entry.has_key('absolute_path')
          and len(renderer.getContent()) == 1
          and 'comment_form' in renderer.flavour
          and not entry.has_key('nocomments'))):
