@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# PyBlosxom documentation build configuration file, created by
+# Pyblosxom documentation build configuration file, created by
 # sphinx-quickstart on Mon Feb 16 00:26:34 2009.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -35,16 +35,16 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General substitutions.
-project = 'PyBlosxom'
-copyright = '2009, 2010, Will Kahn-Greene'
+project = 'Pyblosxom'
+copyright = '2009-2011, Will Kahn-Greene'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '1.5'
+version = '1.5.2'
 # The full version, including alpha/beta/rc tags.
-release = '1.5'
+release = '1.5.2'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -142,7 +142,7 @@ html_last_updated_fmt = '%b %d, %Y'
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PyBlosxomdoc'
+htmlhelp_basename = 'Pyblosxomdoc'
 
 
 # Options for LaTeX output
@@ -157,7 +157,7 @@ htmlhelp_basename = 'PyBlosxomdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, document class [howto/manual]).
 latex_documents = [
-  ('index', 'PyBlosxom.tex', 'PyBlosxom Documentation',
+  ('index', 'Pyblosxom.tex', 'Pyblosxom Documentation',
    'Will Kahn-Greene', 'manual'),
 ]
 

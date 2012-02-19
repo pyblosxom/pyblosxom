@@ -5,8 +5,147 @@
 .. _whatsnew:
 
 
-What's new in 1.5 rc3
-=====================
+What's new in 1.5.2 (December 2011)
+===================================
+
+Pertinent to users:
+
+1. Fixed a warning that pops up when doing ``pip install pyblosxom``
+
+2. Removed debug logging from pycategories
+
+
+What's new in 1.5.1 (December 2011)
+===================================
+
+Pertinent to users:
+-------------------
+
+1. Fixed a problem with the manifest so ``python setup.py install``
+   works again.
+
+2. Fixed the WHATSNEW so it shows correct version and date for
+   1.5 release.
+
+
+What's new in 1.5 (December 2011)
+=================================
+
+Pertinent to users:
+-------------------
+
+1. Renamed the project from PyBlosxom to Pyblosxom (no more CamelCase).
+
+2. I moved all the plugins again.  This time, instead of being in
+   ``plugins/``, they're now in ``Pyblosxom/plugins/``.
+
+   You no longer have to copy core plugins into your plugins
+   directory.  Instead of copying core plugin files, refer to the
+   plugins in your ``config.py`` file using their full Python path in
+   the Pyblosxom package.
+
+   For example, the pycalendar plugin is now in
+   ``Pyblosxom/plugins/pycalendar.py`` and thus its Pyblosxom
+   package path is ``Pyblosxom.plugins.pycalendar``.  Your
+   ``config.py`` file would look have this::
+
+       py["load_plugins"] = [
+           ...
+           "Pyblosxom.plugins.pycalendar",
+           ...
+           ]
+
+
+   If you do this, then the next time you upgrade PyBlosxom, the
+   plugins will be upgraded automatically.
+
+   Further, documentation for plugins is at the top of the individual
+   plugin files, but also in the documentation.  This includes a list
+   of the plugins available in the core.
+
+   .. only:: text
+
+      You can see the plugin documentation in docs/plugins/.
+
+   .. only:: html
+
+      You can see the plugin documentation at :ref:`part-two`.
+
+3. Plugins added: markdown_parser, readmore
+
+4. Plugins changed:
+
+   pages
+
+   * Fixed documentation and error messages for ``pagesdir``.
+   * Fixed frontpage checking.  Should catch / as well as /index
+     now.
+   * Adds more examples to documentation.
+
+   tags
+
+   * Increased tag cloud range from 3 sizes to 5.
+   * Adds truncate support.
+   * Fixes problems with initialization when building tags so that
+     it initializes plugins allowing them to do startup things.
+     This fixes problems with plugins that augment entry parsers.
+
+   rst
+
+   * renamed it to rst_parser so it's clearer what it is
+
+   pycategories
+
+   * fixed category_start/category_begin behavior for root category
+   * fixed the first example of settings in the documentation
+
+   the rest of the plugins: pep8 fixes and documentation updates
+
+5. Plugins removed from Pyblosxom: commentAPI
+
+6. Fixes error handling for loading plugins.  When doing
+   ``pyblosxom-cmd test`` and a plugin fails to load, it'll now tell
+   you.  When using the debug renderer and a plugin fails to load,
+   it'll now tell you.
+
+7. Lot of work on simplifying and improving the documentation.
+
+8. Added a ``static_yearindexes`` setting.  Set it to True to generate
+   year indexes and False to not generate year indexes.
+
+
+Pertinent to developers
+-----------------------
+
+1. I removed all the extra infrastructure for testing plugins.
+   Plugins that come with the core are now in the Pyblosxom package
+   and their tests are in ``Pyblosxom/tests/``.
+
+2. Adds *generate* subcommand to pyblosxom-cmd.  This makes it easier
+   to test blogs and plugins that do things with entries.
+
+3. Renamed ``PyBlosxomWSGIApp`` class to ``PyblosxomWSGIApp``.
+
+4. Renamed ``PyBlosxom`` class to ``Pyblosxom``.
+
+5. Moved the project from gitorious to github.  The new git repository
+   is at `<http://github.com/willkg/pyblosxom>`_.
+
+6. Removed ``VERSION_DATE`` and ``VERSION_SPLIT``.  They're kind of
+   silly and don't really help much.
+
+   I moved the version to ``Pyblosxom/_version.py``.  Use it like
+   this::
+
+       from Pyblosxom import __version__
+
+       print __version__
+
+   I updated the documentation accordingly.
+
+
+What's new in 1.5 rc3 (June 2011)
+=================================
 
 Pertinent to users:
 -------------------
@@ -34,8 +173,8 @@ Pertinent to users:
    If you're using them, update to the latest versions.
 
 
-What's new in 1.5 rc2
-=====================
+What's new in 1.5 rc2 (August 2010)
+===================================
 
 Pertinent to users:
 -------------------
@@ -54,8 +193,8 @@ Pertinent to developers:
 1. New sortlist callback
 
 
-What's new in 1.5 rc1
-=====================
+What's new in 1.5 rc1 (January 2010)
+====================================
 
 Pertinent to users:
 -------------------
@@ -302,7 +441,7 @@ Pertinent to developers:
    then munge through.
 
 9. Added a commandline callback for allowing plugins to add to the
-    command line.
+   command line.
 
 10. Added a truncatelist callback allowing plugins to augment the
     truncate (``num_entries``) behavior.

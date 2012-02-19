@@ -1,36 +1,44 @@
 #!/usr/bin/env python
 
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
-VERSION = "1.5rc3"
+import os
+import re
+from setuptools import setup, find_packages
 
-import os.path, sys, os
-from distutils.sysconfig import get_python_lib
-try:
-    from distribute import setup, find_packages
-    print "Using distribute...."
-except ImportError:
-    from setuptools import setup, find_packages
-    print "Using setuptools...."
+
+READMEFILE = "README.rst"
+VERSIONFILE = os.path.join("Pyblosxom", "_version.py")
+VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
+
+
+def get_version():
+    verstrline = open(VERSIONFILE, "rt").read()
+    mo = re.search(VSRE, verstrline, re.M)
+    if mo:
+        return mo.group(1)
+    else:
+        raise RuntimeError(
+            "Unable to find version string in %s." % VERSIONFILE)
+
 
 setup(
     name="pyblosxom",
-    version=VERSION,
-    description="PyBlosxom is a file-based weblog engine.",
-    long_description=open('README').read(),
+    version=get_version(),
+    description="Pyblosxom is a file-based weblog engine.",
+    long_description=open(READMEFILE).read(),
     license='MIT',
     author="Will Kahn-Greene, et al",
     author_email="willg@bluesock.org",
-    keywords="blog pyblosxom cgi weblog",
+    keywords="blog pyblosxom cgi weblog wsgi",
     url="http://pyblosxom.bluesock.org/",
-    download_url="http://pyblosxom.bluesock.org/download/",
     packages=find_packages(exclude=["ez_setup"]),
     scripts=["bin/pyblosxom-cmd"],
     zip_safe=False,

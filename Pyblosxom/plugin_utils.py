@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -21,13 +21,13 @@ import traceback
 
 
 # this holds the list of plugins that have been loaded.  if you're running
-# PyBlosxom as a long-running process, this only gets cleared when the
+# Pyblosxom as a long-running process, this only gets cleared when the
 # process is restarted.
 plugins = []
 
 # this holds a list of callbacks (any function that begins with cp_) and the
 # list of function instances that support that callback.
-# if you're running PyBlosxom as a long-running process, this only
+# if you're running Pyblosxom as a long-running process, this only
 # gets cleared when the process is restarted.
 callbacks = {}
 
@@ -75,8 +75,8 @@ def initialize_plugins(plugin_dirs, plugin_list):
 
     .. Note::
 
-       If PyBlosxom is part of a long-running process, you must
-       restart PyBlosxom in order to pick up any changes to your plugins.
+       If Pyblosxom is part of a long-running process, you must
+       restart Pyblosxom in order to pick up any changes to your plugins.
 
     :param plugin_dirs: the list of directories to add to the sys.path
                         because that's where our plugins are located.

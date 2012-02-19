@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="$(blog_encoding)" ?>
 <rss version="2.0" 
    xmlns:creativeCommons="http://backend.userland.com/creativeCommonsRssModule" 
-   xmlns:html="http://www.w3.org/1999/html" 
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
    xmlns:slash="http://purl.org/rss/1.0/modules/slash/">
 <channel>
-   <title>$(blog_title)</title>
+   <title>$(escape(blog_title))</title>
    <link>$(base_url)</link>
-   <description>$(blog_description)</description>
-   <language>$(blog_language)</language>
-   <copyright>$(blog_rights)</copyright>
+   <description>$(escape(blog_description))</description>
+   <language>$(escape(blog_language))</language>
+   <copyright>$(escape(blog_rights))</copyright>
    <ttl>60</ttl>
    <pubDate>$(latest_rfc822date)</pubDate>
-   <managingEditor>$(blog_email)</managingEditor>
-   <generator>PyBlosxom http://pyblosxom.bluesock.org/ $(pyblosxom_version)</generator>
+   <managingEditor>$(escape(blog_email)) ($(escape(blog_author)))</managingEditor>
+   <generator>Pyblosxom http://pyblosxom.bluesock.org/ $(escape(pyblosxom_version))</generator>

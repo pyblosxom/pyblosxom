@@ -1,0 +1,32 @@
+<p id="comment-anchor">
+  <b>$(comment_message)</b>
+</p>
+
+<div class="blosxomCommentForm">
+<form method="post" action="$(base_url)/$(file_path)" accept-charset="UTF-8"
+      name="comments_form" id="comments_form">
+<div>
+  <input name="parent" type="hidden" value="$(file_path)" />
+  <input name="title" type="hidden" value="$(title)" />
+  Name:<br />
+  <input maxlength="50" name="author" id="comment-author" size="50" type="text"
+   value="$(cmt_author)" /><br />
+  <br />
+  E-mail:<br />
+  <input maxlength="75" name="email" id="comment-email" size="50" type="text"
+   value="$(cmt_email)" /><br />
+  <br />
+  URL:<br />
+  <input maxlength="100" name="url" id="comment-url" size="50" type="text"
+   value="$(cmt_link)" /><br />
+  <br />
+  Comment:<br />
+  <textarea cols="50" name="body" id="comment-body" rows="12">$(cmt_description)</textarea><br />
+  <br />
+  <input value="Preview" name="preview" type="submit" id="preview">
+  <input value="Submit" name="submit" type="submit" id="post">
+</div>
+</form>
+
+</div>
+</div>

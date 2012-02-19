@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -27,7 +27,7 @@ class NoSuchFlavourException(Exception):
 
 def get_included_flavour(taste):
     """
-    PyBlosxom comes with flavours in taste.flav directories in the flavours
+    Pyblosxom comes with flavours in taste.flav directories in the flavours
     subdirectory of the Pyblosxom package.  This method pulls the template
     files for the associated taste (assuming it exists) or None if it
     doesn't.
@@ -123,7 +123,7 @@ class BlosxomRenderer(RendererBase):
         EITHER the configured datadir OR the flavourdir (if
         configured).  It'll go through directories overriding the
         template files it has already picked up descending the
-        category path of the PyBlosxom request.
+        category path of the Pyblosxom request.
 
         For example, if the user requested the ``html`` flavour and is
         looking at an entry in the category ``dev/pyblosxom``, then

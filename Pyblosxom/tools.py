@@ -1,13 +1,13 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
-"""Utility module for functions that are useful to PyBlosxom and plugins.
+"""Utility module for functions that are useful to Pyblosxom and plugins.
 """
 
 import sgmllib
@@ -20,6 +20,7 @@ import sys
 import locale
 import urllib
 import inspect
+import textwrap
 
 # Pyblosxom imports
 from Pyblosxom import plugin_utils
@@ -65,7 +66,7 @@ def initialize(config):
     This gives the module a chance to use configuration from the
     pyblosxom config.py file.
 
-    This should be called from ``Pyblosxom.pyblosxom.PyBlosxom.initialize``.
+    This should be called from ``Pyblosxom.pyblosxom.Pyblosxom.initialize``.
     """
     global _config
     _config = config
@@ -117,6 +118,30 @@ def initialize(config):
     # all the valid month possibilities
     global MONTHS
     MONTHS = num2month.keys() + month2num.keys()
+
+def pwrap(s):
+    """Wraps the text and prints it.
+    """
+    starter = ""
+    linesep = os.linesep
+    if s.startswith("- "):
+        starter = "- "
+        s = s[2:]
+        linesep = os.linesep + "  "
+
+    print starter + linesep.join(textwrap.wrap(s, 72))
+
+def pwrap_error(s):
+    """Wraps an error message and prints it to stderr.
+    """
+    starter = ""
+    linesep = os.linesep
+    if s.startswith("- "):
+        starter = "- "
+        s = s[2:]
+        linesep = os.linesep + "  "
+
+    sys.stderr.write(starter + linesep.join(textwrap.wrap(s, 72)) + "\n")
 
 def deprecated_function(func):
     def _deprecated_function(*args, **kwargs):
@@ -509,7 +534,7 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     :param recurse: the depth of recursion; defaults to 0 which goes all
                     the way down
     :param pattern: the regexp object for matching files; defaults to
-                    '' which causes PyBlosxom to return files with
+                    '' which causes Pyblosxom to return files with
                     file extensions that match those the entryparsers
                     handle
     :param return_folders: True if you want only folders, False if you
@@ -546,7 +571,7 @@ Walk = deprecated_function(walk)
 def _walk_internal(root, recurse, pattern, ignorere, return_folders, handle_links=False):
     """
     Note: This is an internal function--don't use it and don't expect
-    it to stay the same between PyBlosxom releases.
+    it to stay the same between Pyblosxom releases.
     """
     # FIXME - we should either ditch this function and use os.walk or
     # something similar, or optimize this version by removing the
@@ -588,7 +613,7 @@ def _walk_internal(root, recurse, pattern, ignorere, return_folders, handle_link
 def filestat(request, filename):
     """
     Returns the filestat on a given file.  We store the filestat in
-    case we've already retrieved it during this PyBlosxom request.
+    case we've already retrieved it during this Pyblosxom request.
 
     This returns the mtime of the file (same as returned by
     ``time.localtime()``) -- tuple of 9 ints.
@@ -951,7 +976,7 @@ def render_url_statically(cdict, url, querystring):
 def render_url(cdict, pathinfo, querystring=""):
     """
     Takes a url and a querystring and renders the page that
-    corresponds with that by creating a Request and a PyBlosxom object
+    corresponds with that by creating a Request and a Pyblosxom object
     and passing it through.  It then returns the resulting Response.
 
     :param cdict: the config.py dict
@@ -959,9 +984,9 @@ def render_url(cdict, pathinfo, querystring=""):
                      example: ``/dev/pyblosxom/firstpost.html``
     :param querystring: the querystring (if any); example: debug=yes
 
-    :returns: a PyBlosxom ``Response`` object. 
+    :returns: a Pyblosxom ``Response`` object. 
     """
-    from pyblosxom import PyBlosxom
+    from pyblosxom import Pyblosxom
 
     env = {
         "HTTP_HOST": "localhost",
@@ -977,7 +1002,7 @@ def render_url(cdict, pathinfo, querystring=""):
         "wsgi.input": None
     }
     data = {"STATIC": 1}
-    p = PyBlosxom(cdict, env, data)
+    p = Pyblosxom(cdict, env, data)
     p.run(static=True)
     return p.get_response()
 
@@ -1021,7 +1046,7 @@ def get_logger(log_file=None):
     logger logs to.
 
     :param log_file: the file to log to.  defaults to None which
-                     causes PyBlosxom to check for the ``log_file``
+                     causes Pyblosxom to check for the ``log_file``
                      config.py property and if that's blank, then the
                      log_file is stderr
 
@@ -1114,7 +1139,7 @@ def log_exception(log_file=None):
     log_file as defined in config.py if none is given here.
 
     :param log_file: the file to log to.  defaults to None which
-                     causes PyBlosxom to check for the ``log_file``
+                     causes Pyblosxom to check for the ``log_file``
                      config.py property and if that's blank, then the
                      log_file is stderr
     """
@@ -1136,7 +1161,7 @@ def log_caller(frame_num=1, log_file=None):
     :param frame_num: the index of the frame to log; defaults to 1
 
     :param log_file: the file to log to.  defaults to None which
-                     causes PyBlosxom to check for the ``log_file``
+                     causes Pyblosxom to check for the ``log_file``
                      config.py property and if that's blank, then the
                      log_file is stderr
     """

@@ -1,10 +1,12 @@
-include setup.py
 include WHATSNEW
-include README
+include README.rst
 include INSTALL
 include LICENSE
 include AUTHORS
 include UPGRADE
+
+include setup.py
+
 recursive-include bin *
 recursive-include Pyblosxom *
 recursive-include Pyblosxom/data *

@@ -15,29 +15,31 @@ version of your blog.
 Most newsreaders read most of the syndication formats.  So you
 shouldn't feel that you have to implement each one of them in your
 blog---you can most assuredly get away with implementing RSS 2.0 or
-Atom 1.0 and be just fine.
+Atom and be just fine.
 
-The syndication flavours that come with PyBlosxom should be fine for
+The syndication flavours that come with Pyblosxom should be fine for
 most blogs.  When pointing people to your syndication feed, just use
-one of the syndication flavours:
+one of the syndication flavours.
 
-* ``http://your-server/path-to-blog/index.rss``
-* ``http://your-server/path-to-blog/index.rss20``
-* ``http://your-server/path-to-blog/index.atom``
+Examples:
+
+* ``http://example.com/blog/index.rss``
+* ``http://example.com/~willg/blog/index.rss20``
+* ``http://example.com/index.atom``
 
 
 
-Feed formats that come with PyBlosxom
+Feed formats that come with Pyblosxom
 =====================================
 
-PyBlosxom comes with a few default flavours, three of which are feed
+Pyblosxom comes with a few default flavours, three of which are feed
 formats.
 
 
 RSS 0.9.1
 ---------
 
-PyBlosxom comes with an rss flavour that produces RSS 0.9.1 output.
+Pyblosxom comes with an rss flavour that produces RSS 0.9.1 output.
 Here's a sample of what it produces::
 
    <?xml version="1.0" encoding="utf-8"?>
@@ -78,8 +80,8 @@ your ``config.py`` file.
    entry was created on was.
  
    Unless you have some reason to use RSS 0.9.1 as your syndication
-   format, you should look at using RSS 2.0 or Atom 1.0 both of which
-   also come with PyBlosxom.
+   format, you should look at using RSS 2.0 or Atom both of which
+   also come with Pyblosxom.
 
 
 For more information, look at the `RSS 0.9.1 spec`_.
@@ -91,7 +93,7 @@ For more information, look at the `RSS 0.9.1 spec`_.
 RSS 2.0
 -------
 
-PyBlosxom 1.3 comes with an RSS 2.0 flavour called "rss20".  If it's
+Pyblosxom 1.3 comes with an RSS 2.0 flavour called "rss20".  If it's
 missing features that you want (for example, some folks are doing
 podcasting with their blog), then override the individual templates
 you need to adjust.
@@ -102,23 +104,23 @@ For more information on RSS 2.0, see the `RSS 2.0 spec`_.
 
 
 
-Atom 1.0
---------
+Atom
+----
 
-PyBlosxom 1.3 comes with an Atom 1.0 flavour called "atom".  If it's
-missing features that you want, then override the individual templates
-you need to adjust.
+Starting with 1.3, Pyblosxom comes with an Atom flavour called "atom".
+If it's missing features that you want, then override the individual
+templates you need to adjust.
 
-For more information on Atom 1.0, see the `Atom 1.0 spec`_.
+For more information on Atom, see the `Atom spec`_.
 
-.. _Atom 1.0 spec: http://atomenabled.org/
+.. _Atom spec: http://atomenabled.org/
 
 
 
 Debugging your feeds
 ====================
 
-`FeedValidator`_ is a hugely useful tool for figuring out whether your
+`FeedValidator`_ is a useful tool for figuring out whether your
 feed is valid and fixing bugs in your feed content.
 
 .. _FeedValidator: http://feedvalidator.org/

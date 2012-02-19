@@ -1,20 +1,18 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2010-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2010-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 from os import environ
 import time
-from StringIO import StringIO
 
-from Pyblosxom.tests.helpers import req_, UnitTestBase
+from Pyblosxom.tests import req_, UnitTestBase
 
 from Pyblosxom.tools import STANDARD_FILTERS
-from Pyblosxom.pyblosxom import Request
 from Pyblosxom.entries.base import EntryBase, generate_entry
 
 TIME1 = (2008, 7, 21, 12, 51, 47, 0, 203, 1)

@@ -1,14 +1,14 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 """
-PyBlosxom works by pulling data from the file system, passing it through
+Pyblosxom works by pulling data from the file system, passing it through
 a series of filters and transformations, and then rendering it.  Some
 of these steps are somewhat intensive and to alleviate this, we cache
 things.

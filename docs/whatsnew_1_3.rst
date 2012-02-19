@@ -1,18 +1,18 @@
-What's new in 1.3.2
-===================
+What's new in 1.3.2 (February 2006)
+===================================
 
 Pertinent to users
 ------------------
 
 1. Fixes a security issue where the path_info can come in with
    multiple / at the beginning.  Whether this happens or not depends
-   on the web-server you're using and possibly other things.  Some
+   on the web server you're using and possibly other things.  Some
    people have the issue and some don't.  If you're in doubt, upgrade.
    Thanks FX!
 
 
-What's new in 1.3.1
-===================
+What's new in 1.3.1 (February 2006)
+===================================
 
 Pertinent to users
 ------------------
@@ -49,8 +49,8 @@ Pertinent to developers
 
 
 
-What's new in 1.3
-=================
+What's new in 1.3 (January 2006)
+================================
 
 Pertinent to users
 ------------------
@@ -83,7 +83,7 @@ Pertinent to users
    what will get logged:
 
    * "log_file" - the file that PyBlosxom events will be logged
-     to---the web-server MUST be able to write to this file.
+     to---the web server MUST be able to write to this file.
 
    * "log_level" - the level of events to write to the log.  options
      are "critical", "error", "warning", "info", and "debug"
@@ -94,7 +94,7 @@ Pertinent to users
 
    It's likely you'll want to set log_file and log_level and that's
    it.  Omit log_file and logging will fall back to stderr which
-   usually gets logged to your web-server's error log.
+   usually gets logged to your web server's error log.
 
 
 Pertinent to developers and plugin developers

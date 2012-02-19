@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
 # Copyright (c) 2003 - 2007 Wari Wahab
 # 
-# PyBlosxom is distributed under the MIT license.  See the file LICENSE
+# Pyblosxom is distributed under the MIT license.  See the file LICENSE
 # for distribution details.
 #
 # $Id: pyblosxom.py 913 2006-08-08 20:29:42Z willhelm $

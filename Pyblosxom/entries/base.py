@@ -1,15 +1,15 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 """
 This module contains the base class for all the Entry classes.  The
-EntryBase class is essentially the API for entries in PyBlosxom.  Reading
+EntryBase class is essentially the API for entries in Pyblosxom.  Reading
 through the comments for this class will walk you through building your
 own EntryBase derivatives.
 

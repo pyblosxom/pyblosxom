@@ -1,0 +1,7 @@
+<div class="blosxomComment">
+
+<a name="$(cmt_time)"></a>
+Posted by $(cmt_optionally_linked_author) at $(cmt_pubDate)<br />
+$(cmt_description)<br />
+<br />
+</div>

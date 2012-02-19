@@ -1,15 +1,15 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2010 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2010-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 import os
 
-from Pyblosxom.tests.helpers import UnitTestBase
+from Pyblosxom.tests import UnitTestBase
 from Pyblosxom.pyblosxom import blosxom_entry_parser
 
 class Testentryparser(UnitTestBase):

@@ -1,14 +1,14 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 
-"""This is the main module for PyBlosxom functionality.  PyBlosxom's
+"""This is the main module for Pyblosxom functionality.  Pyblosxom's
 setup and default handlers are defined here.
 """
 
@@ -27,28 +27,18 @@ except ImportError:
     from StringIO import StringIO
 
 # Pyblosxom imports
+from Pyblosxom import __version__
 from Pyblosxom import crashhandling
 from Pyblosxom import tools
 from Pyblosxom import plugin_utils
 from Pyblosxom.entries.fileentry import FileEntry
 
-# valid version formats:
-# * x.y      - final release
-# * x.ya1    - alpha 1
-# * x.yb1    - beta 1
-# * x.yrc1   - release candidate 1
-# * x.y-dev  - dev
 
-# see http://www.python.org/dev/peps/pep-0386/
+VERSION = __version__
 
-VERSION = "1.5-dev"
-VERSION_DATE = VERSION + " git-master"
-# VERSION = "1.5rc3"
-# VERSION_DATE = VERSION + " 20110618"
-VERSION_SPLIT = tuple(VERSION.split(" ")[0].split('.'))
 
-class PyBlosxom:
-    """Main class for PyBlosxom functionality.  It handles
+class Pyblosxom:
+    """Main class for Pyblosxom functionality.  It handles
     initialization, defines default behavior, and also pushes the
     request through all the steps until the output is rendered and
     we're complete.
@@ -61,8 +51,9 @@ class PyBlosxom:
         :param environ: dict containing the environment variables.
         :param data: dict containing data variables.
         """
+        # FIXME: These shouldn't be here.
         config['pyblosxom_name'] = "pyblosxom"
-        config['pyblosxom_version'] = VERSION_DATE
+        config['pyblosxom_version'] = __version__
 
         self._config = config
         self._request = Request(config, environ, data)
@@ -88,7 +79,7 @@ class PyBlosxom:
         # initialize the tools module
         tools.initialize(config)
 
-        data["pyblosxom_version"] = VERSION_DATE
+        data["pyblosxom_version"] = __version__
         data['pi_bl'] = ''
 
         # if the user specifies base_url in config, we use that.
@@ -125,7 +116,7 @@ class PyBlosxom:
                                         defaultfunc=lambda x:x)
 
     def cleanup(self):
-        """This cleans up PyBlosxom after a run.
+        """This cleans up Pyblosxom after a run.
 
         This should be called when Pyblosxom has done everything it
         needs to do before exiting.
@@ -138,7 +129,7 @@ class PyBlosxom:
         log.debug("headers = %s" % response.headers)
 
     def get_request(self):
-        """Returns the Request object for this PyBlosxom instance.
+        """Returns the Request object for this Pyblosxom instance.
         """
         return self._request
     getRequest = tools.deprecated_function(get_request)
@@ -150,12 +141,12 @@ class PyBlosxom:
     getResponse = tools.deprecated_function(get_response)
 
     def run(self, static=False):
-        """This is the main loop for PyBlosxom.  This method will run
+        """This is the main loop for Pyblosxom.  This method will run
         the handle callback to allow registered handlers to handle the
         request.  If nothing handles the request, then we use the
         ``default_blosxom_handler``.
 
-        :param static: True if PyBlosxom should execute in "static rendering
+        :param static: True if Pyblosxom should execute in "static rendering
                        mode" and False otherwise.
         """
         self.initialize()
@@ -191,8 +182,8 @@ class PyBlosxom:
         plugins), executes the requested callback, and then executes
         the end callback.
 
-        This is useful for scripts outside of PyBlosxom that need to
-        do things inside of the PyBlosxom framework.
+        This is useful for scripts outside of Pyblosxom that need to
+        do things inside of the Pyblosxom framework.
 
         If you want to run a callback from a plugin, use
         ``tools.run_callback`` instead.
@@ -280,8 +271,9 @@ class PyBlosxom:
 
         renderme = []
 
-        monthnames = config.get("static_monthnames", 1)
-        monthnumbers = config.get("static_monthnumbers", 0)
+        monthnames = config.get("static_monthnames", True)
+        monthnumbers = config.get("static_monthnumbers", False)
+        yearindexes = config.get("static_yearindexes", True)
 
         dates = {}
         categories = {}
@@ -326,7 +318,8 @@ class PyBlosxom:
                 month = time.strftime("%m", mtime)
                 day = time.strftime("%d", mtime)
 
-                dates[year] = 1
+                if yearindexes:
+                    dates[year] = 1
 
                 if monthnumbers:
                     dates[year + "/" + month] = 1
@@ -394,7 +387,8 @@ class PyBlosxom:
         tools.run_callback("staticrender_filelist",
                            {'request': self._request,
                             'filelist': renderme,
-                            'flavours': flavours})
+                            'flavours': flavours,
+                            'incremental': incremental})
 
         renderme = sorted(set(renderme))
 
@@ -409,12 +403,16 @@ class PyBlosxom:
         # we're done, clean up
         self.cleanup()
 
-class PyBlosxomWSGIApp:
-    """This class is the WSGI application for PyBlosxom.
+
+Pyblosxom = Pyblosxom
+
+
+class PyblosxomWSGIApp:
+    """This class is the WSGI application for Pyblosxom.
     """
     def __init__(self, environ=None, start_response=None, configini=None):
         """
-        Make WSGI app for PyBlosxom.
+        Make WSGI app for Pyblosxom.
 
         :param environ: FIXME
 
@@ -442,7 +440,7 @@ class PyBlosxomWSGIApp:
 
     def run_pyblosxom(self, env, start_response):
         """
-        Executes a single run of PyBlosxom wrapped in the crash handler.
+        Executes a single run of Pyblosxom wrapped in the crash handler.
         """
         response = None
         try:
@@ -451,7 +449,7 @@ class PyBlosxomWSGIApp:
             if "PATH_INFO" not in env:
                 env["PATH_INFO"] = ""
 
-            p = PyBlosxom(dict(self.config), env)
+            p = Pyblosxom(dict(self.config), env)
             p.run()
 
             response = p.get_response()
@@ -470,6 +468,11 @@ class PyBlosxomWSGIApp:
     def __iter__(self):
         yield self.run_pyblosxom(self.environ, self.start_response)
 
+
+# Do this for historical reasons
+PyblosxomWSGIApp = PyblosxomWSGIApp
+
+
 def pyblosxom_app_factory(global_config, **local_config):
     """App factory for paste.
 
@@ -482,7 +485,7 @@ def pyblosxom_app_factory(global_config, **local_config):
     if "configpydir" in conf:
         sys.path.insert(0, conf["configpydir"])
 
-    return PyBlosxomWSGIApp(configini=conf)
+    return PyblosxomWSGIApp(configini=conf)
 
 class EnvDict(dict):
     """Wrapper arround a dict to provide a backwards compatible way to
@@ -516,13 +519,13 @@ class EnvDict(dict):
 
 class Request(object):
     """
-    This class holds the PyBlosxom request.  It holds configuration
+    This class holds the Pyblosxom request.  It holds configuration
     information, HTTP/CGI information, and data that we calculate and
     transform over the course of execution.
 
     There should be only one instance of this class floating around
     and it should get created by ``pyblosxom.cgi`` and passed into the
-    PyBlosxom instance which will do further manipulation on the
+    Pyblosxom instance which will do further manipulation on the
     Request instance.
     """
     def __init__(self, config, environ, data):
@@ -1284,7 +1287,7 @@ def blosxom_process_path_info(args):
         data["truncate"] = False
 
 def run_pyblosxom():
-    """Executes PyBlosxom either as a commandline script or CGI
+    """Executes Pyblosxom either as a commandline script or CGI
     script.
     """
     from config import py as cfg
@@ -1320,7 +1323,7 @@ def run_pyblosxom():
     try:
         # try running as a WSGI-CGI
         from wsgiref.handlers import CGIHandler
-        CGIHandler().run(PyBlosxomWSGIApp())
+        CGIHandler().run(PyblosxomWSGIApp())
 
     except ImportError:
         # run as a regular CGI
@@ -1336,7 +1339,7 @@ def run_pyblosxom():
                     "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING"]:
             env[mem] = os.environ.get(mem, "")
 
-        p = PyBlosxom(dict(cfg), env)
+        p = Pyblosxom(dict(cfg), env)
 
         p.run()
         response = p.get_response()

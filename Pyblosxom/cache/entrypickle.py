@@ -1,9 +1,9 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
@@ -34,7 +34,7 @@ class BlosxomCache(BlosxomCacheBase):
     """
     def __init__(self, req, config):
         """
-        Takes in a PyBlosxom request object and a configuration string
+        Takes in a Pyblosxom request object and a configuration string
         which determines where to store the pickle files.
         """
         BlosxomCacheBase.__init__(self, req, config)

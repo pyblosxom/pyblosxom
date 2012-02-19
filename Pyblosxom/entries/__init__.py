@@ -1,14 +1,14 @@
 #######################################################################
-# This file is part of PyBlosxom.
+# This file is part of Pyblosxom.
 #
-# Copyright (C) 2003-2011 by the PyBlosxom team.  See AUTHORS.
+# Copyright (C) 2003-2011 by the Pyblosxom team.  See AUTHORS.
 #
-# PyBlosxom is distributed under the MIT license.  See the file
+# Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
 
 """
-PyBlosxom does most of its work on "entries".  Each entry is a single
+Pyblosxom does most of its work on "entries".  Each entry is a single
 unit of content which has a series of metadata properties (mtime, filename,
 id, ...) and also a block of data content.  Entries can come from the
 filesystem, SQL, or anywhere else.  They can be generated dynamically
