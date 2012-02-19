@@ -1046,6 +1046,10 @@ def blosxom_file_list_handler(args):
         entrylist = [x for x in entrylist
                      if time.strftime("%Y%m%d%H%M%S", x["timetuple"]).startswith(datestr)]
 
+    ids = [e.get_id() for e in entrylist]
+    for e in entrylist:
+        if (e._realfilename != e._filename) and (e._realfilename in ids):
+            entrylist.remove(e)
 
     args = {"request": request, "entry_list": entrylist}
     entrylist = tools.run_callback("sortlist",
