@@ -36,18 +36,19 @@ Pertinent to users:
 
 1. Renamed the project from PyBlosxom to Pyblosxom (no more CamelCase).
 
-2. I moved all the plugins again.  This time, instead of being in
-   ``plugins/``, they're now in ``Pyblosxom/plugins/``.
+2. I moved all the plugins again in the git repository. This time, instead
+   I moved them from ``plugins/`` to ``Pyblosxom/plugins/`` so that they're
+   in the ``Pyblosxom.plugins`` module.
 
-   You no longer have to copy core plugins into your plugins
-   directory.  Instead of copying core plugin files, refer to the
-   plugins in your ``config.py`` file using their full Python path in
-   the Pyblosxom package.
+   Because of this, you no longer have to copy core plugins into your plugins
+   directory.  Instead of copying core plugin files, refer to the plugins
+   in your ``config.py`` file using their full Python path in the Pyblosxom
+   package.
 
-   For example, the pycalendar plugin is now in
-   ``Pyblosxom/plugins/pycalendar.py`` and thus its Pyblosxom
-   package path is ``Pyblosxom.plugins.pycalendar``.  Your
-   ``config.py`` file would look have this::
+   For example, the pycalendar plugin is a core plugin that comes with
+   Pyblosxom and is now located in ``Pyblosxom/plugins/pycalendar.py`` in
+   git repository. Thus the module name is ``Pyblosxom.plugins.pycalendar``.
+   Your ``config.py`` file would look have this::
 
        py["load_plugins"] = [
            ...
@@ -56,10 +57,39 @@ Pertinent to users:
            ]
 
 
-   If you do this, then the next time you upgrade PyBlosxom, the
+   To switch from having core plugins in your ``plugin_dirs`` directories to
+   using the ones that come with Pyblosxom, all you need to do is:
+
+   1. change the entries for plugins that are core plugins that come with
+      Pyblosxom that are listed in the ``load_plugins`` list in your
+      ``config.py`` from something like this::
+
+          py["load_plugins"] = [
+              ...
+              "pycalendar",
+              ...
+              ]
+
+      to something like this::
+
+          py["load_plugins"] = [
+              ...
+              "Pyblosxom.plugins.pycalendar",
+              ...
+              ]
+
+   2. test to make sure your blog still works
+
+   3. remove the plugin files for plugins you changed in ``load_plugins``
+      from your ``plugin_dirs`` directories
+
+   To get a list of all plugins that come with Pyblosxom, see Part 2
+   in the Pyblosxom documentation.
+
+   If you make these changes, then the next time you upgrade PyBlosxom, core
    plugins will be upgraded automatically.
 
-   Further, documentation for plugins is at the top of the individual
+   Further, documentation for core plugins is at the top of the individual
    plugin files, but also in the documentation.  This includes a list
    of the plugins available in the core.
 
