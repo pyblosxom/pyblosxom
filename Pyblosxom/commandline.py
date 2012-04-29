@@ -493,7 +493,7 @@ def command_line_handler(scriptname, argv):
     handlers = get_handlers()
 
     if len(argv) == 1 or (len(argv) == 2 and argv[1] in ("-h", "--help")):
-        parser = build_parser("[command]")
+        parser = build_parser("%prog [command]")
         parser.print_help()
         print ""
         print "Commands:"
@@ -506,9 +506,9 @@ def command_line_handler(scriptname, argv):
 
     # then we execute the named command with options, or print help
     if argv[1].startswith("-"):
-        pwrap_error ( "Command '%s' does not exist." % argv[1])
-        pwrap_error ('')
-        pwrap_error ( "Commands:")
+        pwrap_error("Command '%s' does not exist." % argv[1])
+        pwrap_error('')
+        pwrap_error("Commands:")
         for command_str, _, command_help in handlers:
             pwrap_error ( "    %-14s %s" % (command_str, command_help))
         return 1
@@ -518,7 +518,7 @@ def command_line_handler(scriptname, argv):
         if c == command:
             return f(command, argv)
 
-    pwrap_error ( "Command '%s' does not exist." % command)
+    pwrap_error("Command '%s' does not exist." % command)
     for command_str, command_func, command_help in handlers:
-        pwrap_error ( "    %-14s %s" % (command_str, command_help))
+        pwrap_error("    %-14s %s" % (command_str, command_help))
     return 1
