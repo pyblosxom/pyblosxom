@@ -29,6 +29,7 @@ purposes.
    deploy_cgi
    deploy_paste
    deploy_apache_mod_wsgi
+   deploy_lighttpd_fastcgi
    deploy_staticrendering
    config_variables
    writing_entries
