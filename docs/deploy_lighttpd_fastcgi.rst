@@ -38,9 +38,11 @@ Deployment
    .. code-block:: python
       :linenos:
 
-      # This is the pyblosxom.wsgi script that powers the _______
-      # blog.
 
+	  #!/usr/bin/env python
+	  # This is the pyblosxom.wsgi script that powers the _______
+      # blog.
+	  
       import sys
 
       def add_to_path(d):
