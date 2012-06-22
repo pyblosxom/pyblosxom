@@ -38,9 +38,8 @@ Deployment
    .. code-block:: python
       :linenos:
 
-
-	  #!/usr/bin/env python
-	  # This is the pyblosxom.wsgi script that powers the _______
+      #!/usr/bin/env python
+      # This is the pyblosxom.wsgi script that powers the _______
       # blog.
 	  
       import sys
