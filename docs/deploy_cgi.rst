@@ -86,7 +86,7 @@ If you have problems and have gone through this section to no avail,
 ask a question on the pyblosxom-users mailing list or ask us on IRC.
 Details for both of these are on the `website`_.
 
-.. _website: http://pyblosxom.bluesock.org/
+.. _website: http://pyblosxom.github.com/
 
 
 Running ./pyblosxom.cgi doesn't work
@@ -145,7 +145,7 @@ specific problem is.
 If the traceback and information doesn't make any sense to you, ask a
 question on the pyblosxom-users mailing list or ask us on IRC.
 Details for both of these are on the `website
-<http://pyblosxom.bluesock.org/>`_.
+<http://pyblosxom.github.com/>`_.
 
 If you don't see a traceback, then you either have a configuration
 problem with your web server or a configuration problem with Python.
@@ -191,7 +191,7 @@ about your blog that might help you figure out what your problem is.
 
 If that doesn't help, ask a question on the pyblosxom-users mailing
 list or ask us on IRC.  Details for both of these are on the `website
-<http://pyblosxom.bluesock.org/>`_.
+<http://pyblosxom.github.com/>`_.
 
 
 UGH! My blog looks UGLY!

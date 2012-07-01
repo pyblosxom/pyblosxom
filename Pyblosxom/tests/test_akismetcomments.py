@@ -12,7 +12,7 @@ Tests for the akismetcomments plugin.
 """
 
 __author__ = 'Ryan Barrett <pyblosxom@ryanb.org>'
-__url__ = 'http://pyblosxom.bluesock.org/wiki/index.php/Framework_for_testing_plugins'
+__url__ = 'http://pyblosxom.github.com/wiki/index.php/Framework_for_testing_plugins'
 
 from Pyblosxom.tests import PluginTest
 from Pyblosxom.plugins import akismetcomments

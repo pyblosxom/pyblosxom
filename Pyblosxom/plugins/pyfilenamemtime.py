@@ -40,7 +40,7 @@ This plugin comes with Pyblosxom.  To install, do the following:
 __author__ = "Tim Roberts"
 __email__ = ""
 __version__ = "2011-10-23"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Allows you to codify the mtime in the filename."
 __category__ = "date"
 __license__ = "MIT"

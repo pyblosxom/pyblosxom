@@ -47,7 +47,7 @@ pingback.
 __author__ = "Ted Leung, Ryan Barrett"
 __email__ = ""
 __version__ = "2011-10-28"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "XMLRPC pingback support."
 __category__ = "comments"
 __license__ = "MIT"

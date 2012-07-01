@@ -125,7 +125,7 @@ Menno Smits at http://freshfoo.com/wiki/CodeIndex .
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
 __version__ = "2011-11-05"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Breaks blog entries into summary and details"
 __category__ = "display"
 __license__ = "MIT"

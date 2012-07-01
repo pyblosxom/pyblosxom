@@ -139,7 +139,7 @@ http://noone.org/blosxom/acronyms .
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
 __version__ = "2011-10-21"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Marks acronyms and abbreviations in blog entries."
 __category__ = "text"
 __license__ = "MIT"

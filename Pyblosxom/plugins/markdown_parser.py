@@ -52,7 +52,7 @@ __author__ = (
     "Blake Winton <bwinton@latte.ca>")
 __email__ = ""
 __version__ = "2011-11-02"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Markdown entry parser"
 __category__ = "text"
 __license__ = "GPLv3 or later"

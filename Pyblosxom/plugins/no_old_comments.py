@@ -35,7 +35,7 @@ Revisions
 __author__ = "Blake Winton"
 __email__ = "bwinton+blog@latte.ca"
 __version__ = "2011-10-28"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Prevent comments on entries older than a month."
 __category__ = "comments"
 __license__ = "Public Domain"

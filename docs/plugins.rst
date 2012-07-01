@@ -38,7 +38,7 @@ needs. The best way to find these plugins is to ask on the
 pyblosxom-users mailing list for a plugin that has the functionality
 you desire.
 
-.. _website: http://pyblosxom.bluesock.org/
+.. _website: http://pyblosxom.github.com/
 
 
 Installing plugins

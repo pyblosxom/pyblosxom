@@ -45,7 +45,7 @@ PyXML.
 __author__ = "Ted Leung"
 __email__ = "twl at sauria dot com"
 __version__ = "2011-10-23"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = (
     "Adds a 'w3cdate' variable which is the mtime in ISO8601 format.")
 __category__ = "date"

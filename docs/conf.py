@@ -35,8 +35,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General substitutions.
-project = 'Pyblosxom'
-copyright = '2009-2011, Will Kahn-Greene'
+project = 'PyBlosxom'
+copyright = 'Creative Commons CC0 - http://creativecommons.org/publicdomain/zero/1.0/'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
@@ -158,7 +158,7 @@ htmlhelp_basename = 'Pyblosxomdoc'
 # (source start file, target name, title, author, document class [howto/manual]).
 latex_documents = [
   ('index', 'Pyblosxom.tex', 'Pyblosxom Documentation',
-   'Will Kahn-Greene', 'manual'),
+   'PyBlosxom CC0', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

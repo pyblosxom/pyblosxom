@@ -33,7 +33,7 @@ If the instructions here don't meet your needs, ask us on the
 pyblosxom-users mailing list or on IRC.  Information for both is on
 the `website`_.
 
-.. _website: http://pyblosxom.bluesock.org/
+.. _website: http://pyblosxom.github.com/
 
 
 Upgrading
@@ -363,7 +363,7 @@ The Pyblosxom documentation covers some of these deployment options.
 If you want to deploy your blog in a way that's not covered in the
 documentation, ask on the pyblosxom-users mailing list or on the
 ``#pyblosxom`` IRC channel on ``irc.freenode.net``.  You can find
-details on the `website <http://pyblosxom.bluesock.org/>`_.
+details on the `website <http://pyblosxom.github.com/>`_.
 
 
 After installing
@@ -388,5 +388,5 @@ Additionally, please hop on the ``#pyblosxom`` IRC channel on
 acquainted with Pyblosxom and it'll reduce the amount of time it takes
 to get your blog up and going.
 
-Details are on the `website <http://pyblosxom.bluesock.org/>`_.
+Details are on the `website <http://pyblosxom.github.com/>`_.
 

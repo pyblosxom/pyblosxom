@@ -61,7 +61,7 @@ the templates.
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
 __version__ = "2011-10-22"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Serves static files related to flavours (css, js, ...)"
 __license__ = "MIT License"
 __registrytags__ = "1.5, core, experimental"

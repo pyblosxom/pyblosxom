@@ -75,7 +75,7 @@ control over the rendered HTML::
 __author__ = "Sean Bowman"
 __email__ = "sean dot bowman at acm dot org"
 __version__ = "2011-10-23"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "restructured text support for blog entries"
 __category__ = "text"
 __license__ = "MIT"

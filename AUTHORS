@@ -2,12 +2,12 @@
  Authors 
 =========
 
-Pyblosxom was originally written by Wari Wahab and is now maintained by
-Will Kahn-Greene.
+Pyblosxom was originally written by Wari Wahab and is now maintained by Akai Kitsune.
 
 Over the years, Pyblosxom has had many contributors who have helped
 make the project what it is today (in no particular order):
 
+* Will Kahn-Greene
 * Martin Kraft
 * Joerg Wendland
 * Enrico Zini
@@ -52,7 +52,6 @@ make the project what it is today (in no particular order):
 * David Pashley
 * David Geller
 * Roberto De Almeida
-* Akai
 * Antonio "Willy" Malara
 * Sean Whitton
 * Nicholas Tollervey

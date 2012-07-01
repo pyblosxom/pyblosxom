@@ -166,7 +166,7 @@ Related files
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 
@@ -208,7 +208,7 @@ Variables available:
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 
@@ -240,7 +240,7 @@ Variables available::
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 
@@ -259,7 +259,7 @@ comment form used to enter new comments.
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 
@@ -339,7 +339,7 @@ If you would like comment previews, you need to do 2 things.
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 
@@ -457,7 +457,7 @@ entry.
 __author__ = "Ted Leung, et al"
 __email__ = "pyblosxom-devel at sourceforge dot net"
 __version__ = "2011-12-17"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Adds comments to a blog entry."
 __category__ = "comments"
 __license__ = "MIT"

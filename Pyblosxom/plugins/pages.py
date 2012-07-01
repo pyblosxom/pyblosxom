@@ -145,7 +145,7 @@ by ``request``.  Example::
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
 __version__ = "2011-10-22"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = (
     "Allows you to include non-blog-entry files in your site and have a "
     "non-blog-entry front page.")

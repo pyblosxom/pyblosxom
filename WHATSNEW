@@ -336,9 +336,9 @@ Pertinent to users:
                  |- ...
 
 20. We moved the main PyBlosxom site to
-    http://pyblosxom.bluesock.org/ .  There's a "powered by
+    http://pyblosxom.github.com/ .  There's a "powered by
     pyblosxom" image at
-    http://pyblosxom.bluesock.org/images/pb_pyblosxom.gif
+    http://pyblosxom.github.com/images/pb_pyblosxom.gif
 
     You should adjust your templates accordingly.
 

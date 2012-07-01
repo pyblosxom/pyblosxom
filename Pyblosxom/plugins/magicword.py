@@ -78,7 +78,7 @@ browsing to it.
 __author__ = "Nathaniel Gray"
 __email__ = "n8gray /at/ caltech /dot/ edu"
 __version__ = "2011-10-28"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Magic word method for reducing comment spam"
 __category__ = "comments"
 __license__ = "MIT"

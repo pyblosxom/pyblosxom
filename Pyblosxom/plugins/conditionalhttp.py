@@ -31,7 +31,7 @@ This plugin comes with Pyblosxom.  To install, do the following:
 __author__ = "Wari Wahab"
 __email__ = "pyblosxom at wari dot per dot sg"
 __version__ = "2011-10-22"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Allows browser-side caching with if-not-modified-since."
 __category__ = "headers"
 __license__ = "MIT"

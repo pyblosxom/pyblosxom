@@ -90,7 +90,7 @@ class CrashHandler:
             "mailing list.</p>\n"
             "<p>The manual and details on IRC and the pyblosxom-users "
             "mailing list are all on the "
-            "<a href=\"http://pyblosxom.bluesock.org/\">website</a>.</p>")
+            "<a href=\"http://pyblosxom.github.com/\">website</a>.</p>")
 
         output.write("<p>Here is some useful information to track down "
             "the root cause of the problem:</p>")

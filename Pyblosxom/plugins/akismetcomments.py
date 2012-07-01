@@ -65,7 +65,7 @@ Hill.
 __author__ = "Benjamin Mako Hill"
 __version__ = "0.2"
 __email__ = ""
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Rejects comments using akismet"
 __category__ = "comments"
 __license__ = "GPLv2"

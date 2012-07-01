@@ -232,7 +232,7 @@ at the code for other entry parsers and implement it yourself.  If you
 need help, please ask on the pyblosxom-devel mailing list or on IRC.
 Details for both of these are on the `website`_.
 
-.. _website: http://pyblosxom.bluesock.org/
+.. _website: http://pyblosxom.github.com/
 
 Additionally, you're not locked into using a single markup across your
 blog.  You can use any markup for an entry that you have an entry

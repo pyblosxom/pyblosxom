@@ -88,7 +88,7 @@ indent                   '&nbsp;&nbsp;&nbsp;&nbsp;'  string
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
 __version__ = "$Id$"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Builds a list of categories."
 __category__ = "category"
 __license__ = "MIT"

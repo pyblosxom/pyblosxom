@@ -63,7 +63,7 @@ This plugin comes with Pyblosxom.  To install, do the following:
 __author__ = "Ted Leung"
 __email__ = ""
 __version__ = ""
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Trackback support."
 __category__ = "comments"
 __license__ = "MIT"

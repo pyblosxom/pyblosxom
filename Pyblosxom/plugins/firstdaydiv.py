@@ -55,7 +55,7 @@ Feel free to use this in other ways.
 __author__ = "Blake Winton"
 __email__ = "bwinton@latte.ca"
 __version__ = "2011-10-22"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = ("Adds a token which tells us whether "
                    "we're the first day being displayed or not.")
 __category__ = "date"

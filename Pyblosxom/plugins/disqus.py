@@ -62,7 +62,7 @@ comment_form template::
 __author__ = "Blake Winton"
 __email__ = "willg at bluesock dot org"
 __version__ = "2011-12-12"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Lets me use Disqus for comments."
 __category__ = "comments"
 __license__ = "MIT"

@@ -167,7 +167,7 @@ Related files
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 
@@ -211,7 +211,7 @@ Variables available:
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 
@@ -243,7 +243,7 @@ Variables available::
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 
@@ -262,7 +262,7 @@ previewed, but hasn't been posted to the blog, yet.
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 
@@ -281,7 +281,7 @@ comment form used to enter new comments.
 .. only:: text
 
    You can find the comment-story file in the docs at
-   http://pyblosxom.bluesock.org/ or in the tarball under
+   http://pyblosxom.github.com/ or in the tarball under
    docs/_static/plugins/comments/.
 
 

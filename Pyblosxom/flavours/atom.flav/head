@@ -16,8 +16,8 @@ $(escape(blog_description))
 <email>$(escape(blog_email))</email>
 </author>
 <rights>$(escape(blog_rights))</rights>
-<generator uri="http://pyblosxom.bluesock.org/" version="$(escape(pyblosxom_version))">
-Pyblosxom http://pyblosxom.bluesock.org/ $(escape(pyblosxom_version))
+<generator uri="http://pyblosxom.github.com/" version="$(escape(pyblosxom_version))">
+Pyblosxom hhttp://pyblosxom.github.com/ $(escape(pyblosxom_version))
 </generator>
 
 <updated>$(latest_w3cdate)</updated>

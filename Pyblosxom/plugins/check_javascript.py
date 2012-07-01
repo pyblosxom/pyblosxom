@@ -68,7 +68,7 @@ Configure
 __author__ = "Ryan Barrett"
 __email__ = "pyblosxom at ryanb dot org"
 __version__ = "2011-10-25"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = "Rejects comments using JavaScript"
 __category__ = "comments"
 __license__ = "GPLv2"

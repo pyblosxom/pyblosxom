@@ -12,4 +12,4 @@
    <ttl>60</ttl>
    <pubDate>$(latest_rfc822date)</pubDate>
    <managingEditor>$(escape(blog_email)) ($(escape(blog_author)))</managingEditor>
-   <generator>Pyblosxom http://pyblosxom.bluesock.org/ $(escape(pyblosxom_version))</generator>
+   <generator>Pyblosxom http://pyblosxom.github.com/ $(escape(pyblosxom_version))</generator>

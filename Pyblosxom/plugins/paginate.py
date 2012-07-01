@@ -99,7 +99,7 @@ point, someone will fix this.
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
 __version__ = "2011-10-22"
-__url__ = "http://pyblosxom.bluesock.org/"
+__url__ = "http://pyblosxom.github.com/"
 __description__ = (
     "Allows navigation by page for indexes that have too many entries.")
 __category__ = "display"
