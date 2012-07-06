@@ -193,7 +193,7 @@ class EntryBase:
             # from the user metadata, rather than the value
             # derived from mtime.
             if data.has_key('date'):
-                data.pop(key)
+                data.pop('date')
             mycache[entryid] = data
 
     addToCache = tools.deprecated_function(add_to_cache)
