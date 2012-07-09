@@ -11,7 +11,7 @@ Pyblosxom.
 How to clone the project
 ========================
 
-`Pyblosxom is on Github <https://github.com/willkg/pyblosxom>`_.
+`Pyblosxom is on Github <https://github.com/pyblosxom/pyblosxom>`_.
 
 
 If you have a Github account
@@ -32,7 +32,7 @@ If you don't have a Github account
 
 Clone the project using git::
 
-    git clone git://github.com/willkg/pyblosxom.git
+    git clone https://github.com/pyblosxom/pyblosxom.git
 
 Set ``user.name`` and ``user.email`` git configuration::
 
