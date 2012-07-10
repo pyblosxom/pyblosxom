@@ -4,30 +4,35 @@
  Contributing
 ==============
 
-This covers the basics for getting started with contributing to
-Pyblosxom.
+This covers the basics you need to know for contributing to
+PyBlosxom.
 
 
 How to clone the project
 ========================
 
-`Pyblosxom is on Github <https://github.com/pyblosxom/pyblosxom>`_.
+`PyBlosxom is on GitHub <https://github.com/pyblosxom/pyblosxom>`_.
 
 
-If you have a Github account
-----------------------------
+If you have a GitHub account [Recommended]
+-------------------------------------------
 
-Fork the project and work on your own clone.
+This is the ideal way to contribute because GitHub makes things simple
+and convenient .
+
+Go to the project page (https://github.com/pyblosxom/pyblosxom) and click on
+"Fork" at the top right on the screen. GitHub will create a copy of the 
+PyBlosxom repository in your account for you to work on.
 
 Create a new branch off of master for any new work that you do.
 
 When you want to send it upstream, create a pull request.
 
-If you need help with this process, `see the Github documentation
+If you need help with this process, `see the GitHub documentation
 <http://help.github.com/>`_.
 
 
-If you don't have a Github account
+If you don't have a GitHub account
 ----------------------------------
 
 Clone the project using git::
@@ -46,7 +51,8 @@ When you want to send it upstream, do::
     git format-patch --stdout origin/master > NAME_OF_PATCH_FILE.patch
 
 where ``NAME_OF_PATCH_FILE`` is a nice name that's short and
-descriptive of what the patch holds.
+descriptive of what the patch holds and master should be replaced with your 
+branch name
 
 Then attach that ``.patch`` file and send it to pyblosxom-devel
 mailing list.
@@ -65,7 +71,7 @@ Please add tests for changes you make. In general, it's best to write
 a test, verify that it fails, then fix the code which should make the
 test pass.
 
-Tests go in ``Pyblosxom/tets/``.
+Tests go in ``Pyblosxom/tests/``.
 
 
 Documentation

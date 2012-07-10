@@ -1,20 +1,24 @@
 .. _hacking-chapter:
 
 ======================
- Hacking on Pyblosxom
+ Hacking on PyBlosxom
 ======================
 
-Installing Pyblosxom to hack on it is a little different since you:
+This will cover installing PyBlosxom from the git repositories in a
+way that won't interfere with the packages or modules already installed on 
+the system.
 
-1. want to be running Pyblosxom from a git clone
+Installing PyBlosxom to hack on it is a little different since you:
 
-2. want Pyblosxom installed such that you don't have to keep running
+1. want to be running PyBlosxom from a git clone
+
+2. want PyBlosxom installed such that you don't have to keep running
    ``python setup.py install``
 
 3. want Paste installed so you can test locally
 
 
-This document covers installing Pyblosxom into a virtual environment
+As such, this document covers installing Pyblosxom into a virtual environment 
 and deploying it using Paste.
 
 
@@ -32,7 +36,6 @@ This requires:
 .. _git: http://git-scm.com/
 .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 .. _PasteScript: http://pypi.python.org/pypi/PasteScript
-
 
 Installation
 ============
@@ -61,7 +64,7 @@ To install:
 
 3. Using git, clone the Pyblosxom repository::
 
-      git clone git@github.com:willkg/pyblosxom.git
+      git clone https://github.com/pyblosxom/pyblosxom.git
 
 4. Change directories into the ``pyblosxom`` directory and run::
 
@@ -81,6 +84,19 @@ environment, you will:
 2. Change directories into where you have your blog and do::
 
       paster serve blog.ini
+	  
+Note: If you get an error message about "paster" not being currently 
+installed, or about the system not finding PyBlosxom, it is likely
+that you have Paster and PyBlosxom installed in different places.
+To ensure Paster is installed in your virtualenv, make sure it 
+is activated (see step 1) and then use pip to install paste.
+
+Note 2: Due to a bug in some linux distributions, it is recommended
+to install paste in the following three steps::
+
+	pip install paste
+	pip install pastedeploy 
+	pip install pastescript
 
 
 Updating Pyblosxom
@@ -89,3 +105,10 @@ Updating Pyblosxom
 Because you installed Pyblosxom with ``python setup.py develop``, when
 you make changes to the Pyblosxom code, they'll be available in the
 environment---you don't need to re-run ``python setup.py develop``.
+
+
+Where to go from here
+======================
+
+Once set up, you can continue to the 
+`Creating your blog <http://pyblosxom.github.com/1.5/install.html#creating-a-blog>`_. chapter
