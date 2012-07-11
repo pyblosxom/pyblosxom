@@ -2,40 +2,64 @@
 Summary
 =======
 
-This plugin implements news item listings for a subset
-of Pyblosxom post categories, suitable for display
-on a landing page. It is compatible with the pages
-plugin.
+This plugin implements news item listings for a subset of Pyblosxom
+post categories, suitable for display on a landing page. It is
+compatible with the pages plugin, and has simple support for
+prepublication preview of news content.
 
 There are several elements to the magic.
 
+
 **Set date from filename** (cb_filestat)
 
-For entry source files that begin with a yyyy-mm-dd string,
-set the date of the post from the filename, overriding
-the mtime value.
+For entry source files that begin with a yyyy-mm-dd string, set the
+date of the post from the filename, overriding the mtime value.
 
-This works out nicely for keeping posts organized in a
-filesystem view, and requires less overhead than extracting
-the date from metadata recorded in the source file header.
+This works out nicely for keeping posts organized in a filesystem
+view, and requires less overhead than extracting the date from
+metadata recorded in the source file header.
+
 
 **Ignore non-conformant filenames** (cb_truncatelist)
 
-For categories specified in the "newslists" config list,
-skip files that do not have a valid date prefix. This allows
-README files and pre-release drafts to be set in these categories,
-which is handy in a small-scale collaborative environment.
+For categories specified in the "newslists" config list, skip files
+that do not have a valid date prefix. This allows README files and
+pre-release drafts to be set in these categories, which is handy in a
+small-scale collaborative environment.
+
 
 **Provide formatted link lists** (cb_prepare)
 
-The categories specified in the "newslists" config list
-are mapped as sorted, formatted link lists in the corresponding
-(lowercased) variable names. The lists can be called in a
-flavor template.
+The categories specified in the "newslists" config list are mapped as
+sorted, formatted link lists in the corresponding (lowercased)
+variable names. The lists can be called in a flavor template.
 
-The composition of the link lists (number of items, and
-whether the title is linked to an underlying post) is 
-controlled by two values on the "newslists" config list objects.
+The composition of the link lists (number of items, and whether the
+title is linked to an underlying post) is controlled by two values on
+the "newslists" config list objects.
+
+
+**Preview** (cb_pathinfo, cb_truncatelist, cb_prepare)
+
+For collaborative workflows, items placed in the "newslists"
+categories that are prefixed with "X" are left out of the default
+view, but shown in a preview mode. To access preview pages, prepend
+the keyword "preview" to the URL path:
+
+  http://myblog.com/preview/index.html
+
+Preview mode affects only "newslists" lists and items; the prefix
+stub is otherwise ignored.
+
+This facility is not particularly tight; the preview items are
+available in the clear. In low-security environments where this is
+acceptable (like ours), it is sufficient to place the "preview" URL
+stub in robots.txt, to prevent search engines from crawling the draft
+content. For a very slight improvement in security, the prefix stub
+can be defined as some random string. If you need rigorous control
+over publication, though, you should be using another workflow or
+another tool.
+
 
 Install
 =======
@@ -65,17 +89,20 @@ To install, do the following:
          }
    }
 
-3. Be sure that top-level category folders corresponding
-   to the values set in the ``newslists`` variable
-   are in place.
+3. Be sure that top-level category folders corresponding to the values
+   set in the ``newslists`` variable are in place.
 
-4. Add the (lowercased) newslist values to your page templates.
-   For example:
+4. Set the newslists-preview string in config.py:
+
+     py["newslists-preview"] = "preview"
+
+5. Add the (lowercased) newslist values to your page templates. For
+   example:
 
    <div style="listing">$(news)</div>
 
-The link templates are hard-wired. To change the HTML,
-just edit the string templates in the plugin directly.
+The link templates are hard-wired. To change the HTML, just edit the
+string templates in the plugin directly.
 
 """
 
@@ -89,15 +116,15 @@ __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"
 
 
-
-
 from Pyblosxom import tools
-from Pyblosxom.tools import pwrap
+from Pyblosxom.tools import pwrap_error
 import os, re
 import datetime,time
+import urllib
 
 filerex = re.compile("^([0-9]{4})-([0-9]{2})-([0-9]{2})")
 
+# Templates with placeholders
 templates = {}
 templates["date"] = {}
 templates["nodate"] = {}
@@ -106,7 +133,8 @@ templates["date"]["nolink"] = "<div style='background:yellow;text-align:center;'
 templates["nodate"]["link"] = "<div class='news-link'><a href='@@url@@'>@@title@@</a></div>"
 templates["nodate"]["nolink"] = "<div style='background:yellow;text-align:center;'><b>Notice:</b> @@title@@</div>"
 
-params = {}
+# Placeholder name lists for each template
+paramsets = {}
 paramsets["date"] = {}
 paramsets["nodate"] = {}
 paramsets["date"]["link"] = ["date","url","title"]
@@ -114,24 +142,55 @@ paramsets["date"]["nolink"] = ["date","title"]
 paramsets["nodate"]["link"] = ["url","title"]
 paramsets["nodate"]["nolink"] = ["title"]
 
-
 def verify_installation(request):
     config = request.get_configuration()
+    # Check for preview path element def
+    if not config.has_key('newslists-preview'):
+        pwrap_error("py[\"newslists-preview\"] string is undefined in config.py")
+        return False
     # Check for defined categories
-    if not config['newslists']:
-        print "Ouch 1"
+    if not config.has_key('newslists'):
+        pwrap_error("py[\"newslists\"] is undefined in config.py.")
         return False
-    if not config['newslists'].keys():
-        print "Ouch 2"
+    if not type(config["newslists"]) == type({}):
+        pwrap_error("py[\"newslists\"] must be %s, found %s" % (type({}), type(config["newslists"])))
         return False
-    for obj in config['newslists']:
-        for key in ["count","link","usedate"]:
-            if not obj.has_key(key):
-                print "Ouch 3"
+    # Check for at least one category, all with a correspnding directory and a full
+    # set of keys
+    status = False
+    for key in config['newslists']:
+        status = True
+        if not os.path.exists(os.path.join(config["datadir"],key)):
+            pwrap_error("Data directory %s must have category \"%s\" as an immediate subdirectory" % (config["datadir"], key))
+            return False
+        for subkey in ["itemCount","useLink","useDate"]:
+            if not config["newslists"][key].has_key(subkey):
+                pwrap_error("py[\"newslists\"] key \"%s\" is missing a value for \"%s\"" % (key,subkey))
                 return False
-    print "Okay"
+    if status == False:
+        pwrap_error("py[\"newslists\"] must define at least one category")
+        return False
     return True
 
+def cb_pathinfo(args):
+    config = args['request'].getConfiguration()
+    data = args['request'].get_data()
+    pyhttp = args['request'].get_http()
+    url = pyhttp['PATH_INFO']
+    urltype, urlhost = urllib.splittype(url)
+    urlhost, urlpath = urllib.splithost(urlhost)
+    if urltype:
+        urlstub = "%s://%s" % (urltype,urlhost)
+    else:
+        urlstub = ''
+    pathlst = urlpath.split("/")[1:]
+    if len(pathlst) > 0 and pathlst[0] == config["newslists-preview"]:
+        pathlst = pathlst[1:]
+        config['preview'] = True
+    else:
+        config['preview'] = False
+    url = '/'.join([urlstub] + pathlst)
+    pyhttp['PATH_INFO'] = url
 
 def cb_filestat(args):
     """Parse the entry filename looking for a date pattern. If the
@@ -175,19 +234,25 @@ def cb_truncatelist(args):
     config = request.getConfiguration()
     category_names = config['newslists'].keys()
     category_configs = config['newslists']
-    pagesdir = config['pagesdir']
+    if config.has_key('pagesdir'):
+        pagesdir = config['pagesdir']
+    else:
+        pagesdir = False
     data = request.get_data()
+
     # The entry_list segment is a little funny inside
     # Pyblosxom. On most occasions it is double-nested when
     # this callback is invoked, so we don't return args
     # verbatim from this function.
+
     entry_list = args['entry_list']
+    previewing = config['preview']
     for i in range(len(entry_list) - 1, -1, -1):
         entry = entry_list[i]
         filepath = entry['file_path']
         # Check for path
         if filepath:
-            # Split file path
+                # Split file path
             filelst = filepath.split(os.path.sep)
             # Always pass through index pages
             if filelst[-1] == "index":
@@ -196,13 +261,17 @@ def cb_truncatelist(args):
             if pagesdir and entry['filename'].startswith(pagesdir):
                 continue
             # Check for dated config
-            if categories:
+            if category_configs:
                 # Check for date pattern. This doesn't check
                 # for date validity, only a looks-like-a-date
                 # pattern.
                 logger.debug("%s" % filelst[-1])
                 if not filerex.match(filelst[-1]):
-                    args['entry_list'].pop(i)
+                    if not previewing or not filelst[-1].startswith('X'):
+                        args['entry_list'].pop(i)
+                else:
+                    if previewing:
+                        args['entry_list'].pop(i)
     return args['entry_list']
 
 
@@ -240,16 +309,29 @@ class GetNewsList:
             if filename == "README.txt" or filename.endswith("~"):
                 continue
             m = filerex.match(filename)
-            if m:
+            dome = True
+            previewing = self._config['preview']
+            if not m:
+                if not previewing or not filename.startswith('X'):
+                    dome = False
+                else:
+                    if previewing:
+                        m = filerex.match(filename[1:])
+                    else:
+                        dome = False
+            else:
+                if previewing:
+                    dome = False
+            if dome and m:
                 # Snip off date
                 year = int(m.group(1))
                 month = int(m.group(2))
                 day = int(m.group(3))
-                # Format date
-
-                # XXX Skip if date is invalid
-                date = datetime.date(year, month, day).strftime("%e %b %Y (%a)").strip()
-
+                # Format date, skipping if date is invalid
+                try:
+                    date = datetime.date(year, month, day).strftime("%e %b %Y (%a)").strip()
+                except Exception as e:
+                    continue
                 # Open file
                 ifh = open(os.path.join(dirpath, filename))
                 # Get title
@@ -257,9 +339,9 @@ class GetNewsList:
                 # Compose strings
                 if title:
                     # Get template
-                    template = templates[self._link][self._date]
+                    template = templates[self._date][self._link]
                     # Get paramset
-                    paramset = paramsets[self._link][self._date]
+                    paramset = paramsets[self._date][self._link]
                     params = {}
                     for key in paramset:
                         if key == "title":
@@ -269,26 +351,38 @@ class GetNewsList:
                             filehtml = "%s.html" % filestub
                             base = self._config['base_url']
                             category = self._categoryName
-                            params['title'] = os.path.join(base, category, filehtml)
+                            params['url'] = os.path.join(base, category, filehtml)
+                            # If config['preview'] is True, restore 'preview' to URL
+                            if self._config['preview']:
+                                url = params['url']
+                                urltype, urlhost = urllib.splittype(url)
+                                urlhost, urlpath = urllib.splithost(urlhost)
+                                if urltype:
+                                    urlstub = "%s://%s" % (urltype,urlhost)
+                                else:
+                                    urlstub = ''
+                                pathlst = urlpath.split("/")
+                                pathlst = [config["newslists-preview"]] + pathlst
+                                params['url'] = "/".join([urlstub] + pathlst)
+
                             while True:
                                 line = ifh.readline()
                                 if not line: break
                                 if not line.startswith("#"): break
                                 if line.startswith("#link ") and len(line) > 6:
-                                    url = line[6:]
+                                    params['url'] = line[6:]
                                     break
                         elif key == "date":
                             params['date'] = date
                     for key in params:
-                        entry = template.replace('@@%s@@' % key, params[key])
+                        template = template.replace('@@%s@@' % key, params[key])
+                    
                     # Add to list
-                    print "Adding"
-                    stuff.append(entry)
+                    stuff.append(template)
                     count += 1
                     if count == self._count:
                         break
                 ifh.close()
-        # Join
         self._news_list = "\n".join(stuff)
 
 def cb_prepare(args):
@@ -301,8 +395,7 @@ def cb_prepare(args):
     logger = tools.get_logger()
     logger.debug(data['url'])
     if data['url'] == "%s/index.html" % base_url:
-        # XXX Iterate over configured newslists
         for categoryName in config["newslists"].keys():
-            key = categoryName.toLowerCase()
+            key = categoryName.lower()
             cfg = config["newslists"][categoryName]
             data[key] = GetNewsList(config, categoryName, cfg['itemCount'], cfg['useLink'], cfg['useDate'])
