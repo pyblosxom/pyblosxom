@@ -53,7 +53,7 @@ htmlhelp:
 	      ".hhp project file in $(BUILDDIR)/htmlhelp."
 
 latex: initialize
-	mkdir -p $(BUILDDIR)/latex $(BUILDdIR)/doctrees
+	mkdir -p $(BUILDDIR)/latex $(BUILDDIR)/doctrees
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
 	@echo
 	@echo "Build finished; the LaTeX files are in $(BUILDDIR)/latex."
