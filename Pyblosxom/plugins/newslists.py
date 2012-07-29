@@ -362,7 +362,7 @@ class GetNewsList:
                                 else:
                                     urlstub = ''
                                 pathlst = urlpath.split("/")
-                                pathlst = [config["newslists-preview"]] + pathlst
+                                pathlst = [self._config["newslists-preview"]] + pathlst
                                 params['url'] = "/".join([urlstub] + pathlst)
 
                             while True:
