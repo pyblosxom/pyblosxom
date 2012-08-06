@@ -144,9 +144,14 @@ class PyblCategories:
         self._baseurl = config.get("base_url", "")
 
         form = self._request.get_form()
-        flavour = (form['flav'].value
-                   if 'flav' in form
-                   else config.get('default_flavour', 'html'))
+
+        if form.has_key('flav'):
+            flavour = form['flav'].value
+        else:
+            flavour = config.get('default_flavour', 'html') 
+        #flavour = form['flav'].value
+        #           if 'flav' in form
+        #           else config.get('default_flavour', 'html'))
 
         # build the list of all entries in the datadir
         elist = tools.walk(self._request, root)
