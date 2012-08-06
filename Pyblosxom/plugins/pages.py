@@ -236,7 +236,7 @@ def is_frontpage(pyhttp, config):
     if pathinfo == "/":
         return True
     path, ext = os.path.splitext(pathinfo)
-    if path == "/index":
+    if path == "/index" and not ext in [".rss20", ".atom", ".rss"]:
         return True
     return False
 
