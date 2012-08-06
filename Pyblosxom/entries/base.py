@@ -186,6 +186,14 @@ class EntryBase:
         """
         mycache = tools.get_cache(self._request)
         if mycache:
+            # This could be extended to cover all keys used by
+            # set_time(), but this is the key most likely to turn
+            # up in metadata. If #date is not blocked from caching
+            # here, the templates will use the raw string value
+            # from the user metadata, rather than the value
+            # derived from mtime.
+            if data.has_key('date'):
+                data.pop('date')
             mycache[entryid] = data
 
     addToCache = tools.deprecated_function(add_to_cache)
