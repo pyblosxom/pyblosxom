@@ -398,7 +398,7 @@ class Pyblosxom:
             url = url.replace(os.sep, "/")
             print "rendering '%s' ..." % url
 
-            tools.render_url_statically(config, url, q)
+            tools.render_url_statically(dict(config), url, q)
 
         # we're done, clean up
         self.cleanup()
