@@ -956,8 +956,6 @@ def render_url_statically(cdict, url, querystring):
     if not staticdir:
         raise Exception("You must set static_dir in your config file.")
 
-    staticdir = cdict.get("static_dir", "")
-
     response = render_url(cdict, url, querystring)
     response.seek(0)
 
