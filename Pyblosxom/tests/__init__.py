@@ -86,7 +86,7 @@ class UnitTestBase(unittest.TestCase):
 
         - req.data["extensions"]          - dict of string -> func
 
-        if using req.getForm():
+        if using req.get_form():
         - req.pyhttp["wsgi.input"]        - StringIO instance
         - req.pyhttp["REQUEST_METHOD"]    - GET or POST
         - req.pyhttp["CONTENT_LENGTH"]    - integer
