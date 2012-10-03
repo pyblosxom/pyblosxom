@@ -984,6 +984,11 @@ def render_url(cdict, pathinfo, querystring=""):
     """
     from pyblosxom import Pyblosxom
 
+    if querystring:
+        request_uri = pathinfo + "?" + querystring
+    else:
+        request_uri = pathinfo
+
     env = {
         "HTTP_HOST": "localhost",
         "HTTP_REFERER": "",
@@ -992,7 +997,7 @@ def render_url(cdict, pathinfo, querystring=""):
         "QUERY_STRING": querystring,
         "REMOTE_ADDR": "",
         "REQUEST_METHOD": "GET",
-        "REQUEST_URI": pathinfo + "?" + querystring,
+        "REQUEST_URI": request_uri,
         "SCRIPT_NAME": "",
         "wsgi.errors": sys.stderr,
         "wsgi.input": None
