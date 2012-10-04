@@ -1,7 +1,7 @@
 #######################################################################
 # This file is part of Pyblosxom.
 #
-# Copyright (c) 2004-2011 Will Kahn-Greene
+# Copyright (c) 2004-2012 Will Kahn-Greene
 #
 # Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
@@ -13,12 +13,13 @@ Summary
 
 Plugin for paging long index pages.
 
-Pyblosxom uses the num_entries configuration variable to prevent more
-than ``num_entries`` being rendered by cutting the list down to
+Pyblosxom uses the ``num_entries`` configuration variable to prevent
+more than ``num_entries`` being rendered by cutting the list down to
 ``num_entries`` entries.  So if your ``num_entries`` is set to 20, you
 will only see the first 20 entries rendered.
 
-The paginate overrides this functionality and allows for paging.
+The paginate plugin overrides this functionality and allows for
+paging.
 
 
 Install
@@ -89,10 +90,17 @@ behavior::
 Note about static rendering
 ===========================
 
-This plugin doesn't work with static rendering.  The problem is that
-it relies on the querystring to figure out which page to show and when
-you're static rendering, only the first page is rendered.  At some
-point, someone will fix this.
+This plugin works fine with static rendering, but the urls look
+different. Instead of adding a ``page=4`` kind of thing to the
+querystring, this adds it to the url.
+
+For example, say your front page was ``/index.html`` and you had 5
+pages of entries. Then the urls would look like this::
+
+    /index.html           first page
+    /index_page2.html     second page
+    /index_page3.html     third page
+    ...
 
 """
 
@@ -107,7 +115,9 @@ __license__ = "MIT"
 __registrytags__ = "1.5, core"
 
 
-from Pyblosxom.tools import pwrap_error
+import os
+
+from Pyblosxom.tools import pwrap_error, render_url_statically
 
 
 def verify_installation(request):
@@ -124,9 +134,9 @@ def verify_installation(request):
 
 
 class PageDisplay:
-    def __init__(self, url, current_page, max_pages, count_from,
+    def __init__(self, url_template, current_page, max_pages, count_from,
                  previous_text, next_text, linkstyle):
-        self._url = url
+        self._url_template = url_template
         self._current_page = current_page
         self._max_pages = max_pages
         self._count_from = count_from
@@ -138,8 +148,9 @@ class PageDisplay:
         output = []
         # prev
         if self._current_page != self._count_from:
-            output.append('<a href="%s%d">%s</a>&nbsp;' %
-                          (self._url, self._current_page - 1, self._previous))
+            prev_url = self._url_template % (self._current_page - 1)
+            output.append('<a href="%s">%s</a>&nbsp;' %
+                          (prev_url, self._previous))
 
         # pages
         if self._linkstyle == 0:
@@ -147,16 +158,17 @@ class PageDisplay:
                 if i == self._current_page:
                     output.append('[%d]' % i)
                 else:
-                    output.append('<a href="%s%d">%d</a>' %
-                                  (self._url, i, i))
+                    page_url = self._url_template % i
+                    output.append('<a href="%s">%d</a>' % (page_url, i))
         elif self._linkstyle == 1:
             output.append(' Page %s of %s ' %
                           (self._current_page, self._max_pages - 1))
 
         # next
         if self._current_page < self._max_pages - 1:
-            output.append('&nbsp;<a href="%s%d">%s</a>' %
-                          (self._url, self._current_page + 1, self._next))
+            next_url = self._url_template % (self._current_page + 1)
+            output.append('&nbsp;<a href="%s">%s</a>' %
+                          (next_url, self._next))
 
         return " ".join(output)
 
@@ -173,48 +185,97 @@ def page(request, num_entries, entry_list):
     if linkstyle > 1:
         linkstyle = 1
 
-    max = num_entries
+    entries_per_page = num_entries
     count_from = config.get("paginate_count_from", 0)
 
-    if max > 0 and isinstance(entry_list, list) and len(entry_list) > max:
-        form = request.get_form()
+    if ((entries_per_page > 0 and isinstance(entry_list, list)
+         and len(entry_list) > entries_per_page)):
 
         page = count_from
-        if form:
+        url = http.get("REQUEST_URI", http.get("HTTP_REQUEST_URI", ""))
+        url_template = url
+        if not data.get("STATIC"):
+            form = request.get_form()
+
+            if form:
+                try:
+                    page = int(form.getvalue("page"))
+                except ValueError:
+                    page = count_from
+
+            # Restructure the querystring so that page= is at the end
+            # where we can fill in the next/previous pages.
+            if url_template.find("?") != -1:
+                query = url_template[url_template.find("?") + 1:]
+                url_template = url_template[:url_template.find("?")]
+
+                query = query.split("&")
+                query = [m for m in query if not m.startswith("page=")]
+                if len(query) == 0:
+                    url_template = url_template + "?" + "page=%d"
+                else:
+                    # Note: We're using &amp; here because it needs to
+                    # be url_templateencoded.
+                    url_template = (url_template + "?" + "&amp;".join(query) +
+                                    "&amp;page=%d")
+            else:
+                url_template = url_template + "?page=%d"
+
+        else:
             try:
-                page = int(form.getvalue("page"))
-            except:
+                page = data["paginate_page"]
+            except KeyError:
                 page = count_from
 
-        begin = (page - count_from) * max
-        end = (page + 1 - count_from) * max
+            # The REQUEST_URI isn't the full url here--it's only the
+            # path and so we need to add the base_url.
+            base_url = config["base_url"].rstrip("/")
+            url_template = base_url + url_template
+
+            url_template = url_template.split("/")
+            ret = url_template[-1].rsplit("_", 1)
+            if len(ret) == 1:
+                fn, ext = os.path.splitext(ret[0])
+                pageno = "_page%d"
+            else:
+                fn, pageno = ret
+                pageno, ext = os.path.splitext(pageno)
+                pageno = "_page%d"
+            url_template[-1] = fn + pageno + ext
+            url_template = "/".join(url_template)
+
+        begin = (page - count_from) * entries_per_page
+        end = (page + 1 - count_from) * entries_per_page
         if end > len(entry_list):
             end = len(entry_list)
 
-        maxpages = ((len(entry_list) - 1) / max) + 1 + count_from
-
-        url = http.get("REQUEST_URI", http.get("HTTP_REQUEST_URI", ""))
-        if url.find("?") != -1:
-            query = url[url.find("?") + 1:]
-            url = url[:url.find("?")]
-
-            query = query.split("&")
-            query = [m for m in query if not m.startswith("page=")]
-            if len(query) == 0:
-                url = url + "?" + "page="
-            else:
-                url = url + "?" + "&amp;".join(query) + "&amp;page="
-        else:
-            url = url + "?page="
+        max_pages = ((len(entry_list) - 1) / entries_per_page) + 1 + count_from
 
         data["entry_list"] = entry_list[begin:end]
 
         data["page_navigation"] = PageDisplay(
-            url, page, maxpages, count_from, previous_text, next_text,
-            linkstyle)
+            url_template, page, max_pages, count_from, previous_text,
+            next_text, linkstyle)
 
-    else:
-        data["page_navigation"] = ""
+        # If we're static rendering and there wasn't a page specified
+        # and this is one of the flavours to statically render, then
+        # this is the first page and we need to render all the rest of
+        # the pages, so we do that here.
+        static_flavours = config.get("static_flavours", ["html"])
+        if ((data.get("STATIC") and page == count_from
+             and data.get("flavour") in static_flavours)):
+            # Turn http://example.com/index.html into
+            # http://example.com/index_page5.html for each page.
+            url = url.split('/')
+            fn = url[-1]
+            fn, ext = os.path.splitext(fn)
+            template = '/'.join(url[:-1]) + '/' + fn + '_page%d'
+            if ext:
+                template = template + ext
+
+            for i in range(count_from + 1, max_pages):
+                print "   rendering page %s ..." % (template % i)
+                render_url_statically(dict(config), template % i, '')
 
 
 def cb_truncatelist(args):
@@ -223,3 +284,36 @@ def cb_truncatelist(args):
 
     page(request, request.config.get("num_entries", 10), entry_list)
     return request.data.get("entry_list", entry_list)
+
+
+def cb_pathinfo(args):
+    request = args["request"]
+    data = request.get_data()
+
+    # This only kicks in during static rendering.
+    if not data.get("STATIC"):
+        return
+
+    http = request.get_http()
+    pathinfo = http.get("PATH_INFO", "").split("/")
+
+    # Handle the http://example.com/index_page5.html case. If we see
+    # that, put the page information in the data dict under
+    # "paginate_page" and "fix" the pathinfo.
+    if pathinfo and "_page" in pathinfo[-1]:
+        fn, pageno = pathinfo[-1].rsplit("_")
+        pageno, ext = os.path.splitext(pageno)
+        try:
+            pageno = int(pageno[4:])
+        except (ValueError, TypeError):
+            # If it's not a valid page number, then we shouldn't be
+            # doing anything here.
+            return
+
+        pathinfo[-1] = fn
+        pathinfo = "/".join(pathinfo)
+        if ext:
+            pathinfo += ext
+
+        http["PATH_INFO"] = pathinfo
+        data["paginate_page"] = pageno
