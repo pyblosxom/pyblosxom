@@ -509,11 +509,11 @@ class EnvDict(dict):
 
     def __getitem__(self, key):
         """If the key argument is ``form``, we return
-        ``_request.getForm()``.  Otherwise this returns the item for
+        ``_request.get_form()``.  Otherwise this returns the item for
         that key in the wrapped dict.
         """
         if key == "form":
-            return self._request.getForm()
+            return self._request.get_form()
 
         return dict.__getitem__(self, key)
 
@@ -566,7 +566,7 @@ class Request(object):
         self.tell = self._in.tell
 
         # this holds the FieldStorage instance.
-        # initialized when request.getForm is called the first time
+        # initialized when request.get_form is called the first time
         self._form = None
 
         self._response = None
@@ -1126,7 +1126,7 @@ def blosxom_process_path_info(args):
     data = request.get_data()
     pyhttp = request.get_http()
 
-    form = request.getForm()
+    form = request.get_form()
 
     # figure out which flavour to use.  the flavour is determined by
     # looking at the "flav" post-data variable, the "flav" query

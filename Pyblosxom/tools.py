@@ -956,8 +956,6 @@ def render_url_statically(cdict, url, querystring):
     if not staticdir:
         raise Exception("You must set static_dir in your config file.")
 
-    staticdir = cdict.get("static_dir", "")
-
     response = render_url(cdict, url, querystring)
     response.seek(0)
 
@@ -986,6 +984,11 @@ def render_url(cdict, pathinfo, querystring=""):
     """
     from pyblosxom import Pyblosxom
 
+    if querystring:
+        request_uri = pathinfo + "?" + querystring
+    else:
+        request_uri = pathinfo
+
     env = {
         "HTTP_HOST": "localhost",
         "HTTP_REFERER": "",
@@ -994,7 +997,7 @@ def render_url(cdict, pathinfo, querystring=""):
         "QUERY_STRING": querystring,
         "REMOTE_ADDR": "",
         "REQUEST_METHOD": "GET",
-        "REQUEST_URI": pathinfo + "?" + querystring,
+        "REQUEST_URI": request_uri,
         "SCRIPT_NAME": "",
         "wsgi.errors": sys.stderr,
         "wsgi.input": None
