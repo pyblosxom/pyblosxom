@@ -566,3 +566,24 @@ def cb_head(args):
 
 
 cb_foot = cb_head
+
+
+def cb_staticrender_filelist(args):
+    req = args["request"]
+
+    # We call our own cb_start() here because we need to initialize
+    # the tagsdata.
+    cb_start({"request": req})
+
+    config = req.get_configuration()
+    filelist = args["filelist"]
+
+    tagsdata = req.get_data()["tagsdata"]
+    index_flavours = config.get("static_index_flavours", ["html"])
+    trigger = "/" + config.get("tags_trigger", "tag")
+
+    # Go through and add an index.flav for each index_flavour
+    # for each tag.
+    for tag in tagsdata.keys():
+        for flavour in index_flavours:
+            filelist.append((trigger + "/" + tag + "." + flavour, ""))
