@@ -183,7 +183,10 @@ class PyblCalendar:
                 continue
 
             # mark the entry because it's one we want to show
-            datepiece = time.strftime("%Y/%b/%d", timetuple)
+            if config.get("static_monthnumbers"):
+                datepiece = time.strftime("%Y/%m/%d", timetuple)
+            else:
+                datepiece = time.strftime("%Y/%b/%d", timetuple)
             self._entries[day] = (baseurl + "/" + datepiece, day)
 
         # Set the first day of the week (Sunday by default)
