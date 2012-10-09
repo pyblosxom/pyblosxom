@@ -268,6 +268,7 @@ class Pyblosxom:
             return 0
 
         flavours = config.get("static_flavours", ["html"])
+        index_flavours = config.get("static_index_flavours", ["html"])
 
         renderme = []
 
@@ -332,7 +333,7 @@ class Pyblosxom:
 
                 # toss in the render queue
                 for f in flavours:
-                    renderme.append( (mem + "." + f, "") )
+                    renderme.append((mem + "." + f, ""))
 
         print "rendering %d entries." % len(renderme)
 
@@ -350,7 +351,7 @@ class Pyblosxom:
 
         for mem in categories:
             mem = os.path.normpath(mem + "/index.")
-            for f in flavours:
+            for f in index_flavours:
                 renderme.append((mem + f, ""))
 
         # now we handle dates
@@ -363,7 +364,7 @@ class Pyblosxom:
 
         for mem in dates:
             mem = os.path.normpath(mem + "/index.")
-            for f in flavours:
+            for f in index_flavours:
                 renderme.append((mem + f, ""))
 
         # now we handle arbitrary urls
