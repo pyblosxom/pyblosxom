@@ -49,7 +49,22 @@ These are the instructions for configuring static rendering in Pyblosxom.
 
       py["static_flavours"] = ["html"]
 
-3. (optional) Uncomment ``static_monthnames`` in your ``config.py`` file.
+3. (optional) Uncomment ``static_index_flavours`` in your ``config.py`` file.
+
+   ``static_index_flavours`` is just like ``static_flavours`` except
+   it's the flavours of the index files: frontpage index, category
+   indexes, date indexes, ...
+
+   Defaults to ``["html"]`` which only renders the html flavour.
+
+   For example::
+
+     py["static_index_flavours"] = ["html"]
+
+   If you want your index files to also be feeds, then you should add
+   a feed flavour to the list.
+
+4. (optional) Uncomment ``static_monthnames`` in your ``config.py`` file.
 
    The value (either ``True`` or ``False``) will determine if you want
    month names (such as ``April``) in the static pages.
@@ -60,7 +75,7 @@ These are the instructions for configuring static rendering in Pyblosxom.
 
       py["static_monthnames"] = False
 
-4. Uncomment ``static_monthnumbers`` in your ``config.py`` file.
+5. Uncomment ``static_monthnumbers`` in your ``config.py`` file.
 
    The value (either ``True`` or ``False``) will determine if you want
    month numbers (such as ``04`` for ``April``) in the static pages.
@@ -71,7 +86,7 @@ These are the instructions for configuring static rendering in Pyblosxom.
 
       py["static_monthnumbers"] = False
 
-5. Set ``base_url`` in your ``config.py`` file to the base url your 
+6. Set ``base_url`` in your ``config.py`` file to the base url your 
    blog will have.
 
    For example, if your ``static_dir`` were set to
@@ -86,6 +101,7 @@ Here's an example of static rendering configuration::
 
    py["static_dir"] = "/home/joe/public_html/static/"
    py["static_flavours"] = ["html"]
+   py["static_index_flavours"] = ["html", "atom"]
    py["static_monthnames"] = False    # I do not want month names
    py["static_monthnumbers"] = True   # I do want month numbers
 
