@@ -42,6 +42,7 @@ class FileEntry(base.EntryBase):
         base.EntryBase.__init__(self, request)
         self._config = request.get_configuration()
         self._filename = filename.replace(os.sep, '/')
+        self._realfilename = os.path.realpath(filename).replace(os.sep, '/')
         self._root = root.replace(os.sep, '/')
 
         self._datadir = datadir or self._config["datadir"]
