@@ -1142,8 +1142,7 @@ class AjaxRenderer(blosxom.Renderer):
         """
         if self._ajax_type == 'preview' and template_name == 'comment-preview':
             return True
-        elif (self._ajax_type == 'post' and template_name == 'comment'
-              and round(self._data.get('cmt_time', 0)) == round(entry['cmt_time'])):
+        elif self._ajax_type == 'post' and template_name == 'comment-form':
             return True
         else:
             return False
@@ -1151,7 +1150,8 @@ class AjaxRenderer(blosxom.Renderer):
     def render_template(self, entry, template_name, override=0):
         if self._should_output(entry, template_name):
             return blosxom.Renderer.render_template(
-                entry, template_name, override)
+                self, entry, template_name, override)
+        else: return ""
 
     def _output_flavour(self, entry, template_name):
         if self._should_output(entry, template_name):
@@ -1334,7 +1334,7 @@ def cb_story_end(args):
          and not entry.has_key('nocomments')
          and data['display_comment_default'])):
         output = []
-        if entry['comments']:
+        if entry.has_key('comments'):
             comment_entry_base = dict(entry)
             del comment_entry_base['comments']
             for comment in entry['comments']:
