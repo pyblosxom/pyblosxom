@@ -527,7 +527,7 @@ def cb_head(args):
         # the most popular tag is at the end--grab the number of files
         # that have that tag
         max_count = len(tags_by_file[-1][1])
-        min_count = len(tags_by_file[0])
+        min_count = len(tags_by_file[0][1])
 
         # figure out the bin size for the tag size classes
         b = (max_count - min_count) / 5
