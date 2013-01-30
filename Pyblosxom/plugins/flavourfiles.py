@@ -141,7 +141,6 @@ def cb_handle(args):
     request = args["request"]
 
     path_info = request.get_http()["PATH_INFO"]
-    print path_info, TRIGGER
     if not path_info.startswith(TRIGGER):
         return
 
