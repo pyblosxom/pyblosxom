@@ -83,7 +83,9 @@ __registrytags__ = "1.5, core"
 
 
 from docutils.core import publish_parts
+
 from Pyblosxom import tools
+from Pyblosxom.memcache import memcache_decorator
 
 
 PREFORMATTER_ID = 'reST'
@@ -104,19 +106,23 @@ def cb_preformat(args):
     if args.get("parser", None) == PREFORMATTER_ID:
         return parse(''.join(args['story']), args['request'])
 
+@memcache_decorator('rst_parser')
+def _parse(initial_header_level, transform_doctitle, story):
+    parts = publish_parts(
+        story,
+        writer_name='html',
+        settings_overrides={
+            'initial_header_level': initial_header_level,
+            'doctitle_xform': transform_doctitle
+            })
+    return parts['body']
 
 def parse(story, request):
     config = request.getConfiguration()
     initial_header_level = config.get('reST_initial_header_level', 1)
     transform_doctitle = config.get('reST_transform_doctitle', 1)
-    settings = {
-        'initial_header_level': initial_header_level,
-        'doctitle_xform': transform_doctitle
-        }
-    parts = publish_parts(
-        story, writer_name='html', settings_overrides=settings)
-    return parts['body']
 
+    return _parse(initial_header_level, transform_doctitle, story)
 
 def readfile(filename, request):
     entry_data = {}
