@@ -75,6 +75,7 @@ __registrytags__ = "1.4, 1.5, core"
 
 
 from Pyblosxom import tools
+from Pyblosxom.memcache import memcache_decorator
 from Pyblosxom.tools import pwrap
 import time
 
@@ -94,6 +95,7 @@ class PyblArchives:
         self._request = request
         self._archives = None
 
+    @memcache_decorator('pyarchives', True)
     def __str__(self):
         if self._archives == None:
             self.gen_linear_archive()
