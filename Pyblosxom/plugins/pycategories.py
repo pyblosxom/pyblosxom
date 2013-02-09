@@ -96,6 +96,7 @@ __registrytags__ = "1.4, 1.5, core"
 
 
 from Pyblosxom import tools
+from Pyblosxom.memcache import memcache_decorator
 from Pyblosxom.tools import pwrap
 import os
 
@@ -124,8 +125,8 @@ class PyblCategories:
     def __init__(self, request):
         self._request = request
         self._categories = None
-        self.gen_categories()
 
+    @memcache_decorator('pycategories', True)
     def __str__(self):
         if self._categories == None:
             self.gen_categories()

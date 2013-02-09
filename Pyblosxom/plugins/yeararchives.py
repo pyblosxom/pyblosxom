@@ -84,6 +84,7 @@ __registrytags__ = "1.4, 1.5, core"
 
 
 from Pyblosxom import tools, entries
+from Pyblosxom.memcache import memcache_decorator
 from Pyblosxom.tools import pwrap
 import time
 
@@ -105,6 +106,7 @@ class YearArchives:
         self._archives = None
         self._items = None
 
+    @memcache_decorator('yeararchives', True)
     def __str__(self):
         if self._archives == None:
             self.gen_linear_archive()

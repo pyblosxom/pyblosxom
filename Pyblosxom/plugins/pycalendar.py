@@ -77,6 +77,7 @@ import calendar
 import string
 
 from Pyblosxom import tools
+from Pyblosxom.memcache import memcache_decorator
 
 
 def verify_installation(request):
@@ -95,6 +96,7 @@ class PyblCalendar:
 
         self._entries = {}
 
+    @memcache_decorator('pycalendar', True)
     def __str__(self):
         """
         Returns the on-demand generated string.

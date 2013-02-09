@@ -47,7 +47,12 @@ __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"
 
 
-import os, re, time
+import os
+import re
+import time
+
+from Pyblosxom import tools
+from Pyblosxom.memcache import memcache_decorator
 
 DAYMATCH = re.compile(
     '([0-9]{4})-'
@@ -55,7 +60,7 @@ DAYMATCH = re.compile(
     '([0-3][0-9])'
     '(-([0-2][0-9])-([0-5][0-9]))?.[\w]+$')
 
-
+@memcache_decorator('pyfilenamemtime')
 def get_mtime(filename):
     mtime = 0
     mtch = DAYMATCH.search(os.path.basename(filename))
@@ -76,7 +81,6 @@ def get_mtime(filename):
             pass
         return mtime
     return None
-
 
 def cb_filestat(args):
     filename = args["filename"]

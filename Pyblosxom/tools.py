@@ -147,7 +147,7 @@ def deprecated_function(func):
     def _deprecated_function(*args, **kwargs):
         return func(*args, **kwargs)
 
-    _deprecated_function.__doc__ = ("DEPRECATED.  Use %s instead." % 
+    _deprecated_function.__doc__ = ("DEPRECATED.  Use %s instead." %
                                     func.__name__)
     _deprecated_function.__dict__.update(func.__dict__)
     return _deprecated_function
@@ -980,7 +980,7 @@ def render_url(cdict, pathinfo, querystring=""):
                      example: ``/dev/pyblosxom/firstpost.html``
     :param querystring: the querystring (if any); example: debug=yes
 
-    :returns: a Pyblosxom ``Response`` object. 
+    :returns: a Pyblosxom ``Response`` object.
     """
     from pyblosxom import Pyblosxom
 
