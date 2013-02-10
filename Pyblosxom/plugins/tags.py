@@ -249,6 +249,8 @@ import os
 import cPickle as pickle
 import shutil
 
+from Pyblosxom.memcache import memcache_decorator
+
 
 def savefile(path, tagdata):
     """Saves tagdata to file at path."""
@@ -259,6 +261,7 @@ def savefile(path, tagdata):
     shutil.move(path + ".new", path)
 
 
+@memcache_decorator('tags')
 def loadfile(path):
     """Loads tagdata from file at path."""
     fp = open(path, "r")
