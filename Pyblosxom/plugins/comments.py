@@ -1142,7 +1142,8 @@ class AjaxRenderer(blosxom.Renderer):
         """
         if self._ajax_type == 'preview' and template_name == 'comment-preview':
             return True
-        elif self._ajax_type == 'post' and template_name == 'comment-form':
+        elif (self._ajax_type == 'post' and template_name == 'comment-form' 
+              and round(self._data.get('cmt_time', 0)) == round(entry['cmt_time'])):
             return True
         else:
             return False
