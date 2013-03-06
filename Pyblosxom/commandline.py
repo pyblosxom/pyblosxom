@@ -232,6 +232,8 @@ def test_installation(command, argv):
                 pwrap("plugin:  %s" % mem[0])
                 print "%s" % mem[1]
                 pwrap("----")
+            pwrap_error("FAIL")
+            return(1)
 
         if len(plugin_utils.plugins) > 0:
             pwrap("- This goes through your plugins and asks each of them "
