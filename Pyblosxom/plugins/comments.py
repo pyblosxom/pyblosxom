@@ -1134,15 +1134,21 @@ class AjaxRenderer(blosxom.Renderer):
         out = request.get_configuration().get('stdoutput', sys.stdout)
         blosxom.Renderer.__init__(self, request, out)
         self._ajax_type = request.get_http()['form']['ajax'].value
+        self._config = request.get_configuration()
         self._data = data
 
     def _should_output(self, entry, template_name):
         """ Return whether we should output this template, depending on the
         type of ajax request we're responding to.
         """
+
+        if (self._ajax_type == 'post' and template_name == 'story'):
+            entry['comments'] = read_comments(entry, self._config)
+            return False
+
         if self._ajax_type == 'preview' and template_name == 'comment-preview':
             return True
-        elif (self._ajax_type == 'post' and template_name == 'comment-form' 
+        elif (self._ajax_type == 'post' and template_name == 'comment'
               and round(self._data.get('cmt_time', 0)) == round(entry['cmt_time'])):
             return True
         else:
