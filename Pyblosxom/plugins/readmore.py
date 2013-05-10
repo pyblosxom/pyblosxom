@@ -217,4 +217,5 @@ def cb_story(args):
                         "file_path": file_path,
                         "flavour": flavour})
 
+    entry["just_summary"] = 1
     entry["body"] = entry["body"][:match.start()] + link
