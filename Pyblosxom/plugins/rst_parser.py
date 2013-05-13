@@ -113,7 +113,8 @@ def _parse(initial_header_level, transform_doctitle, story):
         writer_name='html',
         settings_overrides={
             'initial_header_level': initial_header_level,
-            'doctitle_xform': transform_doctitle
+            'doctitle_xform': transform_doctitle,
+            'syntax_highlight': 'short'
             })
     return parts['body']
 
