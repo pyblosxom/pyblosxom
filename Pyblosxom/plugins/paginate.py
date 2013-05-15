@@ -200,7 +200,7 @@ def page(request, num_entries, entry_list):
             if form:
                 try:
                     page = int(form.getvalue("page"))
-                except ValueError:
+                except:
                     page = count_from
 
             # Restructure the querystring so that page= is at the end
