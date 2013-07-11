@@ -422,10 +422,10 @@ class TestComments(PluginTest):
 
         self.entry['cmt_time'] = self.timestamp
         self.assert_('cmt_time' not in self.data)
-        self.assertEquals(False, should_output('comment-form'))
+        self.assertEquals(False, should_output('comment'))
 
         self.data['cmt_time'] = self.timestamp
-        self.assertEquals(True, should_output('comment-form'))
+        self.assertEquals(True, should_output('comment'))
 
     def test_num_comments(self):
         """cb_story() should count the number of comments."""
