@@ -41,6 +41,7 @@ __registrytags__ = "1.4, 1.5, core"
 import time
 import os
 import cPickle
+import calendar
 
 from Pyblosxom import tools
 
@@ -80,9 +81,11 @@ def cb_prepare(args):
         # ETag: "2bdc4-7b5-3ddb5f0c"
         last_modified = time.strftime(
             '%a, %d %b %Y %H:%M:%S GMT', time.gmtime(mtime))
-        if (((http.get('HTTP_IF_NONE_MATCH', '') == '"%s"' % mtime) or
+        modified_since = http.get('HTTP_IF_MODIFIED_SINCE', '')
+
+        if ((http.get('HTTP_IF_NONE_MATCH', '') == '"%s"' % mtime) or
              (http.get('HTTP_IF_NONE_MATCH', '') == '%s' % mtime) or
-             (http.get('HTTP_IF_MODIFIED_SINCE', '') == last_modified))):
+             (modified_since and calendar.timegm(time.strptime(modified_since,'%a, %d %b %Y %H:%M:%S GMT' )) >= int(mtime))):
 
             renderer.add_header('Status', '304 Not Modified')
             renderer.add_header('ETag', '"%s"' % mtime)
