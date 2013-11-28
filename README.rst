@@ -1,3 +1,6 @@
+[![Travis CI status](https://api.travis-ci.org/pyblosxom/pyblosxom.png)](https://travis-ci.org/pyblosxom/pyblosxom)
+
+
 =================
  About Pyblosxom
 =================
@@ -205,7 +208,5 @@ This will build Pyblosxom, then run the tests.
 If you would like to add tests to the test suite, please do and send
 us patches!
 
-TRAVIS:
 
-[![Travis CI status](https://api.travis-ci.org/pyblosxom/pyblosxom.png)](https://travis-ci.org/pyblosxom/pyblosxom)
 
