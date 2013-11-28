@@ -1,4 +1,4 @@
-.. image: https://api.travis-ci.org/pyblosxom/pyblosxom.png
+.. image:: https://api.travis-ci.org/pyblosxom/pyblosxom.png
    :align: right
    :target: https://travis-ci.org/pyblosxom/pyblosxom
 
