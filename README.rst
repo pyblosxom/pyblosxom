@@ -1,5 +1,3 @@
-[![Travis CI status](https://api.travis-ci.org/pyblosxom/pyblosxom.png)](https://travis-ci.org/pyblosxom/pyblosxom)
-
 
 =================
  About Pyblosxom
@@ -209,4 +207,5 @@ If you would like to add tests to the test suite, please do and send
 us patches!
 
 
-
+Travis:
+You can check our Travis status here: https://travis-ci.org/pyblosxom/pyblosxom
