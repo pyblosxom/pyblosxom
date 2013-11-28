@@ -754,6 +754,7 @@ class Response(object):
 
         Examples:
 
+        >>> resp = Response('some fake request')
         >>> resp.set_status("200 OK")
         >>> resp.set_status("404 Not Found")
 
@@ -774,6 +775,7 @@ class Response(object):
 
         Example:
 
+        >>> resp = Response('some fake request')
         >>> resp.add_header("Content-type", "text/plain")
         >>> resp.add_header("Content-Length", "10500")
 

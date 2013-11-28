@@ -231,13 +231,12 @@ def escape_text(s):
     Note: if ``s`` is ``None``, then we return ``None``.
 
     >>> escape_text(None)
-    None
     >>> escape_text("")
-    ""
+    ''
     >>> escape_text("a'b")
-    "a&#x27;b"
+    'a&#x27;b'
     >>> escape_text('a"b')
-    "a&quot;b"
+    'a&quot;b'
     """
     if not s:
         return s
@@ -253,15 +252,14 @@ def urlencode_text(s):
     Note: if ``s`` is ``None``, then we return ``None``.
 
     >>> urlencode_text(None)
-    None
     >>> urlencode_text("")
-    ""
+    ''
     >>> urlencode_text("a c")
-    "a%20c"
+    'a%20c'
     >>> urlencode_text("a&c")
-    "a%26c"
+    'a%26c'
     >>> urlencode_text("a=c")
-    "a%3Dc"
+    'a%3Dc'
 
     """
     if not s:
@@ -315,18 +313,18 @@ def commasplit(s):
 
     Note: commasplit doesn't remove extranneous spaces.
 
-    >>> tools.commasplit(None)
+    >>> commasplit(None)
     []
-    >>> tools.commasplit("")
-    [""]
-    >>> tools.commasplit("a")
-    ["a"]
-    >>> tools.commasplit("a, b, c")
-    ["a", " b", " c"]
-    >>> tools.commasplit("'a', 'b, c'")
-    ["a", " 'b, c'"]
-    >>> tools.commasplit("'a', \"b, c\"")
-    ["a", " \"b, c\""]
+    >>> commasplit("")
+    ['']
+    >>> commasplit("a")
+    ['a']
+    >>> commasplit("a, b, c")
+    ['a', ' b', ' c']
+    >>> commasplit("'a', 'b, c'")
+    ["'a'", " 'b, c'"]
+    >>> commasplit("'a', \\"b, c\\"")
+    ["'a'", ' \"b, c\"']
 
     :param s: the string to split
 
@@ -827,10 +825,10 @@ def run_callback(chain, input,
 def addcr(text):
     """Adds a cr if it needs one.
 
-    >>> addrc("foo")
-    foo\\n
+    >>> addcr("foo")
+    'foo\\n'
     >>> addcr("foo\\n")
-    foo\\n
+    'foo\\n'
 
     :returns: string with \\n at the end
     """
