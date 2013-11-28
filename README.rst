@@ -1,3 +1,6 @@
+.. image: https://api.travis-ci.org/pyblosxom/pyblosxom.png
+   :align: right
+   :target: https://travis-ci.org/pyblosxom/pyblosxom
 
 =================
  About Pyblosxom
@@ -205,7 +208,3 @@ This will build Pyblosxom, then run the tests.
 
 If you would like to add tests to the test suite, please do and send
 us patches!
-
-
-Travis:
-You can check our Travis status here: https://travis-ci.org/pyblosxom/pyblosxom
