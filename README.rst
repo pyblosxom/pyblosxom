@@ -205,4 +205,6 @@ This will build Pyblosxom, then run the tests.
 If you would like to add tests to the test suite, please do and send
 us patches!
 
-Travis has been added! This commit should trigger it for the first time
+TRAVIS:
+[![Build Status](https://travis-ci.org/[pyblosxom]/[pyblosxom].png)](https://travis-ci.org/[pyblosxom]/pyblosxom])
+https://travis-ci.org/pyblosxom/pyblosxom
