@@ -206,5 +206,6 @@ If you would like to add tests to the test suite, please do and send
 us patches!
 
 TRAVIS:
-[![Build Status](https://travis-ci.org/[pyblosxom]/[pyblosxom].png)](https://travis-ci.org/[pyblosxom]/pyblosxom])
-https://travis-ci.org/pyblosxom/pyblosxom
+
+[![Travis CI status](https://api.travis-ci.org/pyblosxom/pyblosxom.png)](https://travis-ci.org/pyblosxom/pyblosxom)
+
