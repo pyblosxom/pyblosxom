@@ -54,7 +54,6 @@ class BlosxomCache(BlosxomCacheBase):
         Open the pickle file and return the data therein.  If this
         fails, then we return None.
         """
-        filep = None
         try:
             filep = open(self._cachefile, 'rb')
             data = pickle.load(filep)
@@ -62,10 +61,6 @@ class BlosxomCache(BlosxomCacheBase):
             return data
         except IOError:
             return None
-
-        if filep:
-            filep.close()
-
 
     def isCached(self):
         """

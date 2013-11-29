@@ -188,8 +188,7 @@ def page(request, num_entries, entry_list):
     entries_per_page = num_entries
     count_from = config.get("paginate_count_from", 0)
 
-    if ((entries_per_page > 0 and isinstance(entry_list, list)
-         and len(entry_list) > entries_per_page)):
+    if isinstance(entry_list, list) and 0 < entries_per_page < len(entry_list):
 
         page = count_from
         url = http.get("REQUEST_URI", http.get("HTTP_REQUEST_URI", ""))
@@ -219,7 +218,7 @@ def page(request, num_entries, entry_list):
                     url_template = (url_template + "?" + "&amp;".join(query) +
                                     "&amp;page=%d")
             else:
-                url_template = url_template + "?page=%d"
+                url_template += "?page=%d"
 
         else:
             try:
