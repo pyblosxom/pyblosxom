@@ -27,6 +27,7 @@ import os
 from os import makedirs
 from os.path import normpath, dirname, exists, abspath
 
+
 class BlosxomCache(BlosxomCacheBase):
     """
     This cache stores each entry as a separate pickle file of the
@@ -54,7 +55,6 @@ class BlosxomCache(BlosxomCacheBase):
         Open the pickle file and return the data therein.  If this
         fails, then we return None.
         """
-        filep = None
         try:
             filep = open(self._cachefile, 'rb')
             data = pickle.load(filep)
@@ -63,17 +63,12 @@ class BlosxomCache(BlosxomCacheBase):
         except IOError:
             return None
 
-        if filep:
-            filep.close()
-
-
     def isCached(self):
         """
         Check to see if the file is updated.
         """
         return os.path.isfile(self._cachefile) and \
             os.stat(self._cachefile)[8] >= os.stat(self._entryid)[8]
-
 
     def saveEntry(self, entrydata):
         """

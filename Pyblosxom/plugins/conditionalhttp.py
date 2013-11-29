@@ -14,7 +14,7 @@ Summary
 
 This plugin can help save bandwidth for low bandwidth quota sites.
 
-This is done by outputing cache friendly HTTP header tags like Last-Modified
+This is done by output-ing cache friendly HTTP header tags like Last-Modified
 and ETag. These values are calculated from the first entry returned by
 ``entry_list``.
 

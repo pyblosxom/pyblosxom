@@ -115,6 +115,6 @@ def cb_comment_reject(args):
             f.write("%s: %s\n" % (
                     time.ctime(), c.get("ipaddress", None)))
             f.close()
-        return (True, "Comment rejected: I don't think you're human.")
+        return True, "Comment rejected: I don't think you're human."
 
     return False

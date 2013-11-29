@@ -21,6 +21,7 @@ import locale
 import sys
 import os.path
 import cgi
+
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -43,6 +44,7 @@ class Pyblosxom:
     request through all the steps until the output is rendered and
     we're complete.
     """
+
     def __init__(self, config, environ, data=None):
         """Sets configuration and environment and creates the Request
         object.
@@ -64,7 +66,7 @@ class Pyblosxom:
         registering plugins, and entryparsers.
         """
         data = self._request.get_data()
-        pyhttp = self._request.get_http()
+        py_http = self._request.get_http()
         config = self._request.get_configuration()
 
         # initialize the locale, if wanted (will silently fail if locale
@@ -86,12 +88,12 @@ class Pyblosxom:
         # otherwise we compose it from SCRIPT_NAME in the environment
         # or we leave it blank.
         if not "base_url" in config:
-            if pyhttp.has_key('SCRIPT_NAME'):
+            if py_http.has_key('SCRIPT_NAME'):
                 # allow http and https
                 config['base_url'] = '%s://%s%s' % \
-                                     (pyhttp['wsgi.url_scheme'],
-                                      pyhttp['HTTP_HOST'],
-                                      pyhttp['SCRIPT_NAME'])
+                                     (py_http['wsgi.url_scheme'],
+                                      py_http['HTTP_HOST'],
+                                      py_http['SCRIPT_NAME'])
             else:
                 config["base_url"] = ""
 
@@ -99,10 +101,10 @@ class Pyblosxom:
         if config['base_url'].endswith("/"):
             config['base_url'] = config['base_url'][:-1]
 
-        datadir = config["datadir"]
-        if datadir.endswith("/") or datadir.endswith("\\"):
-            datadir = datadir[:-1]
-            config['datadir'] = datadir
+        data_dir = config["datadir"]
+        if data_dir.endswith("/") or data_dir.endswith("\\"):
+            data_dir = data_dir[:-1]
+            config['datadir'] = data_dir
 
         # import and initialize plugins
         plugin_utils.initialize_plugins(config.get("plugin_dirs", []),
@@ -111,9 +113,9 @@ class Pyblosxom:
         # entryparser callback is run here first to allow other
         # plugins register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
-                                        {'txt': blosxom_entry_parser},
-                                        mappingfunc=lambda x,y:y,
-                                        defaultfunc=lambda x:x)
+                                                {'txt': blosxom_entry_parser},
+                                                mappingfunc=lambda x, y: y,
+                                                defaultfunc=lambda x: x)
 
     def cleanup(self):
         """This cleans up Pyblosxom after a run.
@@ -132,12 +134,14 @@ class Pyblosxom:
         """Returns the Request object for this Pyblosxom instance.
         """
         return self._request
+
     getRequest = tools.deprecated_function(get_request)
 
     def get_response(self):
         """Returns the Response object associated with this Request.
         """
         return self._request.getResponse()
+
     getResponse = tools.deprecated_function(get_response)
 
     def run(self, static=False):
@@ -153,8 +157,8 @@ class Pyblosxom:
 
         # buffer the input stream in a StringIO instance if dynamic
         # rendering is used.  This is done to have a known/consistent
-        # way of accessing incomming data.
-        if static == False:
+        # way of accessing incoming data.
+        if not static:
             self.get_request().buffer_input_stream()
 
         # run the start callback
@@ -162,9 +166,9 @@ class Pyblosxom:
 
         # allow anyone else to handle the request at this point
         handled = tools.run_callback("handle",
-                        {'request': self._request},
-                        mappingfunc=lambda x,y:x,
-                        donefunc=lambda x:x)
+                                     {'request': self._request},
+                                     mappingfunc=lambda x, y: x,
+                                     donefunc=lambda x: x)
 
         if not handled == 1:
             blosxom_handler(self._request)
@@ -174,7 +178,7 @@ class Pyblosxom:
 
         # we're done, clean up.
         # only call this if we're not in static rendering mode.
-        if static == False:
+        if not static:
             self.cleanup()
 
     def run_callback(self, callback="help"):
@@ -200,13 +204,14 @@ class Pyblosxom:
         # invoke all callbacks for the 'callback'
         handled = tools.run_callback(callback,
                                      {'request': self._request},
-                                     mappingfunc=lambda x,y:x,
-                                     donefunc=lambda x:x)
+                                     mappingfunc=lambda x, y: x,
+                                     donefunc=lambda x: x)
 
         # do end callback
         tools.run_callback("end", {'request': self._request})
 
         return handled
+
     runCallback = tools.deprecated_function(run_callback)
 
     def run_render_one(self, url, headers):
@@ -224,7 +229,7 @@ class Pyblosxom:
 
         if url.find("?") != -1:
             url = url[:url.find("?")]
-            query = url[url.find("?")+1:]
+            query = url[url.find("?") + 1:]
         else:
             query = ""
 
@@ -260,31 +265,31 @@ class Pyblosxom:
         if incremental:
             print "Incremental is set."
 
-        staticdir = config.get("static_dir", "")
-        datadir = config["datadir"]
+        static_dir = config.get("static_dir", "")
+        data_dir = config["datadir"]
 
-        if not staticdir:
+        if not static_dir:
             print "Error: You must set static_dir in your config file."
             return 0
 
         flavours = config.get("static_flavours", ["html"])
         index_flavours = config.get("static_index_flavours", ["html"])
 
-        renderme = []
+        render_me = []
 
-        monthnames = config.get("static_monthnames", True)
-        monthnumbers = config.get("static_monthnumbers", False)
-        yearindexes = config.get("static_yearindexes", True)
+        month_names = config.get("static_monthnames", True)
+        month_numbers = config.get("static_monthnumbers", False)
+        year_indexes = config.get("static_yearindexes", True)
 
         dates = {}
         categories = {}
 
         # first we handle entries and categories
-        listing = tools.walk(self._request, datadir)
+        listing = tools.walk(self._request, data_dir)
 
         for mem in listing:
             # skip the ones that have bad extensions
-            ext = mem[mem.rfind(".")+1:]
+            ext = mem[mem.rfind(".") + 1:]
             if not ext in data["extensions"].keys():
                 continue
 
@@ -292,10 +297,10 @@ class Pyblosxom:
             mtime = time.mktime(tools.filestat(self._request, mem))
 
             # remove the datadir from the front and the bit at the end
-            mem = mem[len(datadir):mem.rfind(".")]
+            mem = mem[len(data_dir):mem.rfind(".")]
 
             # this is the static filename
-            fn = os.path.normpath(staticdir + mem)
+            fn = os.path.normpath(static_dir + mem)
 
             # grab the mtime of one of the statically rendered file
             try:
@@ -309,7 +314,7 @@ class Pyblosxom:
 
                 # grab the categories
                 temp = os.path.dirname(mem).split(os.sep)
-                for i in range(len(temp)+1):
+                for i in range(len(temp) + 1):
                     p = os.sep.join(temp[0:i])
                     categories[p] = 0
 
@@ -319,23 +324,23 @@ class Pyblosxom:
                 month = time.strftime("%m", mtime)
                 day = time.strftime("%d", mtime)
 
-                if yearindexes:
+                if year_indexes:
                     dates[year] = 1
 
-                if monthnumbers:
+                if month_numbers:
                     dates[year + "/" + month] = 1
                     dates[year + "/" + month + "/" + day] = 1
 
-                if monthnames:
+                if month_names:
                     monthname = tools.num2month[month]
                     dates[year + "/" + monthname] = 1
                     dates[year + "/" + monthname + "/" + day] = 1
 
                 # toss in the render queue
                 for f in flavours:
-                    renderme.append((mem + "." + f, ""))
+                    render_me.append((mem + "." + f, ""))
 
-        print "rendering %d entries." % len(renderme)
+        print "rendering %d entries." % len(render_me)
 
         # handle categories
         categories = categories.keys()
@@ -352,7 +357,7 @@ class Pyblosxom:
         for mem in categories:
             mem = os.path.normpath(mem + "/index.")
             for f in index_flavours:
-                renderme.append((mem + f, ""))
+                render_me.append((mem + f, ""))
 
         # now we handle dates
         dates = dates.keys()
@@ -365,7 +370,7 @@ class Pyblosxom:
         for mem in dates:
             mem = os.path.normpath(mem + "/index.")
             for f in index_flavours:
-                renderme.append((mem + f, ""))
+                render_me.append((mem + f, ""))
 
         # now we handle arbitrary urls
         additional_stuff = config.get("static_urls", [])
@@ -374,28 +379,28 @@ class Pyblosxom:
         for mem in additional_stuff:
             if mem.find("?") != -1:
                 url = mem[:mem.find("?")]
-                query = mem[mem.find("?")+1:]
+                query = mem[mem.find("?") + 1:]
             else:
                 url = mem
                 query = ""
 
-            renderme.append((url, query))
+            render_me.append((url, query))
 
         # now we pass the complete render list to all the plugins via
         # cb_staticrender_filelist and they can add to the filelist
         # any (url, query) tuples they want rendered.
-        print "(before) building %s files." % len(renderme)
+        print "(before) building %s files." % len(render_me)
         tools.run_callback("staticrender_filelist",
                            {'request': self._request,
-                            'filelist': renderme,
+                            'filelist': render_me,
                             'flavours': flavours,
                             'incremental': incremental})
 
-        renderme = sorted(set(renderme))
+        render_me = sorted(set(render_me))
 
-        print "building %s files." % len(renderme)
+        print "building %s files." % len(render_me)
 
-        for url, q in renderme:
+        for url, q in render_me:
             url = url.replace(os.sep, "/")
             print "rendering '%s' ..." % url
 
@@ -411,6 +416,7 @@ Pyblosxom = Pyblosxom
 class PyblosxomWSGIApp:
     """This class is the WSGI application for Pyblosxom.
     """
+
     def __init__(self, environ=None, start_response=None, configini=None):
         """
         Make WSGI app for Pyblosxom.
@@ -427,12 +433,13 @@ class PyblosxomWSGIApp:
         self.environ = environ
         self.start_response = start_response
 
-        if configini == None:
+        if configini is None:
             configini = {}
 
         _config = tools.convert_configini_values(configini)
 
         import config
+
         self.config = dict(config.py)
 
         self.config.update(_config)
@@ -443,7 +450,6 @@ class PyblosxomWSGIApp:
         """
         Executes a single run of Pyblosxom wrapped in the crash handler.
         """
-        response = None
         try:
             # ensure that PATH_INFO exists. a few plugins break if this is
             # missing.
@@ -488,6 +494,7 @@ def pyblosxom_app_factory(global_config, **local_config):
 
     return PyblosxomWSGIApp(configini=conf)
 
+
 class EnvDict(dict):
     """Wrapper arround a dict to provide a backwards compatible way to
     get the ``form`` with syntax as::
@@ -498,6 +505,7 @@ class EnvDict(dict):
 
         request.get_form()
     """
+
     def __init__(self, request, env):
         """Wraps an environment (which is a dict) and a request.
 
@@ -518,6 +526,7 @@ class EnvDict(dict):
 
         return dict.__getitem__(self, key)
 
+
 class Request(object):
     """
     This class holds the Pyblosxom request.  It holds configuration
@@ -529,6 +538,7 @@ class Request(object):
     Pyblosxom instance which will do further manipulation on the
     Request instance.
     """
+
     def __init__(self, config, environ, data):
         """Sets configuration and environment.
 
@@ -549,7 +559,7 @@ class Request(object):
 
         # this holds run-time data which gets created and transformed
         # by pyblosxom during execution
-        if data == None:
+        if data is None:
             self._data = dict()
         else:
             self._data = data
@@ -588,21 +598,21 @@ class Request(object):
     def buffer_input_stream(self):
         """
         Buffer the input stream in a StringIO instance.  This is done
-        to have a known/consistent way of accessing incomming data.
+        to have a known/consistent way of accessing incoming data.
         For example the input stream passed by mod_python does not
-        offer the same functionallity as ``sys.stdin``.
+        offer the same functionality as ``sys.stdin``.
         """
         # TODO: tests on memory consumption when uploading huge files
-        pyhttp = self.get_http()
-        winput = pyhttp['wsgi.input']
-        method = pyhttp["REQUEST_METHOD"]
+        py_http = self.get_http()
+        winput = py_http['wsgi.input']
+        method = py_http["REQUEST_METHOD"]
 
         # there's no data on stdin for a GET request.  pyblosxom
         # will block indefinitely on the read for a GET request with
         # thttpd.
         if method != "GET":
             try:
-                length = int(pyhttp.get("CONTENT_LENGTH", 0))
+                length = int(py_http.get("CONTENT_LENGTH", 0))
             except ValueError:
                 length = 0
 
@@ -617,12 +627,14 @@ class Request(object):
         self._response = response
         # for backwards compatibility
         self.get_configuration()['stdoutput'] = response
+
     setResponse = tools.deprecated_function(set_response)
 
     def get_response(self):
         """Returns the Response for this request.
         """
         return self._response
+
     getResponse = tools.deprecated_function(get_response)
 
     def _getform(self):
@@ -640,9 +652,10 @@ class Request(object):
 
         :returns: a ``cgi.FieldStorage`` instance.
         """
-        if self._form == None:
+        if self._form is None:
             self._form = self._getform()
         return self._form
+
     getForm = tools.deprecated_function(get_form)
 
     def get_configuration(self):
@@ -654,6 +667,7 @@ class Request(object):
         processing.
         """
         return self._configuration
+
     getConfiguration = tools.deprecated_function(get_configuration)
 
     def get_http(self):
@@ -664,6 +678,7 @@ class Request(object):
         processing.
         """
         return self._http
+
     getHttp = tools.deprecated_function(get_http)
 
     def get_data(self):
@@ -674,6 +689,7 @@ class Request(object):
         processing.
         """
         return self._data
+
     getData = tools.deprecated_function(get_data)
 
     def add_http(self, d):
@@ -681,6 +697,7 @@ class Request(object):
         http dict with the new values.
         """
         self._http.update(d)
+
     addHttp = tools.deprecated_function(add_http)
 
     def add_data(self, d):
@@ -688,6 +705,7 @@ class Request(object):
         data dict with the new values.
         """
         self._data.update(d)
+
     addData = tools.deprecated_function(add_data)
 
     def add_configuration(self, newdict):
@@ -695,6 +713,7 @@ class Request(object):
         configuration dict with the new values.
         """
         self._configuration.update(newdict)
+
     addConfiguration = tools.deprecated_function(add_configuration)
 
     def __getattr__(self, name):
@@ -712,12 +731,14 @@ class Request(object):
     def __repr__(self):
         return "Request"
 
+
 class Response(object):
     """Response class to handle all output related tasks in one place.
 
     This class is basically a wrapper arround a ``StringIO`` instance.
     It also provides methods for managing http headers.
     """
+
     def __init__(self, request):
         """Sets the ``Request`` object that leaded to this response.
         Creates a ``StringIO`` that is used as a output buffer.
@@ -761,6 +782,7 @@ class Response(object):
         :param status: the status string.
         """
         self.status = status
+
     setStatus = tools.deprecated_function(set_status)
 
     def get_status(self):
@@ -771,7 +793,7 @@ class Response(object):
     def add_header(self, key, value):
         """Populates the HTTP header with lines of text.  Sets the
         status code on this response object if the given argument list
-        containes a 'Status' header.
+        contains a 'Status' header.
 
         Example:
 
@@ -790,12 +812,14 @@ class Response(object):
             self.setStatus(str(value))
         else:
             self.headers.update({key: str(value)})
+
     addHeader = tools.deprecated_function(add_header)
 
     def get_headers(self):
         """Returns the headers.
         """
         return self.headers
+
     getHeaders = tools.deprecated_function(get_headers)
 
     def send_headers(self, out):
@@ -810,7 +834,7 @@ class Response(object):
         """
         out.write("Status: %s\n" % self.status)
         out.write('\n'.join(['%s: %s' % (hkey, self.headers[hkey])
-                for hkey in self.headers.keys()]))
+                             for hkey in self.headers.keys()]))
         out.write('\n\n')
         self._headers_sent = True
 
@@ -863,8 +887,8 @@ def blosxom_handler(request):
     # downstream processing.
     rend = tools.run_callback('renderer',
                               {'request': request},
-                              donefunc = lambda x: x != None,
-                              defaultfunc = lambda x: None)
+                              donefunc=lambda x: x is not None,
+                              defaultfunc=lambda x: None)
 
     if not rend:
         # get the renderer we want to use
@@ -885,14 +909,14 @@ def blosxom_handler(request):
     # this is
     tools.run_callback("pathinfo",
                        {"request": request},
-                       donefunc=lambda x:x != None,
+                       donefunc=lambda x: x is not None,
                        defaultfunc=blosxom_process_path_info)
 
     # call the filelist callback to generate a list of entries
     data["entry_list"] = tools.run_callback(
         "filelist",
         {"request": request},
-        donefunc=lambda x:x != None,
+        donefunc=lambda x: x is not None,
         defaultfunc=blosxom_file_list_handler)
 
     # figure out the blog-level mtime which is the mtime of the head
@@ -933,7 +957,7 @@ def blosxom_handler(request):
             renderer.set_content(entry_list)
             # Log it as success
             tools.run_callback("logrequest",
-                               {'filename':config.get('logfile',''),
+                               {'filename': config.get('logfile', ''),
                                 'return_code': '200',
                                 'request': request})
         else:
@@ -941,11 +965,11 @@ def blosxom_handler(request):
             renderer.set_content(
                 {'title': 'The page you are looking for is not available',
                  'body': 'Somehow I cannot find the page you want. ' +
-                 'Go Back to <a href="%s">%s</a>?'
-                 % (config["base_url"], config["blog_title"])})
+                         'Go Back to <a href="%s">%s</a>?'
+                         % (config["base_url"], config["blog_title"])})
             # Log it as failure
             tools.run_callback("logrequest",
-                               {'filename':config.get('logfile',''),
+                               {'filename': config.get('logfile', ''),
                                 'return_code': '404',
                                 'request': request})
         renderer.render()
@@ -960,6 +984,7 @@ def blosxom_handler(request):
     cache = tools.get_cache(request)
     if cache:
         cache.close()
+
 
 def blosxom_entry_parser(filename, request):
     """Open up a ``.txt`` file and read its contents.  The first line
@@ -1006,15 +1031,16 @@ def blosxom_entry_parser(filename, request):
     entry_data["body"] = tools.run_callback(
         'preformat',
         args,
-        donefunc=lambda x: x != None,
+        donefunc=lambda x: x is not None,
         defaultfunc=lambda x: ''.join(x['story']))
 
     # call the postformat callbacks
     tools.run_callback('postformat',
-                      {'request': request,
-                       'entry_data': entry_data})
+                       {'request': request,
+                        'entry_data': entry_data})
 
     return entry_data
+
 
 def blosxom_file_list_handler(args):
     """This is the default handler for getting entries.  It takes the
@@ -1032,40 +1058,40 @@ def blosxom_file_list_handler(args):
     config = request.get_configuration()
 
     if data['bl_type'] == 'dir':
-        filelist = tools.walk(request,
-                              data['root_datadir'],
-                              int(config.get("depth", "0")))
+        file_list = tools.walk(request,
+                               data['root_datadir'],
+                               int(config.get("depth", "0")))
     elif data['bl_type'] == 'file':
-        filelist = [data['root_datadir']]
+        file_list = [data['root_datadir']]
     else:
-        filelist = []
+        file_list = []
 
-    entrylist = [FileEntry(request, e, data["root_datadir"]) for e in filelist]
+    entry_list = [FileEntry(request, e, data["root_datadir"]) for e in file_list]
 
     # if we're looking at a set of archives, remove all the entries
     # that aren't in the archive
     if data.get("pi_yr", ""):
         tmp_pi_mo = data.get("pi_mo", "")
-        datestr = "%s%s%s" % (data.get("pi_yr", ""),
+        date_str = "%s%s%s" % (data.get("pi_yr", ""),
                               tools.month2num.get(tmp_pi_mo, tmp_pi_mo),
                               data.get("pi_da", ""))
-        entrylist = [x for x in entrylist
-                     if time.strftime("%Y%m%d%H%M%S", x["timetuple"]).startswith(datestr)]
+        entry_list = [x for x in entry_list
+                     if time.strftime("%Y%m%d%H%M%S", x["timetuple"]).startswith(date_str)]
 
-
-    args = {"request": request, "entry_list": entrylist}
-    entrylist = tools.run_callback("sortlist",
+    args = {"request": request, "entry_list": entry_list}
+    entry_list = tools.run_callback("sortlist",
                                    args,
                                    donefunc=lambda x: x != None,
                                    defaultfunc=blosxom_sort_list_handler)
 
-    args = {"request": request, "entry_list": entrylist}    
-    entrylist = tools.run_callback("truncatelist",
+    args = {"request": request, "entry_list": entry_list}
+    entry_list = tools.run_callback("truncatelist",
                                    args,
                                    donefunc=lambda x: x != None,
                                    defaultfunc=blosxom_truncate_list_handler)
 
-    return entrylist
+    return entry_list
+
 
 def blosxom_sort_list_handler(args):
     """Sorts the list based on ``_mtime`` attribute such that
@@ -1077,14 +1103,15 @@ def blosxom_sort_list_handler(args):
 
     :returns: the sorted ``entry_list``
     """
-    entrylist = args["entry_list"]
+    entry_list = args["entry_list"]
 
-    entrylist = [(e._mtime, e) for e in entrylist]
-    entrylist.sort()
-    entrylist.reverse()
-    entrylist = [e[1] for e in entrylist]
+    entry_list = [(e._mtime, e) for e in entry_list]
+    entry_list.sort()
+    entry_list.reverse()
+    entry_list = [e[1] for e in entry_list]
 
-    return entrylist
+    return entry_list
+
 
 def blosxom_truncate_list_handler(args):
     """If ``config["num_entries"]`` is not 0 and ``data["truncate"]``
@@ -1097,7 +1124,7 @@ def blosxom_truncate_list_handler(args):
     :returns: the truncated ``entry_list``.
     """
     request = args["request"]
-    entrylist = args["entry_list"]
+    entry_list = args["entry_list"]
 
     data = request.data
     config = request.config
@@ -1105,8 +1132,9 @@ def blosxom_truncate_list_handler(args):
     num_entries = config.get("num_entries", 5)
     truncate = data.get("truncate", 0)
     if num_entries and truncate:
-        entrylist = entrylist[:num_entries]
-    return entrylist
+        entry_list = entry_list[:num_entries]
+    return entry_list
+
 
 def blosxom_process_path_info(args):
     """Process HTTP ``PATH_INFO`` for URI according to path
@@ -1127,7 +1155,7 @@ def blosxom_process_path_info(args):
     request = args['request']
     config = request.get_configuration()
     data = request.get_data()
-    pyhttp = request.get_http()
+    py_http = request.get_http()
 
     form = request.get_form()
 
@@ -1145,7 +1173,7 @@ def blosxom_process_path_info(args):
     data['pi_mo'] = ''
     data['pi_da'] = ''
 
-    path_info = pyhttp.get("PATH_INFO", "")
+    path_info = py_http.get("PATH_INFO", "")
 
     data['root_datadir'] = config['datadir']
 
@@ -1154,12 +1182,12 @@ def blosxom_process_path_info(args):
     # first we check to see if this is a request for an index and we
     # can pluck the extension (which is certainly a flavour) right
     # off.
-    newpath, ext = os.path.splitext(path_info)
-    if newpath.endswith("/index") and ext:
+    new_path, ext = os.path.splitext(path_info)
+    if new_path.endswith("/index") and ext:
         # there is a flavour-like thing, so that's our new flavour and
         # we adjust the path_info to the new filename
         data["flavour"] = ext[1:]
-        path_info = newpath
+        path_info = new_path
 
     while path_info and path_info.startswith("/"):
         path_info = path_info[1:]
@@ -1176,7 +1204,7 @@ def blosxom_process_path_info(args):
         data['bl_type'] = 'dir'
 
     elif absolute_path.endswith("/index") and \
-             os.path.isdir(absolute_path[:-6]):
+            os.path.isdir(absolute_path[:-6]):
 
         # this is an absolute path with /index at the end of it
 
@@ -1191,15 +1219,15 @@ def blosxom_process_path_info(args):
             # it's possible we didn't find the file because it's got a
             # flavour thing at the end--so try removing it and
             # checking again.
-            newpath, flav = os.path.splitext(absolute_path)
+            new_path, flav = os.path.splitext(absolute_path)
             if flav:
-                ext = tools.what_ext(data["extensions"].keys(), newpath)
+                ext = tools.what_ext(data["extensions"].keys(), new_path)
                 if ext:
                     # there is a flavour-like thing, so that's our new
                     # flavour and we adjust the absolute_path and
                     # path_info to the new filename
                     data["flavour"] = flav[1:]
-                    absolute_path = newpath
+                    absolute_path = new_path
                     path_info, flav = os.path.splitext("/".join(path_info))
                     path_info = path_info.split("/")
 
@@ -1216,11 +1244,11 @@ def blosxom_process_path_info(args):
             # here.
             pi_bl = ""
             while len(path_info) > 0 and \
-                      not (len(path_info[0]) == 4 and path_info[0].isdigit()):
+                    not (len(path_info[0]) == 4 and path_info[0].isdigit()):
                 pi_bl = os.path.join(pi_bl, path_info.pop(0))
 
             # handle the case where we do in fact have a category
-            # preceeding the date.
+            # preceding the date.
             if pi_bl:
                 pi_bl = pi_bl.replace("\\", "/")
                 data["pi_bl"] = pi_bl
@@ -1233,14 +1261,14 @@ def blosxom_process_path_info(args):
                     data['pi_yr'] = item
                     item = ""
 
-                    if (len(path_info) > 0):
+                    if len(path_info) > 0:
                         item = path_info.pop(0)
                         # handle a month token
                         if item in tools.MONTHS:
                             data['pi_mo'] = item
                             item = ""
 
-                            if (len(path_info) > 0):
+                            if len(path_info) > 0:
                                 item = path_info.pop(0)
                                 # handle a day token
                                 if len(item) == 2 and item.isdigit():
@@ -1285,11 +1313,13 @@ def blosxom_process_path_info(args):
     else:
         data["truncate"] = False
 
+
 def run_pyblosxom():
     """Executes Pyblosxom either as a commandline script or CGI
     script.
     """
     from config import py as cfg
+
     env = {}
 
     # if there's no REQUEST_METHOD, then this is being run on the
@@ -1322,6 +1352,7 @@ def run_pyblosxom():
     try:
         # try running as a WSGI-CGI
         from wsgiref.handlers import CGIHandler
+
         CGIHandler().run(PyblosxomWSGIApp())
 
     except ImportError:

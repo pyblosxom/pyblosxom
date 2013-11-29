@@ -118,12 +118,14 @@ def _parse(initial_header_level, transform_doctitle, story):
             })
     return parts['body']
 
+
 def parse(story, request):
     config = request.getConfiguration()
     initial_header_level = config.get('reST_initial_header_level', 1)
     transform_doctitle = config.get('reST_transform_doctitle', 1)
 
     return _parse(initial_header_level, transform_doctitle, story)
+
 
 def readfile(filename, request):
     entry_data = {}

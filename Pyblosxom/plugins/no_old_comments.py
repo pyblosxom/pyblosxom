@@ -64,7 +64,7 @@ def cb_comment_reject(args):
 
     logger.debug('%s -> %s', entry['mtime'], comment)
 
-    if ((time.time() - entry['mtime']) >= max_age):
+    if (time.time() - entry['mtime']) >= max_age:
         logger.info('Entry too old, comment not posted!')
         return 1
 

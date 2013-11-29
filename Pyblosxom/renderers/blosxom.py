@@ -18,12 +18,14 @@ import sys
 from Pyblosxom import tools
 from Pyblosxom.renderers.base import RendererBase
 
+
 class NoSuchFlavourException(Exception):
     """
     This exception gets thrown when the flavour requested is not
     available in this blog.
     """
     pass
+
 
 def get_included_flavour(taste):
     """
@@ -52,6 +54,7 @@ def get_included_flavour(taste):
         return template_d
 
     return None
+
 
 def get_flavour_from_dir(path, taste):
     """
@@ -91,6 +94,7 @@ def get_flavour_from_dir(path, taste):
         return template_d
 
     return None
+
 
 class BlosxomRenderer(RendererBase):
     """
@@ -408,6 +412,7 @@ class BlosxomRenderer(RendererBase):
         output.append(self.render_template(entry, template_name))
 
     outputTemplate = tools.deprecated_function(output_template)
+
 
 class Renderer(BlosxomRenderer):
     pass

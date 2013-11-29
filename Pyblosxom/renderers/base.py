@@ -22,12 +22,13 @@ import time
 
 from Pyblosxom import tools
 
+
 class RendererBase:
     """
     Pyblosxom core handles the Input and Process of the system and
     passes the result of the process to the Renderers for output. All
     renderers are child classes of RendererBase. RenderBase will
-    contain the public interfaces for all Renderer onject.
+    contain the public interfaces for all Renderer object.
     """
     def __init__(self, request, stdoutput=sys.stdout):
         """
@@ -46,7 +47,6 @@ class RendererBase:
         self._content_mtime = None
         self._needs_content_type = 1
         self.rendered = None
-
 
     def write(self, data):
         """
@@ -82,14 +82,13 @@ class RendererBase:
                     # processed already
                     renderer.rendered = 1
 
-        This simple piece of pseudocode explains what you could do
+        This simple piece of pseudo-code explains what you could do
         with this method, though I highly don't recommend this, unless
         pyblosxom is running continuously.
 
         :param data: Piece of string you want printed
         """
         self._out.write(data)
-
 
     def add_header(self, *args):
         """
@@ -187,6 +186,7 @@ class RendererBase:
         if self._content:
             self.write(self._content)
         self.rendered = 1
+
 
 class Renderer(RendererBase):
     """

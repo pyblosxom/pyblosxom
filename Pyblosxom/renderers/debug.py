@@ -33,6 +33,7 @@ def escv(s):
 
     return tools.escape_text(s)
 
+
 def print_map(printfunc, keymap):
     """
     Takes a map of keys to values and applies the function f to a pretty
@@ -47,6 +48,7 @@ def print_map(printfunc, keymap):
     for key in keys:
         printfunc("<font color=\"#0000ff\">%s</font> -&gt; %s\n" % \
                   (escv(key), escv(keymap[key])))
+
 
 class Renderer(RendererBase):
     """

@@ -23,6 +23,7 @@ from Pyblosxom.cache.base import BlosxomCacheBase
 import shelve
 import os
 
+
 class BlosxomCache(BlosxomCacheBase):
     """
     This stores entries in shelves in a .dbm file.
@@ -59,7 +60,6 @@ class BlosxomCache(BlosxomCacheBase):
         else:
             return None
 
-
     def saveEntry(self, entrydata):
         """
         Save data in the pickled file.
@@ -69,7 +69,6 @@ class BlosxomCache(BlosxomCacheBase):
         payload['entrydata'] = entrydata
 
         self._db[self._entryid] = payload
-
 
     def rmEntry(self):
         """
@@ -94,7 +93,6 @@ class BlosxomCache(BlosxomCacheBase):
                 # Remove this key, why is it there in the first place?
                 del self._db[self._entryid]
         return ret
-
 
     def close(self):
         """
