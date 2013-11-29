@@ -60,6 +60,7 @@ _VAR_REGEXP = re.compile(r"""
 # reference to the pyblosxom config dict
 _config = {}
 
+
 def initialize(config):
     """Initializes the tools module.
 
@@ -75,19 +76,19 @@ def initialize(config):
     global month2num
 
     try:
-        month2num = {'nil' : '00',
-                     locale.nl_langinfo(locale.ABMON_1) : '01',
-                     locale.nl_langinfo(locale.ABMON_2) : '02',
-                     locale.nl_langinfo(locale.ABMON_3) : '03',
-                     locale.nl_langinfo(locale.ABMON_4) : '04',
-                     locale.nl_langinfo(locale.ABMON_5) : '05',
-                     locale.nl_langinfo(locale.ABMON_6) : '06',
-                     locale.nl_langinfo(locale.ABMON_7) : '07',
-                     locale.nl_langinfo(locale.ABMON_8) : '08',
-                     locale.nl_langinfo(locale.ABMON_9) : '09',
-                     locale.nl_langinfo(locale.ABMON_10) : '10',
-                     locale.nl_langinfo(locale.ABMON_11) : '11',
-                     locale.nl_langinfo(locale.ABMON_12) : '12'}
+        month2num = {'nil': '00',
+                     locale.nl_langinfo(locale.ABMON_1): '01',
+                     locale.nl_langinfo(locale.ABMON_2): '02',
+                     locale.nl_langinfo(locale.ABMON_3): '03',
+                     locale.nl_langinfo(locale.ABMON_4): '04',
+                     locale.nl_langinfo(locale.ABMON_5): '05',
+                     locale.nl_langinfo(locale.ABMON_6): '06',
+                     locale.nl_langinfo(locale.ABMON_7): '07',
+                     locale.nl_langinfo(locale.ABMON_8): '08',
+                     locale.nl_langinfo(locale.ABMON_9): '09',
+                     locale.nl_langinfo(locale.ABMON_10): '10',
+                     locale.nl_langinfo(locale.ABMON_11): '11',
+                     locale.nl_langinfo(locale.ABMON_12): '12'}
 
     except AttributeError:
         # Windows doesn't have nl_langinfo, so we use one that
@@ -119,6 +120,7 @@ def initialize(config):
     global MONTHS
     MONTHS = num2month.keys() + month2num.keys()
 
+
 def pwrap(s):
     """Wraps the text and prints it.
     """
@@ -130,6 +132,7 @@ def pwrap(s):
         linesep = os.linesep + "  "
 
     print starter + linesep.join(textwrap.wrap(s, 72))
+
 
 def pwrap_error(s):
     """Wraps an error message and prints it to stderr.
@@ -143,6 +146,7 @@ def pwrap_error(s):
 
     sys.stderr.write(starter + linesep.join(textwrap.wrap(s, 72)) + "\n")
 
+
 def deprecated_function(func):
     def _deprecated_function(*args, **kwargs):
         return func(*args, **kwargs)
@@ -152,11 +156,13 @@ def deprecated_function(func):
     _deprecated_function.__dict__.update(func.__dict__)
     return _deprecated_function
 
+
 class ConfigSyntaxErrorException(Exception):
     """Thrown when ``convert_configini_values`` encounters a syntax
     error.
     """
     pass
+
 
 def convert_configini_values(configini):
     """Takes a dict containing config.ini style keys and values, converts
@@ -218,6 +224,7 @@ def convert_configini_values(configini):
 
     return config
 
+
 def escape_text(s):
     """Takes in a string and converts:
 
@@ -246,6 +253,7 @@ def escape_text(s):
         s = s.replace(mem[0], mem[1])
     return s
 
+
 def urlencode_text(s):
     """Calls ``urllib.quote`` on the string ``s``.
 
@@ -269,6 +277,7 @@ def urlencode_text(s):
 
 STANDARD_FILTERS = {"escape": lambda req, vd, s: escape_text(s),
                     "urlencode": lambda req, vd, s: urlencode_text(s)}
+
 
 class Stripper(sgmllib.SGMLParser):
     """
@@ -305,6 +314,7 @@ class Stripper(sgmllib.SGMLParser):
         """
         return "".join(self.data)
 
+
 def commasplit(s):
     """
     Splits a string that contains strings by comma.  This is
@@ -336,18 +346,18 @@ def commasplit(s):
     if not s:
         return [""]
 
-    startstring = None
+    start_string = None
     t = []
     l = []
 
     for c in s:
-        if c == startstring:
-            startstring = None
+        if c == start_string:
+            start_string = None
             t.append(c)
         elif c == "'" or c == '"':
-            startstring = c
+            start_string = c
             t.append(c)
-        elif not startstring and c == ",":
+        elif not start_string and c == ",":
             l.append("".join(t))
             t = []
         else:
@@ -355,6 +365,7 @@ def commasplit(s):
     if t:
         l.append("".join(t))
     return l
+
 
 class Replacer:
     """
@@ -403,7 +414,7 @@ class Replacer:
              ``var_dict[v](request, vd, *args)`` after some mild
              processing of the arguments
 
-        Also, for backwards compatability reasons, we convert things
+        Also, for backwards compatibility reasons, we convert things
         like::
 
             $id_escaped
@@ -429,7 +440,7 @@ class Replacer:
         if key.startswith("(") and key.endswith(")"):
             key = key[1:-1]
 
-        # do this for backwards-compatability reasons
+        # do this for backwards-compatibility reasons
         if key.endswith("_escaped"):
             key = "escape(%s)" % key[:-8]
         elif key.endswith("_urlencoded"):
@@ -491,6 +502,7 @@ class Replacer:
 
         return r
 
+
 def parse(request, var_dict, template):
     """
     This method parses the ``template`` passed in using ``Replacer``
@@ -507,6 +519,7 @@ def parse(request, var_dict, template):
     encoding = request.config.get("blog_encoding", "utf-8")
     replacer = Replacer(request, encoding, var_dict)
     return _VAR_REGEXP.sub(replacer.replace, template)
+
 
 def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     """
@@ -563,6 +576,7 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
 
 # We do this for backwards compatibility reasons.
 Walk = deprecated_function(walk)
+
 
 def _walk_internal(root, recurse, pattern, ignorere, return_folders):
     """
@@ -647,6 +661,7 @@ def filestat(request, filename):
 
     return timetuple
 
+
 def what_ext(extensions, filepath):
     """
     Takes in a filepath and a list of extensions and tries them all
@@ -662,6 +677,7 @@ def what_ext(extensions, filepath):
         if os.path.isfile(filepath + '.' + ext):
             return ext
     return None
+
 
 def is_year(s):
     """
@@ -684,21 +700,22 @@ def is_year(s):
         return True
     return False
 
-def importname(modulename, name):
+
+def importname(module_name, name):
     """
     Safely imports modules for runtime importing.
 
-    :param modulename: the package name of the module to import from
+    :param module_name: the package name of the module to import from
     :param name: the name of the module to import
 
     :returns: the module object or ``None`` if there were problems
               importing.
     """
     logger = getLogger()
-    if not modulename:
+    if not module_name:
         m = name
     else:
-        m = "%s.%s" % (modulename, name)
+        m = "%s.%s" % (module_name, name)
 
     try:
         module = __import__(m)
@@ -708,13 +725,14 @@ def importname(modulename, name):
 
     except ImportError, ie:
         logger.error("Module %s in package %s won't import: %s" % \
-                     (repr(modulename), repr(name), ie))
+                     (repr(module_name), repr(name), ie))
 
     except StandardError, e:
         logger.error("Module %s not in in package %s: %s" % \
-                     (repr(modulename), repr(name), e))
+                     (repr(module_name), repr(name), e))
 
     return None
+
 
 def generate_rand_str(minlen=5, maxlen=10):
     """
@@ -739,6 +757,7 @@ def generate_rand_str(minlen=5, maxlen=10):
     return "".join(randstr)
 
 generateRandStr = deprecated_function(generate_rand_str)
+
 
 def run_callback(chain, input,
                  mappingfunc=lambda x, y: x,
@@ -822,6 +841,7 @@ def run_callback(chain, input,
     # output.
     return output
 
+
 def addcr(text):
     """Adds a cr if it needs one.
 
@@ -835,6 +855,7 @@ def addcr(text):
     if not text.endswith("\n"):
         return text + "\n"
     return text
+
 
 def create_entry(datadir, category, filename, mtime, title, metadata, body):
     """
@@ -882,6 +903,7 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
     # set the mtime on the entry
     os.utime(fn, (mtime, mtime))
 
+
 def get_cache(request):
     """
     Retrieves the cache from the request or fetches a new CacheDriver
@@ -907,11 +929,12 @@ def get_cache(request):
 
     return mycache
 
+
 def update_static_entry(cdict, entry_filename):
     """
     This is a utility function that allows plugins to easily update
     statically rendered entries without going through all the
-    rigamarole.
+    rigmarole.
 
     First we figure out whether this blog is set up for static
     rendering.  If not, then we return--no harm done.
@@ -924,20 +947,21 @@ def update_static_entry(cdict, entry_filename):
     :param entry_filename: the url path of the entry to be updated;
                            example: ``/movies/xmen2``
     """
-    staticdir = cdict.get("static_dir", "")
+    static_dir = cdict.get("static_dir", "")
 
-    if not staticdir:
+    if not static_dir:
         return
 
-    staticflavours = cdict.get("static_flavours", ["html"])
+    static_flavours = cdict.get("static_flavours", ["html"])
 
-    renderme = []
-    for mem in staticflavours:
-        renderme.append("/index" + "." + mem, "")
-        renderme.append(entry_filename + "." + mem, "")
+    render_me = []
+    for mem in static_flavours:
+        render_me.append("/index" + "." + mem, "")
+        render_me.append(entry_filename + "." + mem, "")
 
-    for mem in renderme:
+    for mem in render_me:
         render_url_statically(cdict, mem[0], mem[1])
+
 
 def render_url_statically(cdict, url, querystring):
     """Renders a url and saves the rendered output to the
@@ -947,17 +971,17 @@ def render_url_statically(cdict, url, querystring):
     :param url: url to render
     :param querystring: querystring of the url to render or ""
     """
-    staticdir = cdict.get("static_dir", "")
+    static_dir = cdict.get("static_dir", "")
 
-    # if there is no staticdir, then they're not set up for static
+    # if there is no static_dir, then they're not set up for static
     # rendering.
-    if not staticdir:
+    if not static_dir:
         raise Exception("You must set static_dir in your config file.")
 
     response = render_url(cdict, url, querystring)
     response.seek(0)
 
-    fn = os.path.normpath(staticdir + os.sep + url)
+    fn = os.path.normpath(static_dir + os.sep + url)
     if not os.path.isdir(os.path.dirname(fn)):
         os.makedirs(os.path.dirname(fn))
 
@@ -966,6 +990,7 @@ def render_url_statically(cdict, url, querystring):
     f = open(fn, "w")
     f.write(response.read())
     f.close()
+
 
 def render_url(cdict, pathinfo, querystring=""):
     """
@@ -1013,8 +1038,9 @@ def render_url(cdict, pathinfo, querystring=""):
 import logging
 
 # A dict to keep track of created log handlers.  Used to prevent
-# multiple handlers from beeing added to the same logger.
+# multiple handlers from being added to the same logger.
 _loghandler_registry = {}
+
 
 class LogFilter(object):
     """
@@ -1037,8 +1063,9 @@ class LogFilter(object):
             return 1
         return 0
 
+
 def get_logger(log_file=None):
-    """Creates and retuns a log channel.
+    """Creates and returns a log channel.
 
     If no log_file is given the system-wide logfile as defined in
     config.py is used. If a log_file is given that's where the created
@@ -1053,7 +1080,7 @@ def get_logger(log_file=None):
               ``error``, ``warning``, ``debug``, ``info``, ... on.
     """
     custom_log_file = False
-    if log_file == None:
+    if log_file is None:
         log_file = _config.get('log_file', 'stderr')
         f = sys._getframe(1)
         filename = f.f_code.co_filename
@@ -1084,7 +1111,7 @@ def get_logger(log_file=None):
     # don't propagate messages up the logger hierarchy
     logger.propagate = 0
 
-    # setup the handler if it doesn't allready exist.  only add one
+    # setup the handler if it doesn't already exist.  only add one
     # handler per log channel.
     key = "%s|%s" % (log_file, log_name)
     if not key in _loghandler_registry:
@@ -1132,6 +1159,7 @@ def get_logger(log_file=None):
 
 getLogger = deprecated_function(get_logger)
 
+
 def log_exception(log_file=None):
     """
     Logs an exception to the given file.  Uses the system-wide
@@ -1144,6 +1172,7 @@ def log_exception(log_file=None):
     """
     log = getLogger(log_file)
     log.exception("Exception occured:")
+
 
 def log_caller(frame_num=1, log_file=None):
     """

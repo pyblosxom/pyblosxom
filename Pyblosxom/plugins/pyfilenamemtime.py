@@ -82,6 +82,7 @@ def get_mtime(filename):
         return mtime
     return None
 
+
 def cb_filestat(args):
     filename = args["filename"]
     stattuple = args["mtime"]

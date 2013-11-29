@@ -23,6 +23,7 @@ import re
 from Pyblosxom import tools
 from Pyblosxom.entries import base
 
+
 class FileEntry(base.EntryBase):
     """
     This class gets it's data and metadata from the file specified
@@ -113,7 +114,6 @@ class FileEntry(base.EntryBase):
         path = path.replace(os.path.basename(self._filename), '')
         path = path[:-1]
 
-        absolute_path = self._filename.replace(self._datadir, '')
         absolute_path = self._filename.replace(self._datadir, '', 1)
         absolute_path = absolute_path.replace(file_basename, '')
         absolute_path = absolute_path[1:][:-1]
@@ -121,35 +121,35 @@ class FileEntry(base.EntryBase):
         if absolute_path and absolute_path[-1] == "/":
             absolute_path = absolute_path[0:-1]
 
-        filenamenoext = os.path.splitext(file_basename)[0]
+        filename_no_ext = os.path.splitext(file_basename)[0]
         if absolute_path == '':
-            file_path = filenamenoext
+            file_path = filename_no_ext
         else:
-            file_path = '/'.join((absolute_path, filenamenoext))
+            file_path = '/'.join((absolute_path, filename_no_ext))
 
-        tb_id = '%s/%s' % (absolute_path, filenamenoext)
+        tb_id = '%s/%s' % (absolute_path, filename_no_ext)
         tb_id = re.sub(r'[^A-Za-z0-9]', '_', tb_id)
 
         self['path'] = path
         self['tb_id'] = tb_id
         self['absolute_path'] = absolute_path
         self['file_path'] = file_path
-        self['fn'] = filenamenoext
+        self['fn'] = filename_no_ext
         self['filename'] = self._filename
 
         self.set_time(self._timetuple)
 
         data = self._request.get_data()
 
-        entrydict = self.get_from_cache(self._filename)
-        if not entrydict:
-            fileext = os.path.splitext(self._filename)
-            if fileext:
-                fileext = fileext[1][1:]
+        entry_dict = self.get_from_cache(self._filename)
+        if not entry_dict:
+            file_ext = os.path.splitext(self._filename)
+            if file_ext:
+                file_ext = file_ext[1][1:]
 
-            eparser = data['extensions'][fileext]
-            entrydict = eparser(self._filename, self._request)
-            self.add_to_cache(self._filename, entrydict)
+            eparser = data['extensions'][file_ext]
+            entry_dict = eparser(self._filename, self._request)
+            self.add_to_cache(self._filename, entry_dict)
 
-        self.update(entrydict)
+        self.update(entry_dict)
         self._populated_data = 1

@@ -35,6 +35,7 @@ callbacks = {}
 # didn't import.
 bad_plugins = []
 
+
 def catalogue_plugin(plugin_module):
     """
     Goes through the plugin's contents and catalogues all the functions
@@ -52,6 +53,7 @@ def catalogue_plugin(plugin_module):
         if callable(func):
             callbacks.setdefault(memadj, []).append(func)
 
+
 def get_callback_chain(chain):
     """
     Returns a list of functions registered with the callback.
@@ -61,6 +63,7 @@ def get_callback_chain(chain):
     @rtype: list of functions
     """
     return callbacks.get(chain, [])
+
 
 def initialize_plugins(plugin_dirs, plugin_list):
     """
@@ -115,6 +118,7 @@ def initialize_plugins(plugin_dirs, plugin_list):
         catalogue_plugin(_module)
         plugins.append(_module)
 
+
 def get_plugin_by_name(name):
     """
     This retrieves a plugin instance (it's a Python module instance)
@@ -130,6 +134,7 @@ def get_plugin_by_name(name):
                 return mem
     return None
 
+
 def get_module_name(filename):
     """
     Takes a filename and returns the module name from the filename.
@@ -141,6 +146,7 @@ def get_module_name(filename):
     :returns: the filename without path or extension
     """
     return os.path.splitext(os.path.split(filename)[1])[0]
+
 
 def get_plugin_list(plugin_list, plugin_dirs):
     """
@@ -155,7 +161,7 @@ def get_plugin_list(plugin_list, plugin_dirs):
 
     :return: list of python module names of the plugins to load
     """
-    if plugin_list == None:
+    if plugin_list is None:
         plugin_list = []
         for mem in plugin_dirs:
             file_list = glob.glob(os.path.join(mem, "*.py"))

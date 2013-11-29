@@ -52,7 +52,7 @@ class EntryBase:
 
     def __repr__(self):
         """
-        Returns a friendly debuggable representation of self. Useful
+        Returns a friendly debug-able representation of self. Useful
         to know on what entry pyblosxom fails on you (though unlikely)
 
         :returns: Identifiable representation of object

@@ -73,7 +73,6 @@ __category__ = "archives"
 __license__ = "MIT"
 __registrytags__ = "1.4, 1.5, core"
 
-
 from Pyblosxom import tools
 from Pyblosxom.memcache import memcache_decorator
 from Pyblosxom.tools import pwrap
@@ -107,21 +106,21 @@ class PyblArchives:
         root = config["datadir"]
         archives = {}
         archive_list = tools.walk(self._request, root)
-        fulldict = {}
-        fulldict.update(config)
-        fulldict.update(data)
+        full_dict = {}
+        full_dict.update(config)
+        full_dict.update(data)
 
         template = config.get('archive_template',
-                    '<a href="%(base_url)s/%(Y)s/%(b)s">%(Y)s-%(b)s</a><br />')
+                              '<a href="%(base_url)s/%(Y)s/%(b)s">%(Y)s-%(b)s</a><br />')
         for mem in archive_list:
             timetuple = tools.filestat(self._request, mem)
-            timedict = {}
+            time_dict = {}
             for x in ["B", "b", "m", "Y", "y"]:
-                timedict[x] = time.strftime("%" + x, timetuple)
+                time_dict[x] = time.strftime("%" + x, timetuple)
 
-            fulldict.update(timedict)
-            if not (timedict['Y'] + timedict['m']) in archives:
-                archives[timedict['Y'] + timedict['m']] = (template % fulldict)
+            full_dict.update(time_dict)
+            if not (time_dict['Y'] + time_dict['m']) in archives:
+                archives[time_dict['Y'] + time_dict['m']] = (template % full_dict)
 
         arc_keys = archives.keys()
         arc_keys.sort()

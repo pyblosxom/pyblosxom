@@ -27,6 +27,7 @@ from Pyblosxom import plugin_utils
 USAGE = "%prog [options] [command] [command-options]"
 VERSION = "%prog " + __version__
 
+
 def build_pyblosxom():
     """Imports config.py and builds an empty Pyblosxom object.
     """
@@ -35,16 +36,17 @@ def build_pyblosxom():
         from config import py as cfg
     except StandardError:
         h, t = os.path.split(sys.argv[0])
-        scriptname = t or h
+        script_name = t or h
 
         pwrap_error("ERROR: Cannot find your config.py file.  Please execute "
                     "%s in the directory with the config.py file in it or use "
                     "the --config flag.\n\n"
-                    "See \"%s --help\" for more details." % (scriptname,
-                                                             scriptname))
+                    "See \"%s --help\" for more details." % (script_name,
+                                                             script_name))
         return None
 
     return Pyblosxom(cfg, {})
+
 
 def build_parser(usage):
     parser = OptionParser(usage=usage, version=VERSION)
@@ -60,6 +62,7 @@ def build_parser(usage):
                       "the 'create' command need a config.py file.")
 
     return parser
+
 
 def generate_entries(command, argv):
     """
@@ -136,6 +139,7 @@ def generate_entries(command, argv):
     if verbose:
         print "Done!"
     return 0
+
 
 def test_installation(command, argv):
     """
@@ -272,6 +276,7 @@ def test_installation(command, argv):
     pwrap("")
     pwrap("Verification complete.  Correct any errors and warnings above.")
 
+
 def create_blog(command, argv):
     """
     Creates a blog in the specified directory.  Mostly this involves
@@ -373,6 +378,7 @@ def create_blog(command, argv):
         print "Done!"
     return 0
 
+
 def render_url(command, argv):
     """Renders a single url.
     """
@@ -398,6 +404,7 @@ def render_url(command, argv):
         p.run_render_one(url, options.headers)
 
     return 0
+
 
 def run_static_renderer(command, argv):
     parser = build_parser("%prog staticrender [options]")
@@ -427,7 +434,8 @@ DEFAULT_HANDLERS = (
     ("renderurl", render_url, "Renders a single url of your blog."),
     ("generate", generate_entries, "Generates random entries--helps "
      "with blog setup.")
-    )
+)
+
 
 def get_handlers():
     try:
@@ -453,6 +461,7 @@ def get_handlers():
 
     return handlers
 
+
 def command_line_handler(scriptname, argv):
     if "--silent" in argv:
         sys.stdout = open(os.devnull, "w")
@@ -462,39 +471,39 @@ def command_line_handler(scriptname, argv):
 
     # slurp off the config file setting and add it to sys.path.
     # this needs to be first to pick up plugin-based command handlers.
-    configdir = None
+    config_dir = None
     for i, mem in enumerate(argv):
         if mem.startswith("--config"):
             if "=" in mem:
-                _, configdir = mem.split("=")
+                _, config_dir = mem.split("=")
                 break
             else:
                 try:
-                    configdir = argv[i+1]
+                    config_dir = argv[i+1]
                     break
                 except IndexError:
                     pwrap_error("Error: no config file argument specified.")
                     pwrap_error("Exiting.")
                     return 1
 
-    if configdir is not None:
-        if configdir.endswith("config.py"):
-            configdir = configdir[0:-9]
+    if config_dir is not None:
+        if config_dir.endswith("config.py"):
+            config_dir = config_dir[0:-9]
 
-        if not os.path.exists(configdir):
+        if not os.path.exists(config_dir):
             pwrap_error("ERROR: '%s' does not exist--cannot find config.py "
-                        "file." % configdir)
+                        "file." % config_dir)
             pwrap_error("Exiting.")
             return 1
 
-        if not "config.py" in os.listdir(configdir):
+        if not "config.py" in os.listdir(config_dir):
             pwrap_error("Error: config.py not in '%s'.  "
-                        "Cannot find config.py file." % configdir)
+                        "Cannot find config.py file." % config_dir)
             pwrap_error("Exiting.")
             return 1
 
-        sys.path.insert(0, configdir)
-        print "Inserting %s to beginning of sys.path...." % configdir
+        sys.path.insert(0, config_dir)
+        print "Inserting %s to beginning of sys.path...." % config_dir
 
     handlers = get_handlers()
 

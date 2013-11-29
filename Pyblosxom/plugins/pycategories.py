@@ -128,7 +128,7 @@ class PyblCategories:
 
     @memcache_decorator('pycategories', True)
     def __str__(self):
-        if self._categories == None:
+        if self._categories is None:
             self.gen_categories()
         return self._categories
 

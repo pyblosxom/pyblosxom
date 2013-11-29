@@ -61,7 +61,7 @@ Examples::
     HTML = Hypertext Markup Language
     HTTP = Hypertext Transport Protocol
     RDF = Resource Description Framework
-    RSS = Really Simple Sindication
+    RSS = Really Simple Syndication
     URL = Uniform Resource Locator
     URI = Uniform Resource Indicator
     WSGI = Web Server Gateway Interface
@@ -119,12 +119,12 @@ Styling
 You might want to add something like this to your CSS::
 
     acronym {
-        bordor-bottom: 1px dashed #aaa;
+        border-bottom: 1px dashed #aaa;
         cursor: help;
     }
 
     abbr {
-        bordor-bottom: 1px dashed #aaa;
+        border-bottom: 1px dashed #aaa;
         cursor: help;
     }
 
@@ -213,7 +213,7 @@ def build_acronyms(lines):
         secondpart = line[1].strip()
         secondpart = secondpart.replace("\"", "&quot;")
 
-        if (secondpart.startswith("abbr|") or firstpart.endswith(".")):
+        if secondpart.startswith("abbr|") or firstpart.endswith("."):
             if secondpart.startswith("abbr|"):
                 secondpart = secondpart[5:]
             repl = "<abbr title=\"%s\">\\1</abbr>" % secondpart

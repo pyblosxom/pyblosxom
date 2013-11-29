@@ -27,6 +27,7 @@ import os
 from os import makedirs
 from os.path import normpath, dirname, exists, abspath
 
+
 class BlosxomCache(BlosxomCacheBase):
     """
     This cache stores each entry as a separate pickle file of the
@@ -68,7 +69,6 @@ class BlosxomCache(BlosxomCacheBase):
         """
         return os.path.isfile(self._cachefile) and \
             os.stat(self._cachefile)[8] >= os.stat(self._entryid)[8]
-
 
     def saveEntry(self, entrydata):
         """

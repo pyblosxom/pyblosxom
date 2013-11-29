@@ -128,12 +128,12 @@ class CrashHandler:
 
 
 def enable_excepthook(httpresponse=False):
-    """This attaches the crashhandler to the sys.excepthook.
+    """This attaches the :ref:`CrashHandler` to the sys.excepthook.
     This will handle any exceptions thrown that don't get
     handled anywhere else.
 
     If you're running Pyblosxom as a WSGI application or as a CGI
-    script, you should create a ``CrashHandler`` instance and call
+    script, you should create a :ref:`CrashHandler` instance and call
     ``handle_by_response`` directly.  See
     :ref:`pyblosxom.PyblosxomWSGIApp`.
     """

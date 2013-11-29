@@ -483,6 +483,7 @@ from Pyblosxom.tools import pwrap, pwrap_error
 
 LATEST_PICKLE_FILE = 'LATEST.cmt'
 
+
 def cb_start(args):
     request = args["request"]
     config = request.get_configuration()
@@ -496,6 +497,7 @@ def cb_start(args):
     if not 'comment_nofollow' in config:
         config['comment_nofollow'] = 0
 
+
 def verify_installation(request):
     config = request.get_configuration()
 
@@ -503,8 +505,8 @@ def verify_installation(request):
 
     if 'comment_dir' in config and not os.path.isdir(config['comment_dir']):
         pwrap_error(
-           'The "comment_dir" property in the config file must refer '
-           'to a directory')
+            'The "comment_dir" property in the config file must refer '
+            'to a directory')
         retval = False
 
     smtp_keys_defined = []
@@ -539,6 +541,7 @@ def verify_installation(request):
                   "integer value.")
 
     return retval
+
 
 def createhtmlmail(html, headers):
     """
@@ -583,6 +586,7 @@ def createhtmlmail(html, headers):
 
     return msg
 
+
 def read_comments(entry, config):
     """
     @param: a file entry
@@ -597,6 +601,7 @@ def read_comments(entry, config):
     comments = [(cmt['cmt_time'], cmt) for cmt in comments]
     comments.sort()
     return [c[1] for c in comments]
+
 
 def cmt_expr(entry, config):
     """
@@ -614,6 +619,7 @@ def cmt_expr(entry, config):
     cmt_dir = os.path.join(config['comment_dir'], entry['absolute_path'])
     cmt_expr = os.path.join(cmt_dir, entry['fn'] + '-*.' + config['comment_ext'])
     return cmt_expr
+
 
 def read_file(filename, config):
     """
@@ -678,6 +684,7 @@ def read_file(filename, config):
             cmt['cmt_optionally_linked_author'] = cmt['cmt_author']
 
     return cmts
+
 
 def write_comment(request, config, data, comment, encoding):
     """
@@ -761,6 +768,7 @@ def write_comment(request, config, data, comment, encoding):
         return "Comment was submitted for approval.  Thanks!"
 
     return "Comment submitted.  Thanks!"
+
 
 def send_email(config, entry, comment, comment_dir, comment_filename):
     """Send an email to the blog owner on a new comment
@@ -870,6 +878,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
         tools.get_logger().error("error sending email: %s" %
                                 traceback.format_exception(*sys.exc_info()))
 
+
 def check_comments_disabled(config, entry):
     disabled_after_x_days = config.get("comment_disable_after_x_days", 0)
     if not isinstance(disabled_after_x_days, int):
@@ -888,6 +897,7 @@ def check_comments_disabled(config, entry):
         return True
     return False
 
+
 def clean_author(s):
     """
     Guard against blasterattacko style attacks that embedd SMTP commands in
@@ -901,6 +911,7 @@ def clean_author(s):
     @returns the sanitized string
     """
     return s.splitlines()[0]
+
 
 def escape_smtp_commands(s):
     """
@@ -919,6 +930,7 @@ def escape_smtp_commands(s):
     s = re.sub('([Ff]rom:.*)',repl_fn,s)
     s = re.sub('([Ss]ubject:.*)',repl_fn,s)
     return s
+
 
 def sanitize(body):
     """
@@ -940,14 +952,14 @@ def sanitize(body):
     # <abbr>, <acronym>, <big>, <cite>, <code>, <dfn>, <kbd>, <pre>, <small>
     # <strong>, <sub>, <sup>, <tt>, <var>, <ul>, <ol>, <li>
     body = re.sub('&lt;a href="([^"]*)"&gt;([^&]*)&lt;/a&gt;',
-                 '<a href="\\1">\\2</a>', body)
+                  '<a href="\\1">\\2</a>', body)
     body = re.sub('&lt;a href=\'([^\']*)\'&gt;([^&]*)&lt;/a&gt;',
-                '<a href="\\1">\\2</a>', body)
+                  '<a href="\\1">\\2</a>', body)
     body = re.sub('&lt;em&gt;([^&]*)&lt;/em&gt;', '<em>\\1</em>', body)
     body = re.sub('&lt;i&gt;([^&]*)&lt;/i&gt;', '<i>\\1</i>', body)
     body = re.sub('&lt;b&gt;([^&]*)&lt;/b&gt;', '<b>\\1</b>', body)
     body = re.sub('&lt;blockquote&gt;([^&]*)&lt;/blockquote&gt;',
-                '<blockquote>\\1</blockquote>', body)
+                  '<blockquote>\\1</blockquote>', body)
     body = re.sub('&lt;br\s*/?&gt;\n?', '\n', body)
 
     body = re.sub('&lt;abbr&gt;([^&]*)&lt;/abbr&gt;', '<abbr>\\1</abbr>', body)
@@ -1006,8 +1018,10 @@ def sanitize(body):
 
     return body
 
+
 def dont_follow(mo):
     return '<a rel="nofollow" ' + mo.group(1) + '>'
+
 
 def add_dont_follow(s, config):
     url_pat_str = '<a ([^>]+)>'
@@ -1016,6 +1030,7 @@ def add_dont_follow(s, config):
         return url_pat.sub(dont_follow, s)
     else:
         return s
+
 
 def cb_prepare(args):
     """
@@ -1028,14 +1043,14 @@ def cb_prepare(args):
     form = request.get_http()['form']
     config = request.get_configuration()
     data = request.get_data()
-    pyhttp = request.get_http()
+    py_http = request.get_http()
 
     # first we check to see if we're going to print out comments
     # the default is not to show comments
     data['display_comment_default'] = False
 
     # check to see if they have "showcomments=yes" in the querystring
-    qstr = pyhttp.get('QUERY_STRING', None)
+    qstr = py_http.get('QUERY_STRING', None)
     if qstr != None:
         parsed_qs = cgi.parse_qs(qstr)
         if 'showcomments' in parsed_qs:
@@ -1103,7 +1118,7 @@ def cb_prepare(args):
         if 'email' in form:
             cdict['email'] = form['email'].value
 
-        cdict['ipaddress'] = pyhttp.get('REMOTE_ADDR', '')
+        cdict['ipaddress'] = py_http.get('REMOTE_ADDR', '')
 
         # record the comment's timestamp, so we can extract it and send it
         # back alone, without the rest of the page, if the request was ajax.
@@ -1124,6 +1139,7 @@ def cb_prepare(args):
         else:
             data["comment_message"] = write_comment(request, config, data, \
                                                    cdict, encoding)
+
 
 class AjaxRenderer(blosxom.Renderer):
     """ The renderer used when responding to AJAX requests to preview
@@ -1164,6 +1180,7 @@ class AjaxRenderer(blosxom.Renderer):
         if self._should_output(entry, template_name):
             blosxom.Renderer._output_flavour(self, entry, template_name)
 
+
 def cb_renderer(args):
     request = args['request']
     config = request.get_configuration()
@@ -1175,6 +1192,7 @@ def cb_renderer(args):
         data = '&'.join(['%s=%s' % (arg.name, arg.value) for arg in form.list])
         tools.get_logger().info('AJAX request: %s' % data)
         return AjaxRenderer(request, request.get_data())
+
 
 def cb_handle(args):
     request = args['request']
@@ -1194,6 +1212,7 @@ def cb_handle(args):
                 f.close()
                 return True
 
+
 def massage_link(linkstring):
     """Don't allow html in the link string. Prepend http:// if there isn't
     already a protocol."""
@@ -1202,6 +1221,7 @@ def massage_link(linkstring):
     if linkstring and linkstring.find(':') == -1:
         linkstring = 'http://' + linkstring
     return linkstring
+
 
 def decode_form(d, blog_encoding):
     """Attempt to decode the POST data with a few likely character encodings.
@@ -1224,6 +1244,7 @@ def decode_form(d, blog_encoding):
             except:
                 continue
 
+
 def get_content_type_charset():
     """Extract and return the charset part of the HTTP Content-Type
     header.
@@ -1236,6 +1257,7 @@ def get_content_type_charset():
         return match.group(1)
     else:
         return None
+
 
 def cb_head(args):
     renderer = args['renderer']
@@ -1251,6 +1273,7 @@ def cb_head(args):
         entry.update(single_entry)
         args['entry'] = entry
     return template
+
 
 def cb_story(args):
     """For single entry requests, when commenting is enabled and the
@@ -1274,6 +1297,7 @@ def cb_story(args):
             args['template'] = args['template'] + template
 
     return template
+
 
 def build_preview_comment(form, entry, config):
     """Build a prevew comment by brute force
@@ -1325,6 +1349,7 @@ def build_preview_comment(form, entry, config):
 
     entry.update(c)
     return c
+
 
 def cb_story_end(args):
     renderer = args['renderer']

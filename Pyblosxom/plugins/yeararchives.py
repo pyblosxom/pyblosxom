@@ -108,7 +108,7 @@ class YearArchives:
 
     @memcache_decorator('yeararchives', True)
     def __str__(self):
-        if self._archives == None:
+        if self._archives is None:
             self.gen_linear_archive()
         return self._archives
 
@@ -116,7 +116,6 @@ class YearArchives:
         config = self._request.get_configuration()
         data = self._request.get_data()
         root = config["datadir"]
-        baseurl = config.get("base_url", "")
 
         archives = {}
         archive_list = tools.walk(self._request, root)
