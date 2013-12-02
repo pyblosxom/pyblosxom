@@ -8,9 +8,10 @@
 #######################################################################
 
 import os
+from Pyblosxom.blosxom import blosxom_entry_parser
 
 from Pyblosxom.tests import UnitTestBase
-from Pyblosxom.pyblosxom import blosxom_entry_parser
+
 
 class Testentryparser(UnitTestBase):
     """pyblosxom.blosxom_entry_parser

@@ -6,10 +6,11 @@
 # Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
 #######################################################################
+from Pyblosxom.blosxom import blosxom_process_path_info
 
 from Pyblosxom.tests import UnitTestBase
-from Pyblosxom.pyblosxom import blosxom_process_path_info
 from Pyblosxom import tools
+
 
 class Testpathinfo(UnitTestBase):
     """pyblosxom.blosxom_process_path_info

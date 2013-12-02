@@ -289,7 +289,7 @@ def buildtags(command, argv):
     sep = config.py.get("tags_separator", ",")
     tagsfile = get_tagsfile(config.py)
 
-    from Pyblosxom.pyblosxom import blosxom_entry_parser, Pyblosxom
+    from Pyblosxom.pyblosxom import Pyblosxom
     from Pyblosxom import tools
     from Pyblosxom.entries import fileentry
 
@@ -334,7 +334,8 @@ def category_to_tags(command, argv):
 
     sep = config.py.get("tags_separator", ",")
 
-    from Pyblosxom.pyblosxom import blosxom_entry_parser, Request
+    from Pyblosxom.pyblosxom import Request
+    from Pyblosxom.blosxom import blosxom_entry_parser
     from Pyblosxom import tools
 
     data = {}
@@ -401,7 +402,7 @@ def cb_start(args):
 
 
 def cb_filelist(args):
-    from Pyblosxom.pyblosxom import blosxom_truncate_list_handler
+    from Pyblosxom.blosxom import blosxom_truncate_list_handler
     from Pyblosxom import tools
 
     # handles /trigger/tag to show all the entries tagged that

@@ -43,6 +43,7 @@ pingback.
 * http://www.dummy-blog.org/
 
 """
+from Pyblosxom.blosxom import blosxom_file_list_handler, blosxom_process_path_info
 
 __author__ = "Ted Leung, Ryan Barrett"
 __email__ = ""
@@ -112,11 +113,9 @@ def fileFor(req, uri):
     # We get our path here
     path = uri.replace(config['base_url'], '')
     req.add_http({'PATH_INFO': path, "form": {}})
-    from Pyblosxom.pyblosxom import blosxom_process_path_info
     blosxom_process_path_info({'request': req})
 
     args = {'request': req}
-    from Pyblosxom.pyblosxom import blosxom_file_list_handler
     es = blosxom_file_list_handler(args)
 
     # We're almost there
