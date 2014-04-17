@@ -1,5 +1,8 @@
 .. image:: https://api.travis-ci.org/pyblosxom/pyblosxom.png
    :target: https://travis-ci.org/pyblosxom/pyblosxom
+   
+.. image:: https://d3o0mnbgv6k92a.cloudfront.net/assets/hack-s-v1-7475db0cf93fe5d1e29420c928ebc614.png
+   :target: https://www.nitrous.io/hack_button?source=embed&runtime=django&repo=pyblosxom%2Fpyblosxom
 
 =================
  About Pyblosxom
