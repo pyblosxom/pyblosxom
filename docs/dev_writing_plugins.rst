@@ -275,7 +275,7 @@ First you need to get the logger instance.  After that, you can call
 debug, info, warning, error and critical on the logger instance.  For
 example::
 
-    from pyblosxom import tools
+    from Pyblosxom import tools
 
     def cb_prepare(args):
         # ...

@@ -111,4 +111,4 @@ Where to go from here
 ======================
 
 Once set up, you can continue to the 
-`Creating your blog <http://pyblosxom.github.com/1.5/install.html#creating-a-blog>`_. chapter
+`Creating your blog <http://pyblosxom.github.io/Documentation/1.5/install.html#creating-a-blog>`_. chapter
