@@ -209,7 +209,11 @@ def cb_story(args):
     # otherwise we replace the breakpoint with the template
     base_url = config["base_url"]
     file_path = entry["file_path"]
-    flavour = config.get("default_flavour", "html")
+
+    # Set and use current (or default) flavour for full entry
+    flavour = data.get(
+        "flavour", config.get("default_flavour", "html"))
+
     url = '%s/%s.%s' % (base_url, file_path, flavour)
 
     link = (template % {"url": url,
