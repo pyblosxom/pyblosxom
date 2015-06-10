@@ -5,6 +5,8 @@
 #
 # Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
+#
+# TRYING TO FIX STATIC RENDERING, MIGHT BREAK HORRIBLY //Sebastian Hellvin (habmala.se) (June 2015)
 #######################################################################
 
 """
@@ -106,7 +108,7 @@ pages of entries. Then the urls would look like this::
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "2011-10-22"
+__version__ = "2015-06-09" #Sebastians Mod
 __url__ = "http://pyblosxom.github.com/"
 __description__ = (
     "Allows navigation by page for indexes that have too many entries.")
@@ -135,7 +137,7 @@ def verify_installation(request):
 
 class PageDisplay:
     def __init__(self, url_template, current_page, max_pages, count_from,
-                 previous_text, next_text, linkstyle):
+                 previous_text, next_text, linkstyle, request): #added request //Sebastian
         self._url_template = url_template
         self._current_page = current_page
         self._max_pages = max_pages
@@ -143,20 +145,34 @@ class PageDisplay:
         self._previous = previous_text
         self._next = next_text
         self._linkstyle = linkstyle
+        self._config = request.get_configuration() #added to use config["base_url"] for links //Sebastian
 
     def __str__(self):
         output = []
+
         # prev
-        if self._current_page != self._count_from:
+##Sebastians mod
+        if self._current_page == self._count_from + 1:
+            prev_url = self._config["base_url"]
+            output.append('<a href="%s">%s</a>&nbsp;' %
+                          (prev_url, self._previous))
+##End Sebastians mod
+
+        elif self._current_page != self._count_from:
             prev_url = self._url_template % (self._current_page - 1)
             output.append('<a href="%s">%s</a>&nbsp;' %
                           (prev_url, self._previous))
-
+            
         # pages
         if self._linkstyle == 0:
             for i in range(self._count_from, self._max_pages):
                 if i == self._current_page:
                     output.append('[%d]' % i)
+##Sebastians mod
+                elif i == 1:
+                    page_url = self._config["base_url"]
+                    output.append('<a href="%s">%d</a>' % (page_url, i))
+##End Sebastians mod
                 else:
                     page_url = self._url_template % i
                     output.append('<a href="%s">%d</a>' % (page_url, i))
@@ -254,7 +270,7 @@ def page(request, num_entries, entry_list):
 
         data["page_navigation"] = PageDisplay(
             url_template, page, max_pages, count_from, previous_text,
-            next_text, link_style)
+            next_text, link_style, request) # added request to fix an error with the number of arguments given //Sebastian
 
         # If we're static rendering and there wasn't a page specified
         # and this is one of the flavours to statically render, then
