@@ -152,7 +152,8 @@ class PageDisplay:
 
         # prev
 ##Sebastians mod
-        if self._current_page == self._count_from + 1:
+        if self._current_page == self._count_from + 1
+            and data.get("STATIC"):
             prev_url = self._config["base_url"]
             output.append('<a href="%s">%s</a>&nbsp;' %
                           (prev_url, self._previous))
@@ -170,6 +171,7 @@ class PageDisplay:
                     output.append('[%d]' % i)
 ##Sebastians mod
                 elif i == 1:
+                    and data.get("STATIC"):
                     page_url = self._config["base_url"]
                     output.append('<a href="%s">%d</a>' % (page_url, i))
 ##End Sebastians mod
