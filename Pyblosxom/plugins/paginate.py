@@ -146,13 +146,15 @@ class PageDisplay:
         self._next = next_text
         self._linkstyle = linkstyle
         self._config = request.get_configuration() #added to use config["base_url"] for links //Sebastian
+        self._data = request.get_data()
 
     def __str__(self):
         output = []
 
         # prev
 ##Sebastians mod
-        if self._current_page == self._count_from + 1:
+        if (self._current_page == self._count_from + 1
+            and self._data.get("STATIC")):
             prev_url = self._config["base_url"]
             output.append('<a href="%s">%s</a>&nbsp;' %
                           (prev_url, self._previous))
@@ -169,9 +171,10 @@ class PageDisplay:
                 if i == self._current_page:
                     output.append('[%d]' % i)
 ##Sebastians mod
-                elif i == 1:
-                    page_url = self._config["base_url"]
-                    output.append('<a href="%s">%d</a>' % (page_url, i))
+                elif (i == 1
+                     and self._data.get("STATIC")):
+                     page_url = self._config["base_url"]
+                     output.append('<a href="%s">%d</a>' % (page_url, i))
 ##End Sebastians mod
                 else:
                     page_url = self._url_template % i
