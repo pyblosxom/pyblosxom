@@ -5,8 +5,6 @@
 #
 # Pyblosxom is distributed under the MIT license.  See the file
 # LICENSE for distribution details.
-#
-# TRYING TO FIX STATIC RENDERING, MIGHT BREAK HORRIBLY //Sebastian Hellvin (habmala.se) (June 2015)
 #######################################################################
 
 """
@@ -70,6 +68,26 @@ behavior::
 
    This is the text for the "next page" link.
 
+``paginate_first_last``
+
+   Defaults to 0
+
+   Set this to 1 to add links to the first and last page.
+
+
+``paginate_first_text``
+
+   Defaults to "&lt;&lt;&gt;".
+
+   This is the text for the "first page" link.
+
+
+``paginate_last_text``
+
+   Defaults to "&gt;&gt;&gt;".
+
+   This is the text for the "last page" link.
+
 
 ``paginate_linkstyle``
 
@@ -108,7 +126,7 @@ pages of entries. Then the urls would look like this::
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "2015-06-09" #Sebastians Mod
+__version__ = "2015-06-12"
 __url__ = "http://pyblosxom.github.com/"
 __description__ = (
     "Allows navigation by page for indexes that have too many entries.")
@@ -137,7 +155,7 @@ def verify_installation(request):
 
 class PageDisplay:
     def __init__(self, url_template, current_page, max_pages, count_from,
-                 previous_text, next_text, linkstyle, first_last, first_text, last_text, request): #added request //Sebastian
+                 previous_text, next_text, linkstyle, first_last, first_text, last_text, request):
         self._url_template = url_template
         self._current_page = current_page
         self._max_pages = max_pages
@@ -148,7 +166,7 @@ class PageDisplay:
         self._first_last = first_last
         self._first = first_text
         self._last = last_text
-        self._config = request.get_configuration() #added to use config["base_url"] for links //Sebastian
+        self._config = request.get_configuration()
         self._data = request.get_data()
 
     def __str__(self):
@@ -157,7 +175,7 @@ class PageDisplay:
         #first
         if (self._current_page != self._count_from
             and self._first_last == 1
-            and self._data.get("STATIC")): #check if static and link to "base_url" from config.py
+            and self._data.get("STATIC")):
             first_url = self._config["base_url"]
             output.append('<a href="%s">%s</a>&nbsp;' %
                           (first_url, self._first))
@@ -170,7 +188,7 @@ class PageDisplay:
         
         # prev
         if (self._current_page == self._count_from + 1
-            and self._data.get("STATIC")): #check if static and link to "base_url" from config.py
+            and self._data.get("STATIC")):
             prev_url = self._config["base_url"]
             output.append('<a href="%s">%s</a>&nbsp;' %
                           (prev_url, self._previous))
@@ -186,7 +204,7 @@ class PageDisplay:
                 if i == self._current_page:
                     output.append('[%d]' % i)
                 elif (i == 1
-                     and self._data.get("STATIC")): #check if static and link to "base_url" from config.py
+                     and self._data.get("STATIC")):
                      page_url = self._config["base_url"]
                      output.append('<a href="%s">%d</a>' % (page_url, i))
                 else:
@@ -206,7 +224,7 @@ class PageDisplay:
         #last
         if (self._current_page != self._max_pages -1
             and self._first_last == 1
-            and self._data.get("STATIC")): #check if static and link to "base_url" from config.py
+            and self._data.get("STATIC")):
             last_url = self._url_template % (self._max_pages -1)
             output.append('<a href="%s">%s</a>&nbsp;' %
                           (last_url, self._last))
@@ -232,6 +250,8 @@ def page(request, num_entries, entry_list):
     last_text = config.get("paginate_last_text", "&gt;&gt;&gt;")
 
     first_last = config.get("paginate_first_last", 0)
+    if first_last > 1:
+        first_last = 1
 
     link_style = config.get("paginate_linkstyle", 1)
     if link_style > 1:
@@ -306,7 +326,7 @@ def page(request, num_entries, entry_list):
 
         data["page_navigation"] = PageDisplay(
             url_template, page, max_pages, count_from, previous_text,
-            next_text, link_style, first_last, first_text, last_text, request) # added request to fix an error with the number of arguments given //Sebastian
+            next_text, link_style, first_last, first_text, last_text, request)
 
         # If we're static rendering and there wasn't a page specified
         # and this is one of the flavours to statically render, then
