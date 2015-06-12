@@ -21,6 +21,8 @@ will only see the first 20 entries rendered.
 The paginate plugin overrides this functionality and allows for
 paging.
 
+This plugin also needs the ``base_url`` variable to be set for static
+rendering and fi using first_last to add links to the first and last page.
 
 Install
 =======
@@ -37,6 +39,9 @@ This plugin comes with Pyblosxom.  To install, do the following:
 2. add the ``$(page_navigation)`` variable to your head or foot (or
    both) templates.  this is where the page navigation HTML will
    appear.
+
+Optional:
+3. Customize the links with the CSS class "paginate".
 
 
 Here are some additional configuration variables to adjust the
@@ -177,25 +182,25 @@ class PageDisplay:
             and self._first_last == 1
             and self._data.get("STATIC")):
             first_url = self._config["base_url"]
-            output.append('<a href="%s">%s</a>&nbsp;' %
+            output.append('<a class="paginate" href="%s">%s</a>&nbsp;' %
                           (first_url, self._first))
 
         elif (self._current_page != self._count_from
               and self._first_last == 1):
             first_url = self._config["base_url"]
-            output.append('<a href="%s">%s</a>&nbsp;' %
+            output.append('<a class="paginate" href="%s">%s</a>&nbsp;' %
                           (first_url, self._first))
         
         # prev
         if (self._current_page == self._count_from + 1
             and self._data.get("STATIC")):
             prev_url = self._config["base_url"]
-            output.append('<a href="%s">%s</a>&nbsp;' %
+            output.append('<a class="paginate" href="%s">%s</a>&nbsp;' %
                           (prev_url, self._previous))
 
         elif self._current_page != self._count_from:
             prev_url = self._url_template % (self._current_page - 1)
-            output.append('<a href="%s">%s</a>&nbsp;' %
+            output.append('<a class="paginate" href="%s">%s</a>&nbsp;' %
                           (prev_url, self._previous))
             
         # pages
@@ -206,10 +211,10 @@ class PageDisplay:
                 elif (i == 1
                      and self._data.get("STATIC")):
                      page_url = self._config["base_url"]
-                     output.append('<a href="%s">%d</a>' % (page_url, i))
+                     output.append('<a class="paginate" href="%s">%d</a>' % (page_url, i))
                 else:
                     page_url = self._url_template % i
-                    output.append('<a href="%s">%d</a>' % (page_url, i))
+                    output.append('<a class="paginate" href="%s">%d</a>' % (page_url, i))
         elif self._linkstyle == 1:
             output.append(' Page %s of %s ' %
                           (self._current_page, self._max_pages - 1))
@@ -217,7 +222,7 @@ class PageDisplay:
         # next
         if self._current_page < self._max_pages - 1:
             next_url = self._url_template % (self._current_page + 1)
-            output.append('&nbsp;<a href="%s">%s</a>' %
+            output.append('&nbsp;<a class="paginate" href="%s">%s</a>' %
                           (next_url, self._next))
 
         
@@ -226,13 +231,13 @@ class PageDisplay:
             and self._first_last == 1
             and self._data.get("STATIC")):
             last_url = self._url_template % (self._max_pages -1)
-            output.append('<a href="%s">%s</a>&nbsp;' %
+            output.append('<a class="paginate" href="%s">%s</a>&nbsp;' %
                           (last_url, self._last))
 
         elif (self._current_page != self._max_pages -1
               and self._first_last == 1):
             last_url = self._url_template (self._max_pages -1)
-            output.append('<a href="%s">%s</a>&nbsp;' %
+            output.append('<a class="paginate" href="%s">%s</a>&nbsp;' %
                           (last_url, self._last))
 
             
