@@ -154,7 +154,7 @@ class PageDisplay:
         output = []
 
         #first
-        if (self._current_page == self._count_from + 1
+        if (self._current_page != self._count_from
             and self._first_last == 1
             and self._data.get("STATIC")): #check if static and link to "base_url" from config.py
             first_url = self._config["base_url"]
