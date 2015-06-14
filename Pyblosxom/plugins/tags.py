@@ -253,7 +253,7 @@ from anywhere.
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "2011-10-23"
+__version__ = "2015-06-14"
 __url__ = "http://pyblosxom.github.com/"
 __description__ = "Tags plugin"
 __category__ = "tags"
