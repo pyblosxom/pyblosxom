@@ -22,6 +22,8 @@ for the story.
 
 It creates a ``$(tagcloud)`` variable for the tag cloud.
 
+It creates a ``$(feed_tag)`` variable for use in rss-feeds.
+
 
 Install
 =======
@@ -180,6 +182,20 @@ configuration property:
     Defaults to ``<a href="%(tagurl)s">%(tag)s</a>``.
 
     Tags are joined together with ``,``.
+
+``tags_feed_item``
+
+    This is the template for a single tag for a rss-feed.  It can use the
+    following bits:
+
+    * ``base_url`` - the baseurl for this blog
+    * ``flavour`` - the default flavour or flavour currently being viewed
+    * ``tag`` - the tag
+    * ``tagurl`` - url composed of baseurl, trigger and tag
+
+    Defaults to ``<category domain="%(base_url)s">%(tag)s</category>``
+
+    Tags are joined together with ``\n`` (newline).
 
 
 Creating the tags index file
@@ -457,6 +473,7 @@ def cb_story(args):
 
     sep = config.get("tags_separator", ",")
     tags = [t.strip() for t in entry.get("tags", "").split(sep)]
+    feed_tags = [t.strip() for t in entry.get("tags", "").split(sep)]
     tags.sort()
     entry["tags_raw"] = tags
 
@@ -468,6 +485,7 @@ def cb_story(args):
     baseurl = config.get("base_url", "")
     trigger = config.get("tags_trigger", "tag")
     template = config.get("tags_item", '<a href="%(tagurl)s">%(tag)s</a>')
+    feed_template = config.get("tags_feed_item", '<category domain="%(base_url)s">%(tag)s</category>')
 
     tags = [template % {"base_url": baseurl,
                         "flavour": flavour,
@@ -475,6 +493,13 @@ def cb_story(args):
                         "tagurl": "/".join([baseurl, trigger, tag])}
             for tag in tags]
     entry["tags"] = ", ".join(tags)
+
+    feed_tags = [feed_template % {"base_url": baseurl,
+                        "flavour": flavour,
+                        "tag": tag,
+                        "baseurl": "/".join([baseurl, trigger, tag])}
+            for tag in feed_tags]
+    entry["feed_tags"] = "\n ".join(feed_tags)
     return args
 
 
