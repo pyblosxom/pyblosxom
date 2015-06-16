@@ -22,7 +22,7 @@ for the story.
 
 It creates a ``$(tagcloud)`` variable for the tag cloud.
 
-It creates a ``$(feed_tag)`` variable for use in rss-feeds.
+It creates a ``$(feed_tags)`` variable for use in rss-feeds.
 
 
 Install
