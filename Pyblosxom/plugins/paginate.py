@@ -127,11 +127,14 @@ pages of entries. Then the urls would look like this::
     /index_page3.html     third page
     ...
 
+The links will break with static rendering if you blog is located at a url
+that contains "_page".
+
 """
 
 __author__ = "Will Kahn-Greene"
 __email__ = "willg at bluesock dot org"
-__version__ = "2015-06-12"
+__version__ = "2015-06-29"
 __url__ = "http://pyblosxom.github.com/"
 __description__ = (
     "Allows navigation by page for indexes that have too many entries.")
