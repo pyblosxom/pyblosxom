@@ -159,10 +159,10 @@ def verify_installation(request):
 
 
 class PageDisplay:
-    def __init__(self, url_template, url_first, current_page, max_pages, count_from,
+    def __init__(self, url_template, url_first_page, current_page, max_pages, count_from,
                  previous_text, next_text, linkstyle, first_last, first_text, last_text, request):
         self._url_template = url_template
-        self._url_first = url_first
+        self._url_first_page = url_first_page
         self._current_page = current_page
         self._max_pages = max_pages
         self._count_from = count_from
@@ -182,7 +182,7 @@ class PageDisplay:
         if (self._current_page != self._count_from
             and self._first_last == 1
             and self._data.get("STATIC")):
-            first_url = self._url_first
+            first_url = self._url_first_page
             output.append('<a class="paginate" href="%s">%s</a>&nbsp;' %
                           (first_url, self._first))
 
@@ -195,7 +195,7 @@ class PageDisplay:
         # prev
         if (self._current_page == self._count_from + 1
             and self._data.get("STATIC")):
-            prev_url = self._url_first
+            prev_url = self._url_first_page
             output.append('<a class="paginate" href="%s">%s</a>&nbsp;' %
                           (prev_url, self._previous))
 
@@ -211,7 +211,7 @@ class PageDisplay:
                     output.append('[%d]' % i)
                 elif (i == 1
                      and self._data.get("STATIC")):
-                     page_url = self._url_first
+                     page_url = self._url_first_page
                      output.append('<a class="paginate" href="%s">%d</a>' % (page_url, i))
                 else:
                     page_url = self._url_template % i
@@ -320,8 +320,8 @@ def page(request, num_entries, entry_list):
                 pageno = "_page%d"
             url_template[-1] = fn + pageno + ext
             url_template = "/".join(url_template)
-            url_first = url_template.split("_")
-            url_first = url_first[0] + ext
+            url_first_page = url_template.split("_page")
+            url_first_page = url_first_page[0] + ext
 
         begin = (page - count_from) * entries_per_page
         end = (page + 1 - count_from) * entries_per_page
@@ -333,7 +333,7 @@ def page(request, num_entries, entry_list):
         data["entry_list"] = entry_list[begin:end]
 
         data["page_navigation"] = PageDisplay(
-            url_template, url_first, page, max_pages, count_from, previous_text,
+            url_template, url_first_page, page, max_pages, count_from, previous_text,
             next_text, link_style, first_last, first_text, last_text, request)
 
         # If we're static rendering and there wasn't a page specified
