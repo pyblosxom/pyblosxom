@@ -22,7 +22,21 @@ Dependencies
 ============
 
 You need to install Pyblosxom and create a blog on the web server first.
-See :doc:`/install`.
+See :doc:`/install`. The instructions on this page assume that you've created
+your blog at ``/var/www/blog``, for example by running:
+
+.. code-block:: bash
+
+   pyblosxom-cmd create /var/www/blog
+
+.. tip::
+
+   You may need to give your user account write access to ``/var/www``:
+
+   .. code-block:: bash
+
+      sudo mkdir -p /var/www
+      sudo chown `whoami` /var/www
 
 You also need to install Gunicorn and Nginx. Just run this command in a
 terminal:
@@ -54,7 +68,7 @@ Restart the Gunicorn service:
 
 .. code-block:: bash
 
-  sudo service gunicorn restart
+   sudo service gunicorn restart
 
 At this point Gunicorn should be running your blog on port 8000. You can test
 it by running ``curl localhost:8000``, which should print out the HTML code of
