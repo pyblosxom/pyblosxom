@@ -143,3 +143,68 @@ in your ``~/.profile``, ``~/.bashrc``, or other shell configuration file.
    or if you create files on the server using an editor running locally that is
    capable of editing remote files, you may need to make sure that your umask
    on your local machine is 0022 as well.
+
+Static files
+============
+
+To make static files such as image, CSS and JavaScript files available to your
+blog you can setup a second site on the same web server but at a different
+domain or subdomin to host them.
+
+Create the Nginx config file ``/etc/nginx/sites-available/static`` with these
+contents::
+
+  server {
+    listen 80;
+    server_name static.example.com;
+    root /var/www/static;
+    expires 1d;  # How long should static files be cached for.
+  }
+
+Replace ``static.example.com`` with the domain name for your static files site.
+
+Create the directory on the server where the static files will go:
+
+.. code-block:: bash
+
+   mkdir /var/www/static
+
+Enable the site by creating a ``sites-enabled`` symlink for it and restarting
+Nginx:
+
+.. code-block:: bash
+
+   sudo ln -s /etc/nginx/sites-available/static /etc/nginx/sites-enabled
+   sudo service nginx restart
+
+Now if you put, say, an image file at ``/var/www/static/image.jpeg`` then it'll
+be available to web browsers at http://static.example.com/image.jpeg. To use
+this image in one of your blog posts, you might put an ``img`` tag like this
+in the entry file:
+
+.. code-block:: html
+
+   <img src="http://static.example.com/image.jpeg" />
+
+.. note::
+
+   As with your blog's files, all files in ``/var/www/static`` need to be
+   readable by the ``www-data`` user.
+
+.. tip::
+
+   If your theme needs access to static files you can add a setting in your
+   ``config.py`` file like this:
+
+   .. code-block:: python
+
+      py["static_url"] = "http://static.example.com/"
+
+   Then you can link to static files in your flavour templates with code like:
+
+   .. code-block:: html
+
+      <link href="$(static_url)/mystyles.css" rel="stylesheet" type="text/css">
+
+   This saves having to code the full URL to your static files site into your
+   flavour templates.
