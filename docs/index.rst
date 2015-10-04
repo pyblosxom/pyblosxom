@@ -26,6 +26,8 @@ purposes.
    install
    upgrade
    pyblosxom_cmd
+   deploy_gunicorn
+   deploy_gunicorn_nginx
    deploy_cgi
    deploy_paste
    deploy_apache_mod_wsgi
