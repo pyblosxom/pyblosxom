@@ -233,14 +233,15 @@ class EntryBase:
         # really RFC-compliant: directives %a and %b are locale
         # dependent.  Technically, we're after english locale, but
         # only 'C' locale is guaranteed to exist.
-        loc = locale.getlocale(locale.LC_ALL)
+        #loc = locale.getlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'C')
 
         self['rfc822date'] = time.strftime('%a, %d %b %Y %H:%M GMT', \
                                            gmtimetuple)
 
         # set the locale back
-        locale.setlocale(locale.LC_ALL, loc)
+        #locale.setlocale(locale.LC_ALL, loc)
+        locale.resetlocale()
 
     setTime = tools.deprecated_function(set_time)
 
