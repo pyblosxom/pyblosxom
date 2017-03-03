@@ -1,7 +1,13 @@
+Master branch Build Status:
+
 .. image:: https://travis-ci.org/pyblosxom/pyblosxom.svg?branch=master
    :target: https://travis-ci.org/pyblosxom/pyblosxom
    
- Python3 version (In progress) : 
+
+
+
+Python3 version (In progress) : 
+
 .. image:: https://travis-ci.org/pyblosxom/pyblosxom.svg?branch=python3
    :target: https://travis-ci.org/pyblosxom/pyblosxom
    
