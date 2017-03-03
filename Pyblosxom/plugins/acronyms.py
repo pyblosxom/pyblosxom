@@ -186,7 +186,7 @@ def verify_installation(request):
         firstpart = "(\\b" + firstpart.strip() + "\\b)"
         try:
             re.compile(firstpart)
-        except re.error, s:
+        except re.error as s:
             pwrap_error("- '%s' is not a properly formed regexp.  (%s)" %
                         (line, s))
             malformed = True

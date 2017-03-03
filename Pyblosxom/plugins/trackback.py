@@ -117,7 +117,7 @@ def cb_handle(args):
                    "http://www.sixapart.com/pronet/docs/trackback_spec)")
 
         if "url" in form:
-            from comments import decode_form
+            from .comments import decode_form
             encoding = config.get('blog_encoding', 'iso-8859-1')
             decode_form(form, encoding)
             import time
@@ -140,20 +140,20 @@ def cb_handle(args):
                 reject_code, reject_message = reject, "Trackback rejected."
 
             if reject_code == 1:
-                print >> response, tb_bad_response % reject_message
+                print(tb_bad_response % reject_message, file=response)
                 return 1
 
             from Pyblosxom.entries.fileentry import FileEntry
 
             datadir = config['datadir']
 
-            from comments import writeComment
+            from .comments import writeComment
             try:
                 import os
                 pi = path_info.replace(urltrigger, '')
                 path = os.path.join(datadir, pi[1:])
                 data = request.get_data()
-                ext = tools.what_ext(data['extensions'].keys(), path)
+                ext = tools.what_ext(list(data['extensions'].keys()), path)
                 entry = FileEntry(request, '%s.%s' % (path, ext), datadir)
                 data = {}
                 data['entry_list'] = [entry]
@@ -161,15 +161,15 @@ def cb_handle(args):
                 cdict['author'] = (
                     'Trackback from %s' % form.getvalue('blog_name', ''))
                 writeComment(request, config, data, cdict, encoding)
-                print >> response, tb_good_response
+                print(tb_good_response, file=response)
             except OSError:
                 message = 'URI ' + path_info + " doesn't exist"
                 logger.error(message)
-                print >> response, tb_bad_response % message
+                print(tb_bad_response % message, file=response)
 
         else:
             logger.error(message)
-            print >> response, tb_bad_response % message
+            print(tb_bad_response % message, file=response)
 
         # no further handling is needed
         return 1

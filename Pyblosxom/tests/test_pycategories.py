@@ -27,16 +27,16 @@ class Test_pycategories(PluginTest):
         PluginTest.tearDown(self)
 
     def test_cb_prepare(self):
-        self.assert_("categorylinks" not in self.request.get_data())
+        self.assertTrue("categorylinks" not in self.request.get_data())
         pycategories.cb_prepare(self.args)
-        self.assert_("categorylinks" in self.request.get_data())
+        self.assertTrue("categorylinks" in self.request.get_data())
 
     def test_verify_installation(self):
-        self.assert_(pycategories.verify_installation)
+        self.assertTrue(pycategories.verify_installation)
 
     def test_no_categories(self):
         pycategories.cb_prepare(self.args)
-        self.assertEquals(
+        self.assertEqual(
             str(self.request.get_data()["categorylinks"]),
             "<ul class=\"categorygroup\">\n\n</ul>")
 
@@ -55,7 +55,7 @@ class Test_pycategories(PluginTest):
         self.generate_entry("cat2/test_cat2.txt")
 
         pycategories.cb_prepare(self.args)
-        self.assertEquals(
+        self.assertEqual(
             str(self.request.get_data()["categorylinks"]),
             "\n".join(
                 ['<ul class="categorygroup">',

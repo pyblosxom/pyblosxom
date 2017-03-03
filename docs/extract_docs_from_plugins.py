@@ -65,7 +65,7 @@ def get_info(node, info_name):
             if target.id == info_name:                
                 return mem.value.s
 
-    print "missing %s" % info_name
+    print("missing %s" % info_name)
     return None
 
 
@@ -115,7 +115,7 @@ def get_plugins(plugindir, outputdir):
                 continue
 
             filename = os.path.join(root, file_)
-            print "working on %s" % filename
+            print("working on %s" % filename)
 
             entry = build_docs_file(filename)
 
@@ -127,18 +127,18 @@ def get_plugins(plugindir, outputdir):
 
 
 def main(args):
-    print "update_registry.py"
+    print("update_registry.py")
 
     outputdir = "./plugins/"
 
     plugindir = "../Pyblosxom/plugins/"
 
-    print "plugindir: %s" % plugindir
+    print("plugindir: %s" % plugindir)
     if not os.path.exists(plugindir):
-        print "Plugindir doesn't exist."
+        print("Plugindir doesn't exist.")
         sys.exit(1)
 
-    print "outputdir: %s" % outputdir
+    print("outputdir: %s" % outputdir)
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
 

@@ -79,64 +79,64 @@ class TestAkismetComments(PluginTest):
 
     def test_verify_installation(self):
         """verify_installation should check for an api key and verify it."""
-        self.assertEquals(
+        self.assertEqual(
             True, akismetcomments.verify_installation(self.request))
 
         # try without an akismet_api_key config var
         del self.config['akismet_api_key']
-        self.assertEquals(
+        self.assertEqual(
             False, akismetcomments.verify_installation(self.request))
 
         # try with an import error
         akismet = sys.modules['akismet']
         del sys.modules['akismet']
-        self.assertEquals(
+        self.assertEqual(
             False, akismetcomments.verify_installation(self.request))
         sys.modules['akismet'] = akismet
 
         # try with a key that doesn't verify
         self.config['akismet_api_key'] = 'bad_key'
         orig_verify_key = akismet.Akismet.verify_key
-        self.assertEquals(False, akismetcomments.verify_installation(self.request))
+        self.assertEqual(False, akismetcomments.verify_installation(self.request))
 
     def test_comment_reject(self):
         """comment_reject() should pass the comment through to akismet."""
         # no comment to reject
         assert 'comment' not in self.data
-        self.assertEquals(
+        self.assertEqual(
             False,
             akismetcomments.cb_comment_reject(self.args))
 
         self.set_form_data({})
-        self.assertEquals(
+        self.assertEqual(
             False, akismetcomments.cb_comment_reject(self.args))
         self.set_form_data({'body': 'body'})
 
     def test_bad_api_key_reject(self):
         # bad api key
         self.config['akismet_api_key'] = 'bad_key'
-        self.assertEquals(
+        self.assertEqual(
             False, akismetcomments.cb_comment_reject(self.args))
         self.config['akismet_api_key'] = MockAkismet.GOOD_KEY
 
     def test_akismet_error(self):
         # akismet error
         MockAkismet.inject_comment_check_error()
-        print akismet.Akismet.comment_check_error
-        self.assertEquals(
+        print(akismet.Akismet.comment_check_error)
+        self.assertEqual(
             (True, 'Missing essential data (e.g., a UserAgent string).'),
             akismetcomments.cb_comment_reject(self.args))
 
     def test_akismet_ham(self):
         # akismet says ham
         MockAkismet.inject_comment_check(False)
-        self.assertEquals(
+        self.assertEqual(
             False, akismetcomments.cb_comment_reject(self.args))
 
     def test_akismet_spam(self):
         # akismet says spam
         MockAkismet.inject_comment_check(True)
-        self.assertEquals(
+        self.assertEqual(
             (True, 'I\'m sorry, but your comment was rejected by the <a href="'
              'http://akismet.com/">Akismet</a> spam filtering system.'),
             akismetcomments.cb_comment_reject(self.args))

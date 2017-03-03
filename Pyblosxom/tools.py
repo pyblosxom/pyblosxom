@@ -10,7 +10,7 @@
 """Utility module for functions that are useful to Pyblosxom and plugins.
 """
 
-import sgmllib
+from html.parser import HTMLParser
 import re
 import os
 import time
@@ -18,7 +18,7 @@ import os.path
 import stat
 import sys
 import locale
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import inspect
 import textwrap
 
@@ -112,13 +112,13 @@ def initialize(config):
     # num2month = dict(zip(month2num.itervalues(), month2num))
     global num2month
     num2month = {}
-    for month_abbr, month_num in month2num.items():
+    for month_abbr, month_num in list(month2num.items()):
         num2month[month_num] = month_abbr
         num2month[int(month_num)] = month_abbr
 
     # all the valid month possibilities
     global MONTHS
-    MONTHS = num2month.keys() + month2num.keys()
+    MONTHS = list(num2month.keys()) + list(month2num.keys())
 
 
 def pwrap(s):
@@ -131,7 +131,7 @@ def pwrap(s):
         s = s[2:]
         linesep = os.linesep + "  "
 
-    print starter + linesep.join(textwrap.wrap(s, 72))
+    print(starter + linesep.join(textwrap.wrap(s, 72)))
 
 
 def pwrap_error(s):
@@ -200,7 +200,7 @@ def convert_configini_values(configini):
         return text
 
     config = {}
-    for key, value in configini.items():
+    for key, value in list(configini.items()):
         # in configini.items, we pick up a local_config which seems
         # to be a copy of what's in configini.items--puzzling.
         if isinstance(value, dict):
@@ -273,46 +273,35 @@ def urlencode_text(s):
     if not s:
         return s
 
-    return urllib.quote(s)
+    return urllib.parse.quote(s)
 
 STANDARD_FILTERS = {"escape": lambda req, vd, s: escape_text(s),
                     "urlencode": lambda req, vd, s: urlencode_text(s)}
 
 
-class Stripper(sgmllib.SGMLParser):
+class Stripper(HTMLParser):
     """
-    SGMLParser that removes HTML formatting code.
+    removes HTML formatting code.
     """
     def __init__(self):
-        """
-        Initializes the instance.
-        """
-        self.data = []
-        sgmllib.SGMLParser.__init__(self)
+        self.reset()
+        super().__init__()
+        self.strict = False
+        self.convert_charrefs= True
+        self.fed = []
+    def feed(self, d):
+        self.fed.append(d)
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
 
-    def unknown_starttag(self, tag, attrs):
-        """
-        Implements unknown_starttag.  Appends a space to the buffer.
-        """
-        self.data.append(" ")
-
-    def unknown_endtag(self, tag):
-        """
-        Implements unknown_endtag.  Appends a space to the buffer.
-        """
-        self.data.append(" ")
-
-    def handle_data(self, data):
-        """
-        Implements handle_data.  Appends data to the buffer.
-        """
-        self.data.append(data)
+    def close(self):
+        pass
 
     def gettext(self):
-        """
-        Returns the buffer.
-        """
-        return "".join(self.data)
+        return self.get_data()
+
 
 
 def commasplit(s):
@@ -452,7 +441,7 @@ class Replacer:
         else:
             args = None
 
-        if not vd.has_key(key):
+        if key not in vd:
             return ""
 
         r = vd[key]
@@ -471,9 +460,9 @@ class Replacer:
                     # otherwise it might be an identifier--check
                     # the vardict and return the value if it's in
                     # there
-                    if vd.has_key(s):
+                    if s in vd:
                         return vd[s]
-                    if s.startswith("$") and vd.has_key(s[1:]):
+                    if s.startswith("$") and s[1:] in vd:
                         return vd[s[1:]]
                     return s
                 args = [fix(arg.strip()) for arg in commasplit(args)]
@@ -495,7 +484,7 @@ class Replacer:
 
         # convert non-strings to strings
         if not isinstance(r, str):
-            if isinstance(r, unicode):
+            if isinstance(r, str):
                 r = r.encode(self._encoding)
             else:
                 r = str(r)
@@ -556,7 +545,7 @@ def walk(request, root='.', recurse=0, pattern='', return_folders=0):
     # expand pattern
     if not pattern:
         ext = request.get_data()['extensions']
-        pattern = re.compile(r'.*\.(' + '|'.join(ext.keys()) + r')$')
+        pattern = re.compile(r'.*\.(' + '|'.join(list(ext.keys())) + r')$')
 
     ignore = request.get_configuration().get("ignore_directories", None)
     if isinstance(ignore, str):
@@ -636,7 +625,7 @@ def filestat(request, filename):
     data = request.getData()
     filestat_cache = data.setdefault("filestat_cache", {})
 
-    if filestat_cache.has_key(filename):
+    if filename in filestat_cache:
         return filestat_cache[filename]
 
     argdict = {"request": request,
@@ -723,11 +712,11 @@ def importname(module_name, name):
             module = getattr(module, c)
         return module
 
-    except ImportError, ie:
+    except ImportError as ie:
         logger.error("Module %s in package %s won't import: %s" % \
                      (repr(module_name), repr(name), ie))
 
-    except StandardError, e:
+    except Exception as e:
         logger.error("Module %s not in in package %s: %s" % \
                      (repr(module_name), repr(name), e))
 
@@ -747,7 +736,7 @@ def generate_rand_str(minlen=5, maxlen=10):
     :returns: generated string
     """
     import random, string
-    chars = string.letters + string.digits
+    chars = string.ascii_letters + string.digits
     randstr = []
     randstr_size = random.randint(minlen, maxlen)
     x = 0
@@ -880,7 +869,7 @@ def create_entry(datadir, category, filename, mtime, title, metadata, body):
 
     # format the metadata lines for the entry
     metadatalines = ["#%s %s" % (key, metadata[key])
-                     for key in metadata.keys()]
+                     for key in list(metadata.keys())]
 
     entry = addcr(title) + "\n".join(metadatalines) + body
 
@@ -1005,7 +994,7 @@ def render_url(cdict, pathinfo, querystring=""):
 
     :returns: a Pyblosxom ``Response`` object.
     """
-    from pyblosxom import Pyblosxom
+    from .pyblosxom import Pyblosxom
 
     if querystring:
         request_uri = pathinfo + "?" + querystring

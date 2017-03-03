@@ -76,7 +76,7 @@ def get_mtime(filename):
                 hr = int(mtch.group(5))
                 minute = int(mtch.group(6)) 
             mtime = time.mktime((year, mo, day, hr, minute, 0, 0, 0, -1))
-        except StandardError:
+        except Exception:
             # TODO: Some sort of debugging code here?
             pass
         return mtime

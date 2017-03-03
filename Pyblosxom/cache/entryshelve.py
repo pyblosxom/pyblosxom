@@ -74,7 +74,7 @@ class BlosxomCache(BlosxomCacheBase):
         """
         Removes an entry from the shelf.
         """
-        if self._db.has_key(self._entryid):
+        if self._entryid in self._db:
             del self._db[self._entryid]
 
     def keys(self):
@@ -85,7 +85,7 @@ class BlosxomCache(BlosxomCacheBase):
         @rtype: list of strings
         """
         ret = []
-        for key in self._db.keys():
+        for key in list(self._db.keys()):
             self.load(key)
             if self.isCached():
                 ret.append(key)

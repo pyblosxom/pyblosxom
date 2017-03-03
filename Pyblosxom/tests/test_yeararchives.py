@@ -30,5 +30,5 @@ class Test_yeararchives(PluginTest):
             ("/2003/index.flav", ("2003", "flav")),
             ]:
  
-            self.assertEquals(yeararchives.parse_path_info(testin),
+            self.assertEqual(yeararchives.parse_path_info(testin),
                               testout)

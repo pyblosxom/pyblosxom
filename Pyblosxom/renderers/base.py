@@ -88,6 +88,7 @@ class RendererBase:
 
         :param data: Piece of string you want printed
         """
+
         self._out.write(data)
 
     def add_header(self, *args):

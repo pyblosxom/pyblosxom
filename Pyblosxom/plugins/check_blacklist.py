@@ -116,7 +116,7 @@ def cb_comment_reject(args):
     config = r.get_configuration()
 
     badwords = config.get("comment_rejected_words", [])
-    for mem in c.values():
+    for mem in list(c.values()):
         mem = mem.lower()
         for word in badwords:
             # FIXME - this matches on substrings, too.  should use

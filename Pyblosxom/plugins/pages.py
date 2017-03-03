@@ -155,7 +155,7 @@ __registrytags__ = "1.4, 1.5, core"
 
 
 import os
-import StringIO
+import io
 import sys
 import os.path
 from Pyblosxom.entries.fileentry import FileEntry
@@ -211,13 +211,13 @@ def eval_python_blocks(req, body):
             if start != -1 and end != -1:
                 codeblock = body[start + 2:end].lstrip()
 
-                sys.stdout = StringIO.StringIO()
-                sys.stderr = StringIO.StringIO()
+                sys.stdout = io.StringIO()
+                sys.stderr = io.StringIO()
 
                 try:
-                    exec codeblock in localsdict, globalsdict
-                except Exception, e:
-                    print "ERROR in processing: %s" % e
+                    exec(codeblock, localsdict, globalsdict)
+                except Exception as e:
+                    print("ERROR in processing: %s" % e)
 
                 output = sys.stdout.getvalue() + sys.stderr.getvalue()
                 body = body[:start] + output + body[end + 2:]
@@ -296,7 +296,7 @@ def cb_filelist(args):
     if flavour:
         data["flavour"] = flavour[1:]
 
-    ext = tools.what_ext(data["extensions"].keys(), pagesdir + page_name)
+    ext = tools.what_ext(list(data["extensions"].keys()), pagesdir + page_name)
 
     if not ext:
         return []

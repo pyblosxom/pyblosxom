@@ -93,7 +93,7 @@ def cb_comment_reject(args):
         return False
 
     dump = '\n'.join(['%s: %s' % (arg.name, arg.value)
-                      for arg in dict(form).values()])
+                      for arg in list(dict(form).values())])
     logger = tools.get_logger()
     logger.info('Comment rejected from %s:\n%s' % (
             http['REMOTE_ADDR'], dump))

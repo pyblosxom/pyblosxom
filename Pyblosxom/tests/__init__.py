@@ -17,12 +17,12 @@ data structures for useful testing plugins.
 from Pyblosxom import pyblosxom, tools, entries
 from Pyblosxom.renderers.blosxom import Renderer
 import cgi
-import StringIO
+import io
 import os
 import os.path
 import tempfile
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import shutil
 import unittest
 
@@ -43,7 +43,7 @@ class UnitTestBase(unittest.TestCase):
                 pass
 
     def eq_(self, a, b, text=None):
-        self.assertEquals(a, b, text)
+        self.assertEqual(a, b, text)
 
     def get_temp_dir(self):
         if self._tempdir == None:
@@ -62,7 +62,7 @@ class UnitTestBase(unittest.TestCase):
 
             try:
                 os.makedirs(d)
-            except OSError, e:
+            except OSError as e:
                 pass
 
             if f:
@@ -102,7 +102,7 @@ class UnitTestBase(unittest.TestCase):
         if data:
             _data.update(data)
 
-        _http = {"wsgi.input": StringIO.StringIO(inputstream),
+        _http = {"wsgi.input": io.StringIO(inputstream),
                  "REQUEST_METHOD": len(inputstream) and "GET" or "POST",
                  "CONTENT_LENGTH": len(inputstream)}
         if http: _http.update(http)
@@ -128,9 +128,9 @@ class UnitTestBase(unittest.TestCase):
     def cmpdict(self, expected, actual):
         """expected <= actual
         """
-        for mem in expected.keys():
+        for mem in list(expected.keys()):
             if mem in actual:
-                self.assertEquals(expected[mem], actual[mem])
+                self.assertEqual(expected[mem], actual[mem])
             else:
                 assert False, "%s not in actual" % mem
 
@@ -284,10 +284,13 @@ class PluginTest(unittest.TestCase):
         self.environ['REQUEST_METHOD'] = 'POST'
         self.request.add_http({'REQUEST_METHOD': 'POST'})
 
-        encoded = ['%s=%s' % (arg, urllib.quote(val))
-                   for arg, val in args.items()]
+        encoded = ['%s=%s' % (arg, urllib.parse.quote(val))
+                   for arg, val in list(args.items())]
         self.form_data += ('&' + '&'.join(encoded))
-        input_ = StringIO.StringIO(self.form_data)
+        tmpdata = self.form_data
+        tmpdata = bytes(tmpdata, 'utf-8')
+        input_ = io.BytesIO(tmpdata)
+
         self.request._form = cgi.FieldStorage(fp=input_, environ=self.environ)
 
     def set_form_data(self, args):
@@ -314,4 +317,4 @@ class PluginTest(unittest.TestCase):
         shutil.rmtree(self.datadir, ignore_errors=True)
 
     # allows us to use shorthand
-    eq_ = unittest.TestCase.assertEquals
+    eq_ = unittest.TestCase.assertEqual

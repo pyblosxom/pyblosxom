@@ -34,7 +34,7 @@ def build_pyblosxom():
     pwrap("Trying to import the config module....")
     try:
         from config import py as cfg
-    except StandardError:
+    except Exception:
         h, t = os.path.split(sys.argv[0])
         script_name = t or h
 
@@ -114,7 +114,7 @@ def generate_entries(command, argv):
     paras = [sm_para, med_para, lg_para]
 
     if verbose:
-        print "Creating %d entries" % num_entries
+        print("Creating %d entries" % num_entries)
 
     now = time.time()
 
@@ -132,12 +132,12 @@ def generate_entries(command, argv):
 
         mtime = now - ((num_entries - i) * 3600)
         os.utime(fn, (mtime, mtime))
-        
+
         if verbose:
-            print "Creating '%s'..." % fn
+            print("Creating '%s'..." % fn)
 
     if verbose:
-        print "Done!"
+        print("Done!")
     return 0
 
 
@@ -185,7 +185,7 @@ def test_installation(command, argv):
     pwrap("=======================")
     pwrap("- properties set: %s" % len(config))
 
-    config_keys = config.keys()
+    config_keys = list(config.keys())
 
     if "datadir" not in config_keys:
         pwrap_error("- ERROR: 'datadir' must be set.  Refer to installation "
@@ -234,7 +234,7 @@ def test_installation(command, argv):
             pwrap("----")
             for mem in plugin_utils.bad_plugins:
                 pwrap("plugin:  %s" % mem[0])
-                print "%s" % mem[1]
+                print("%s" % mem[1])
                 pwrap("----")
             pwrap_error("FAIL")
             return(1)
@@ -247,15 +247,15 @@ def test_installation(command, argv):
             for mem in plugin_utils.plugins:
                 if hasattr(mem, "verify_installation"):
                     pwrap("plugin:  %s" % mem.__name__)
-                    print "file:    %s" % mem.__file__
-                    print "version: %s" % (str(getattr(mem, "__version__")))
+                    print("file:    %s" % mem.__file__)
+                    print("version: %s" % (str(getattr(mem, "__version__"))))
 
                     try:
                         if mem.verify_installation(request) == 1:
                             pwrap("PASS")
                         else:
                             pwrap_error("FAIL")
-                    except StandardError:
+                    except Exception:
                         pwrap_error("FAIL: Exception thrown:")
                         traceback.print_exc(file=sys.stdout)
 
@@ -271,7 +271,7 @@ def test_installation(command, argv):
                       "verification:")
                 no_verification_support.sort()
                 for mem in no_verification_support:
-                    print "- %s" % mem
+                    print("- %s" % mem)
 
     pwrap("")
     pwrap("Verification complete.  Correct any errors and warnings above.")
@@ -304,7 +304,7 @@ def create_blog(command, argv):
 
     def _mkdir(d):
         if verbose:
-            print "Creating '%s'..." % d
+            print("Creating '%s'..." % d)
         os.makedirs(d)
 
     _mkdir(d)
@@ -320,12 +320,12 @@ def create_blog(command, argv):
         dest = os.path.join(d, "flavours", root[len(source)+1:])
         if not os.path.isdir(dest):
             if verbose:
-                print "Creating '%s'..." % dest
+                print("Creating '%s'..." % dest)
             os.mkdir(dest)
 
         for mem in files:
             if verbose:
-                print "Creating file '%s'..." % os.path.join(dest, mem)
+                print("Creating file '%s'..." % os.path.join(dest, mem))
             fpin = open(os.path.join(root, mem), "r")
             fpout = open(os.path.join(dest, mem), "w")
 
@@ -336,7 +336,7 @@ def create_blog(command, argv):
 
     def _copyfile(frompath, topath, fn, fix=False):
         if verbose:
-            print "Creating file '%s'..." % os.path.join(topath, fn)
+            print("Creating file '%s'..." % os.path.join(topath, fn))
         fp = open(os.path.join(frompath, fn), "r")
         filedata = fp.readlines()
         fp.close()
@@ -364,7 +364,7 @@ def create_blog(command, argv):
     datadir = os.path.join(d, "entries")
     firstpost = os.path.join(datadir, "firstpost.txt")
     if verbose:
-        print "Creating file '%s'..." % firstpost
+        print("Creating file '%s'..." % firstpost)
     fp = open(firstpost, "w")
     fp.write("""First post!
 <p>
@@ -375,7 +375,7 @@ def create_blog(command, argv):
     fp.close()
 
     if verbose:
-        print "Done!"
+        print("Done!")
     return 0
 
 
@@ -416,7 +416,7 @@ def run_static_renderer(command, argv):
     (options, args) = parser.parse_args()
 
     # Turn on memcache.
-    from Pyblosxom import memcache
+    from .Pyblosxom import memcache
     memcache.usecache = True
 
     p = build_pyblosxom()
@@ -453,9 +453,9 @@ def get_handlers():
     # test the handlers, drop any that aren't the right return type,
     # and print a warning.
     handlers = []
-    for k, v in handlers_dict.items():
+    for k, v in list(handlers_dict.items()):
         if not len(v) == 2 or not callable(v[0]) or not isinstance(v[1], str):
-            print "Plugin returned '%s' for commandline." % ((k, v),)
+            print("Plugin returned '%s' for commandline." % ((k, v),))
             continue
         handlers.append((k, v[0], v[1]))
 
@@ -467,7 +467,7 @@ def command_line_handler(scriptname, argv):
         sys.stdout = open(os.devnull, "w")
         argv.remove("--silent")
 
-    print "%s version %s" % (scriptname, __version__)
+    print("%s version %s" % (scriptname, __version__))
 
     # slurp off the config file setting and add it to sys.path.
     # this needs to be first to pick up plugin-based command handlers.
@@ -503,17 +503,17 @@ def command_line_handler(scriptname, argv):
             return 1
 
         sys.path.insert(0, config_dir)
-        print "Inserting %s to beginning of sys.path...." % config_dir
+        print("Inserting %s to beginning of sys.path...." % config_dir)
 
     handlers = get_handlers()
 
     if len(argv) == 1 or (len(argv) == 2 and argv[1] in ("-h", "--help")):
         parser = build_parser("%prog [command]")
         parser.print_help()
-        print ""
-        print "Commands:"
+        print("")
+        print("Commands:")
         for command_str, _, command_help in handlers:
-            print "    %-14s %s" % (command_str, command_help)
+            print("    %-14s %s" % (command_str, command_help))
         return 0
 
     if argv[1] == "--version":

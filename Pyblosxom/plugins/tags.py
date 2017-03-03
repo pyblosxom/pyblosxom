@@ -262,7 +262,7 @@ __registrytags__ = "1.5, core"
 
 
 import os
-import cPickle as pickle
+import pickle as pickle
 import shutil
 
 from Pyblosxom.memcache import memcache_decorator
@@ -371,11 +371,11 @@ def category_to_tags(command, argv):
         datadir = datadir + os.sep
 
     for mem in filelist:
-        print "working on %s..." % mem
+        print("working on %s..." % mem)
 
         category = os.path.dirname(mem)[len(datadir):]
         tags = category.split(os.sep)
-        print "   adding tags %s" % tags
+        print("   adding tags %s" % tags)
         tags = "#tags %s\n" % (sep.join(tags))
 
         atime, mtime = os.stat(mem)[7:9]
@@ -512,7 +512,7 @@ def cb_head(args):
     tagsdata = data.get("tagsdata", {})
 
     # first, build the tags list
-    tags = tagsdata.keys()
+    tags = list(tagsdata.keys())
     tags.sort()
 
     start_t = config.get("tags_list_start", '<p>')
@@ -542,7 +542,7 @@ def cb_head(args):
     entry["tagslist"] = "\n".join(output)
 
     # second, build the tags cloud
-    tags_by_file = tagsdata.items()
+    tags_by_file = list(tagsdata.items())
 
     start_t = config.get("tags_cloud_start", "<p>")
     item_t = config.get("tags_cloud_item",
@@ -613,6 +613,6 @@ def cb_staticrender_filelist(args):
 
     # Go through and add an index.flav for each index_flavour
     # for each tag.
-    for tag in tagsdata.keys():
+    for tag in list(tagsdata.keys()):
         for flavour in index_flavours:
             filelist.append((trigger + "/" + tag + "." + flavour, ""))

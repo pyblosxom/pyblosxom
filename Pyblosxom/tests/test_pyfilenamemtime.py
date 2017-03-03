@@ -26,12 +26,12 @@ class Test_pyfilenamemtime(PluginTest):
         for mem in (('foo-2011-10-23.txt', '2011-10-23-00-00'),
                     ('foo-2011-09-22-12-00.txt', '2011-09-22-12-00')):
             mtime = get_mtime(mem[0])
-            print mtime, mem[1]
-            self.assertEquals(mtime_to_date(mtime), mem[1])
+            print(mtime, mem[1])
+            self.assertEqual(mtime_to_date(mtime), mem[1])
             
     def test_bad_filenames(self):
         get_mtime = pyfilenamemtime.get_mtime
         for mem in ('foo-2011.txt',
                     'foo-2011-10.txt',
                     'foo.txt'):
-            self.assertEquals(get_mtime(mem[0]), None)
+            self.assertEqual(get_mtime(mem[0]), None)

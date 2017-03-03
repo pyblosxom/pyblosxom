@@ -110,7 +110,7 @@ class Testparse(UnitTestBase):
                     ({"lang": lambda req, vd: "español"}, "foo $(lang) foo", "foo español foo"),
                     # Note: functions can return unicode which will get 
                     # converted to blog_encoding
-                    ({"lang": lambda req, vd: u"español"}, "español $(lang)", "español español")):
+                    ({"lang": lambda req, vd: "español"}, "español $(lang)", "español español")):
             self.eq_(tools.parse(req, mem[0], mem[1]), mem[2])
 
     def test_functions_old_behavior(self):
@@ -133,7 +133,7 @@ class Testparse(UnitTestBase):
         vd = {"foo": lambda req, vd, x: (x + "A"),
               "bar": "BAR",
               "lang": "Español",
-              "ulang": u"Español"}
+              "ulang": "Español"}
 
         for mem in (
                     # this bar is a string
@@ -218,7 +218,7 @@ class Test_generate_rand_str(UnitTestBase):
     def _gen_checker(self, s, minlen, maxlen):
         assert len(s) >= minlen and len(s) <= maxlen
         for c in s:
-            assert c in string.letters or c in string.digits
+            assert c in string.ascii_letters or c in string.digits
 
     def test_generates_a_random_string(self):
         for i in range(5):

@@ -356,7 +356,7 @@ def page(request, num_entries, entry_list):
                 template = template + ext
 
             for i in range(count_from + 1, max_pages):
-                print "   rendering page %s ..." % (template % i)
+                print("   rendering page %s ..." % (template % i))
                 render_url_statically(dict(config), template % i, '')
 
 

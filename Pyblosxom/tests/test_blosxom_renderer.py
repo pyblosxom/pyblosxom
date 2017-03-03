@@ -7,7 +7,7 @@
 # LICENSE for distribution details.
 #######################################################################
 
-from StringIO import StringIO
+from io import StringIO
 
 from Pyblosxom.tests import UnitTestBase
 from Pyblosxom.pyblosxom import Request

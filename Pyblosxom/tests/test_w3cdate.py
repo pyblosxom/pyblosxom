@@ -25,7 +25,7 @@ class W3CDateTest(unittest.TestCase):
         #we expect US EASTERN time without DST
         os.environ['TZ'] = 'EST+05EST+05,M4.1.0,M10.5.0'
         time.tzset()
-        self.assertEquals(gfd(W3CDateTest.entry1),
+        self.assertEqual(gfd(W3CDateTest.entry1),
                           "2010-01-17T15:48:20-05:00")
         # reset time zone to whatever it was
         if tz is None:
@@ -46,16 +46,16 @@ class W3CDateTest(unittest.TestCase):
         entry = {}
         args = {"entry": entry, "request": req}
         w3cdate.cb_head(args)
-        self.assertEquals(entry["w3cdate"], gfd(self.entry1))
+        self.assertEqual(entry["w3cdate"], gfd(self.entry1))
 
         req = Request({}, {}, {"entry_list": [entry3, entry2, entry1]})
         entry = {}
         args = {"entry": entry, "request": req}
         w3cdate.cb_head(args)
-        self.assertEquals(entry["w3cdate"], gfd(self.entry3))
+        self.assertEqual(entry["w3cdate"], gfd(self.entry3))
 
     def test_story(self):
         entry = dict(self.entry1)
         args = {"entry": entry}
         w3cdate.cb_story(args)
-        self.assertEquals(entry['w3cdate'], w3cdate.get_formatted_date(entry))
+        self.assertEqual(entry['w3cdate'], w3cdate.get_formatted_date(entry))

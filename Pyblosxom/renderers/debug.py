@@ -43,7 +43,7 @@ def print_map(printfunc, keymap):
 
     :param keymap: a mapping of key/value pairs
     """
-    keys = keymap.keys()
+    keys = list(keymap.keys())
     keys.sort()
     for key in keys:
         printfunc("<font color=\"#0000ff\">%s</font> -&gt; %s\n" % \
@@ -150,7 +150,7 @@ class Renderer(RendererBase):
                 print_map(printout, content)
 
         printout(hbar)
-        if not config.has_key("cacheDriver"):
+        if "cacheDriver" not in config:
             printout("No cache driver configured.")
         else:
             printout("Cached Titles:\n")
@@ -160,7 +160,7 @@ class Renderer(RendererBase):
                 if not isinstance(content, str):
                     filename = content['filename']
 
-                    if cache.has_key(filename):
+                    if filename in cache:
                         printout("%s\n" % escv(cache[filename]['title']))
                     cache.close()
 
@@ -170,7 +170,7 @@ class Renderer(RendererBase):
             for content in self._content:
                 if not isinstance(content, str):
                     filename = content['filename']
-                    if cache.has_key(filename):
+                    if filename in cache:
                         printout("%s\n" % escv(cache[filename]['title']))
                         printout(hbar.replace("-", "="))
                         printout("%s\n" % escv(cache[filename]['body']))

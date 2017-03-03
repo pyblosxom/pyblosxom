@@ -190,7 +190,7 @@ class BlosxomRenderer(RendererBase):
         if not template_d:
             raise NoSuchFlavourException("Flavour '%s' does not exist." % taste)
 
-        for k in template_d.keys():
+        for k in list(template_d.keys()):
             try:
                 flav_template = open(template_d[k]).read()
                 template_d[k] = flav_template
@@ -304,7 +304,7 @@ class BlosxomRenderer(RendererBase):
         try:
             self.flavour = self.get_flavour(data.get("flavour", "html"))
 
-        except NoSuchFlavourException, nsfe:
+        except NoSuchFlavourException as nsfe:
             error_msg = str(nsfe)
             try:
                 self.flavour = self.get_flavour("error")
@@ -330,9 +330,9 @@ class BlosxomRenderer(RendererBase):
             if "story" in self.flavour:
                 content = self.render_content(self._content)
                 for i, mem in enumerate(content):
-                    if isinstance(mem, unicode):
+                    if isinstance(mem, str):
                         content[i] = mem.encode("utf-8")
-                content = "".join(content)
+                content = b"".join(content)
                 self.write(content)
             if "foot" in self.flavour:
                 self.write(self.render_template(self.get_parse_vars(), "foot"))
@@ -378,12 +378,12 @@ class BlosxomRenderer(RendererBase):
         # cases regarding function data.  need a real template
         # engine with a real parser here.
         entry = dict(args["entry"])
-        for k, v in entry.items():
-            if isinstance(v, basestring):
+        for k, v in list(entry.items()):
+            if isinstance(v, str):
                 entry[k] = v.replace(r"\$", r"\\$")
 
         finaltext = tools.parse(self._request, entry, template)
-        return finaltext.replace(r'\$', '$')
+        return bytes(finaltext.replace(r'\$', '$'),'UTF-8')
 
     renderTemplate = tools.deprecated_function(render_template)
 

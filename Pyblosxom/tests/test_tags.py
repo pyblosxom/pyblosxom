@@ -34,20 +34,20 @@ class TagsTest(PluginTest):
         req = Request({"datadir": self.get_datadir()}, {}, {})
 
         cfg = {"datadir": self.get_datadir()}
-        self.assertEquals(tags.get_tagsfile(cfg),
+        self.assertEqual(tags.get_tagsfile(cfg),
                           os.path.join(self.get_datadir(), os.pardir,
                                        "tags.index"))
         
         tags_filename = os.path.join(self.get_datadir(), "tags.db")
         cfg = {"datadir": self.get_datadir(), "tags_filename": tags_filename}
-        self.assertEquals(tags.get_tagsfile(cfg), tags_filename)
+        self.assertEqual(tags.get_tagsfile(cfg), tags_filename)
 
     def test_tag_cloud_no_tags(self):
         # test no tags
         self.request.get_data()["tagsdata"] = {}
         
         tags.cb_head(self.args)
-        self.assertEquals(
+        self.assertEqual(
             str(self.args["entry"]["tagcloud"]),
             "\n".join(
                 ["<p>",
@@ -60,7 +60,7 @@ class TagsTest(PluginTest):
             }
         
         tags.cb_head(self.args)
-        self.assertEquals(
+        self.assertEqual(
             str(self.args["entry"]["tagcloud"]),
             "\n".join(
                 ["<p>",
@@ -76,7 +76,7 @@ class TagsTest(PluginTest):
             }
         
         tags.cb_head(self.args)
-        self.assertEquals(
+        self.assertEqual(
             str(self.args["entry"]["tagcloud"]),
             "\n".join(
                 ["<p>",

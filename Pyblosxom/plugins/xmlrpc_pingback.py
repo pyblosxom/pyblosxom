@@ -56,13 +56,13 @@ __registrytags__ = "1.4, core"
 
 
 from Pyblosxom import tools
-from xmlrpclib import Fault
+from xmlrpc.client import Fault
 
 import re
 import sgmllib
 import time
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 
 
 def verify_installation(request):
@@ -104,7 +104,7 @@ class parser(sgmllib.SGMLParser):
 
 def fileFor(req, uri):
     config = req.get_configuration()
-    urldata = urlparse.urlsplit(uri)
+    urldata = urllib.parse.urlsplit(uri)
 
     # Reconstruct uri to something sane
     uri = "%s://%s%s" % (urldata[0], urldata[1], urldata[2])
@@ -137,7 +137,7 @@ def fileFor(req, uri):
 def pingback(request, source, target):
     logger = tools.get_logger()
     logger.info("pingback started")
-    source_file = urllib.urlopen(source.split('#')[0])
+    source_file = urllib.request.urlopen(source.split('#')[0])
     if source_file.headers.get('error', '') == '404':
         raise Fault(0x0010, "Target %s not exists" % target)
     source_page = parser()
@@ -192,7 +192,7 @@ def pingback(request, source, target):
     if reject_code == 1:
         raise Fault(0x0031, reject_message)
 
-    from comments import writeComment
+    from .comments import writeComment
     config = request.get_configuration()
     data = request.get_data()
     data['entry_list'] = [target_entry]

@@ -16,10 +16,10 @@ class PagesTest(PluginTest):
 
     def test_is_frontpage(self):
         # test setup-related is_frontpage = False possibilities
-        self.assertEquals(pages.is_frontpage({}, {}), False)
-        self.assertEquals(pages.is_frontpage({"PATH_INFO": "/"}, {}),
+        self.assertEqual(pages.is_frontpage({}, {}), False)
+        self.assertEqual(pages.is_frontpage({"PATH_INFO": "/"}, {}),
                           False)
-        self.assertEquals(pages.is_frontpage({"PATH_INFO": "/"},
+        self.assertEqual(pages.is_frontpage({"PATH_INFO": "/"},
                                              {"pages_frontpage": False}),
                           False)
 
@@ -31,4 +31,4 @@ class PagesTest(PluginTest):
                                ("/foo", False)):
             pyhttp = {"PATH_INFO": path}
             cfg = {"pages_frontpage": True}
-            self.assertEquals(pages.is_frontpage(pyhttp, cfg), expected)
+            self.assertEqual(pages.is_frontpage(pyhttp, cfg), expected)

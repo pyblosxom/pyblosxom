@@ -23,15 +23,15 @@ class TestCheckBlacklist(PluginTest):
 
         # no comment_rejected_words--so it passes
         ret = check_blacklist.cb_comment_reject(self.args)
-        self.assertEquals(False, ret)
+        self.assertEqual(False, ret)
 
         # rejected words, but none in the comment
         cfg["comment_rejected_words"] = ["foo"]
         comment["body"] = "this is a happy comment"
         ret = check_blacklist.cb_comment_reject(self.args)
-        self.assertEquals(False, ret)
+        self.assertEqual(False, ret)
 
         # rejected words, one is in the comment
         cfg["comment_rejected_words"] = ["this"]
         ret = check_blacklist.cb_comment_reject(self.args)
-        self.assertEquals(True, ret[0])
+        self.assertEqual(True, ret[0])

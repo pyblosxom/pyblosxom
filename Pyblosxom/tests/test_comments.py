@@ -15,7 +15,7 @@ from Pyblosxom.tests import PluginTest, FrozenTime, TIMESTAMP
 from Pyblosxom.plugins import comments
 
 import cgi
-import cPickle
+import pickle
 import os
 
 

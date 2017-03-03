@@ -122,7 +122,7 @@ class PyblArchives:
             if not (time_dict['Y'] + time_dict['m']) in archives:
                 archives[time_dict['Y'] + time_dict['m']] = (template % full_dict)
 
-        arc_keys = archives.keys()
+        arc_keys = list(archives.keys())
         arc_keys.sort()
         arc_keys.reverse()
         result = []

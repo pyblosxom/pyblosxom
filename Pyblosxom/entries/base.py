@@ -148,7 +148,7 @@ class EntryBase:
 
         :returns: list of metadata keys
         """
-        return self._metadata.keys()
+        return list(self._metadata.keys())
 
     getMetadataKeys = tools.deprecated_function(get_metadata_keys)
 
@@ -196,7 +196,7 @@ class EntryBase:
             # here, the templates will use the raw string value
             # from the user metadata, rather than the value
             # derived from mtime.
-            if data.has_key('date'):
+            if 'date' in data:
                 data.pop('date')
             mycache[entryid] = data
 
@@ -323,7 +323,7 @@ class EntryBase:
 
         :param newdict: the dict we're updating this one with
         """
-        for mem in newdict.keys():
+        for mem in list(newdict.keys()):
             if mem == CONTENT_KEY:
                 self.set_data(newdict[mem])
             else:

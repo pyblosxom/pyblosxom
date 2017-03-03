@@ -28,12 +28,12 @@ class TestCheckJavascript(PluginTest):
         """check_javascript should check the secretToken query argument."""
         # no secretToken
         assert 'secretToken' not in self.http
-        self.assertEquals(True, check_javascript.cb_comment_reject(self.args))
+        self.assertEqual(True, check_javascript.cb_comment_reject(self.args))
 
         # bad secretToken
         self.set_form_data({'secretToken': 'not the title'})
-        self.assertEquals(True, check_javascript.cb_comment_reject(self.args))
+        self.assertEqual(True, check_javascript.cb_comment_reject(self.args))
 
         # good secretToken
         self.set_form_data({'secretToken': 'test title'})
-        self.assertEquals(False, check_javascript.cb_comment_reject(self.args))
+        self.assertEqual(False, check_javascript.cb_comment_reject(self.args))

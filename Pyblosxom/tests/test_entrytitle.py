@@ -25,7 +25,7 @@ class Test_entrytitle(PluginTest):
             "entry": {}
             }
         newargs = entrytitle.cb_head(args)
-        self.assertEquals(newargs["entry"].get("entry_title", ""), "")
+        self.assertEqual(newargs["entry"].get("entry_title", ""), "")
 
         # one entry yields entry_title
         args = {
@@ -36,7 +36,7 @@ class Test_entrytitle(PluginTest):
             "entry": {}
             }
         newargs = entrytitle.cb_head(args)
-        self.assertEquals(newargs["entry"]["entry_title"], ":: foobar")
+        self.assertEqual(newargs["entry"]["entry_title"], ":: foobar")
 
         # one entry with no title yields entry_title with "No title"
         args = {
@@ -47,7 +47,7 @@ class Test_entrytitle(PluginTest):
             "entry": {}
             }
         newargs = entrytitle.cb_head(args)
-        self.assertEquals(newargs["entry"]["entry_title"], ":: No title")
+        self.assertEqual(newargs["entry"]["entry_title"], ":: No title")
 
         # one entry yields entry_title, using entry_title_template
         # configuration property
@@ -59,7 +59,7 @@ class Test_entrytitle(PluginTest):
             "entry": {}
             }
         newargs = entrytitle.cb_head(args)
-        self.assertEquals(newargs["entry"]["entry_title"], "foobar ::")
+        self.assertEqual(newargs["entry"]["entry_title"], "foobar ::")
 
         # multiple entries yields no title
         args = {
@@ -70,7 +70,7 @@ class Test_entrytitle(PluginTest):
             "entry": {}
             }
         newargs = entrytitle.cb_head(args)
-        self.assertEquals(newargs["entry"].get("entry_title", ""), "")
+        self.assertEqual(newargs["entry"].get("entry_title", ""), "")
 
     def test_verify_installation(self):
-        self.assert_(entrytitle.verify_installation(self.request))
+        self.assertTrue(entrytitle.verify_installation(self.request))

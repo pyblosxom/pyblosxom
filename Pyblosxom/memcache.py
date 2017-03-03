@@ -52,7 +52,7 @@ def memcache_decorator(scope, instance=False):
                 else:
                     hash_key = hash((args, frozenset(sorted(kwargs.items()))))
             except TypeError:
-                print repr((args, kwargs))
+                print(repr((args, kwargs)))
                 hash_key = None
 
             if not hash_key:

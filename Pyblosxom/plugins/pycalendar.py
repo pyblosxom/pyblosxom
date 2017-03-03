@@ -205,7 +205,7 @@ class PyblCalendar:
         # yyyymm strings we created, turning it into a list, sorting
         # them, and then finding "today"'s entry.  then the one before
         # it (index-1) is prev, and the one after (index+1) is next.
-        keys = yearmonth.keys()
+        keys = list(yearmonth.keys())
         keys.sort()
         thismonth = time.strftime("%Y%m", view)
 

@@ -27,7 +27,7 @@ class TestEntryBase(UnitTestBase):
         self.eq_(e.get_data(), s1)
         self.eq_(type(e.get_data()), str)
 
-        s2 = u"foo foo foo foo foo"
+        s2 = "foo foo foo foo foo"
         e.set_data(s2)
         self.eq_(e.get_data(), s2)
         self.eq_(type(e.get_data()), str)
@@ -38,7 +38,7 @@ class TestEntryBase(UnitTestBase):
 
     def test_metadata(self):
         e = EntryBase(req_())
-        self.eq_(e.get_metadata_keys(), STANDARD_FILTERS.keys())
+        self.eq_(e.get_metadata_keys(), list(STANDARD_FILTERS.keys()))
         self.eq_(e.get_metadata("foo"), None)
         self.eq_(e.get_metadata("foo", "bar"), "bar")
         e.set_metadata("foo", "bar")
@@ -74,7 +74,7 @@ class TestEntryBase(UnitTestBase):
             l.sort()
             return l
 
-        self.eq_(sortlist(e.keys()), sortlist(STANDARD_FILTERS.keys() + ["foo", "body"]))
+        self.eq_(sortlist(list(e.keys())), sortlist(list(STANDARD_FILTERS.keys()) + ["foo", "body"]))
 
         self.eq_(e["foo"], "bar")
         self.eq_(e.get("foo"), "bar")

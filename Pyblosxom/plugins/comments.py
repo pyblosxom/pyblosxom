@@ -468,14 +468,14 @@ import cgi
 import glob
 import re
 import time
-import cPickle
+import pickle
 import os
 import codecs
 import sys
 import subprocess
 import traceback
 
-from email.MIMEText import MIMEText
+from email.mime.text import MIMEText
 from xml.sax.saxutils import escape
 from Pyblosxom import tools
 from Pyblosxom.renderers import blosxom
@@ -552,13 +552,13 @@ def createhtmlmail(html, headers):
     """
     import MimeWriter
     import mimetools
-    import cStringIO
+    import io
 
-    out = cStringIO.StringIO() # output buffer for our message
-    htmlin = cStringIO.StringIO(html)
+    out = io.StringIO() # output buffer for our message
+    htmlin = io.StringIO(html)
 
     text = re.sub('<.*?>', '', html)
-    txtin = cStringIO.StringIO(text)
+    txtin = io.StringIO(text)
 
     # FIXME MimeWriter is deprecated as of Python 2.6
     writer = MimeWriter.MimeWriter(out)
@@ -746,7 +746,7 @@ def write_comment(request, config, data, comment, encoding):
         mod_time = float(comment['pubDate'])
 
     try:
-        cPickle.dump(mod_time, latest)
+        pickle.dump(mod_time, latest)
         latest.close()
     except IOError:
         if latest:
@@ -874,7 +874,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
                             msg=mimemsg.as_string())
             server.quit()
 
-    except Exception, e:
+    except Exception as e:
         tools.get_logger().error("error sending email: %s" %
                                 traceback.format_exception(*sys.exc_info()))
 
@@ -1109,7 +1109,7 @@ def cb_prepare(args):
                  'source': '',
                  'description': add_dont_follow(body, config)}
 
-        keys = form.keys()
+        keys = list(form.keys())
         keys = [k for k in keys
                 if k not in ["title", "url", "author", "body", "description"]]
         for k in keys:
@@ -1235,7 +1235,7 @@ def decode_form(d, blog_encoding):
     if charset:
         encodings = [charset] + encodings
 
-    for key in d.keys():
+    for key in list(d.keys()):
         for e in encodings:
             try:
                 d[key].value = d[key].value.decode(e)
@@ -1344,7 +1344,7 @@ def build_preview_comment(form, entry, config):
         if 'email' in form:
             c['cmt_email'] = form['email'].value
 
-    except KeyError, e:
+    except KeyError as e:
         c['cmt_error'] = 'Missing value: %s' % e
 
     entry.update(c)

@@ -76,7 +76,7 @@ from Pyblosxom.tools import pwrap_error
 def verify_installation(request):
     config = request.get_configuration()
 
-    if not config.has_key('disqus_shortname'):
+    if 'disqus_shortname' not in config:
         pwrap_error(
             "missing required config property 'disqus_shortname' which"
             "is necessary to determine which disqus site to link to.")
@@ -101,10 +101,10 @@ def cb_story(args):
 
     # This uses the same logic as comments.py for determining when
     # to show the comments.
-    if ((entry.has_key('absolute_path')
+    if (('absolute_path' in entry
          and len(renderer.getContent()) == 1
          and 'comment_form' in renderer.flavour
-         and not entry.has_key('nocomments'))):
+         and 'nocomments' not in entry)):
 
         # entry.getId() contains the path.
         output = []

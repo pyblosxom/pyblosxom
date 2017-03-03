@@ -151,7 +151,7 @@ class YearArchives:
                  time.mktime(timetuple),
                  mem])
 
-        arc_keys = archives.keys()
+        arc_keys = list(archives.keys())
         arc_keys.sort()
         arc_keys.reverse()
 

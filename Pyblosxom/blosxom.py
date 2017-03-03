@@ -287,7 +287,7 @@ def blosxom_process_path_info(args):
     # string variable, the "default_flavour" setting in the config.py
     # file, or "html"
     flav = config.get("default_flavour", "html")
-    if form.has_key("flav"):
+    if "flav" in form:
         flav = form["flav"].value
 
     data['flavour'] = flav
@@ -337,14 +337,14 @@ def blosxom_process_path_info(args):
     else:
         # this is either a file or a date
 
-        ext = tools.what_ext(data["extensions"].keys(), absolute_path)
+        ext = tools.what_ext(list(data["extensions"].keys()), absolute_path)
         if not ext:
             # it's possible we didn't find the file because it's got a
             # flavour thing at the end--so try removing it and
             # checking again.
             new_path, flav = os.path.splitext(absolute_path)
             if flav:
-                ext = tools.what_ext(data["extensions"].keys(), new_path)
+                ext = tools.what_ext(list(data["extensions"].keys()), new_path)
                 if ext:
                     # there is a flavour-like thing, so that's our new
                     # flavour and we adjust the absolute_path and
@@ -458,4 +458,3 @@ def blosxom_truncate_list_handler(args):
     if num_entries and truncate:
         entry_list = entry_list[:num_entries]
     return entry_list
-

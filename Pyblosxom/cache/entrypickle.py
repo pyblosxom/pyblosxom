@@ -22,7 +22,7 @@ with .entryplugin extention in the drectory.
 from Pyblosxom import tools
 from Pyblosxom.cache.base import BlosxomCacheBase
 
-import cPickle as pickle
+import pickle as pickle
 import os
 from os import makedirs
 from os.path import normpath, dirname, exists, abspath

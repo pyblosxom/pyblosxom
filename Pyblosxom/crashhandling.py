@@ -17,7 +17,7 @@ This module has the code for handling crashes.
 """
 
 import sys
-import StringIO
+import io
 import cgi
 import traceback
 
@@ -56,7 +56,7 @@ class CrashHandler:
             response.headers.append(
                 "Content-Length: %d" % httpresponse.body.len)
         sys.output.write("HTTP/1.0 %s\n" % response.status)
-        for key, val in response.headers.items():
+        for key, val in list(response.headers.items()):
             sys.output.write("%s: %s\n" % (key, val))
         sys.output.write("\n")
         sys.output.write(response.body.read())
@@ -67,7 +67,7 @@ class CrashHandler:
         for display.
         """
         headers = {}
-        output = StringIO.StringIO()
+        output = io.StringIO()
 
         headers["Content-Type"] = "text/html"
         # FIXME - are there other userful headers?
@@ -98,7 +98,7 @@ class CrashHandler:
         output.write("<div style=\"border: 1px solid black; padding: 10px;\">")
 
         try:
-            import Pyblosxom
+            from . import Pyblosxom
             version = Pyblosxom.__version__
         except:
             version = "unknown"
@@ -114,7 +114,7 @@ class CrashHandler:
 
         output.write("<p>HTTP environment:</p>")
         output.write("<pre>")
-        for key, val in self.environ.items():
+        for key, val in list(self.environ.items()):
             output.write("%s: %s\n" % (_e(repr(key)), _e(repr(val))))
         output.write("</pre>")
 
@@ -123,7 +123,10 @@ class CrashHandler:
         output.write("</body>")
         output.write("</html>")
 
-        headers["Content-Length"] = str(output.len)
+        # pos = output.tell()
+        # output.seek(pos)
+
+        headers["Content-Length"] = str(output.tell())
         return Response("500 Server Error", headers, output)
 
 

@@ -146,7 +146,7 @@ class PyblCategories:
 
         form = self._request.get_form()
 
-        if form.has_key('flav'):
+        if 'flav' in form:
             flavour = form['flav'].value
         else:
             flavour = config.get('default_flavour', 'html')
@@ -172,7 +172,7 @@ class PyblCategories:
         # category list map (i.e. "dev", "dev/pyblosxom",
         # "dev/pyblosxom/releases")
         clistmap = {}
-        for mem in elistmap.keys():
+        for mem in list(elistmap.keys()):
             mem = mem.split(os.sep)
             for index in range(len(mem) + 1):
                 p = os.sep.join(mem[0:index])
@@ -180,7 +180,7 @@ class PyblCategories:
 
         # then we take the category list from the clistmap and sort it
         # alphabetically
-        clist = clistmap.keys()
+        clist = list(clistmap.keys())
         clist.sort()
 
         output = []
@@ -192,7 +192,7 @@ class PyblCategories:
             itemlist = item.split(os.sep)
 
             num = 0
-            for key in self._elistmap.keys():
+            for key in list(self._elistmap.keys()):
                 if item == '' or key == item or key.startswith(item + os.sep):
                     num = num + self._elistmap[key]
 

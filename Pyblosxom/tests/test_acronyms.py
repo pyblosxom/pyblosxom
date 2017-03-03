@@ -24,17 +24,17 @@ class Test_acronyms(PluginTest):
 
     def test_get_acronym_file(self):
         config = dict(self.config_base)
-        self.assert_(acronyms.get_acronym_file(config),
+        self.assertTrue(acronyms.get_acronym_file(config),
                      os.path.join(self.datadir, os.pardir, "acronyms.txt"))
 
         config["acronym_file"] = os.path.join(self.datadir, "foo.txt")
-        self.assert_(acronyms.get_acronym_file(config),
+        self.assertTrue(acronyms.get_acronym_file(config),
                      os.path.join(self.datadir, "foo.txt"))
 
     def test_verify_installation(self):
         config = dict(self.config_base)
         req = pyblosxom.Request(config, self.environ, {})
-        self.assert_(acronyms.verify_installation(req) == 0)
+        self.assertTrue(acronyms.verify_installation(req) == 0)
 
         config["acronym_file"] = os.path.join(self.datadir, "foo.txt")
         req = pyblosxom.Request(config, self.environ, {})
@@ -43,13 +43,13 @@ class Test_acronyms(PluginTest):
         fp.write("...")
         fp.close()
         
-        self.assert_(acronyms.verify_installation(req) == 1)
+        self.assertTrue(acronyms.verify_installation(req) == 1)
 
     def test_build_acronyms(self):
         def check_this(lines, output):
             for inmem, outmem in zip(acronyms.build_acronyms(lines), output):
-                self.assertEquals(inmem[0].pattern, outmem[0])
-                self.assertEquals(inmem[1], outmem[1])
+                self.assertEqual(inmem[0].pattern, outmem[0])
+                self.assertEqual(inmem[1], outmem[1])
 
         check_this(["FOO = bar"],
                    [("(\\bFOO\\b)", "<acronym title=\"bar\">\\1</acronym>")])
@@ -73,7 +73,7 @@ class Test_acronyms(PluginTest):
 
         ret = acronyms.cb_story(args)
 
-        self.assertEquals(
+        self.assertEqual(
             args["entry"]["body"],
             "<p>This is <acronym title=\"bar\">FOO</acronym>!</p>")
 
@@ -83,6 +83,6 @@ class Test_acronyms(PluginTest):
 
         ret = acronyms.cb_story(args)
 
-        self.assertEquals(
+        self.assertEqual(
             args["entry"]["body"],
             "<FOO>This is <acronym title=\"bar\">FOO</acronym>!</FOO>")
