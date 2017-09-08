@@ -229,5 +229,4 @@ def cb_story(args):
                         "flavour": flavour})
 
     entry["just_summary"] = 1
-    entry["body"] = entry["body"][:match.start(0)] + link + str(match.group(2))
-
+    entry["body"] = entry["body"][:match.start(1)] + link + str(match.group(2))
