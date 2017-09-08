@@ -194,8 +194,15 @@ def cb_story(args):
     breakpoint = config.get("readmore_breakpoint", READMORE_BREAKPOINT)
     template = config.get("readmore_template", READMORE_TEMPLATE)
 
-    # check to see if the breakpoint is in the body.
-    match = re.search(breakpoint, entry["body"])
+    """
+    Check to see if the breakpoint is in the body.
+
+    Since it might have been wrapped in html tags by a markdown
+    plugin, grab everything from the end of breakpoint up to, but
+    excluding, either the first opening tag, or newline.
+    """
+    match = re.search('(' + breakpoint + ')(.*?)(<[ ]*?[^/].+|[\n])', \
+                      entry["body"])
 
     # if not, return because we don't have to do anything
     if not match:
@@ -222,4 +229,5 @@ def cb_story(args):
                         "flavour": flavour})
 
     entry["just_summary"] = 1
-    entry["body"] = entry["body"][:match.start()] + link
+    entry["body"] = entry["body"][:match.start(0)] + link + str(match.group(2))
+
