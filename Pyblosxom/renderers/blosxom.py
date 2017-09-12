@@ -328,11 +328,9 @@ class BlosxomRenderer(RendererBase):
             if "head" in self.flavour:
                 self.write(self.render_template(self.get_parse_vars(), "head"))
             if "story" in self.flavour:
+
                 content = self.render_content(self._content)
-                for i, mem in enumerate(content):
-                    if isinstance(mem, str):
-                        content[i] = mem.encode("utf-8")
-                content = b"".join(content)
+                content = "".join(content)
                 self.write(content)
             if "foot" in self.flavour:
                 self.write(self.render_template(self.get_parse_vars(), "foot"))
@@ -383,7 +381,7 @@ class BlosxomRenderer(RendererBase):
                 entry[k] = v.replace(r"\$", r"\\$")
 
         finaltext = tools.parse(self._request, entry, template)
-        return bytes(finaltext.replace(r'\$', '$'),'UTF-8')
+        return finaltext.replace(r'\$', '$')
 
     renderTemplate = tools.deprecated_function(render_template)
 

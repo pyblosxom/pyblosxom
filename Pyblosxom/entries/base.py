@@ -330,7 +330,7 @@ class EntryBase:
             else:
                 self.set_metadata(mem, newdict[mem])
 
-    def has_key(self, key):
+    def __contains__(self, key):
         """
         Returns whether a given key is in the metadata dict.  If the
         key is the ``CONTENT_KEY``, then we automatically return true.
