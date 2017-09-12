@@ -92,9 +92,9 @@ class TestEntryBase(UnitTestBase):
         # e.set("faz", "baz")
         # yield eq_, e.get("faz"), "baz"
 
-        self.eq_(e.has_key("foo"), True)
-        self.eq_(e.has_key("foo2"), False)
-        self.eq_(e.has_key("body"), True)
+        self.eq_("foo" in e, True)
+        self.eq_("foo2" in e, False)
+        self.eq_("body" in e, True)
 
         # FIXME - EntryBase doesn't support "in" operator.
         # self.eq_("foo" in e, True)
@@ -152,7 +152,7 @@ class TestEntryBase(UnitTestBase):
         self.__tz = environ.get('TZ')
         environ['TZ'] = 'US/Eastern'
         time.tzset()
-    
+
     def __restore_tz(self):
         """
         Restore time zone to what it was before __force_tz() call.
