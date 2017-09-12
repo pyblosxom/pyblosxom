@@ -289,8 +289,16 @@ class Stripper(HTMLParser):
         self.strict = False
         self.convert_charrefs= True
         self.fed = []
-    def feed(self, d):
-        self.fed.append(d)
+
+    def handle_starttag(self, tag, args):
+        self.fed.append(" ")
+
+    def handle_startendtag(self, tag, args):
+        self.fed.append(" ")
+
+    def handle_endtag(self, tag):
+        self.fed.append(" ")
+
     def handle_data(self, d):
         self.fed.append(d)
     def get_data(self):
