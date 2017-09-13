@@ -792,7 +792,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
     # import the formatdate function which is in a different
     # place in Python 2.3 and up.
     try:
-        from email.Utils import formatdate
+        from email.utils import formatdate
     except ImportError:
         from rfc822 import formatdate
     from socket import gethostbyaddr
