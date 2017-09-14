@@ -420,12 +420,6 @@ class TestComments(PluginTest):
         # a comment that was just posted
         self.set_form_data({'ajax': 'post'})
         self.assertEquals(False, should_output('story'))
-
-        self.entry['cmt_time'] = self.timestamp
-        self.assert_('cmt_time' not in self.data)
-        self.assertEquals(False, should_output('comment'))
-
-        self.data['cmt_time'] = self.timestamp
         self.assertEquals(True, should_output('comment'))
 
     def test_num_comments(self):
