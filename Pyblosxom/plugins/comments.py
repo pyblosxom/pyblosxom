@@ -737,7 +737,7 @@ def write_comment(request, config, data, comment, encoding):
     latest = None
     latest_filename = os.path.join(config['comment_dir'], LATEST_PICKLE_FILE)
     try:
-        latest = open(latest_filename, "w")
+        latest = open(latest_filename, "wb")
     except IOError:
         logger = tools.get_logger()
         logger.error("couldn't open latest comment pickle for writing")
@@ -792,7 +792,7 @@ def send_email(config, entry, comment, comment_dir, comment_filename):
     # import the formatdate function which is in a different
     # place in Python 2.3 and up.
     try:
-        from email.Utils import formatdate
+        from email.utils import formatdate
     except ImportError:
         from rfc822 import formatdate
     from socket import gethostbyaddr
@@ -889,7 +889,7 @@ def check_comments_disabled(config, entry):
         # FIXME - log an error?
         return False
 
-    if not entry.has_key('mtime'):
+    if 'mtime' not in entry:
         return False
 
     entry_age = (time.time() - entry['mtime']) / (60 * 60 * 24)
@@ -1287,7 +1287,7 @@ def cb_story(args):
     data = request.get_data()
     config = request.get_configuration()
     # FIXME - entry is currently broken and doesn't support "in"
-    if entry.has_key('absolute_path') and not entry.has_key('nocomments'):
+    if 'absolute_path' in entry and 'nocomments' not in entry:
         entry['comments'] = read_comments(entry, config)
         entry['num_comments'] = len(entry['comments'])
         if ((len(renderer.get_content()) == 1
@@ -1360,10 +1360,10 @@ def cb_story_end(args):
     form = request.get_http()['form']
     config = request.get_configuration()
     # FIXME - entry is currently broken and doesn't support "in"
-    if ((entry.has_key('absolute_path')
+    if (('absolute_path' in entry
          and len(renderer.get_content()) == 1
          and 'comment-story' in renderer.flavour
-         and not entry.has_key('nocomments')
+         and 'nocomments' not in entry
          and data['display_comment_default'])):
         output = []
         if entry.get('comments', []):

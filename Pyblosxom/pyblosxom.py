@@ -22,10 +22,7 @@ import sys
 import time
 from Pyblosxom.blosxom import blosxom_entry_parser, blosxom_handler
 
-try:
-    from io import BytesIO
-except ImportError:
-    from io import BytesIO
+from io import BytesIO, StringIO
 
 # Pyblosxom imports
 from Pyblosxom import __version__
@@ -467,7 +464,7 @@ class PyblosxomWSGIApp:
         start_response(response.status, list(response.headers.items()))
         response.seek(0)
 
-        return response.read()
+        return response.read().encode(self.config.get("blog_encoding", "utf-8"))
 
     def __call__(self, env, start_response):
         return [self.run_pyblosxom(env, start_response)]
@@ -735,16 +732,16 @@ class Request(object):
 class Response(object):
     """Response class to handle all output related tasks in one place.
 
-    This class is basically a wrapper arround a ``BytesIO`` instance.
+    This class is basically a wrapper arround a ``StringIO`` instance.
     It also provides methods for managing http headers.
     """
 
     def __init__(self, request):
         """Sets the ``Request`` object that leaded to this response.
-        Creates a ``BytesIO`` that is used as a output buffer.
+        Creates a ``StringIO`` that is used as a output buffer.
         """
         self._request = request
-        self._out = BytesIO()
+        self._out = StringIO()
         self._headers_sent = False
         self.headers = {}
         self.status = "200 OK"

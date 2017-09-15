@@ -69,7 +69,7 @@ def cb_prepare(args):
             latest_filename = os.path.join(config['comment_dir'], 'LATEST.cmt')
 
             if os.path.exists(latest_filename):
-                latest = open(latest_filename)
+                latest = open(latest_filename, "rb")
                 latest_cmtime = pickle.load(latest)
                 latest.close()
 

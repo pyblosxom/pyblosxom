@@ -18,7 +18,7 @@ from Pyblosxom.pyblosxom import Request
 class TagsTest(PluginTest):
     def setUp(self):
         PluginTest.setUp(self, tags)
-        self.tmpdir = tempfile.mkdtemp() 
+        self.tmpdir = tempfile.mkdtemp()
 
     def get_datadir(self):
         return os.path.join(self.tmpdir, "datadir")
@@ -29,7 +29,7 @@ class TagsTest(PluginTest):
             shutil.rmtree(self.tmpdir)
         except OSError:
             pass
-                
+
     def test_get_tagsfile(self):
         req = Request({"datadir": self.get_datadir()}, {}, {})
 
@@ -37,7 +37,7 @@ class TagsTest(PluginTest):
         self.assertEqual(tags.get_tagsfile(cfg),
                           os.path.join(self.get_datadir(), os.pardir,
                                        "tags.index"))
-        
+
         tags_filename = os.path.join(self.get_datadir(), "tags.db")
         cfg = {"datadir": self.get_datadir(), "tags_filename": tags_filename}
         self.assertEqual(tags.get_tagsfile(cfg), tags_filename)
@@ -45,7 +45,7 @@ class TagsTest(PluginTest):
     def test_tag_cloud_no_tags(self):
         # test no tags
         self.request.get_data()["tagsdata"] = {}
-        
+
         tags.cb_head(self.args)
         self.assertEqual(
             str(self.args["entry"]["tagcloud"]),
@@ -58,13 +58,13 @@ class TagsTest(PluginTest):
         self.request.get_data()["tagsdata"] = {
             "tag2": ["a"],
             }
-        
+
         tags.cb_head(self.args)
         self.assertEqual(
             str(self.args["entry"]["tagcloud"]),
             "\n".join(
                 ["<p>",
-                 '<a class="biggestTag" href="http://bl.og//tag/tag2">tag2</a>',
+                 '<a class="smallestTag" href="http://bl.og//tag/tag2">tag2</a>',
                  "</p>"]))
 
     def test_tag_cloud_many_tags(self):
@@ -74,13 +74,13 @@ class TagsTest(PluginTest):
             "tag2": ["a", "b", "c", "d"],
             "tag3": ["a"]
             }
-        
+
         tags.cb_head(self.args)
         self.assertEqual(
             str(self.args["entry"]["tagcloud"]),
             "\n".join(
                 ["<p>",
                  '<a class="biggestTag" href="http://bl.og//tag/tag1">tag1</a>',
-                 '<a class="biggestTag" href="http://bl.og//tag/tag2">tag2</a>',
+                 '<a class="mediumTag" href="http://bl.og//tag/tag2">tag2</a>',
                  '<a class="smallestTag" href="http://bl.og//tag/tag3">tag3</a>',
                  "</p>"]))

@@ -53,9 +53,10 @@ class TestComments(PluginTest):
             self.config['blog_encoding'] = encoding
 
         # build up the form data and post the comment
-        args = [(arg, vars()[arg])
-                for arg in ('title', 'author', 'body', 'url', 'email', 'preview')
-                if vars()[arg] is not None]
+        args = []
+        for arg in ('title', 'author', 'body', 'url', 'email', 'preview'):
+            if vars()[arg] is not None:
+                args.append((arg, vars()[arg]))
         self.set_form_data(dict(args))
         comments.cb_prepare(self.args)
 
@@ -357,7 +358,7 @@ class TestComments(PluginTest):
         self.comment()
         latest_path = os.path.join(self.config['comment_dir'],
                                    comments.LATEST_PICKLE_FILE)
-        timestamp = cPickle.load(open(latest_path))
+        timestamp = pickle.load(open(latest_path, "rb"))
         self.assertEquals(self.timestamp, timestamp)
 
     def test_cb_prepare_draft(self):
@@ -372,13 +373,13 @@ class TestComments(PluginTest):
         # only expand if we have a comment-head template
         self.assert_('comment-head' not in self.renderer.flavour)
         self.assertEquals(template, comments.cb_head(self.args))
-        self.assert_(not self.entry.has_key('title'))
+        self.assert_('title' not in self.entry)
 
         # don't expand if we're displaying more than one entry
         self.renderer.flavour['comment-head'] = ''
         self.renderer.set_content([self.entry, self.entry])
         self.assertEquals(template, comments.cb_head(self.args))
-        self.assert_(not self.entry.has_key('title'))
+        self.assert_('title' not in self.entry)
 
         # we have comment-head and only one entry. expand!
         class MockEntry(dict):
@@ -432,7 +433,7 @@ class TestComments(PluginTest):
         self.data['display_comment_default'] = True
 
         def check_num_comments(expected):
-            if self.entry.has_key("num_comments"):
+            if "num_comments" in self.entry:
                 self.entry["num_comments"] = None
             comments.cb_story(self.args)
             self.assertEquals(expected, self.entry['num_comments'])
