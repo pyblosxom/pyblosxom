@@ -1122,7 +1122,7 @@ def cb_prepare(args):
 
         # record the comment's timestamp, so we can extract it and send it
         # back alone, without the rest of the page, if the request was ajax.
-        data['cmt_time'] = float(cdict['pubDate'])
+        data['cmt_time'] = cmt_time
 
         argdict = {"request": request, "comment": cdict}
         reject = tools.run_callback("comment_reject",
@@ -1158,14 +1158,8 @@ class AjaxRenderer(blosxom.Renderer):
         type of ajax request we're responding to.
         """
 
-        if (self._ajax_type == 'post' and template_name == 'story'):
-            entry['comments'] = read_comments(entry, self._config)
-            return False
-
-        if self._ajax_type == 'preview' and template_name == 'comment-preview':
-            return True
-        elif (self._ajax_type == 'post' and template_name == 'comment'
-              and round(self._data.get('cmt_time', 0)) == round(entry['cmt_time'])):
+        if (self._ajax_type == 'preview' and template_name == 'comment-preview') \
+                or (self._ajax_type == 'post' and template_name == 'comment'):
             return True
         else:
             return False
@@ -1383,6 +1377,10 @@ def cb_story_end(args):
             rejected['cmt_description'] = msg
             rejected['cmt_description_escaped'] = escape(msg)
             output.append(renderer.render_template(rejected, 'comment'))
+        # For AJAX we need to return the comment as well
+        elif 'ajax' in form and request.get_http().get('REQUEST_METHOD','') == 'POST':
+            com = build_preview_comment(form, entry, config)
+            output.append(renderer.render_template(com, 'comment'))
         if not check_comments_disabled(config, entry):
             output.append(renderer.render_template(entry, 'comment-form'))
         args['template'] = template + "".join(output)
