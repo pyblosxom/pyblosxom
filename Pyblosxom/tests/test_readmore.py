@@ -33,21 +33,37 @@ class ReadmoreTest(PluginTest):
         # if showing a single file, then we nix the BREAK bit.
         req = Request({"base_url": "/"}, {}, {"bl_type": "file"})
 
-        args = {"entry": {"body": "no BREAK break",
+        args = {"entry": {"body": "no BREAK break\n",
                           "file_path": ""},
                 "request": req}
 
         readmore.cb_story(args)
-        self.assertEquals(args["entry"]["body"], "no  break")
+        self.assertEquals(args["entry"]["body"], "no  break\n")
 
-    def test_story_break_index(self):
+    def test_story_break_index_at_tag(self):
         # if showing the entry in an index, then we replace the BREAK
-        # with the template and nix everything after BREAK.
+        # with the template and nix everything from the first opening
+        # html tag after BREAK.
         req = Request({"readmore_template": "FOO", "base_url": "/"},
                       {},
                       {"bl_type": "dir"})
 
-        args = {"entry": {"body": "no BREAK break",
+        args = {"entry": {"body": "no BREAK<p> break",
+                          "file_path": ""},
+                "request": req}
+
+        readmore.cb_story(args)
+        self.assertEquals(args["entry"]["body"], "no FOO")
+
+    def test_story_break_index_at_eol(self):
+        # if showing the entry in an index, then we replace the BREAK
+        # with the template and nix everything from the first newline
+        # after BREAK.
+        req = Request({"readmore_template": "FOO", "base_url": "/"},
+                      {},
+                      {"bl_type": "dir"})
+
+        args = {"entry": {"body": "no BREAK\n break",
                           "file_path": ""},
                 "request": req}
 

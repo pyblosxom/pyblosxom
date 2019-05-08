@@ -89,6 +89,8 @@ then you could have a blog entry like this::
       Ha ha!  Made you look below the break!
     </p>
 
+In order to produce valid HTML, the BREAK needs to be on a line of its
+own, i.e. not interspersed in text.
 
 Usage with rst_parser
 =====================
@@ -194,8 +196,19 @@ def cb_story(args):
     breakpoint = config.get("readmore_breakpoint", READMORE_BREAKPOINT)
     template = config.get("readmore_template", READMORE_TEMPLATE)
 
-    # check to see if the breakpoint is in the body.
-    match = re.search(breakpoint, entry["body"])
+    """
+    Check to see if the breakpoint is in the body.
+
+    Since it might have been wrapped in html tags by a markdown
+    plugin, grab everything from the end of breakpoint up to, but
+    excluding, either the first opening tag, or newline. We assume
+    that all this tag wrapping will stay on the same line.
+
+    XXX We might insist on the breakpoint occurring on the beginning
+        of a line of its own.
+    """
+    match = re.search('(' + breakpoint + ')(.*?)(<[ ]*?[^/].+|[\n])',
+                      entry["body"])
 
     # if not, return because we don't have to do anything
     if not match:
@@ -222,4 +235,4 @@ def cb_story(args):
                         "flavour": flavour})
 
     entry["just_summary"] = 1
-    entry["body"] = entry["body"][:match.start()] + link
+    entry["body"] = entry["body"][:match.start(1)] + link + str(match.group(2))
