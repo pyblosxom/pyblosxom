@@ -2,6 +2,7 @@ import locale
 import os
 import sys
 import time
+import operator
 from Pyblosxom import tools
 from Pyblosxom.entries.fileentry import FileEntry
 
@@ -252,7 +253,9 @@ def blosxom_sort_list_handler(args):
     entry_list = args["entry_list"]
 
     entry_list = [(e._mtime, e) for e in entry_list]
-    entry_list.sort()
+    # Sort only by first element. Second element is a FileEntry
+    # and doesn't support comparison operators.
+    entry_list.sort(key = operator.itemgetter(0))
     entry_list.reverse()
     entry_list = [e[1] for e in entry_list]
 

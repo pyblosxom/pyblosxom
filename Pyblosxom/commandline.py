@@ -416,7 +416,7 @@ def run_static_renderer(command, argv):
     (options, args) = parser.parse_args()
 
     # Turn on memcache.
-    from .Pyblosxom import memcache
+    from Pyblosxom import memcache
     memcache.usecache = True
 
     p = build_pyblosxom()
