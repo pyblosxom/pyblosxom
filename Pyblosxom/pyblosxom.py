@@ -109,7 +109,12 @@ class Pyblosxom:
         # entryparser callback is run here first to allow other
         # plugins register what file extensions can be used
         data['extensions'] = tools.run_callback("entryparser",
-                                                {'txt': blosxom_entry_parser},
+                                                # Use blx instead of txt
+                                                # as the file extension
+                                                # for entries, since they
+                                                # aren't text, they're HTML.
+                                                {'blx': blosxom_entry_parser},
+                                                # {'txt': blosxom_entry_parser},
                                                 mappingfunc=lambda x, y: y,
                                                 defaultfunc=lambda x: x)
 
