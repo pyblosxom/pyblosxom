@@ -176,7 +176,7 @@ class PyblCalendar:
 
             # add an entry for yyyymm so we can figure out next/previous
             year = str(timetuple[0])
-            dayzfill = string.zfill(timetuple[1], 2)
+            dayzfill = str.zfill(str(timetuple[1]), 2)
             yearmonth[year + dayzfill] = time.strftime("%b", timetuple)
 
             # if the entry isn't in the year/month we're looking at with
