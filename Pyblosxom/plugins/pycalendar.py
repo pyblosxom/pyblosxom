@@ -96,7 +96,6 @@ class PyblCalendar:
 
         self._entries = {}
 
-    @memcache_decorator('pycalendar', True)
     def __str__(self):
         """
         Returns the on-demand generated string.
@@ -133,9 +132,7 @@ class PyblCalendar:
         # this comes in as '', 2001, 2002, 2003, ...  so we can convert it
         # without an issue
         temp = data.get("pi_yr")
-        if not temp:
-            view[0] = int(self._today[0])
-        else:
+        if temp:
             view[0] = int(temp)
 
         # the month is a bit harder since it can come in as "08", "", or
@@ -145,8 +142,6 @@ class PyblCalendar:
             view[1] = int(temp)
         elif temp and temp in tools.month2num:
             view[1] = int(tools.month2num[temp])
-        else:
-            view[1] = int(self._today[1])
 
         self._view = view = tuple(view)
 
