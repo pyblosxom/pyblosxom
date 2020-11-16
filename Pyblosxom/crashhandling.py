@@ -18,10 +18,10 @@ This module has the code for handling crashes.
 
 import sys
 import io
-import cgi
+import html
 import traceback
 
-_e = cgi.escape
+_e = html.escape
 
 
 class Response:
