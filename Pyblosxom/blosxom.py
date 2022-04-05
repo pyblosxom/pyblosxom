@@ -79,8 +79,8 @@ def blosxom_handler(request):
     data["latest_date"] = time.strftime('%a, %d %b %Y', mtime_tuple)
 
     # Make sure we get proper 'English' dates when using standards
-    loc = locale.getlocale(locale.LC_ALL)
-    locale.setlocale(locale.LC_ALL, 'C')
+    loc = locale.getlocale(locale.LC_TIME)
+    locale.setlocale(locale.LC_TIME, 'C')
 
     data["latest_w3cdate"] = time.strftime('%Y-%m-%dT%H:%M:%SZ',
                                            mtime_gmtuple)
@@ -88,7 +88,7 @@ def blosxom_handler(request):
                                               mtime_gmtuple)
 
     # set the locale back
-    locale.setlocale(locale.LC_ALL, loc)
+    locale.setlocale(locale.LC_TIME, loc)
 
     # we pass the request with the entry_list through the prepare
     # callback giving everyone a chance to transform the data.  the
